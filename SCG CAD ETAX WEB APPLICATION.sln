@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCG.CAD.ETAX.WEB", "SCG.CAD.ETAX.WEB\SCG.CAD.ETAX.WEB.csproj", "{E2982D7C-92E4-4ADD-A520-C94A50D0D9C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCG.CAD.ETAX.UTILITY", "SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj", "{8B35ABD4-1F4A-4812-B09B-03E91026830F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCG.CAD.ETAX.MODEL", "SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj", "{9C7C353D-C267-4D86-9DDE-BB8FDA4D32D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCG.CAD.ETAX.DAL", "SCG.CAD.ETAX.DAL\SCG.CAD.ETAX.DAL.csproj", "{E8DFF584-5D97-40B9-A43C-E1FD87B51350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCG.CAD.ETAX.API", "SCG.CAD.ETAX.API\SCG.CAD.ETAX.API.csproj", "{7C423A4F-4C52-4B78-AA16-FE95D379A080}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2982D7C-92E4-4ADD-A520-C94A50D0D9C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2982D7C-92E4-4ADD-A520-C94A50D0D9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2982D7C-92E4-4ADD-A520-C94A50D0D9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2982D7C-92E4-4ADD-A520-C94A50D0D9C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B35ABD4-1F4A-4812-B09B-03E91026830F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B35ABD4-1F4A-4812-B09B-03E91026830F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B35ABD4-1F4A-4812-B09B-03E91026830F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B35ABD4-1F4A-4812-B09B-03E91026830F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C7C353D-C267-4D86-9DDE-BB8FDA4D32D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C7C353D-C267-4D86-9DDE-BB8FDA4D32D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C7C353D-C267-4D86-9DDE-BB8FDA4D32D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C7C353D-C267-4D86-9DDE-BB8FDA4D32D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8DFF584-5D97-40B9-A43C-E1FD87B51350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8DFF584-5D97-40B9-A43C-E1FD87B51350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8DFF584-5D97-40B9-A43C-E1FD87B51350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8DFF584-5D97-40B9-A43C-E1FD87B51350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C423A4F-4C52-4B78-AA16-FE95D379A080}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C423A4F-4C52-4B78-AA16-FE95D379A080}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C423A4F-4C52-4B78-AA16-FE95D379A080}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C423A4F-4C52-4B78-AA16-FE95D379A080}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD0A509D-EA7A-476A-8B90-7DD05C90A301}
+	EndGlobalSection
+EndGlobal
