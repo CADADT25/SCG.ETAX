@@ -9,6 +9,14 @@ namespace SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision
 {
     public class TISICitySubDivisionNameModel
     {
+		public class ETDASubDistrict
+		{
+			public string? subDistrictCode { get; set; }
+			public string? subDistrictName { get; set; }
+			public string? districtCode { get; set; }
+			public string? ProviceCode { get; set; }
+
+		}
 
 		[XmlRoot(ElementName = "documentation")]
 		public class Documentation

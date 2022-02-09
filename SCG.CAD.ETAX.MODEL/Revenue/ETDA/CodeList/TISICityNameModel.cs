@@ -9,105 +9,114 @@ namespace SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City
 {
     public class TISICityNameModel
     {
-		[XmlRoot(ElementName = "documentation")]
-		public class Documentation
-		{
 
-			[XmlElement(ElementName = "Name")]
-			public string? Name { get; set; }
+        public class ETDADistrict
+        {
+            public string? districtCode { get; set; }
+            public string? districtName { get; set; }
+            public string? ProviceCode { get; set; }
 
-			[XmlAttribute(AttributeName = "lang")]
-			public string? Lang { get; set; }
+        }
 
-			[XmlText]
-			public string? Text { get; set; }
-		}
+        [XmlRoot(ElementName = "documentation")]
+        public class Documentation
+        {
 
-		[XmlRoot(ElementName = "annotation")]
-		public class Annotation
-		{
+            [XmlElement(ElementName = "Name")]
+            public string? Name { get; set; }
 
-			[XmlElement(ElementName = "documentation")]
-			public Documentation? Documentation { get; set; }
-		}
+            [XmlAttribute(AttributeName = "lang")]
+            public string? Lang { get; set; }
 
-		[XmlRoot(ElementName = "enumeration")]
-		public class Enumeration
-		{
+            [XmlText]
+            public string? Text { get; set; }
+        }
 
-			[XmlElement(ElementName = "annotation")]
-			public Annotation? Annotation { get; set; }
+        [XmlRoot(ElementName = "annotation")]
+        public class Annotation
+        {
 
-			[XmlAttribute(AttributeName = "value")]
-			public int Value { get; set; }
+            [XmlElement(ElementName = "documentation")]
+            public Documentation? Documentation { get; set; }
+        }
 
-			[XmlText]
-			public string? Text { get; set; }
-		}
+        [XmlRoot(ElementName = "enumeration")]
+        public class Enumeration
+        {
 
-		[XmlRoot(ElementName = "restriction")]
-		public class Restriction
-		{
+            [XmlElement(ElementName = "annotation")]
+            public Annotation? Annotation { get; set; }
 
-			[XmlElement(ElementName = "enumeration")]
-			public List<Enumeration>? Enumeration { get; set; }
+            [XmlAttribute(AttributeName = "value")]
+            public int Value { get; set; }
 
-			[XmlAttribute(AttributeName = "base")]
-			public string? Base { get; set; }
+            [XmlText]
+            public string? Text { get; set; }
+        }
 
-			[XmlText]
-			public string? Text { get; set; }
-		}
+        [XmlRoot(ElementName = "restriction")]
+        public class Restriction
+        {
 
-		[XmlRoot(ElementName = "simpleType")]
-		public class SimpleType
-		{
+            [XmlElement(ElementName = "enumeration")]
+            public List<Enumeration>? Enumeration { get; set; }
 
-			[XmlElement(ElementName = "restriction")]
-			public Restriction? Restriction { get; set; }
+            [XmlAttribute(AttributeName = "base")]
+            public string? Base { get; set; }
 
-			[XmlAttribute(AttributeName = "name")]
-			public string? Name { get; set; }
+            [XmlText]
+            public string? Text { get; set; }
+        }
 
-			[XmlText]
-			public string? Text { get; set; }
-		}
+        [XmlRoot(ElementName = "simpleType")]
+        public class SimpleType
+        {
 
-		[XmlRoot(ElementName = "schema")]
-		public class Schema
-		{
+            [XmlElement(ElementName = "restriction")]
+            public Restriction? Restriction { get; set; }
 
-			[XmlElement(ElementName = "simpleType")]
-			public SimpleType? SimpleType { get; set; }
+            [XmlAttribute(AttributeName = "name")]
+            public string? Name { get; set; }
 
-			[XmlAttribute(AttributeName = "xsd")]
-			public string? Xsd { get; set; }
+            [XmlText]
+            public string? Text { get; set; }
+        }
 
-			[XmlAttribute(AttributeName = "ids5ISO316612A")]
-			public string? Ids5ISO316612A { get; set; }
+        [XmlRoot(ElementName = "schema")]
+        public class Schema
+        {
 
-			[XmlAttribute(AttributeName = "ccts")]
-			public string? Ccts { get; set; }
+            [XmlElement(ElementName = "simpleType")]
+            public SimpleType? SimpleType { get; set; }
 
-			[XmlAttribute(AttributeName = "targetNamespace")]
-			public string? TargetNamespace { get; set; }
+            [XmlAttribute(AttributeName = "xsd")]
+            public string? Xsd { get; set; }
 
-			[XmlAttribute(AttributeName = "elementFormDefault")]
-			public string? ElementFormDefault { get; set; }
+            [XmlAttribute(AttributeName = "ids5ISO316612A")]
+            public string? Ids5ISO316612A { get; set; }
 
-			[XmlAttribute(AttributeName = "attributeFormDefault")]
-			public string? AttributeFormDefault { get; set; }
+            [XmlAttribute(AttributeName = "ccts")]
+            public string? Ccts { get; set; }
 
-			[XmlAttribute(AttributeName = "version")]
-			public DateTime Version { get; set; }
+            [XmlAttribute(AttributeName = "targetNamespace")]
+            public string? TargetNamespace { get; set; }
 
-			[XmlAttribute(AttributeName = "thcity")]
-			public string? Thcity { get; set; }
+            [XmlAttribute(AttributeName = "elementFormDefault")]
+            public string? ElementFormDefault { get; set; }
 
-			[XmlText]
-			public string? Text { get; set; }
-		}
+            [XmlAttribute(AttributeName = "attributeFormDefault")]
+            public string? AttributeFormDefault { get; set; }
+
+            [XmlAttribute(AttributeName = "version")]
+            public DateTime Version { get; set; }
+
+            [XmlAttribute(AttributeName = "thcity")]
+            public string? Thcity { get; set; }
+
+            [XmlText]
+            public string? Text { get; set; }
+        }
 
 
-	}
+    }
 }

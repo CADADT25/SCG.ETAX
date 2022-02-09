@@ -17,10 +17,28 @@ namespace SCG.CAD.ETAX.API.Controllers
 
 
         [HttpGet]
-        [Route("ThaiISOCountrySubdivisionCode")]
-        public IActionResult GetThaiISOCountrySubdivisionCode()
+        [Route("GetProviceFromETDA")]
+        public IActionResult GetProviceFromETDA()
         {
             var result = repo.GetThaiISOCountrySubdivisionCode().Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetDistrictFromETDA")]
+        public IActionResult GetDistrictFromETDA(string ProviceCode)
+        {
+            var result = repo.GetTISICityName(ProviceCode).Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetSubDistrictFromETDA")]
+        public IActionResult GetSubDistrictFromETDA(string DistrictCode)
+        {
+            var result = repo.GetTISICitySubDivisionName(DistrictCode).Result;
 
             return Ok(result);
         }

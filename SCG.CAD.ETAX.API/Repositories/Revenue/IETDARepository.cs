@@ -5,8 +5,8 @@ namespace SCG.CAD.ETAX.API.Repositories
     public interface IETDARepository
     {
         Task<Response> GetThaiISOCountrySubdivisionCode();
-        Task<Response> GetTISICityName();
-        Task<Response> GetTISICitySubDivisionName();
+        Task<Response> GetTISICityName(string ProviceCode);
+        Task<Response> GetTISICitySubDivisionName(string DistrictCode);
         Task<Response> GetThaiPurposeCode_Invoice();
         Task<Response> GetThaiMessageFunctionCode();
         Task<Response> GetThaiDocumentNameCode();

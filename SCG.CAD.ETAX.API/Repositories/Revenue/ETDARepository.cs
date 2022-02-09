@@ -11,6 +11,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;
 
 namespace SCG.CAD.ETAX.API.Repositories
 {
@@ -25,7 +27,7 @@ namespace SCG.CAD.ETAX.API.Repositories
 
         public async Task<Response> GetThaiISOCountrySubdivisionCode()
         {
-            List<ETDAProvice> eTDAProvice = new List<ETDAProvice>();
+            List<ETDAProvice> result = new List<ETDAProvice>();
 
             Response resp = new Response();
 
@@ -35,12 +37,75 @@ namespace SCG.CAD.ETAX.API.Repositories
 
                 if (!string.IsNullOrEmpty(getXml))
                 {
-                    eTDAProvice = eTDAService.MappingToObject(getXml);
+                    result = eTDAService.ProviceMappingToObject(getXml);
 
-                    if (eTDAProvice.Count() > 0)
+                    if (result.Count() > 0)
                     {
                         resp.STATUS = true;
-                        resp.OUTPUT_DATA = eTDAProvice;
+                        resp.OUTPUT_DATA = result;
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+            }
+
+            return resp;
+        }
+
+
+        public async Task<Response> GetTISICityName(string ProviceCode)
+        {
+            List<ETDADistrict> result = new List<ETDADistrict>();
+
+            Response resp = new Response();
+
+            try
+            {
+                var getXml = eTDAService.ReadXmlTISICityName();
+
+                if (!string.IsNullOrEmpty(getXml))
+                {
+                    result = eTDAService.DistrictMappingToObject(getXml, ProviceCode);
+
+                    if (result.Count() > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.OUTPUT_DATA = result;
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+            }
+
+            return resp;
+        }
+
+        public async Task<Response> GetTISICitySubDivisionName(string DistrictCode)
+        {
+            List<ETDASubDistrict> result = new List<ETDASubDistrict>();
+
+            Response resp = new Response();
+
+            try
+            {
+                var getXml = eTDAService.ReadXmlTISICitySubDivisionName();
+
+                if (!string.IsNullOrEmpty(getXml))
+                {
+                    result = eTDAService.SubDistrictMappingToObject(getXml, DistrictCode);
+
+                    if (result.Count() > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.OUTPUT_DATA = result;
                     }
                 }
             }
@@ -69,14 +134,6 @@ namespace SCG.CAD.ETAX.API.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Response> GetTISICityName()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Response> GetTISICitySubDivisionName()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
