@@ -7,8 +7,8 @@ namespace SCG.CAD.ETAX.API.Repositories
         Task<Response> GET_LIST();
         Task<Response> GET_DETAIL(int taxCodeNo);
         Task<Response> INSERT(TaxCode param);
-        Task<Response> UPDATE();
-        Task<Response> DELETE();
+        Task<Response> UPDATE(TaxCode param);
+        Task<Response> DELETE(TaxCode param);
 
 
     }

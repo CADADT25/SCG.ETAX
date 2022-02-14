@@ -1,16 +1,19 @@
-﻿namespace SCG.CAD.ETAX.API.Controllers
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaxCodeController : ControllerBase
+    public class CancelZipLineController : ControllerBase
     {
+        private readonly ICancelZipLineRepository repo;
 
-        private readonly ITaxCodeRepository repo;
-
-        public TaxCodeController()
+        public CancelZipLineController()
         {
-            repo = new TaxCodeRepository();
+            repo = new CancelZipLineRepository();
         }
+
 
         [HttpGet]
         [Route("GetListAll")]
@@ -23,16 +26,16 @@
 
         [HttpGet]
         [Route("GetDetail")]
-        public IActionResult GetTaxCodeDetail(int taxCodeNo)
+        public IActionResult GetTaxCodeDetail(int id)
         {
-            var result = repo.GET_DETAIL(taxCodeNo).Result;
+            var result = repo.GET_DETAIL(id).Result;
 
             return Ok(result);
         }
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(TaxCode param)
+        public IActionResult Insert(CancelZipLine param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -41,7 +44,7 @@
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(TaxCode param)
+        public IActionResult Update(CancelZipLine param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -50,13 +53,11 @@
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(TaxCode param)
+        public IActionResult Delete(CancelZipLine param)
         {
             var result = repo.DELETE(param).Result;
 
             return Ok(result);
         }
-
-
     }
 }

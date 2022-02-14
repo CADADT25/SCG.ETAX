@@ -82,11 +82,11 @@
 
             return resp;
         }
-        public async Task<Response> UPDATE()
+        public async Task<Response> UPDATE(TaxCode param)
         {
             throw new NotImplementedException();
         }
-        public async Task<Response> DELETE()
+        public async Task<Response> DELETE(TaxCode param)
         {
             throw new NotImplementedException();
         }

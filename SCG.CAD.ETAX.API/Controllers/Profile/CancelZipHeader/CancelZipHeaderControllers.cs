@@ -2,14 +2,13 @@
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaxCodeController : ControllerBase
+    public class CancelZipHeaderControllers : ControllerBase
     {
+        private readonly ICancelZipHeaderRepository repo;
 
-        private readonly ITaxCodeRepository repo;
-
-        public TaxCodeController()
+        public CancelZipHeaderControllers()
         {
-            repo = new TaxCodeRepository();
+            repo = new CancelZipHeaderRepository();
         }
 
         [HttpGet]
@@ -23,16 +22,16 @@
 
         [HttpGet]
         [Route("GetDetail")]
-        public IActionResult GetTaxCodeDetail(int taxCodeNo)
+        public IActionResult GetTaxCodeDetail(int id)
         {
-            var result = repo.GET_DETAIL(taxCodeNo).Result;
+            var result = repo.GET_DETAIL(id).Result;
 
             return Ok(result);
         }
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(TaxCode param)
+        public IActionResult Insert(CancelZipHeader param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -41,7 +40,7 @@
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(TaxCode param)
+        public IActionResult Update(CancelZipHeader param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -50,12 +49,13 @@
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(TaxCode param)
+        public IActionResult Delete(CancelZipHeader param)
         {
             var result = repo.DELETE(param).Result;
 
             return Ok(result);
         }
+
 
 
     }

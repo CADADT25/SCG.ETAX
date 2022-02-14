@@ -1,0 +1,16 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace SCG.CAD.ETAX.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProfileIsActiveController : ControllerBase
+    {
+        private readonly IProfileIsActiveRepository repo;
+        public ProfileIsActiveController()
+        {
+            repo = new ProfileIsActiveRepository();
+        }
+    }
+}
