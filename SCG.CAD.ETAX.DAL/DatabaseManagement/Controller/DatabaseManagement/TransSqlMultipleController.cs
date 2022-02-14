@@ -12,12 +12,12 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
 {
     public class TransSqlMultipleController
     {
-        private SqlConnection? conTrans;
+        private SqlConnection conTrans;
         private SqlCommand userCommand = new SqlCommand();
-        private SqlTransaction? trans;
+        private SqlTransaction trans;
 
         protected string strConnection = "";
-        private OutputOnDbModel? dataOutPut;
+        private OutputOnDbModel dataOutPut;
 
         public TransSqlMultipleController()
         {

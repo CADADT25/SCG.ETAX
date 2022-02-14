@@ -14,18 +14,19 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
 {
     public class TransSqlController
     {
-        private SqlConnection? conTrans;
+        private SqlConnection conTrans;
         private SqlCommand userCommand = new SqlCommand();
-        private SqlTransaction? trans;
+        private SqlTransaction trans;
 
         protected string strConnection = "";
-        private OutputOnDbModel? dataOutPut;
+        private OutputOnDbModel dataOutPut;
 
 
         public TransSqlController()
         {
             //strConnection = ConfigurationManager.ConnectionStrings["ConnectionStr"].ConnectionString;
-            strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("AppSettings")["APP_Name"];
+            strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
+            //strConnection = ConfigurationManager.ConnectionStrings["ConnectionStr"].ConnectionString;
 
         }
 

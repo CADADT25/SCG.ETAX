@@ -1,8 +1,5 @@
-﻿using SCG.CAD.ETAX.DAL.CONTROLLER;
-using SCG.CAD.ETAX.DAL.MODEL;
-using Microsoft.AspNetCore.Hosting;
-using System.Xml;
-using System.Configuration;
+﻿using System.Xml;
+using SCG.CAD.ETAX.MODEL;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;
@@ -19,9 +16,10 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 XmlDocument xmlDoc = new XmlDocument();
 
-                var ETDAFileName = "ThaiISOCountrySubdivisionCode_1p0.xsd";
 
-                var ETDALocation = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
+                var ETDAFileName = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAProviceFileName"];
+
+                var ETDALocation = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
 
                 var FilePath = Path.Combine(Directory.GetCurrentDirectory(), ETDALocation + ETDAFileName).Replace("~", "");
 
@@ -50,9 +48,9 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 XmlDocument xmlDoc = new XmlDocument();
 
-                var ETDAFileName = "TISICityName_1p0.xsd";
+                var ETDAFileName = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDACityFileName"];
 
-                var ETDALocation = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
+                var ETDALocation = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
 
                 var FilePath = Path.Combine(Directory.GetCurrentDirectory(), ETDALocation + ETDAFileName).Replace("~", "");
 
@@ -81,9 +79,9 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 XmlDocument xmlDoc = new XmlDocument();
 
-                var ETDAFileName = "TISICitySubDivisionName_1p0.xsd";
+                var ETDAFileName = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDASubDivisionFileName"];
 
-                var ETDALocation = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
+                var ETDALocation = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["ETDAFile"];
 
                 var FilePath = Path.Combine(Directory.GetCurrentDirectory(), ETDALocation + ETDAFileName).Replace("~", "");
 

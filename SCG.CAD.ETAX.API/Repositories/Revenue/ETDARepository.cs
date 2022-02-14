@@ -1,15 +1,5 @@
-﻿using DocumentFormat.OpenXml.Vml.Office;
-using SCG.CAD.ETAX.API.Services;
+﻿using SCG.CAD.ETAX.API.Services;
 using SCG.CAD.ETAX.MODEL;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice;
-using SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City;
-using SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision;
-using System.Collections;
-using System.Xml;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;

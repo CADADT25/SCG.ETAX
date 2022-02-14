@@ -10,10 +10,10 @@ namespace SCG.CAD.ETAX.DAL.MODEL
     public class OutputOnDbModel
     {
         public bool StatusOnDb { get; set; }
-        public string? ClassOnDb { get; set; }
-        public string? MethodOnDb { get; set; }
-        public DataTable? ResultOnDb { get; set; }
-        public string? MessageOnDb { get; set; }
-        public string? TotalCountOnDb { get; set; }
+        public string ClassOnDb { get; set; }
+        public string MethodOnDb { get; set; }
+        public DataTable ResultOnDb { get; set; }
+        public string MessageOnDb { get; set; }
+        public string TotalCountOnDb { get; set; }
     }
 }
