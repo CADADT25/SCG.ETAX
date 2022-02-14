@@ -4,11 +4,11 @@ namespace SCG.CAD.ETAX.API.Repositories
     public interface ITaxCodeRepository
     {
         // CRUD Interface
-        Task<Response> GetTaxCodeAll();
-        Task<Response> GetTaxCodeDetail(int taxCodeNo);
-        Task<Response> InsertTaxCode(TaxCode param);
-        Task<Response> UpdateTaxCode();
-        Task<Response> DeleteTaxCode();
+        Task<Response> GET_LIST();
+        Task<Response> GET_DETAIL(int taxCodeNo);
+        Task<Response> INSERT(TaxCode param);
+        Task<Response> UPDATE();
+        Task<Response> DELETE();
 
 
     }

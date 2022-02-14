@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class RdDocument
     {
+        [Key]
         public int RdDocumentNo { get; set; }
         public int? RdDocumentCode { get; set; }
         public string? RdDocumentNameTh { get; set; }

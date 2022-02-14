@@ -75,6 +75,40 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
+        public List<TaxCode> UPDATE_TAXCODE(TaxCode param)
+        {
+            List<TaxCode> resp = new List<TaxCode>();
+            try
+            {
+                using (_dbContext)
+                {
+                    
+                }
+            }
+            catch
+            {
+                throw;
+            }
+            return resp;
+        }
+
+        public List<TaxCode> DELETE_TAXCODE(TaxCode param)
+        {
+            List<TaxCode> resp = new List<TaxCode>();
+            try
+            {
+                using (_dbContext)
+                {
+
+                }
+            }
+            catch
+            {
+                throw;
+            }
+            return resp;
+        }
+
 
 
     }

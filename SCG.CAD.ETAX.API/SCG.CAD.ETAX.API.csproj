@@ -21,4 +21,27 @@
     <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\Profile\CancelZipHeader\" />
+    <Folder Include="Repositories\Profile\CancelZipLine\" />
+    <Folder Include="Repositories\Profile\DocumentCode\" />
+    <Folder Include="Repositories\Profile\NewsBoard\" />
+    <Folder Include="Repositories\Profile\ProductUnit\" />
+    <Folder Include="Repositories\Profile\ProfileCertificate\" />
+    <Folder Include="Repositories\Profile\ProfileCompany\" />
+    <Folder Include="Repositories\Profile\ProfileCustomer\" />
+    <Folder Include="Repositories\Profile\ProfileEmailTemplate\" />
+    <Folder Include="Repositories\Profile\ProfileEmailType\" />
+    <Folder Include="Repositories\Profile\ProfileIsActive\" />
+    <Folder Include="Repositories\Profile\ProfilePartner\" />
+    <Folder Include="Repositories\Profile\ProfileSeller\" />
+    <Folder Include="Repositories\Profile\ProfileStatus\" />
+    <Folder Include="Repositories\Profile\RdDocument\" />
+    <Folder Include="Repositories\Profile\TransactionDescription\" />
+    <Folder Include="Repositories\Profile\ZipFileConfig\" />
+    <Folder Include="Repositories\Profile\ZipFilePost\" />
+    <Folder Include="Repositories\Profile\ZipFileTransaction\" />
+    <Folder Include="Repositories\Profile\ZipFileType\" />
+  </ItemGroup>
+
 </Project>

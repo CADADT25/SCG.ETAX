@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class ZipFilePost
     {
+        [Key]
         public int ZipFilePostNo { get; set; }
         public int ZipTransactionNo { get; set; }
         public string CreateBy { get; set; } = null!;

@@ -1,4 +1,5 @@
-﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

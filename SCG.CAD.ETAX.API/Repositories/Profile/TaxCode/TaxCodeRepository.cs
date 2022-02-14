@@ -5,7 +5,7 @@
         TaxCodeService service = new TaxCodeService();
 
         //OutputOnDbModel resultData = new OutputOnDbModel();
-        public async Task<Response> GetTaxCodeAll()
+        public async Task<Response> GET_LIST()
         {
             List<TaxCode> taxCodeList = new List<TaxCode>();
 
@@ -33,7 +33,7 @@
 
             return resp;
         }
-        public async Task<Response> GetTaxCodeDetail(int taxCodeNo)
+        public async Task<Response> GET_DETAIL(int taxCodeNo)
         {
             List<TaxCode> taxCodeList = new List<TaxCode>();
 
@@ -61,10 +61,7 @@
 
             return resp;
         }
-
-
-
-        public async Task<Response> InsertTaxCode(TaxCode param)
+        public async Task<Response> INSERT(TaxCode param)
         {
             List<TaxCode> taxCodeList = new List<TaxCode>();
 
@@ -85,13 +82,11 @@
 
             return resp;
         }
-
-        public Task<Response> UpdateTaxCode()
+        public async Task<Response> UPDATE()
         {
             throw new NotImplementedException();
         }
-
-        public Task<Response> DeleteTaxCode()
+        public async Task<Response> DELETE()
         {
             throw new NotImplementedException();
         }

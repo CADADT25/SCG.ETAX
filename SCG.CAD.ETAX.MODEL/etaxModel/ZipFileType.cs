@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class ZipFileType
     {
+        [Key]
         public int ZipFileTypeNo { get; set; }
         public string? ZipFileTypeCode { get; set; }
         public string? ZipFileTypeName { get; set; }

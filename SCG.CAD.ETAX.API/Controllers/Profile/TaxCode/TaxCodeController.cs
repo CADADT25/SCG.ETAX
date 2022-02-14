@@ -1,5 +1,4 @@
-﻿
-namespace SCG.CAD.ETAX.API.Controllers.Profile.TaxCode
+﻿namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -13,28 +12,28 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.TaxCode
         }
 
         [HttpGet]
-        [Route("GetTaxCode")]
+        [Route("GET_LIST")]
         public IActionResult GetTaxCodeAll()
         {
-            var result = repo.GetTaxCodeAll().Result;
+            var result = repo.GET_LIST().Result;
 
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("GetTaxCodeDetail")]
+        [Route("GET_DETAIL")]
         public IActionResult GetTaxCodeDetail(int taxCodeNo)
         {
-            var result = repo.GetTaxCodeDetail(taxCodeNo).Result;
+            var result = repo.GET_DETAIL(taxCodeNo).Result;
 
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("InsertTaxCode")]
-        public IActionResult InsertTaxCode(MODEL.etaxModel.TaxCode param)
+        [Route("INSERT")]
+        public IActionResult InsertTaxCode(TaxCode param)
         {
-            var result = repo.InsertTaxCode(param).Result;
+            var result = repo.INSERT(param).Result;
 
             return Ok(result);
         }

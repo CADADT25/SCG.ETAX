@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class ProfileCompany
     {
+        [Key]
         public int CompanyNo { get; set; }
         public int CompanyCode { get; set; }
         public string CompanyNameTh { get; set; } = null!;

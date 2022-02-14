@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class TransactionDescription
     {
+        [Key]
         public int TransactionNo { get; set; }
         public string BillingNumber { get; set; } = null!;
         public DateTime BillingDate { get; set; }

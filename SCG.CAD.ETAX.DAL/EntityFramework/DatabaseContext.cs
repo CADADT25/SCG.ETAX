@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,27 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
 
         }
 
-        public DbSet<TaxCode> taxCode { get; set; }
+        public DbSet<CancelZipHeader> cancelZipHeader { get; set; }
+        public DbSet<CancelZipLine> cancelZipLine { get; set; }
         public DbSet<DocumentCode> documentCode { get; set; }
+        public DbSet<NewsBoard> newsBoard { get; set; }
+        public DbSet<ProductUnit> productUnit { get; set; }
+        public DbSet<ProfileCertificate> profileCertificate { get; set; }
+        public DbSet<ProfileCompany> profileCompanie { get; set; }
+        public DbSet<ProfileCustomer> profileCustomer { get; set; }
+        public DbSet<ProfileEmailTemplate> profileEmailTemplate { get; set; }
+        public DbSet<ProfileEmailType> profileEmailType { get; set; }
+        public DbSet<ProfileIsActive> profileIsActive { get; set; }
+        public DbSet<ProfilePartner> profilePartner { get; set; }
+        public DbSet<ProfileSeller> profileSeller { get; set; }
+        public DbSet<ProfileStatus> profileStatuse { get; set; }
+        public DbSet<RdDocument> rdDocument { get; set; }
+        public DbSet<TaxCode> taxCode { get; set; }
+        public DbSet<TransactionDescription> transactionDescription { get; set; }
+        public DbSet<ZipFileConfig> zipFileConfig { get; set; }
+        public DbSet<ZipFilePost> zipFilePost { get; set; }
+        public DbSet<ZipFileTransaction> zipFileTransaction { get; set; }
+        public DbSet<ZipFileType> zipFileType { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

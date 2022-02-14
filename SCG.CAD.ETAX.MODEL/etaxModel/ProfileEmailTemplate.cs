@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class ProfileEmailTemplate
     {
+        [Key]
         public int EmailTemplateNo { get; set; }
         public int EmailTypeNo { get; set; }
         public string EmailBody { get; set; } = null!;

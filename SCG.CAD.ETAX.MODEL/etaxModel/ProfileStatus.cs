@@ -1,9 +1,10 @@
 ﻿
 
-namespace SCG.CAD.ETAX.MODEL.etaxModel
+namespace SCG.CAD.ETAX.MODEL
 {
     public partial class ProfileStatus
     {
+        [Key]
         public int StatusNo { get; set; }
         public string? StatusNameTh { get; set; }
         public string StatusNameEn { get; set; } = null!;
