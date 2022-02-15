@@ -58,6 +58,8 @@
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
+
+                DateTime.Now.ToString("ddMMyyyy");
             }
             return resp;
         }
