@@ -2,6 +2,8 @@
 {
     public class ZipFileTransactionRepository : IZipFileTransactionRepository
     {
+        ZipFileTransactionService service = new ZipFileTransactionService();
+
         public Task<Response> DELETE(MODEL.ZipFileTransaction param)
         {
             throw new NotImplementedException();

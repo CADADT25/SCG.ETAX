@@ -5,7 +5,6 @@ namespace SCG.CAD.ETAX.API.Services
     {
         readonly DatabaseContext _dbContext = new();
 
-
         OutputOnDbModel resultData = new OutputOnDbModel();
         sqlTaxCode sqlFactory = new sqlTaxCode();
 

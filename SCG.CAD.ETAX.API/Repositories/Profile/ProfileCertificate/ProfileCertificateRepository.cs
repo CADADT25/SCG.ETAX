@@ -2,6 +2,8 @@
 {
     public class ProfileCertificateRepository : IProfileCertificateRepository
     {
+        ProfileCertificateService service = new ProfileCertificateService();
+
         public Task<Response> DELETE(MODEL.ProfileCertificate param)
         {
             throw new NotImplementedException();

@@ -2,6 +2,8 @@
 {
     public class ProductUnitRepository : IProductUnitRepository
     {
+        ProductUnitService service = new ProductUnitService();
+
         public Task<Response> DELETE(MODEL.ProductUnit param)
         {
             throw new NotImplementedException();

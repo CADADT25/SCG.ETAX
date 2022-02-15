@@ -2,6 +2,8 @@
 {
     public class TransactionDescriptionRepository : ITransactionDescriptionRepository
     {
+        TransactionDescriptionService service = new TransactionDescriptionService();
+
         public Task<Response> DELETE(MODEL.TransactionDescription param)
         {
             throw new NotImplementedException();

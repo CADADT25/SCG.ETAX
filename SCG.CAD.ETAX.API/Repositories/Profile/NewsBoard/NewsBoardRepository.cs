@@ -2,10 +2,9 @@
 {
     public class NewsBoardRepository : INewsBoardRepository
     {
-        public Task<Response> DELETE(MODEL.NewsBoard param)
-        {
-            throw new NotImplementedException();
-        }
+        NewsBoardService service = new NewsBoardService();
+
+        
 
         public Task<Response> GET_DETAIL(int id)
         {
@@ -17,14 +16,61 @@
             throw new NotImplementedException();
         }
 
-        public Task<Response> INSERT(MODEL.NewsBoard param)
+        public async Task<Response> INSERT(NewsBoard param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.INSERT(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return resp;
         }
 
-        public Task<Response> UPDATE(MODEL.NewsBoard param)
+        public async Task<Response> UPDATE(NewsBoard param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+            }
+
+            return resp;
+        }
+
+        public async Task<Response> DELETE(MODEL.NewsBoard param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return resp;
         }
     }
 }

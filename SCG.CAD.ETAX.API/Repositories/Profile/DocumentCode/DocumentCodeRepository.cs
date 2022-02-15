@@ -2,6 +2,8 @@
 {
     public class DocumentCodeRepository : IDocumentCodeRepository
     {
+        DocumentCodeService service = new DocumentCodeService();
+
         public Task<Response> DELETE(MODEL.DocumentCode param)
         {
             throw new NotImplementedException();

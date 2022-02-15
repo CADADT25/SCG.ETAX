@@ -2,6 +2,7 @@
 {
     public partial class CancelZipLine
     {
+        [Key]
         public int CancelZipLineNo { get; set; }
         public int CancelZipHeaderNo { get; set; }
         public string BillingNo { get; set; } = null!;

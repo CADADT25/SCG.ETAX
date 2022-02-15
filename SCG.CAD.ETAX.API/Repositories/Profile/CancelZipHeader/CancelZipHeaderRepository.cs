@@ -2,6 +2,8 @@
 {
     public class CancelZipHeaderRepository : ICancelZipHeaderRepository
     {
+        CancelZipHeaderService service = new CancelZipHeaderService();
+
         public Task<Response> DELETE(MODEL.CancelZipHeader param)
         {
             throw new NotImplementedException();

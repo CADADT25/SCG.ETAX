@@ -2,6 +2,8 @@
 {
     public class CancelZipLineRepository : ICancelZipLineRepository
     {
+        CancelZipLineService service = new CancelZipLineService();
+
         public Task<Response> DELETE(MODEL.CancelZipLine param)
         {
             throw new NotImplementedException();

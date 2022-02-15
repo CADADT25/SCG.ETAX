@@ -2,6 +2,8 @@
 {
     public class ZipFileConfigRepository : IZipFileConfigRepository
     {
+        ZipFileConfigService service = new ZipFileConfigService();
+
         public Task<Response> DELETE(MODEL.ZipFileConfig param)
         {
             throw new NotImplementedException();

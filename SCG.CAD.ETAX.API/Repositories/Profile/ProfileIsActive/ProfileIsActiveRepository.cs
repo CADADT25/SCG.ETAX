@@ -2,6 +2,8 @@
 {
     public class ProfileIsActiveRepository : IProfileIsActiveRepository
     {
+        ProfileIsActiveService service = new ProfileIsActiveService();
+
         public Task<Response> DELETE(MODEL.ProfileIsActive param)
         {
             throw new NotImplementedException();

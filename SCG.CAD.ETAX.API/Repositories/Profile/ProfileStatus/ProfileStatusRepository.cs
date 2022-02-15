@@ -2,6 +2,8 @@
 {
     public class ProfileStatusRepository : IProfileStatusRepository
     {
+        ProfileStatusService service = new ProfileStatusService();
+
         public Task<Response> DELETE(MODEL.ProfileStatus param)
         {
             throw new NotImplementedException();

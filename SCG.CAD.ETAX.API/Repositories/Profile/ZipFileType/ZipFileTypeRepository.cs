@@ -2,7 +2,9 @@
 {
     public class ZipFileTypeRepository : IZipFileTypeRepository
     {
-        public Task<Response> DELETE(MODEL.ZipFileType param)
+        ZipFileTypeService service = new ZipFileTypeService();
+
+        public Task<Response> DELETE(ZipFileType param)
         {
             throw new NotImplementedException();
         }
@@ -17,12 +19,12 @@
             throw new NotImplementedException();
         }
 
-        public Task<Response> INSERT(MODEL.ZipFileType param)
+        public Task<Response> INSERT(ZipFileType param)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Response> UPDATE(MODEL.ZipFileType param)
+        public Task<Response> UPDATE(ZipFileType param)
         {
             throw new NotImplementedException();
         }

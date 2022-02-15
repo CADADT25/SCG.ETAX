@@ -2,6 +2,8 @@
 {
     public class ProfileEmailTemplateRepository : IProfileEmailTemplateRepository
     {
+        ProfileEmailTemplateService service = new ProfileEmailTemplateService();
+
         public Task<Response> DELETE(MODEL.ProfileEmailTemplate param)
         {
             throw new NotImplementedException();

@@ -2,7 +2,8 @@
 {
     public class ProfileEmailTypeRepository : IProfileEmailTypeRepository
     {
-        public Task<Response> DELETE(MODEL.ProfileEmailType param)
+        ProfileEmailTypeService service = new ProfileEmailTypeService();
+        public Task<Response> DELETE(ProfileEmailType param)
         {
             throw new NotImplementedException();
         }
@@ -17,12 +18,12 @@
             throw new NotImplementedException();
         }
 
-        public Task<Response> INSERT(MODEL.ProfileEmailType param)
+        public Task<Response> INSERT(ProfileEmailType param)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Response> UPDATE(MODEL.ProfileEmailType param)
+        public Task<Response> UPDATE(ProfileEmailType param)
         {
             throw new NotImplementedException();
         }

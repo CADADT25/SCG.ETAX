@@ -2,6 +2,8 @@
 {
     public class RdDocumentRepository : IRdDocumentRepository
     {
+        RdDocumentService service = new RdDocumentService();
+
         public Task<Response> DELETE(MODEL.RdDocument param)
         {
             throw new NotImplementedException();
