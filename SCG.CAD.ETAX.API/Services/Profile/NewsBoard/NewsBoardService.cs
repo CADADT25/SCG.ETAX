@@ -4,30 +4,60 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<NewsBoard> GET_LIST()
+        public Response GET_LIST()
         {
-            List<NewsBoard> resp = new List<NewsBoard>();
+            Response resp = new Response();
             try
             {
-                resp = _dbContext.newsBoard.ToList();
+                var getList = _dbContext.newsBoard.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<NewsBoard> GET_DETAIL(int NewsBoardNo)
+        public Response GET_DETAIL(int NewsBoardNo)
         {
-            List<NewsBoard> resp = new List<NewsBoard>();
+            Response resp = new Response();
             try
             {
-                resp = _dbContext.newsBoard.Where(x => x.NewsBoardNo == NewsBoardNo).ToList();
+                var getList = _dbContext.newsBoard.Where(x => x.NewsBoardNo == NewsBoardNo).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + NewsBoardNo + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }

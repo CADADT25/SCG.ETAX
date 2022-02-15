@@ -4,16 +4,41 @@
     {
         NewsBoardService service = new NewsBoardService();
 
-        
-
-        public Task<Response> GET_DETAIL(int id)
+        public async Task<Response> GET_DETAIL(int id)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL(id);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> GET_LIST()
+        public async Task<Response> GET_LIST()
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_LIST();
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
         public async Task<Response> INSERT(NewsBoard param)
@@ -32,7 +57,7 @@
                 resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
-            return resp;
+            return await Task.FromResult(resp);
         }
 
         public async Task<Response> UPDATE(NewsBoard param)
@@ -51,10 +76,10 @@
                 resp.ERROR_MESSAGE = ex.InnerException.ToString();
             }
 
-            return resp;
+            return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(MODEL.NewsBoard param)
+        public async Task<Response> DELETE(NewsBoard param)
         {
             Response resp = new Response();
 
@@ -70,7 +95,7 @@
                 resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
-            return resp;
+            return await Task.FromResult(resp);
         }
     }
 }
