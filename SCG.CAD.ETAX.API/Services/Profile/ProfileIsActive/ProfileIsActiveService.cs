@@ -4,82 +4,154 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<ProfileIsActive> GET_LIST()
+        public Response GET_LIST()
         {
-            List<ProfileIsActive> resp = new List<ProfileIsActive>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.profileIsActive.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileIsActive> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<ProfileIsActive> resp = new List<ProfileIsActive>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.profileIsActive.Where(x => x.IsActiveNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileIsActive> INSERT(ProfileIsActive param)
+        public Response INSERT(ProfileIsActive param)
         {
-            List<ProfileIsActive> resp = new List<ProfileIsActive>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.profileIsActive.Add(param);
+                    _dbContext.SaveChanges();
 
-
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileIsActive> UPDATE(ProfileIsActive param)
+        public Response UPDATE(ProfileIsActive param)
         {
-            List<ProfileIsActive> resp = new List<ProfileIsActive>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.profileIsActive.Where(x => x.IsActiveNo == param.IsActiveNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+                        update.IsActiveCode = param.IsActiveCode;
+                        update.IsActiveNameTh = param.IsActiveNameTh;
+                        update.IsActiveNameEn = param.IsActiveNameEn;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileIsActive> DELETE(ProfileIsActive param)
+        public Response DELETE(ProfileIsActive param)
         {
-            List<ProfileIsActive> resp = new List<ProfileIsActive>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.profileIsActive.Find(param.IsActiveNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.profileIsActive.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
