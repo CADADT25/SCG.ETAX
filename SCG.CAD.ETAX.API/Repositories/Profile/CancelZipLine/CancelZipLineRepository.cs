@@ -3,30 +3,101 @@
     public class CancelZipLineRepository : ICancelZipLineRepository
     {
         CancelZipLineService service = new CancelZipLineService();
-
-        public Task<Response> DELETE(MODEL.CancelZipLine param)
+    
+        public async Task<Response> GET_DETAIL(int id)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL(id);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> GET_DETAIL(int id)
+        public async Task<Response> GET_LIST()
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_LIST();
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> GET_LIST()
+        public async Task<Response> INSERT(CancelZipLine param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.INSERT(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> INSERT(MODEL.CancelZipLine param)
+        public async Task<Response> UPDATE(CancelZipLine param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> UPDATE(MODEL.CancelZipLine param)
+        public async Task<Response> DELETE(CancelZipLine param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
+
     }
 }

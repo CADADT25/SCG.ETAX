@@ -4,82 +4,157 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<ProfileEmailTemplate> GET_LIST()
+
+        public Response GET_LIST()
         {
-            List<ProfileEmailTemplate> resp = new List<ProfileEmailTemplate>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.profileEmailTemplate.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileEmailTemplate> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<ProfileEmailTemplate> resp = new List<ProfileEmailTemplate>();
+            Response resp = new Response();
+
             try
             {
+                var getList = _dbContext.profileEmailTemplate.Where(x => x.EmailTemplateNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileEmailTemplate> INSERT(ProfileEmailTemplate param)
+        public Response INSERT(ProfileEmailTemplate param)
         {
-            List<ProfileEmailTemplate> resp = new List<ProfileEmailTemplate>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.profileEmailTemplate.Add(param);
+                    _dbContext.SaveChanges();
 
-
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileEmailTemplate> UPDATE(ProfileEmailTemplate param)
+        public Response UPDATE(ProfileEmailTemplate param)
         {
-            List<ProfileEmailTemplate> resp = new List<ProfileEmailTemplate>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.profileEmailTemplate.Where(x => x.EmailTemplateNo == param.EmailTemplateNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+
+                        update.EmailTypeNo = param.EmailTemplateNo;
+                        update.EmailBody = param.EmailBody;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfileEmailTemplate> DELETE(ProfileEmailTemplate param)
+        public Response DELETE(ProfileEmailTemplate param)
         {
-            List<ProfileEmailTemplate> resp = new List<ProfileEmailTemplate>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.profileEmailTemplate.Find(param.EmailTemplateNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.profileEmailTemplate.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }

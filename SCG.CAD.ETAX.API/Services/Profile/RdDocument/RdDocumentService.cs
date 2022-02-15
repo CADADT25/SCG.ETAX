@@ -4,85 +4,165 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<RdDocument> GET_LIST()
+
+
+
+        public Response GET_LIST()
         {
-            List<RdDocument> resp = new List<RdDocument>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.rdDocument.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<RdDocument> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<RdDocument> resp = new List<RdDocument>();
+            Response resp = new Response();
+
             try
             {
+                var getList = _dbContext.rdDocument.Where(x => x.RdDocumentNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<RdDocument> INSERT(RdDocument param)
+        public Response INSERT(RdDocument param)
         {
-            List<RdDocument> resp = new List<RdDocument>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.rdDocument.Add(param);
+                    _dbContext.SaveChanges();
 
 
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<RdDocument> UPDATE(RdDocument param)
+        public Response UPDATE(RdDocument param)
         {
-            List<RdDocument> resp = new List<RdDocument>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.rdDocument.Where(x => x.RdDocumentNo == param.RdDocumentNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+                        update.RdDocumentCode = param.RdDocumentCode;
+                        update.RdDocumentNameTh = param.RdDocumentNameTh;
+                        update.RdDocumentNameEn = param.RdDocumentNameEn;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<RdDocument> DELETE(RdDocument param)
+        public Response DELETE(RdDocument param)
         {
-            List<RdDocument> resp = new List<RdDocument>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.rdDocument.Find(param.RdDocumentNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.rdDocument.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
+
+
 
     }
 }

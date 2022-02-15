@@ -4,82 +4,167 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<ProfilePartner> GET_LIST()
+
+        public Response GET_LIST()
         {
-            List<ProfilePartner> resp = new List<ProfilePartner>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.profilePartner.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfilePartner> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<ProfilePartner> resp = new List<ProfilePartner>();
+            Response resp = new Response();
+
             try
             {
+                var getList = _dbContext.profilePartner.Where(x => x.PartnerProfileNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfilePartner> INSERT(ProfilePartner param)
+        public Response INSERT(ProfilePartner param)
         {
-            List<ProfilePartner> resp = new List<ProfilePartner>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.profilePartner.Add(param);
+                    _dbContext.SaveChanges();
 
 
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfilePartner> UPDATE(ProfilePartner param)
+        public Response UPDATE(ProfilePartner param)
         {
-            List<ProfilePartner> resp = new List<ProfilePartner>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.profilePartner.Where(x => x.PartnerProfileNo == param.PartnerProfileNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+                        update.CustomerId = param.CustomerId;
+                        update.CompanyCode = param.CompanyCode;
+                        update.SellOrg = param.SellOrg;
+                        update.PartnerOutputType = param.PartnerOutputType;
+                        update.NumberOfCopies = param.NumberOfCopies;
+                        update.SoldToCode = param.SoldToCode;
+                        update.SoldToEmail = param.SoldToEmail;
+                        update.SoldToCcemail = param.SoldToCcemail;
+                        update.ShipToCode = param.ShipToCode;
+                        update.ShipToEmail = param.ShipToEmail;
+                        update.ShipToCcemail = param.ShipToCcemail;
+                        update.PartnerEmailType = param.PartnerEmailType;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ProfilePartner> DELETE(ProfilePartner param)
+        public Response DELETE(ProfilePartner param)
         {
-            List<ProfilePartner> resp = new List<ProfilePartner>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.profilePartner.Find(param.PartnerProfileNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.profilePartner.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }

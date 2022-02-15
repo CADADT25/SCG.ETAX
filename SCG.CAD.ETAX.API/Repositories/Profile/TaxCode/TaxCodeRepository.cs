@@ -5,25 +5,33 @@
         TaxCodeService service = new TaxCodeService();
 
         //OutputOnDbModel resultData = new OutputOnDbModel();
+        public async Task<Response> GET_DETAIL(int id)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL(id);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
         public async Task<Response> GET_LIST()
         {
-            List<TaxCode> taxCodeList = new List<TaxCode>();
-
             Response resp = new Response();
             try
             {
-                var result = service.GET_TAXCODE_LIST();
+                var result = service.GET_LIST();
 
-                if (result.Count > 0)
-                {
-                    resp.STATUS = true;
-                    resp.OUTPUT_DATA = result;
-                }
-                else
-                {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Data not found";
-                }
+                resp = result;
             }
             catch (Exception ex)
             {
@@ -31,64 +39,64 @@
                 resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
             }
 
-            return resp;
+            return await Task.FromResult(resp);
         }
-        public async Task<Response> GET_DETAIL(int taxCodeNo)
-        {
-            List<TaxCode> taxCodeList = new List<TaxCode>();
 
-            Response resp = new Response();
-            try
-            {
-                var result = service.GET_TAXCODE_DETAIL(taxCodeNo);
-
-                if (result.Count > 0)
-                {
-                    resp.STATUS = true;
-                    resp.OUTPUT_DATA = result;
-                }
-                else
-                {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Data not found";
-                }
-            }
-            catch (Exception ex)
-            {
-                resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
-            }
-
-            return resp;
-        }
         public async Task<Response> INSERT(TaxCode param)
         {
-            List<TaxCode> taxCodeList = new List<TaxCode>();
-
             Response resp = new Response();
+
             try
             {
-                var result = service.INSERT_TAXCODE(param);
+                var result = service.INSERT(param);
 
-                resp.STATUS = true;
-                resp.MESSAGE = "SaveChanges Success";
-
+                resp = result;
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
-            return resp;
+            return await Task.FromResult(resp);
         }
+
         public async Task<Response> UPDATE(TaxCode param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
+
         public async Task<Response> DELETE(TaxCode param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
     }

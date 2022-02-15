@@ -4,82 +4,157 @@
     {
 
         readonly DatabaseContext _dbContext = new();
-        public List<CancelZipLine> GET_LIST()
+        public Response GET_LIST()
         {
-            List<CancelZipLine> resp = new List<CancelZipLine>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.cancelZipLine.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<CancelZipLine> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<CancelZipLine> resp = new List<CancelZipLine>();
+            Response resp = new Response();
+
             try
             {
+                var getList = _dbContext.cancelZipLine.Where(x => x.CancelZipLineNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<CancelZipLine> INSERT(CancelZipLine param)
+        public Response INSERT(CancelZipLine param)
         {
-            List<CancelZipLine> resp = new List<CancelZipLine>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.cancelZipLine.Add(param);
+                    _dbContext.SaveChanges();
 
 
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<CancelZipLine> UPDATE(CancelZipLine param)
+        public Response UPDATE(CancelZipLine param)
         {
-            List<CancelZipLine> resp = new List<CancelZipLine>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.cancelZipLine.Where(x => x.CancelZipLineNo == param.CancelZipLineNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+                        update.CancelZipHeaderNo = param.CancelZipHeaderNo;
+                        update.BillingNo = param.BillingNo;
+                        update.TransactionNo = param.TransactionNo;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<CancelZipLine> DELETE(CancelZipLine param)
+        public Response DELETE(CancelZipLine param)
         {
-            List<CancelZipLine> resp = new List<CancelZipLine>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.cancelZipLine.Find(param.CancelZipLineNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.cancelZipLine.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }

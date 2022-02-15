@@ -157,7 +157,7 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Update faild.";
+                resp.MESSAGE = "Delete faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

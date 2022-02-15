@@ -4,29 +4,104 @@
     {
         ZipFileTypeService service = new ZipFileTypeService();
 
-        public Task<Response> DELETE(ZipFileType param)
+
+
+        public async Task<Response> GET_DETAIL(int id)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL(id);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> GET_DETAIL(int id)
+        public async Task<Response> GET_LIST()
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_LIST();
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> GET_LIST()
+        public async Task<Response> INSERT(ZipFileType param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.INSERT(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> INSERT(ZipFileType param)
+        public async Task<Response> UPDATE(ZipFileType param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
 
-        public Task<Response> UPDATE(ZipFileType param)
+        public async Task<Response> DELETE(ZipFileType param)
         {
-            throw new NotImplementedException();
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
         }
+
+
+
+
     }
 }

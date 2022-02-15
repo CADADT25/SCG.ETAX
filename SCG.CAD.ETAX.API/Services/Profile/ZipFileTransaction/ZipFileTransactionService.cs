@@ -2,87 +2,168 @@
 {
     public class ZipFileTransactionService
     {
-
         readonly DatabaseContext _dbContext = new();
-        public List<ZipFileTransaction> GET_LIST()
+
+
+
+
+        public Response GET_LIST()
         {
-            List<ZipFileTransaction> resp = new List<ZipFileTransaction>();
+            Response resp = new Response();
             try
             {
+                var getList = _dbContext.zipFileTransaction.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ZipFileTransaction> GET_DETAIL(int id)
+        public Response GET_DETAIL(int id)
         {
-            List<ZipFileTransaction> resp = new List<ZipFileTransaction>();
+            Response resp = new Response();
+
             try
             {
+                var getList = _dbContext.zipFileTransaction.Where(x => x.ZipTransactionNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
 
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ZipFileTransaction> INSERT(ZipFileTransaction param)
+        public Response INSERT(ZipFileTransaction param)
         {
-            List<ZipFileTransaction> resp = new List<ZipFileTransaction>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    _dbContext.zipFileTransaction.Add(param);
+                    _dbContext.SaveChanges();
 
 
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ZipFileTransaction> UPDATE(ZipFileTransaction param)
+        public Response UPDATE(ZipFileTransaction param)
         {
-            List<ZipFileTransaction> resp = new List<ZipFileTransaction>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var update = _dbContext.zipFileTransaction.Where(x => x.ZipTransactionNo == param.ZipTransactionNo).FirstOrDefault();
 
+                    if (update != null)
+                    {
+
+                        update.ZipFileName = param.ZipFileName;
+                        update.ZipFilePath = param.ZipFilePath;
+                        update.ZipFilePostStatus = param.ZipFilePostStatus;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<ZipFileTransaction> DELETE(ZipFileTransaction param)
+        public Response DELETE(ZipFileTransaction param)
         {
-            List<ZipFileTransaction> resp = new List<ZipFileTransaction>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.zipFileTransaction.Find(param.ZipTransactionNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.zipFileTransaction.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
+
+
 
     }
 }

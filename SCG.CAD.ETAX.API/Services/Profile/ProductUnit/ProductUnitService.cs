@@ -73,6 +73,7 @@
                     _dbContext.productUnit.Add(param);
                     _dbContext.SaveChanges();
 
+
                     resp.STATUS = true;
                     resp.MESSAGE = "Insert success.";
                 }
@@ -152,7 +153,7 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Update faild.";
+                resp.MESSAGE = "Delete faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

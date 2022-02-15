@@ -28,85 +28,162 @@ namespace SCG.CAD.ETAX.API.Services
             return resultData;
         }
 
-        public List<TaxCode> GET_TAXCODE_LIST()
+
+        public Response GET_LIST()
         {
-            List<TaxCode> resp = new List<TaxCode> ();
+            Response resp = new Response();
             try
             {
-                resp = _dbContext.taxCode.ToList();
+                var getList = _dbContext.taxCode.ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<TaxCode> GET_TAXCODE_DETAIL(int CodeNo)
+        public Response GET_DETAIL(int id)
         {
-            List<TaxCode> resp = new List<TaxCode>();
+            Response resp = new Response();
+
             try
             {
-                resp = _dbContext.taxCode.Where(x => x.TaxCodeNo ==CodeNo).ToList();
+                var getList = _dbContext.taxCode.Where(x => x.TaxCodeNo == id).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data from ID '" + id + "' success. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<TaxCode> INSERT_TAXCODE(TaxCode param)
+        public Response INSERT(TaxCode param)
         {
-            List<TaxCode> resp = new List<TaxCode>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
                     _dbContext.taxCode.Add(param);
                     _dbContext.SaveChanges();
+
+
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<TaxCode> UPDATE_TAXCODE(TaxCode param)
+        public Response UPDATE(TaxCode param)
         {
-            List<TaxCode> resp = new List<TaxCode>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    
+                    var update = _dbContext.taxCode.Where(x => x.TaxCodeNo == param.TaxCodeNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        update.TaxCodeErp = param.TaxCodeErp;
+                        update.TaxCodeRd = param.TaxCodeRd;
+                        update.TaxCodeDescription = param.TaxCodeDescription;
+                        update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = param.UpdateDate;
+                        update.Isactive = param.Isactive;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public List<TaxCode> DELETE_TAXCODE(TaxCode param)
+        public Response DELETE(TaxCode param)
         {
-            List<TaxCode> resp = new List<TaxCode>();
+            Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
+                    var delete = _dbContext.taxCode.Find(param.TaxCodeNo);
 
+                    if (delete != null)
+                    {
+                        _dbContext.taxCode.Remove(delete);
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Delete success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't delete because data not found.";
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                resp.STATUS = false;
+                resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
+
 
 
 

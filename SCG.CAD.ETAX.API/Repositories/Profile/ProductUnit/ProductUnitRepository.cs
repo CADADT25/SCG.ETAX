@@ -65,7 +65,7 @@
 
             try
             {
-                var result = service.INSERT(param);
+                var result = service.UPDATE(param);
 
                 resp = result;
             }
@@ -84,7 +84,7 @@
 
             try
             {
-                var result = service.INSERT(param);
+                var result = service.DELETE(param);
 
                 resp = result;
             }
