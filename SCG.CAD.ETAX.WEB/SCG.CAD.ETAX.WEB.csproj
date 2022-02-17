@@ -1721,4 +1721,9 @@
     <None Include="wwwroot\assets\select2\select2.min.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 using System.Configuration;
 using System.Net;
@@ -12,7 +13,7 @@ namespace SCG.CAD.ETAX.UTILITY
         public static async Task<HttpResponseMessage> Call(string url)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var baseAdress = ConfigurationManager.AppSettings["ApiBaseAddress"];
+            var baseAdress = new ConfigurationBuilder().Build().GetSection("ApiConfig")["ApiBaseAddress"];
             string apiUrl = baseAdress + url;
 
             using (HttpClient client = new HttpClient())
@@ -66,7 +67,8 @@ namespace SCG.CAD.ETAX.UTILITY
             Response res = new Response();
             using (var client = new HttpClient())
             {
-                var baseAdress = System.Configuration.ConfigurationManager.AppSettings["ApiBaseAddress"];
+                var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
                 string apiUrl = baseAdress + url;
 
                 client.DefaultRequestHeaders.Accept.Clear();

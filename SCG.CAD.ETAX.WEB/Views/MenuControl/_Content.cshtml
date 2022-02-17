@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null;
+}
+
+
+<script>
+
+
+    $("#btn-CallPageProductUnit").click(function () {
+        $("#contentPartial").load("@Url.Action("Index", "ProductUnit")");
+        $("#li-btnCallPageProductUnit").addClass("active");
+
+        $("#liaaa").removeClass("active");
+
+    });
+
+
+</script>

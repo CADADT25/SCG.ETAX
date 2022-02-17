@@ -102,11 +102,9 @@
         <script src="~/js/site.js" asp-append-version="true"></script>*@
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script>
-        $("#btnCallPageProductUnit").click(function () {
-            $("#contentPartial").load("@Url.Action("Index", "ProductUnit")");
-        });
-    </script>
+
+    @*Js menu control*@ 
+    @await Html.PartialAsync("~/Views/MenuControl/_Content.cshtml")
 
 
 </body>
