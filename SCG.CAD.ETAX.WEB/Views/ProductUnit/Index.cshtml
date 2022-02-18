@@ -15,7 +15,6 @@
 
 </div>
 
-<a onclick="fnSweetAlert_SaveSuccess();">sdfsfd</a>
 
 <script type="text/javascript">
 
@@ -32,96 +31,95 @@
 
     function RenderProductUnit(){
 
-           var table = $("#tbProductUnitMain").DataTable({
+        var table = $("#tbProductUnitMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProductUnit")",
+                type: "POST",
+                datatype: "json"
+            },
 
 
-                "scrollY": false,
-                "processing": true, // for show progress bar
-                "serverSide": false, // for process server side
-                "filter": true, // this is for disable filter (search box)
-                "orderMulti": true, // for disable multiple column at once
-                "pageLength": 10,
+            "columns": [
 
-                "ajax": {
-                    url: "@Url.Action("List", "ProductUnit")",
-                    type: "POST",
-                    datatype: "json"
+                {
+                    data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
                 },
-
-
-                "columns": [
-
-                    {
-                        data: "productUnitNo",
-                        className: "text-center",
-                        width: "5%",
-                        visible: false
-                    },
-                    {
-                        //data: "productUnitNo",
-                        className: "text-center",
-                        width: "5%",
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: "productUnitErp",
-                        width: "20%"
-                    },
-                    {
-                        data: "productUnitRd",
-                        width: "20%"
-                    },
-                    {
-                        data: "productUnitDescription",
-                        width: "10%"
-                    },
-                    {
-                        data: "isactive",
-                        width: "10%",
-                        className: "text-center",
-                        render: function (data, type, row) {
-                            return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
-                        }
-                    },
-                    {
-                        data: null,
-                        className: "dt-center editor-edit text-center text-primary",
-                        defaultContent: '<i class="pointer fas fa-pen"/>',
-                        orderable: false,
-                        width: "2%"
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
-                    //{
-                    //    data: null,
-                    //    className: "dt-center editor-delete text-center text-danger",
-                    //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                    //    orderable: false,
-                    //    width: "2%"
-                    //}
-                ]
-            });
+                },
+                {
+                    data: "productUnitErp",
+                    width: "20%"
+                },
+                {
+                    data: "productUnitRd",
+                    width: "20%"
+                },
+                {
+                    data: "productUnitDescription",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
 
-            EditProductUnit(table);
-            DeleteProductUnit(table);
+        EditProductUnit(table);
+        DeleteProductUnit(table);
     }
 
-
      function fnInsertProductUnit(){
-          if ($('#txtInsertProductUnitErp').val() != '' || $('#txtInsertProductUnitRd').val() != '') {
-                    callProductUnitInsertController();
-                } else {
-                    validateProductUnit();
-                }
-
-                callProductUnitIndex();
+        if ($('#txtInsertProductUnitErp').val() != '' || $('#txtInsertProductUnitRd').val() != '') {
+            callProductUnitInsertController();
+        } 
+        else {
+            validateProductUnit();
+        }
+        callProductUnitIndex();
     }
 
     function fnUpdateProductUnit(){
         if ($('#txtUpdateProductUnitErp').val() != '' || $('#txtUpdateProductUnitRd').val() != '') {
-                    callProductUnitUpdateController();
-            } else {
-                validateProductUnit();
+            callProductUnitUpdateController();
+        } 
+        else {
+            validateProductUnit();
         }
         callProductUnitIndex();
     }
@@ -158,14 +156,12 @@
                 confirmButtonClass: 'btn btn-primary',
                 cancelButtonClass: 'btn btn-danger ml-1',
                 buttonsStyling: false,
-            }).then(function (result) {
-                if (result) {
-
-                    callProductUnitDeleteController(getPK);
-                    callProductUnitIndex();
-
-                  }
-            })
+                }).then(function (result) {
+                    if (result) {
+                        callProductUnitDeleteController(getPK);
+                        callProductUnitIndex();
+                      }
+                    })
         });
 
     }
@@ -175,37 +171,31 @@
     }
 
 
-     function callProductUnitGetDetailController(getPK){
-
+    function callProductUnitGetDetailController(getPK){
         $.ajax({
-        type: "GET",
-        url: "@Url.Action("Detail", "ProductUnit")",
-        data: { id : getPK },
-        //contentType: 'application/json; charset=utf-8',
-        dataType: "json",
-        success: function (result) {
+            type: "GET",
+            url: "@Url.Action("Detail", "ProductUnit")",
+            data: { id : getPK },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (result) {
 
-            data = $.parseJSON(result)
+                data = $.parseJSON(result)
+                document.getElementById('txtUpdateProductUnitNo').value = data.ProductUnitNo;
+                document.getElementById('txtUpdateProductUnitErp').value = data.ProductUnitErp;
+                document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;            
+                document.getElementById('txtUpdatetProductUnitDescription').value = data.ProductUnitDescription;
 
-            document.getElementById('txtUpdateProductUnitNo').value = data.ProductUnitNo;
-            document.getElementById('txtUpdateProductUnitErp').value = data.ProductUnitErp;
-            document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;            
-            document.getElementById('txtUpdatetProductUnitDescription').value = data.ProductUnitDescription;
+                if(data.Isactive == 1){
+                    $('#toggleUpdateProductUnit').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateProductUnit').bootstrapToggle('off');
+                }
 
-            if(data.Isactive == 1){
-
-                $('#toggleUpdateProductUnit').bootstrapToggle('on');
-
-            }
-            else{
-                $('#toggleUpdateProductUnit').bootstrapToggle('off');
-            }
-
-
-            $("#modalUpdateProductUnit").modal('show');
+                $("#modalUpdateProductUnit").modal('show');
                 
             }
-            
         });
     }
 
@@ -234,23 +224,23 @@
         var getJsonString = JSON.stringify(model);
 
         $.ajax({
-        type: "POST",
-        url: "@Url.Action("Insert", "ProductUnit")",
-        data: { jsonString : getJsonString },
-        //contentType: 'application/json; charset=utf-8',
-        dataType: "text",
-        success: function (resp) {
+            type: "POST",
+            url: "@Url.Action("Insert", "ProductUnit")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
 
-            if(resp.OUTPUT_STATUS = true){
+                if(resp.OUTPUT_STATUS = true){
 
-                fnSweetAlert_SaveSuccess();
+                    fnSweetAlert_SaveSuccess();
 
-                document.getElementById('txtInsertProductUnitErp').value = '';
-                document.getElementById('txtInsertProductUnitRd').value = '';
-                document.getElementById('txtInsertProductUnitDescription').value = '';
+                    document.getElementById('txtInsertProductUnitErp').value = '';
+                    document.getElementById('txtInsertProductUnitRd').value = '';
+                    document.getElementById('txtInsertProductUnitDescription').value = '';
 
-                $("#modalProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-            }
+                    $("#modalProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                }
 
             }
         });
@@ -260,18 +250,15 @@
         
         var IsActive = 1;
 
-         var ssssds = $('#toggleUpdateProductUnit-event').text();
+        var getToggle = $('#toggleUpdateProductUnit-event').text();
 
-       if(ssssds.includes("true")){
-                  IsActive = 1;
-
-       }
-       else
-       {
-                             IsActive = 0;
-
-       }
-
+        if(getToggle.includes("true")){
+            IsActive = 1;
+        }
+        else
+        {
+            IsActive = 0;
+        }
 
         var model = new Object();
 
@@ -288,29 +275,23 @@
         var getJsonString = JSON.stringify(model);
 
         $.ajax({
-        type: "POST",
-        url: "@Url.Action("Update", "ProductUnit")",
-        data: { jsonString : getJsonString },
-        //contentType: 'application/json; charset=utf-8',
-        dataType: "text",
-        success: function (resp) {
+            type: "POST",
+            url: "@Url.Action("Update", "ProductUnit")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
 
-            if(resp.OUTPUT_STATUS = true){
+                if(resp.OUTPUT_STATUS = true){
 
-                fnSweetAlert_SaveSuccess();
+                    fnSweetAlert_SaveSuccess();
 
-                document.getElementById('txtUpdateProductUnitErp').value = '';
-                document.getElementById('txtUpdateProductUnitRd').value = '';
-                document.getElementById('txtUpdatetProductUnitDescription').value = '';
+                    document.getElementById('txtUpdateProductUnitErp').value = '';
+                    document.getElementById('txtUpdateProductUnitRd').value = '';
+                    document.getElementById('txtUpdatetProductUnitDescription').value = '';
 
-                $("#modalUpdateProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-            }
-
-            else{
-                
-
-            }
-
+                    $("#modalUpdateProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                }
             }
         });
     }
@@ -343,8 +324,7 @@
 
                     $("#FloorInsert").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
                 }
-            });
-
+        });
     }
 
     function callProductUnitIndex() {
@@ -354,7 +334,6 @@
             $.unblockUI();
         }, 500);
     }
-
 
 
 </script>
