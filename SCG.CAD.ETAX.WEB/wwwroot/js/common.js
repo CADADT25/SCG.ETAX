@@ -14,3 +14,12 @@ function fnSweetAlert_DeleteSuccess() {
     });
 }
 
+function fnSweetAlert_Error() {
+    Swal.fire({
+        type: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        footer: '<a href="javascript:void();">Why do I have this issue?</a>'
+    });
+}
+

@@ -23,6 +23,31 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public async Task<JsonResult> Detail(int id)
+        {
+            List<ProductUnit> tran = new List<ProductUnit>();
+
+            var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetDetail?id= " + id + " "));
+
+            Response resp = new Response();
+
+            var result = "";
+
+            if (task.STATUS)
+            {
+
+                tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+
+                result = JsonConvert.SerializeObject(tran[0]);
+
+            }
+            else
+            {
+                ViewBag.Error = task.MESSAGE;
+            }
+            return Json(result);
+        }
+
         public async Task<JsonResult> List()
         {
             List<ProductUnit> tran = new List<ProductUnit>();
@@ -30,8 +55,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             var json = JsonConvert.SerializeObject(tran);
 
             Response resp = new Response();
-
-
 
             if (task.STATUS)
             {
@@ -48,11 +71,41 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
+            ProductUnit tran = new ProductUnit();
+
+            tran = JsonConvert.DeserializeObject<ProductUnit>(jsonString.ToString());
+
+            string json = JsonConvert.SerializeObject(tran, Formatting.Indented);
+
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Insert", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> Update(string jsonString)
+        {
+            Response res = new Response();
+
             //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Update", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> Delete(string jsonString)
+        {
+            Response res = new Response();
+
+            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Delete", httpContent));
 
             return Json(task);
         }

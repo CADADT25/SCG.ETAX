@@ -37,7 +37,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(ProductUnit param)
+        public ActionResult Insert(ProductUnit param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -55,7 +55,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(ProductUnit param)
+        public ActionResult Delete(ProductUnit param)
         {
             var result = repo.DELETE(param).Result;
 

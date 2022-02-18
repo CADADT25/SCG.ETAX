@@ -46,10 +46,63 @@
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="SaveChangeProductUnit();">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProductUnit();">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
 @* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProductUnit" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateProductUnitNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ProductUnit for ERP</label>
+                                    <input type="text" id="txtUpdateProductUnitErp" onkeyup="validateProductUnit()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ProductUnit for Revenue</label>
+                                    <input type="text" id="txtUpdateProductUnitRd" onkeyup="validateProductUnit()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtUpdatetProductUnitDescription" onkeyup="validateProductUnit()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateProductUnit" type="checkbox" data-toggle="toggle">
+                                    <div id="toggleUpdateProductUnit-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProductUnit();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

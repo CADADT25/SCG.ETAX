@@ -40,4 +40,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//app.UseResponseBuffering();
+
 app.Run();
+

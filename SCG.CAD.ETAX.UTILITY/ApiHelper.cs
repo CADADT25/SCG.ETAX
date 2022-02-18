@@ -26,6 +26,7 @@ namespace SCG.CAD.ETAX.UTILITY
                 client.BaseAddress = new Uri(apiUrl);
 
                 client.DefaultRequestHeaders.Accept.Clear();
+
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -44,15 +45,26 @@ namespace SCG.CAD.ETAX.UTILITY
                 using (var client = new HttpClient())
                 {
                     var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
                     string apiUrl = baseAdress + url;
 
                     client.DefaultRequestHeaders.Accept.Clear();
+
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
                     HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
+
+                    //var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
+
+
                     if (result.IsSuccessStatusCode)
                     {
                         var x = result.Content.ReadAsStringAsync().Result;
                         response = JsonConvert.DeserializeObject<Response>(x.ToString());
+                    }
+                    else
+                    {
+                        //var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
                     }
                 }
             }
@@ -77,9 +89,11 @@ namespace SCG.CAD.ETAX.UTILITY
 
                 client.DefaultRequestHeaders.Accept.Clear();
 
-                
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                var getException = await client.GetAsync(apiUrl).Result.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
                 {
