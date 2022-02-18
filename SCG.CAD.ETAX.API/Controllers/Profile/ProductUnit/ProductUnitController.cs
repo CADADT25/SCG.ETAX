@@ -19,7 +19,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpGet]
         [Route("GetListAll")]
-        public IActionResult GetListAll()
+        public ActionResult GetListAll()
         {
             var result = repo.GET_LIST().Result;
 

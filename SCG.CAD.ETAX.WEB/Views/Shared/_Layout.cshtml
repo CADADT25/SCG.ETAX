@@ -4,12 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SCG.CAD.ETAX.WEB</title>
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
-    @*    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/SCG.CAD.ETAX.WEB.styles.css" asp-append-version="true" />*@
 
-    <!-- General CSS Files -->
-    @*<link rel="stylesheet" href="~/assets/css/bootstrap.min.css">*@
+
     <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.min.css")" />
 
 
@@ -18,8 +14,6 @@
     <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/brands.css")" />
     <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/solid.css")" />
 
-
-    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">*@
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css">
@@ -45,6 +39,17 @@
     <meta name="msapplication-TileImage" content="~/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
+    <link rel="stylesheet" href="~/assets/css/cursor/cursor.css">
+    <link rel="stylesheet" href="~/assets/css/scroll/scroll.css">
+
+
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/sweetalert2.min.css">
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css" />
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+
 </head>
 <body>
     <div id="app">
@@ -64,13 +69,12 @@
                     </div>
                 </section>
             </div>
-
-
-            @await Html.PartialAsync("~/Views/Sidebar/BottomSidebar.cshtml")
-
-
         </div>
     </div>
+
+
+    @await Html.PartialAsync("~/Views/ProductUnit/_Modal.cshtml")
+
 
 
     <!-- General JS Scripts -->
@@ -80,13 +84,8 @@
     <script src="~/assets/js/jquery.nicescroll.min.js"></script>
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/stisla.js"></script>
+    <script src="~/assets/BlockUI/BlockUI.js"></script>
 
-    @*
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>*@
 
     <!-- Template JS File -->
     <script src="~/assets/js/scripts.js"></script>
@@ -96,14 +95,21 @@
     <script src="~/assets/js/page/index.js"></script>
 
 
-    @*
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>*@
+    <script src="~/assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
+    <script src="~/assets/js/scripts/extensions/sweet-alerts"></script>
+
+    <script src="~/js/common.js"></script>
+    <script src="~/js/validate.js"></script>
+
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 
 
-    @*Js menu control*@ 
+    @*Js menu control*@
     @await Html.PartialAsync("~/Views/MenuControl/_Content.cshtml")
 
 

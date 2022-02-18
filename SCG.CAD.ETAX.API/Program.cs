@@ -12,6 +12,7 @@ global using System.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
 
 // Add services to the container.

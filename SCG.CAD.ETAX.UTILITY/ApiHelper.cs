@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 using System.Configuration;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace SCG.CAD.ETAX.UTILITY
 {
@@ -13,7 +15,9 @@ namespace SCG.CAD.ETAX.UTILITY
         public static async Task<HttpResponseMessage> Call(string url)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var baseAdress = new ConfigurationBuilder().Build().GetSection("ApiConfig")["ApiBaseAddress"];
+            var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
+
             string apiUrl = baseAdress + url;
 
             using (HttpClient client = new HttpClient())
@@ -39,7 +43,7 @@ namespace SCG.CAD.ETAX.UTILITY
             {
                 using (var client = new HttpClient())
                 {
-                    var baseAdress = System.Configuration.ConfigurationManager.AppSettings["ApiBaseAddress"];
+                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
                     string apiUrl = baseAdress + url;
 
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -72,11 +76,15 @@ namespace SCG.CAD.ETAX.UTILITY
                 string apiUrl = baseAdress + url;
 
                 client.DefaultRequestHeaders.Accept.Clear();
+
+                
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = await client.GetAsync(new Uri(apiUrl));
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var x = response.Content.ReadAsStringAsync().Result;
+
                     res = JsonConvert.DeserializeObject<Response>(x.ToString());
                 }
             }
