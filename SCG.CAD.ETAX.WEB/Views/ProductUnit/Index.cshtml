@@ -28,7 +28,6 @@
 
     });
 
-
     function RenderProductUnit(){
 
         var table = $("#tbProductUnitMain").DataTable({
@@ -124,7 +123,6 @@
         callProductUnitIndex();
     }
 
-
     function EditProductUnit(table){
 
         $('#tbProductUnitMain').on('click', 'td.editor-edit', function () {
@@ -163,13 +161,19 @@
                       }
                     })
         });
-
     }
 
     function ExportProductUnit(){
 
+        $.blockUI();
+
+        callProductUnitExportController();
+
+        $.unblockUI();
     }
 
+
+    // [Begin] Ajax call Controller 
 
     function callProductUnitGetDetailController(getPK){
         $.ajax({
@@ -326,6 +330,37 @@
                 }
         });
     }
+
+    function callProductUnitExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ProductUnit")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ProductUnit.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller 
+
+
+
 
     function callProductUnitIndex() {
         setTimeout(function(){

@@ -4,6 +4,8 @@
     {
 
         readonly DatabaseContext _dbContext = new();
+
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
         public Response GET_LIST()
         {
             Response resp = new Response();
@@ -69,6 +71,9 @@
             {
                 using (_dbContext)
                 {
+                    param.CreateDate = dtNow;
+                    param.UpdateDate = dtNow;
+
                     _dbContext.profileIsActive.Add(param);
                     _dbContext.SaveChanges();
 
@@ -100,7 +105,7 @@
                         update.IsActiveNameTh = param.IsActiveNameTh;
                         update.IsActiveNameEn = param.IsActiveNameEn;
                         update.UpdateBy = param.UpdateBy;
-                        update.UpdateDate = param.UpdateDate;
+                        update.UpdateDate = dtNow;
 
                         _dbContext.SaveChanges();
 

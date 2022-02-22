@@ -1,13 +1,6 @@
-﻿using ClosedXML.Excel;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SCG.CAD.ETAX.MODEL;
-using SCG.CAD.ETAX.UTILITY;
-using System.Text;
-
-namespace SCG.CAD.ETAX.WEB.Controllers
+﻿namespace SCG.CAD.ETAX.WEB.Controllers
 {
-    public class ProductUnitController : Controller
+    public class RdDocumentController : Controller
     {
         public IActionResult Index()
         {
@@ -24,11 +17,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+
+
         public async Task<JsonResult> Detail(int id)
         {
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<RdDocument> tran = new List<RdDocument>();
 
-            var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetDetail?id= " + id + " "));
+            var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetDetail?id= " + id + " "));
 
             Response resp = new Response();
 
@@ -37,7 +32,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             if (task.STATUS)
             {
 
-                tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
 
                 result = JsonConvert.SerializeObject(tran[0]);
 
@@ -53,15 +48,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<RdDocument> tran = new List<RdDocument>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -81,15 +76,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //ProductUnit tran = new ProductUnit();
-
-            //tran = JsonConvert.DeserializeObject<ProductUnit>(jsonString.ToString());
-
-            //string json = JsonConvert.SerializeObject(tran, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Insert", httpContent));
 
             return Json(task);
         }
@@ -98,11 +87,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Update", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Update", httpContent));
 
             return Json(task);
         }
@@ -111,11 +98,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Delete", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Delete", httpContent));
 
             return Json(task);
         }
@@ -124,25 +109,25 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<RdDocument> tran = new List<RdDocument>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "ProductUnitNo," +
-                            "ProductUnitErp," +
-                            "ProductUnitRd," +
-                            "ProductUnitDescription," +
+                            "RdDocumentNo," +
+                            "RdDocumentCode," +
+                            "RdDocumentNameTh," +
+                            "RdDocumentNameEn," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -154,10 +139,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.ProductUnitNo}," +
-                                $"{item.ProductUnitErp}," +
-                                $"{item.ProductUnitRd}," +
-                                $"{item.ProductUnitDescription}," +
+                                $"{item.RdDocumentNo}," +
+                                $"{item.RdDocumentCode}," +
+                                $"{item.RdDocumentNameTh}," +
+                                $"{item.RdDocumentNameEn}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +

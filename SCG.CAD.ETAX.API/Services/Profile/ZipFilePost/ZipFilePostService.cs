@@ -5,7 +5,7 @@
 
         readonly DatabaseContext _dbContext = new();
 
-
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
 
         public Response GET_LIST()
         {
@@ -73,6 +73,9 @@
             {
                 using (_dbContext)
                 {
+                    param.CreateDate = dtNow;
+                    param.UpdateDate = dtNow;
+
                     _dbContext.zipFilePost.Add(param);
                     _dbContext.SaveChanges();
 
@@ -105,7 +108,7 @@
                         update.ZipTransactionNo = param.ZipFilePostNo;
                         update.ZipFileStatus = param.ZipFileStatus;
                         update.UpdateBy = param.UpdateBy;
-                        update.UpdateDate = param.UpdateDate;
+                        update.UpdateDate = dtNow;
 
                         _dbContext.SaveChanges();
 

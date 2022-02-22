@@ -1,14 +1,11 @@
-﻿using ClosedXML.Excel;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SCG.CAD.ETAX.MODEL;
-using SCG.CAD.ETAX.UTILITY;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
-    public class ProductUnitController : Controller
+    public class ProfileEmailTypeController : Controller
     {
+
+
         public IActionResult Index()
         {
             return View();
@@ -24,28 +21,39 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+
+
         public async Task<JsonResult> Detail(int id)
         {
-            List<ProductUnit> tran = new List<ProductUnit>();
-
-            var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetDetail?id= " + id + " "));
+            List<ProfileEmailType> tran = new List<ProfileEmailType>();
 
             Response resp = new Response();
 
             var result = "";
 
-            if (task.STATUS)
+            try
             {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailType/GetDetail?id= " + id + " "));
 
-                tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                if (task.STATUS)
+                {
 
-                result = JsonConvert.SerializeObject(tran[0]);
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailType>>(task.OUTPUT_DATA.ToString());
 
+                    result = JsonConvert.SerializeObject(tran[0]);
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
             }
-            else
+
+            catch (Exception ex)
             {
-                ViewBag.Error = task.MESSAGE;
+                Console.WriteLine(ex.InnerException);
             }
+
             return Json(result);
         }
 
@@ -53,15 +61,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<ProfileEmailType> tran = new List<ProfileEmailType>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailType/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailType>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -81,15 +89,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //ProductUnit tran = new ProductUnit();
-
-            //tran = JsonConvert.DeserializeObject<ProductUnit>(jsonString.ToString());
-
-            //string json = JsonConvert.SerializeObject(tran, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileEmailType/Insert", httpContent));
 
             return Json(task);
         }
@@ -98,11 +100,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Update", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileEmailType/Update", httpContent));
 
             return Json(task);
         }
@@ -111,11 +111,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Delete", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileEmailType/Delete", httpContent));
 
             return Json(task);
         }
@@ -124,25 +122,23 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<ProfileEmailType> tran = new List<ProfileEmailType>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailType/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailType>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "ProductUnitNo," +
-                            "ProductUnitErp," +
-                            "ProductUnitRd," +
-                            "ProductUnitDescription," +
+                            "EmailTypeNo," +
+                            "EmailTypeName," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -150,14 +146,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "Isactive");
 
 
-
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.ProductUnitNo}," +
-                                $"{item.ProductUnitErp}," +
-                                $"{item.ProductUnitRd}," +
-                                $"{item.ProductUnitDescription}," +
+                                $"{item.EmailTypeNo}," +
+                                $"{item.EmailTypeName}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
@@ -182,9 +175,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 Console.WriteLine(ex.InnerException.ToString());
             }
 
-            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProductUnit.csv");
+            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileEmailType.csv");
 
         }
+
+
 
     }
 }

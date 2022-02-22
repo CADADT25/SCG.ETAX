@@ -5,6 +5,8 @@ namespace SCG.CAD.ETAX.API.Services
     {
         readonly DatabaseContext _dbContext = new();
 
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+
         OutputOnDbModel resultData = new OutputOnDbModel();
         sqlTaxCode sqlFactory = new sqlTaxCode();
 
@@ -95,6 +97,9 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 using (_dbContext)
                 {
+                    param.CreateDate = dtNow;
+                    param.UpdateDate = dtNow;
+
                     _dbContext.taxCode.Add(param);
                     _dbContext.SaveChanges();
 
@@ -127,7 +132,7 @@ namespace SCG.CAD.ETAX.API.Services
                         update.TaxCodeRd = param.TaxCodeRd;
                         update.TaxCodeDescription = param.TaxCodeDescription;
                         update.UpdateBy = param.UpdateBy;
-                        update.UpdateDate = param.UpdateDate;
+                        update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
 
                         _dbContext.SaveChanges();

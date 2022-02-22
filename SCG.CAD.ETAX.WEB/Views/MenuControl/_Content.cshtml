@@ -13,7 +13,20 @@
 
         $("#li-btnCallPageProductUnit").addClass("active");
 
-        $("#liaaa").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+
+        $.unblockUI();
+
+    });
+
+    $("#btn-btnCallPageTaxCode").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
+
+        $("#li-btnCallPageTaxCode").addClass("active");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
 
         $.unblockUI();
 

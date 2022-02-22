@@ -14,32 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Etax\CancelZipHeader\" />
-    <Folder Include="Controllers\Etax\CancelZipLine\" />
-    <Folder Include="Controllers\Etax\DocumentCode\" />
-    <Folder Include="Controllers\Etax\NewsBoard\" />
-    <Folder Include="Controllers\Etax\ProductUnit\" />
-    <Folder Include="Controllers\Etax\ProfileCertificate\" />
-    <Folder Include="Controllers\Etax\ProfileCompany\" />
-    <Folder Include="Controllers\Etax\ProfileCustomer\" />
-    <Folder Include="Controllers\Etax\ProfileEmailTemplate\" />
-    <Folder Include="Controllers\Etax\ProfileEmailType\" />
-    <Folder Include="Controllers\Etax\ProfileIsActive\" />
-    <Folder Include="Controllers\Etax\ProfilePartner\" />
-    <Folder Include="Controllers\Etax\ProfileSeller\" />
-    <Folder Include="Controllers\Etax\ProfileStatus\" />
-    <Folder Include="Controllers\Etax\RdDocument\" />
-    <Folder Include="Controllers\Etax\TaxCode\" />
-    <Folder Include="Controllers\Etax\TransactionDescription\" />
-    <Folder Include="Controllers\Etax\ZipFileConfig\" />
-    <Folder Include="Controllers\Etax\ZipFilePost\" />
-    <Folder Include="Controllers\Etax\ZipFileTransaction\" />
-    <Folder Include="Controllers\Etax\ZipFileType\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,6 +4,8 @@
     {
 
         readonly DatabaseContext _dbContext = new();
+
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
         public Response GET_LIST()
         {
             Response resp = new Response();
@@ -70,6 +72,9 @@
             {
                 using (_dbContext)
                 {
+                    param.CreateDate = dtNow;
+                    param.UpdateDate = dtNow;
+
                     _dbContext.cancelZipLine.Add(param);
                     _dbContext.SaveChanges();
 
@@ -102,7 +107,7 @@
                         update.BillingNo = param.BillingNo;
                         update.TransactionNo = param.TransactionNo;
                         update.UpdateBy = param.UpdateBy;
-                        update.UpdateDate = param.UpdateDate;
+                        update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
 
                         _dbContext.SaveChanges();

@@ -1,3 +1,10 @@
+global using ClosedXML.Excel;
+global using Microsoft.AspNetCore.Mvc;
+global using Newtonsoft.Json;
+global using SCG.CAD.ETAX.MODEL;
+global using SCG.CAD.ETAX.UTILITY;
+global using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
