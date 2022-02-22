@@ -8,24 +8,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateTaxCode" data-toggle="modal" data-target="#modalCreateTaxCode" class="pointer btn btn-icon icon-left text-white btn-primary">
+                <a id="btnCallModalCreateRdDocument" data-toggle="modal" data-target="#modalCreateRdDocument" class="pointer btn btn-icon icon-left text-white btn-primary">
                     <i class="fas fa-plus"></i> Cerate New
                 </a>
                 &nbsp;&nbsp;
-                <a id="btnExportData" onclick="ExportTaxCode()" class="pointer btn btn-icon icon-left text-white btn-success">
+                <a id="btnExportData" onclick="ExportRdDocument()" class="pointer btn btn-icon icon-left text-white btn-success">
                     <i class="fas fa-file-export"></i> Export (.csv)
                 </a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped" id="tbTaxCodeMain">
+                    <table class="table table-striped" id="tbRdDocumentMain">
                         <thead>
                             <tr>
                                 <th class="text-center">PK Key</th>
                                 <th class="text-center">No</th>
-                                <th>ERP</th>
-                                <th>Revenue</th>
-                                <th>Description</th>
+                                <th>Code</th>
+                                <th>Name (TH)</th>
+                                <th>Name (EN)</th>
                                 <th>IsActive</th>
                                 <th></th>
 @*                                <th></th>

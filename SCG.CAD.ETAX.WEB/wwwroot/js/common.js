@@ -1,4 +1,6 @@
-﻿function fnSweetAlert_SaveSuccess() {
+﻿
+
+function fnSweetAlert_SaveSuccess() {
     Swal.fire({
         type: 'success',
         title: 'Your work has been saved',

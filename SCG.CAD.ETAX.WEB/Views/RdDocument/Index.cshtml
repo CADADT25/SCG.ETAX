@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "TaxCode Profile";
+    ViewData["Title"] = "Revenue Document Profile";
     Layout = null;
 }
 
@@ -10,7 +10,7 @@
 
 <div class="section-body">
 
-    @await Html.PartialAsync("~/Views/TaxCode/_Content.cshtml")
+    @await Html.PartialAsync("~/Views/RdDocument/_Content.cshtml")
 
 </div>
 
@@ -19,19 +19,19 @@
 
      $(document).ready(function () {
 
-        RenderTaxCode();
+        RenderRdDocument();
 
-         $('#toggleUpdateTaxCode').change(function() {
-            $('#toggleUpdateTaxCode-event').html('Toggle: ' + $(this).prop('checked'))
+         $('#toggleUpdateRdDocument').change(function() {
+            $('#toggleUpdateRdDocument-event').html('Toggle: ' + $(this).prop('checked'))
         })
 
     });
 
 
     
-    function RenderTaxCode(){
+    function RenderRdDocument(){
 
-        var table = $("#tbTaxCodeMain").DataTable({
+        var table = $("#tbRdDocumentMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -41,7 +41,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "TaxCode")",
+                url: "@Url.Action("List", "RdDocument")",
                 type: "POST",
                 datatype: "json"
             },
@@ -50,7 +50,7 @@
             "columns": [
 
                 {
-                    data: "taxCodeNo",
+                    data: "RdDocumentNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -64,15 +64,15 @@
                     }
                 },
                 {
-                    data: "taxCodeErp",
+                    data: "RdDocumentCode",
                     width: "20%"
                 },
                 {
-                    data: "taxCodeRd",
+                    data: "RdDocumentNameTh",
                     width: "20%"
                 },
                 {
-                    data: "taxCodeDescription",
+                    data: "RdDocumentNameEn",
                     width: "10%"
                 },
                 {
@@ -100,45 +100,45 @@
             ]
         });
 
-        EditTaxCode(table);
-        DeleteTaxCode(table);
+        EditRdDocument(table);
+        DeleteRdDocument(table);
     }
 
-    function fnInsertTaxCode(){
-        if ($('#txtInsertTaxCodeErp').val() != '' || $('#txtInsertTaxCodeRd').val() != '') {
-            callTaxCodeInsertController();
+    function fnInsertRdDocument(){
+        if ($('#txtInsertRdDocumentCode').val() != '' || $('#txtInsertRdDocumentNameTH').val() != '') {
+            callRdDocumentInsertController();
         } 
         else {
-            validateTaxCode();
+            validateRdDocument();
         }
-        callTaxCodeIndex();
+        callRdDocumentIndex();
     }
 
-    function fnUpdateTaxCode(){
-        if ($('#txtUpdateTaxCodeErp').val() != '' || $('#txtUpdateTaxCodeRd').val() != '') {
-            callTaxCodeUpdateController();
+    function fnUpdateRdDocument(){
+        if ($('#txtUpdateRdDocumentCode').val() != '' || $('#txtUpdateRdDocumentNameTH').val() != '') {
+            callRdDocumentUpdateController();
         } 
         else {
-            validateTaxCode();
+            validateRdDocument();
         }
-        callTaxCodeIndex();
+        callRdDocumentIndex();
     }
 
-    function EditTaxCode(table){
+    function EditRdDocument(table){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-edit', function () {
+        $('#tbRdDocumentMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callTaxCodeGetDetailController(getPK);
+            callRdDocumentGetDetailController(getPK);
         });
     }
 
-    function DeleteTaxCode(table){
+    function DeleteRdDocument(table){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-delete', function () {
+        $('#tbRdDocumentMain').on('click', 'td.editor-delete', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
@@ -157,18 +157,18 @@
                 buttonsStyling: false,
                 }).then(function (result) {
                     if (result) {
-                        callTaxCodeDeleteController(getPK);
-                        callTaxCodeIndex();
+                        callRdDocumentDeleteController(getPK);
+                        callRdDocumentIndex();
                       }
                     })
         });
     }
 
-    function ExportTaxCode(){
+    function ExportRdDocument(){
 
         $.blockUI();
 
-        callTaxCodeExportController();
+        callRdDocumentExportController();
 
         $.unblockUI();
     }
@@ -177,39 +177,39 @@
     
     // [Begin] Ajax call Controller 
 
-    function callTaxCodeGetDetailController(getPK){
+    function callRdDocumentGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "TaxCode")",
+            url: "@Url.Action("Detail", "RdDocument")",
             data: { id : getPK },
             //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
-                document.getElementById('txtUpdateTaxCodeNo').value = data.TaxCodeNo;
-                document.getElementById('txtUpdateTaxCodeErp').value = data.TaxCodeErp;
-                document.getElementById('txtUpdateTaxCodeRd').value = data.TaxCodeRd;            
-                document.getElementById('txtUpdatetTaxCodeDescription').value = data.TaxCodeDescription;
+                document.getElementById('txtUpdateRdDocumentNo').value = data.RdDocumentNo;
+                document.getElementById('txtUpdateRdDocumentCode').value = data.RdDocumentCode;
+                document.getElementById('txtUpdateRdDocumentNameTH').value = data.RdDocumentNameTh;            
+                document.getElementById('txtUpdateRdDocumentNameEN').value = data.RdDocumentNameEn;
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateTaxCode').bootstrapToggle('on');
+                    $('#toggleUpdateRdDocument').bootstrapToggle('on');
                 }
                 else{
-                    $('#toggleUpdateTaxCode').bootstrapToggle('off');
+                    $('#toggleUpdateRdDocument').bootstrapToggle('off');
                 }
 
-                $("#modalUpdateTaxCode").modal('show');
+                $("#modalUpdateRdDocument").modal('show');
                 
             }
         });
     }
 
-    function callTaxCodeInsertController(){
+    function callRdDocumentInsertController(){
 
         var IsActive = 1;
 
-        if($('#toggleInsertTaxCode').prop('checked')){
+        if($('#toggleInsertRdDocument').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -218,9 +218,9 @@
 
         var model = new Object();
 
-        model.TaxCodeErp = $('#txtInsertTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtInsertTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtInsertTaxCodeDescription').val();
+        model.RdDocumentCode = $('#txtInsertRdDocumentCode').val();
+        model.RdDocumentNameTh = $('#txtInsertRdDocumentNameTH').val();
+        model.RdDocumentNameEn = $('#txtInsertRdDocumentNameEN').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -231,7 +231,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "TaxCode")",
+            url: "@Url.Action("Insert", "RdDocument")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -241,22 +241,22 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertTaxCodeErp').value = '';
-                    document.getElementById('txtInsertTaxCodeRd').value = '';
-                    document.getElementById('txtInsertTaxCodeDescription').value = '';
+                    document.getElementById('txtInsertRdDocumentCode').value = '';
+                    document.getElementById('txtInsertRdDocumentNameTH').value = '';
+                    document.getElementById('txtInsertRdDocumentNameEn').value = '';
 
-                    $("#modalCreateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateRdDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
                 }
 
             }
         });
     }
 
-    function callTaxCodeUpdateController(){
+    function callRdDocumentUpdateController(){
         
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateTaxCode-event').text();
+        var getToggle = $('#toggleUpdateRdDocument-event').text();
 
         if(getToggle.includes("true")){
             IsActive = 1;
@@ -268,10 +268,10 @@
 
         var model = new Object();
 
-        model.TaxCodeNo = $('#txtUpdateTaxCodeNo').val();
-        model.TaxCodeErp = $('#txtUpdateTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtUpdateTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtUpdatetTaxCodeDescription').val();
+        model.RdDocumentNo = $('#txtUpdateRdDocumentNo').val();
+        model.RdDocumentCode = $('#txtUpdateRdDocumentCode').val();
+        model.RdDocumentNameTh = $('#txtUpdateRdDocumentNameTH').val();
+        model.RdDocumentNameEn = $('#txtUpdateRdDocumentNameEN').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -282,7 +282,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "TaxCode")",
+            url: "@Url.Action("Update", "RdDocument")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -292,24 +292,24 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateTaxCodeErp').value = '';
-                    document.getElementById('txtUpdateTaxCodeRd').value = '';
-                    document.getElementById('txtUpdatetTaxCodeDescription').value = '';
+                    document.getElementById('txtUpdateRdDocumentCode').value = '';
+                    document.getElementById('txtUpdateRdDocumentNameTH').value = '';
+                    document.getElementById('txtUpdateRdDocumentNameEN').value = '';
 
-                    $("#modalUpdateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateRdDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
                 }
             }
         });
     }
 
-    function callTaxCodeDeleteController(getPK){
+    function callRdDocumentDeleteController(getPK){
 
         var model = new Object();
 
-        model.TaxCodeNo = getPK;
-        model.TaxCodeErp = "";
-        model.TaxCodeRd = "";
-        model.TaxCodeDescription = "";
+        model.RdDocumentNo = getPK;
+        model.RdDocumentCode = "";
+        model.RdDocumentNameTh = "";
+        model.RdDocumentNameEn = "";
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -320,7 +320,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Delete", "TaxCode")",
+            url: "@Url.Action("Delete", "RdDocument")",
             data: { jsonString : getJsonString },
             //contentType: "application/json; charset=utf-8",
             dataType: "text",
@@ -333,10 +333,10 @@
         });
     }
 
-    function callTaxCodeExportController(){
+    function callRdDocumentExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "TaxCode")",
+            url: "@Url.Action("ExportToCsv", "RdDocument")",
             //data: { id : getPK },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
@@ -350,7 +350,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-TaxCode.csv";
+                a.download = "scg-etax-RdDocument.csv";
 
                 document.body.appendChild(a);
 
@@ -364,10 +364,10 @@
 
 
 
-    function callTaxCodeIndex() {
+    function callRdDocumentIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
+            $("#contentPartial").load("@Url.Action("Index", "RdDocument")");
             $.unblockUI();
         }, 500);
     }

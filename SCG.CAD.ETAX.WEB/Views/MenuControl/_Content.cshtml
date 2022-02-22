@@ -12,24 +12,38 @@
         $("#contentPartial").load("@Url.Action("Index", "ProductUnit")");
 
         $("#li-btnCallPageProductUnit").addClass("active");
-
         $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
 
         $.unblockUI();
-
     });
+
+
 
     $("#btn-btnCallPageTaxCode").click(function () {
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
 
-        $("#li-btnCallPageTaxCode").addClass("active");
-
         $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").addClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
 
         $.unblockUI();
+    });
 
+
+
+    $("#btn-btnCallPageRdDocument").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "RdDocument")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").addClass("active");
+
+        $.unblockUI();
     });
 
 

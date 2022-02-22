@@ -23,9 +23,9 @@
 
         [HttpGet]
         [Route("GetDetail")]
-        public IActionResult GetTaxCodeDetail(int taxCodeNo)
+        public IActionResult GetTaxCodeDetail(int id)
         {
-            var result = repo.GET_DETAIL(taxCodeNo).Result;
+            var result = repo.GET_DETAIL(id).Result;
 
             return Ok(result);
         }

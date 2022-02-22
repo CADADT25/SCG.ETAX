@@ -54,7 +54,7 @@ namespace SCG.CAD.ETAX.UTILITY
 
                     HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
 
-                    //var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
+                    var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
 
 
                     if (result.IsSuccessStatusCode)
