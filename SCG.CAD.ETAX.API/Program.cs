@@ -8,6 +8,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using SCG.CAD.ETAX.API.Repositories;
 global using SCG.CAD.ETAX.API.Services;
 global using System.Data;
+global using SCG.CAD.ETAX.MODEL.etaxModel;
 
 
 

@@ -14,6 +14,8 @@
         $("#li-btnCallPageProductUnit").addClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -28,6 +30,9 @@
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").addClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+
+
 
         $.unblockUI();
     });
@@ -42,6 +47,21 @@
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").addClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+
+        $.unblockUI();
+    });
+
+    $("#btn-btnCallPageDocumentCode").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "DocumentCode")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").addClass("active");
+
 
         $.unblockUI();
     });

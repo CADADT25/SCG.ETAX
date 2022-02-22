@@ -76,6 +76,7 @@
     @await Html.PartialAsync("~/Views/ProductUnit/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/TaxCode/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/RdDocument/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/DocumentCode/_Modal.cshtml")
 
 
     <!-- General JS Scripts -->
@@ -100,7 +101,7 @@
     <script src="~/assets/js/scripts/extensions/sweet-alerts"></script>
 
     <script src="~/js/common.js"></script>
-    <script src="~/js/validate.js"></script>
+    @*<script src="~/js/validate.js"></script>*@
 
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>

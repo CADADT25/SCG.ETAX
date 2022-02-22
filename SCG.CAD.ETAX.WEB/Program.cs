@@ -4,6 +4,7 @@ global using Newtonsoft.Json;
 global using SCG.CAD.ETAX.MODEL;
 global using SCG.CAD.ETAX.UTILITY;
 global using System.Text;
+global using SCG.CAD.ETAX.MODEL.etaxModel;
 
 var builder = WebApplication.CreateBuilder(args);
 

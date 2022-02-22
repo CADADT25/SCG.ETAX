@@ -42,7 +42,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(MODEL.CancelZipHeader param)
+        public async Task<Response> INSERT(CancelZipHeader param)
         {
             Response resp = new Response();
 
@@ -61,7 +61,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(MODEL.CancelZipHeader param)
+        public async Task<Response> UPDATE(CancelZipHeader param)
         {
             Response resp = new Response();
 
@@ -80,7 +80,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(MODEL.CancelZipHeader param)
+        public async Task<Response> DELETE(CancelZipHeader param)
         {
             Response resp = new Response();
 

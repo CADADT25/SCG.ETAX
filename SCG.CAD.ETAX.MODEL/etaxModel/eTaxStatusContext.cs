@@ -1,4 +1,9 @@
-﻿namespace SCG.CAD.ETAX.MODEL.etaxModel
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public partial class eTaxStatusContext : DbContext
     {
@@ -37,6 +42,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=SCCBSTAXQDB1;Database=eTaxStatus;Trusted_Connection=True;");
             }
         }
@@ -178,7 +184,9 @@
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.NewsBoardBody).HasColumnName("newsBoardBody");
 
@@ -680,7 +688,9 @@
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
-                entity.Property(e => e.RdDocumentCode).HasColumnName("rdDocumentCode");
+                entity.Property(e => e.RdDocumentCode)
+                    .HasMaxLength(20)
+                    .HasColumnName("rdDocumentCode");
 
                 entity.Property(e => e.RdDocumentNameEn)
                     .HasMaxLength(250)

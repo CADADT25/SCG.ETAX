@@ -1,12 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 
-namespace SCG.CAD.ETAX.MODEL
+namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public partial class RdDocument
     {
         [Key]
         public int RdDocumentNo { get; set; }
-        public int? RdDocumentCode { get; set; }
+        public string? RdDocumentCode { get; set; }
         public string? RdDocumentNameTh { get; set; }
         public string? RdDocumentNameEn { get; set; }
         public string CreateBy { get; set; } = null!;

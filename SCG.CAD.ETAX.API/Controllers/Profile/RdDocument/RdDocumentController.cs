@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {

@@ -18,6 +18,10 @@
     // Not requierd
 
     $('#txtInsertProductUnitDescription').removeClass('form-control is-invalid').addClass('form-control is-valid');
+
+    //============================
+
+    
 }
 
 
@@ -65,4 +69,34 @@ function validateRdDocument() {
     // Not requierd
 
     $('#txtInsertRdDocumentNameEN').removeClass('form-control is-invalid').addClass('form-control is-valid');
+}
+
+
+function validateDocumentCode() {
+
+    // required field
+    if ($('#txtInsertDocumentCodeErpSource').val() != '') {
+        $('#txtInsertDocumentCodeErpSource').removeClass('form-control is-invalid').addClass('form-control is-valid');
+    }
+    else {
+        $('#txtInsertDocumentCodeErpSource').removeClass('form-control is-valid').addClass('form-control is-invalid');
+    }
+
+    if ($('#txtInsertDocumentCodeErp').val() != '') {
+        $('#txtInsertDocumentCodeErp').removeClass('form-control is-invalid').addClass('form-control is-valid');
+    }
+    else {
+        $('#txtInsertDocumentCodeErp').removeClass('form-control is-valid').addClass('form-control is-invalid');
+    }
+
+    if ($('#txtInsertDocumentCodeRd').val() != '') {
+        $('#txtInsertDocumentCodeRd').removeClass('form-control is-invalid').addClass('form-control is-valid');
+    }
+    else {
+        $('#txtInsertDocumentCodeRd').removeClass('form-control is-valid').addClass('form-control is-invalid');
+    }
+
+    // Not requierd
+
+    $('#txtInsertDocumentCodeDescription').removeClass('form-control is-invalid').addClass('form-control is-valid');
 }

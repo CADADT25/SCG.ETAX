@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Document Code";
+    Layout = null;
+}
+
+<script src="~/assets/validate/DocumentCodeValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateDocumentCode" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Source</label>
+                                    <input type="text" id="txtInsertDocumentCodeErpSource" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ERP</label>
+                                    <input type="text" id="txtInsertDocumentCodeErp" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Revenue</label>
+                                    <input type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtInsertDocumentCodeDescription" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertDocumentCode" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertDocumentCode-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertDocumentCode();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateDocumentCode" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateDocumentCodeNo" class="form-control">
+                                </div>
+
+                               <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Source</label>
+                                    <input type="text" id="txtUpdateDocumentCodeErpSource" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ERP</label>
+                                    <input type="text" id="txtUpdateDocumentCodeErp" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Revenue</label>
+                                    <input type="text" id="txtUpdateDocumentCodeRd" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtUpdateDocumentCodeDescription" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateDocumentCode" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateDocumentCode-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateDocumentCode();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -42,7 +42,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(MODEL.ProfileCompany param)
+        public async Task<Response> INSERT(ProfileCompany param)
         {
             Response resp = new Response();
 
@@ -61,7 +61,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(MODEL.ProfileCompany param)
+        public async Task<Response> UPDATE(ProfileCompany param)
         {
             Response resp = new Response();
 
@@ -80,7 +80,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(MODEL.ProfileCompany param)
+        public async Task<Response> DELETE(ProfileCompany param)
         {
             Response resp = new Response();
 

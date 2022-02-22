@@ -41,7 +41,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(MODEL.DocumentCode param)
+        public async Task<Response> INSERT(DocumentCode param)
         {
             Response resp = new Response();
             try
@@ -59,7 +59,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(MODEL.DocumentCode param)
+        public async Task<Response> UPDATE(DocumentCode param)
         {
             Response resp = new Response();
             try
@@ -77,7 +77,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(MODEL.DocumentCode param)
+        public async Task<Response> DELETE(DocumentCode param)
         {
             Response resp = new Response();
             try

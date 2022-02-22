@@ -115,7 +115,7 @@
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
 
                 if (task.STATUS)
                 {

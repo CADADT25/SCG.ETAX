@@ -1,0 +1,402 @@
+﻿@{
+    ViewData["Title"] = "Document Code Profile";
+    Layout = null;
+}
+
+<div class="section-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+
+<div class="section-body">
+
+    @await Html.PartialAsync("~/Views/DocumentCode/_Content.cshtml")
+
+</div>
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderDocumentCode();
+
+         $('#toggleUpdateDocumentCode').change(function() {
+            $('#toggleUpdateDocumentCode-event').html('Toggle: ' + $(this).prop('checked'))
+        })
+
+    });
+
+
+    
+    function RenderDocumentCode(){
+
+        var table = $("#tbDocumentCodeMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "DocumentCode")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "documentCodeNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "erpSource",
+                    width: "20%"
+                },
+                {
+                    data: "documentCodeErp",
+                    width: "20%"
+                },
+                {
+                    data: "documentCodeRd",
+                    width: "10%"
+                },
+                {
+                    data: "documentDescription",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditDocumentCode(table);
+        DeleteDocumentCode(table);
+    }
+
+    function fnInsertDocumentCode(){
+        debugger;
+
+        if ($('#txtInsertDocumentCodeErpSource').val() != '' || $('#txtInsertDocumentCodeErp').val() != '' || $('#txtInsertDocumentCodeRd').val() != '') {
+            callDocumentCodeInsertController();
+        } 
+        else {
+            validateInsertDocumentCode();
+        }
+        callDocumentCodeIndex();
+    }
+
+    function fnUpdateDocumentCode(){
+        if ($('#txtUpdateDocumentCodeErpSource').val() != '' || $('#txtUpdateDocumentCodeErp').val() != '' || $('#txtUpdateDocumentCodeRd').val() != '') {
+            callDocumentCodeUpdateController();
+        } 
+        else {
+            validateUpdateDocumentCode();
+        }
+        callDocumentCodeIndex();
+    }
+
+    function EditDocumentCode(table){
+
+        $('#tbDocumentCodeMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callDocumentCodeGetDetailController(getPK);
+        });
+    }
+
+    function DeleteDocumentCode(table){
+
+        $('#tbDocumentCodeMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callDocumentCodeDeleteController(getPK);
+                        callDocumentCodeIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportDocumentCode(){
+
+        $.blockUI();
+
+        callDocumentCodeExportController();
+
+        $.unblockUI();
+    }
+
+
+    
+    // [Begin] Ajax call Controller 
+
+    function callDocumentCodeGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "DocumentCode")",
+            data: { id : getPK },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+                document.getElementById('txtUpdateDocumentCodeNo').value = data.DocumentCodeNo;
+                document.getElementById('txtUpdateDocumentCodeErpSource').value = data.ErpSource;
+                document.getElementById('txtUpdateDocumentCodeErp').value = data.DocumentCodeErp;            
+                document.getElementById('txtUpdateDocumentCodeRd').value = data.DocumentCodeRd;
+                document.getElementById('txtUpdateDocumentCodeDescription').value = data.DocumentDescription;
+
+
+                if(data.Isactive == 1){
+                    $('#toggleUpdateDocumentCode').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateDocumentCode').bootstrapToggle('off');
+                }
+
+                $("#modalUpdateDocumentCode").modal('show');
+                
+            }
+        });
+    }
+
+    function callDocumentCodeInsertController(){
+
+        var IsActive = 1;
+
+        if($('#toggleInsertDocumentCode').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.ErpSource = $('#txtInsertDocumentCodeErpSource').val();
+        model.DocumentCodeErp = $('#txtInsertDocumentCodeErp').val();
+        model.DocumentCodeRd = $('#txtInsertDocumentCodeRd').val();
+        model.DocumentDescription = $('#txtInsertDocumentCodeDescription').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "DocumentCode")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                if(resp.OUTPUT_STATUS = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateDocumentCodeErpSource').value = '';
+                    document.getElementById('txtUpdateDocumentCodeErp').value = '';
+                    document.getElementById('txtUpdateDocumentCodeRd').value = '';
+                    document.getElementById('txtUpdateDocumentCodeDescription').value = '';
+
+                    $("#modalCreateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                }
+
+            }
+        });
+    }
+
+    function callDocumentCodeUpdateController(){
+        
+        var IsActive = 1;
+
+        var getToggle = $('#toggleUpdateDocumentCode-event').text();
+
+        if(getToggle.includes("true")){
+            IsActive = 1;
+        }
+        else
+        {
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.DocumentCodeNo = $('#txtUpdateDocumentCodeNo').val();
+        model.ErpSource = $('#txtUpdateDocumentCodeErpSource').val();
+        model.DocumentCodeErp = $('#txtUpdateDocumentCodeErp').val();
+        model.DocumentCodeRd = $('#txtUpdateDocumentCodeRd').val();
+        model.DocumentDescription = $('#txtUpdateDocumentCodeDescription').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "DocumentCode")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                if(resp.OUTPUT_STATUS = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateDocumentCodeErpSource').value = '';
+                    document.getElementById('txtUpdateDocumentCodeErp').value = '';
+                    document.getElementById('txtUpdateDocumentCodeRd').value = '';
+                    document.getElementById('txtUpdateDocumentCodeDescription').value = '';
+
+
+                    $("#modalUpdateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                }
+            }
+        });
+    }
+
+    function callDocumentCodeDeleteController(getPK){
+
+        var model = new Object();
+
+
+        model.DocumentCodeNo = getPK;
+        model.ErpSource = "";
+        model.DocumentCodeErp = "";
+        model.DocumentCodeRd = "";
+        model.DocumentDescription = "";
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "DocumentCode")",
+            data: { jsonString : getJsonString },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function () {
+
+                    fnSweetAlert_DeleteSuccess();
+
+                    
+                }
+        });
+    }
+
+    function callDocumentCodeExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "DocumentCode")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-DocumentCode.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller 
+
+
+
+
+    function callDocumentCodeIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "DocumentCode")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+
+
+
+
+</script>

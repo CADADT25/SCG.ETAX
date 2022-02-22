@@ -1,5 +1,4 @@
-﻿
-namespace SCG.CAD.ETAX.WEB.Controllers
+﻿namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class CancelZipHeaderController : Controller
     {

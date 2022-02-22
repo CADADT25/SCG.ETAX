@@ -1,4 +1,7 @@
-﻿namespace SCG.CAD.ETAX.MODEL
+﻿using System;
+using System.Collections.Generic;
+
+namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public partial class NewsBoard
     {

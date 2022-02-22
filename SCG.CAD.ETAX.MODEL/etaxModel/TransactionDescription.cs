@@ -1,6 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 
-namespace SCG.CAD.ETAX.MODEL
+namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public partial class TransactionDescription
     {

@@ -41,7 +41,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(MODEL.ProfileCertificate param)
+        public async Task<Response> INSERT(ProfileCertificate param)
         {
             Response resp = new Response();
             try
@@ -59,7 +59,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(MODEL.ProfileCertificate param)
+        public async Task<Response> UPDATE(ProfileCertificate param)
         {
             Response resp = new Response();
             try
@@ -77,7 +77,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(MODEL.ProfileCertificate param)
+        public async Task<Response> DELETE(ProfileCertificate param)
         {
             Response resp = new Response();
             try

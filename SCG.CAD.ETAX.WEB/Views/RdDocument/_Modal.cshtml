@@ -3,17 +3,8 @@
     Layout = null;
 }
 
-<script type="text/javascript">
-        function isKeyEN(keyCode) {
-        return ((keyCode >= 58 && keyCode <= 122) || keyCode == 8 || keyCode == 13 || keyCode == 46)
-    }
-    function isKeyTH(keyCode) {
-        return ((keyCode >= 161) || keyCode == 8 || keyCode == 13 || keyCode == 46)
-    }
-    function isKeyNum(keyCode) {
-        return ((keyCode >= 48 && keyCode <= 57) || keyCode == 8 || keyCode == 13 || keyCode == 46)
-    }
-</script>
+    <script src="~/assets/validate/RdDocumentValidate.js"></script>
+
 
 @* [Begin] Modal Create *@
 <div class="modal fade" tabindex="-1" role="dialog" id="modalCreateRdDocument" data-backdrop="static" data-keyboard="false">
@@ -32,23 +23,23 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Document Code</label>
-                                    <input type="text" id="txtInsertRdDocumentCode" onkeyup="validateRdDocument();" class="form-control">
+                                    <input type="text" id="txtInsertRdDocumentCode" onkeyup="validateInsertRdDocument();" class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Name (TH)</label>
-                                    <input type="text" id="txtInsertRdDocumentNameTH" onkeyup="validateRdDocument();" class="form-control">
+                                    <input type="text" id="txtInsertRdDocumentNameTH" onkeyup="validateInsertRdDocument();" class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Name (EN)</label>
-                                    <input type="text" id="txtInsertRdDocumentNameEN" onkeyup="validateRdDocument();" class="form-control">
+                                    <input type="text" id="txtInsertRdDocumentNameEN" onkeyup="validateInsertRdDocument();" class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <div class="control-label">Toggle switch IsActive</div>
                                     <input id="toggleInsertRdDocument" checked type="checkbox" data-toggle="toggle">
-                                    <div id="toggleInsertRdDocument-event"></div>
+                                    <div hidden id="toggleInsertRdDocument-event"></div>
                                 </div>
 
                             </div>
@@ -71,7 +62,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -88,17 +79,17 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Document Code</label>
-                                    <input disabled type="text" id="txtUpdateRdDocumentCode" onkeyup="validateRdDocument();" class="form-control">
+                                    <input disabled type="text" id="txtUpdateRdDocumentCode" onkeyup="validateUpdateRdDocument();" class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Name (TH)</label>
-                                    <input type="text" id="txtUpdateRdDocumentNameTH" onkeyup="validateRdDocument();" onkeypress="return isKeyTH(event.keyCode);" class="form-control">
+                                    <input type="text" id="txtUpdateRdDocumentNameTH" onkeyup="validateUpdateRdDocument();" onkeypress="return isKeyTH(event.keyCode);" class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Name (EN)</label>
-                                    <input type="text" id="txtUpdateRdDocumentNameEN" onkeyup="validateRdDocument();" onkeypress="return isKeyEN(event.keyCode);" class="form-control">
+                                    <input type="text" id="txtUpdateRdDocumentNameEN" onkeyup="validateUpdateRdDocument();" onkeypress="return isKeyEN(event.keyCode);" class="form-control">
                                 </div>
 
 

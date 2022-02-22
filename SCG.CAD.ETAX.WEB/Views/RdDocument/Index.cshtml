@@ -50,7 +50,7 @@
             "columns": [
 
                 {
-                    data: "RdDocumentNo",
+                    data: "rdDocumentNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -64,15 +64,15 @@
                     }
                 },
                 {
-                    data: "RdDocumentCode",
+                    data: "rdDocumentCode",
                     width: "20%"
                 },
                 {
-                    data: "RdDocumentNameTh",
+                    data: "rdDocumentNameTh",
                     width: "20%"
                 },
                 {
-                    data: "RdDocumentNameEn",
+                    data: "rdDocumentNameEn",
                     width: "10%"
                 },
                 {
@@ -100,16 +100,25 @@
             ]
         });
 
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
         EditRdDocument(table);
         DeleteRdDocument(table);
     }
 
     function fnInsertRdDocument(){
+        debugger;
+
         if ($('#txtInsertRdDocumentCode').val() != '' || $('#txtInsertRdDocumentNameTH').val() != '') {
             callRdDocumentInsertController();
         } 
         else {
-            validateRdDocument();
+            validateInsertRdDocument();
         }
         callRdDocumentIndex();
     }
@@ -119,7 +128,7 @@
             callRdDocumentUpdateController();
         } 
         else {
-            validateRdDocument();
+            validateUpdateRdDocument();
         }
         callRdDocumentIndex();
     }
