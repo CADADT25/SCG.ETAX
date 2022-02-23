@@ -7,7 +7,7 @@
 
 
 @* [Begin] Modal Create *@
-<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateDocumentCode" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalCreateDocumentCode" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -34,7 +34,14 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Revenue</label>
-                                    <input type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                    <input hidden type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">
+
+                                    <select class="select2 form-control" id="ddlInsertDocumentCodeRd">
+                                        <option value="0">--- Select Revenue Department Code ---</option>
+                                    </select>
+
+                                    <label id="lbInsertDocumentCodeRdError"><spa class="text-danger">*** Please select value</spa></label>
+
                                 </div>
 
                                 <div class="form-group">
@@ -83,7 +90,7 @@
                                     <input disabled type="text" id="txtUpdateDocumentCodeNo" class="form-control">
                                 </div>
 
-                               <div class="form-group">
+                                <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Source</label>
                                     <input type="text" id="txtUpdateDocumentCodeErpSource" onkeyup="validateUpdateDocumentCode();" class="form-control">
                                 </div>

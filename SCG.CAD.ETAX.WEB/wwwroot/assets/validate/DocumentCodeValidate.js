@@ -15,13 +15,12 @@
         $('#txtInsertDocumentCodeErp').removeClass('form-control is-valid').addClass('form-control is-invalid');
     }
 
-    if ($('#txtInsertDocumentCodeRd').val() != '') {
-        $('#txtInsertDocumentCodeRd').removeClass('form-control is-invalid').addClass('form-control is-valid');
+    if ($('#ddlInsertDocumentCodeRd').val() != 0) {
+        $('#lbInsertDocumentCodeRdError').css('display:none');
     }
     else {
-        $('#txtInsertDocumentCodeRd').removeClass('form-control is-valid').addClass('form-control is-invalid');
+        $('#lbInsertDocumentCodeRdError').css('display:block');
     }
-
 
     // Not requierd
 

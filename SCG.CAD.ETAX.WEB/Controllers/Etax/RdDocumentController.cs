@@ -171,5 +171,34 @@
 
         }
 
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<RdDocument> tran = new List<RdDocument>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
+
     }
 }
