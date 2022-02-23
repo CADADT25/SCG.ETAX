@@ -661,13 +661,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
+                entity.Property(e => e.SellOrgCode)
+                    .HasMaxLength(250)
+                    .HasColumnName("sellOrgCode");
+
                 entity.Property(e => e.SellOrgDescripttion)
                     .HasMaxLength(500)
                     .HasColumnName("sellOrgDescripttion");
-
-                entity.Property(e => e.SellOrgName)
-                    .HasMaxLength(250)
-                    .HasColumnName("sellOrgName");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

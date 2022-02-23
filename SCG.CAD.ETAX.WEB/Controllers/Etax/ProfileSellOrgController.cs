@@ -137,7 +137,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     {
                         strBuilder.AppendLine("" +
                             "SellOrgNo," +
-                            "SellOrgName," +
+                            "SellOrgCode," +
                             "SellOrgDescripttion," +
                             "CreateBy," +
                             "CreateDate," +
@@ -151,7 +151,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         {
                             strBuilder.AppendLine($"" +
                                 $"{item.SellOrgNo}," +
-                                $"{item.SellOrgName}," +
+                                $"{item.SellOrgCode}," +
                                 $"{item.SellOrgDescripttion}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +

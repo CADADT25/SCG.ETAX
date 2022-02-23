@@ -7,7 +7,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int SellOrgNo { get; set; }
-        public string SellOrgName { get; set; } = null!;
+        public string SellOrgCode { get; set; } = null!;
         public string? SellOrgDescripttion { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }

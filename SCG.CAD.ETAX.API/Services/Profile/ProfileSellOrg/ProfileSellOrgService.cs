@@ -104,7 +104,7 @@
 
                     if (update != null)
                     {
-                        update.SellOrgName = param.SellOrgName;
+                        update.SellOrgCode = param.SellOrgCode;
                         update.SellOrgDescripttion = param.SellOrgDescripttion;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

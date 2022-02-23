@@ -64,7 +64,7 @@ namespace SCG.CAD.ETAX.UTILITY
                     }
                     else
                     {
-                        //var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
+                        var getException = result.Content.ReadAsStringAsync();
                     }
                 }
             }

@@ -24,22 +24,17 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Source</label>
-                                    <input type="text" id="txtInsertDocumentCodeErpSource" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                    <select class="select2 form-control" id="ddlInsertDocumentCodeErpSource"></select>
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>ERP</label>
-                                    <input type="text" id="txtInsertDocumentCodeErp" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                    <select class="select2 form-control" id="ddlInsertDocumentCodeErp"></select>
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Revenue</label>
-                                    @*<input hidden type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">*@
-
-                                    <select class="select2 form-control" id="ddlInsertDocumentCodeRd">
-                                        
-                                    </select>
-
+                                    <select class="select2 form-control" id="ddlInsertDocumentCodeRd"></select>
                                 </div>
 
                                 <div class="form-group">
@@ -69,7 +64,7 @@
 @* [End] Modal Create *@
 
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateDocumentCode" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalUpdateDocumentCode" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,21 +85,19 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Source</label>
-                                    <input type="text" id="txtUpdateDocumentCodeErpSource" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                    @*<input type="text" id="txtUpdateDocumentCodeErpSource" onkeyup="validateUpdateDocumentCode();" class="form-control">*@
+                                    <select class="select2 form-control" id="ddlUpdateDocumentCodeErpSource"></select>
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>ERP</label>
-                                    <input type="text" id="txtUpdateDocumentCodeErp" onkeyup="validateUpdateDocumentCode();" class="form-control">
+                                    @*<input type="text" id="txtUpdateDocumentCodeErp" onkeyup="validateUpdateDocumentCode();" class="form-control">*@
+                                    <select class="select2 form-control" id="ddlUpdateDocumentCodeErp"></select>
                                 </div>
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Revenue</label>
-
-                                     <select class="select2 form-control" id="ddlUpdateDocumentCodeRd">
-                                         
-                                    </select>
-
+                                     <select class="select2 form-control" id="ddlUpdateDocumentCodeRd"></select>
                                 </div>
 
                                 <div class="form-group">

@@ -28,9 +28,16 @@
     });
 
     $(window).on('load', function() {
-        $('select').select2({
+
+        $('#modalCreateDocumentCode').select2({
             dropdownParent: $('#modalCreateDocumentCode')
         });
+
+
+        $('#modalUpdateDocumentCode').select2({
+            dropdownParent: $('#modalCreateDocumentCode')
+        });
+
     });
 
 
@@ -123,16 +130,62 @@
 
     function fnDropdownDocumentCodeRd() {
 
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Data Source Code ---").appendTo("#ddlInsertDocumentCodeErpSource");
+
 
         $('<option>',
-            {
-                value: 0,
-            }).html("--- Select Revenue Department Code ---").appendTo("#ddlInsertDocumentCodeRd");
+        {
+            value: 0,
+        }).html("--- Select Erp Code ---").appendTo("#ddlInsertDocumentCodeErp");
 
-            // $('<option>',
-            //{
-            //    value: 0,
-            //}).html("--- Select Revenue Department Code ---").appendTo("#ddlUpdateDocumentCodeRd");
+            
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Revenue Department Code ---").appendTo("#ddlInsertDocumentCodeRd");
+
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.dataSourceName,
+                        text: data.dataSourceName
+                    }).html(data.dataSourceName).appendTo("#ddlInsertDocumentCodeErpSource");
+            });
+
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.dataSourceName,
+                        text: data.dataSourceName
+                    }).html(data.dataSourceName).appendTo("#ddlUpdateDocumentCodeErpSource");
+            });
+        })        
+
+
+        $.getJSON("@Url.Action("DropDownList", "ErpDocument")", function (data) {
+
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.erpDocumentCode,
+                        text: data.erpDocumentCode
+                    }).html(data.erpDocumentCode).appendTo("#ddlInsertDocumentCodeErp");
+            });
+
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.erpDocumentCode,
+                        text: data.erpDocumentCode
+                    }).html(data.erpDocumentCode).appendTo("#ddlUpdateDocumentCodeErp");
+            });
+        })
+
 
         $.getJSON("@Url.Action("DropDownList", "RdDocument")", function (data) {
 
@@ -143,6 +196,7 @@
                         text: data.rdDocumentCode
                     }).html(data.rdDocumentCode  + '&nbsp; (' + data.rdDocumentNameTh + ')').appendTo("#ddlInsertDocumentCodeRd");
             });
+
 
             $.each(data, function (i, data) {
                 $('<option>',
@@ -156,8 +210,8 @@
 
     function fnInsertCancelDocumentCode(){
 
-            document.getElementById('txtInsertDocumentCodeErpSource').value = '';
-            document.getElementById('txtInsertDocumentCodeErp').value = '';
+            $("#ddlInsertDocumentCodeErpSource").empty();
+            $("#ddlInsertDocumentCodeErp").empty();
             $("#ddlInsertDocumentCodeRd").empty();
             document.getElementById('txtInsertDocumentCodeDescription').value = '';
             $("#modalCreateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
@@ -165,8 +219,8 @@
 
     function fnUpdateCancelDocumentCode(){
 
-            document.getElementById('txtUpdateDocumentCodeErpSource').value = '';
-            document.getElementById('txtUpdateDocumentCodeErp').value = '';
+            $("#ddlUpdateDocumentCodeErpSource").empty();
+            $("#ddlUpdateDocumentCodeErp").empty();
             $("#ddlUpdateDocumentCodeRd").empty();
             document.getElementById('txtUpdateDocumentCodeDescription').value = '';
             $("#modalUpdateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
@@ -182,9 +236,14 @@
 
     function fnInsertDocumentCode(){
 
+        var DataSource = $('#ddlInsertDocumentCodeErpSource').val();
+
+        var DocumentCodeErp = $('#ddlInsertDocumentCodeErp').val();
+
         var DocumentCodeRd = $('#ddlInsertDocumentCodeRd').val();
 
-        if ( $('#txtInsertDocumentCodeErpSource').val() != '' &&  $('#txtInsertDocumentCodeErp').val() != '' && DocumentCodeRd != '0')
+
+        if ( DataSource != '0' &&  DocumentCodeErp != '0' && DocumentCodeRd != '0')
         {
             callDocumentCodeInsertController();
         }
@@ -196,9 +255,11 @@
 
     function fnUpdateDocumentCode(){
 
+        var DataSource = $('#ddlUpdateDocumentCodeErpSource').val();
+        var DocumentCodeErp = $('#ddlUpdateDocumentCodeErp').val();
         var DocumentCodeRd = $('#ddlUpdateDocumentCodeRd').val();
 
-        if ($('#txtUpdateDocumentCodeErpSource').val() != '' && $('#txtUpdateDocumentCodeErp').val() != '' && DocumentCodeRd != '0') {
+        if (DataSource != '0' && DocumentCodeErp != '0' && DocumentCodeRd != '0') {
             callDocumentCodeUpdateController();
         }
         else {
@@ -274,19 +335,39 @@
 
                 data = $.parseJSON(result)
                 document.getElementById('txtUpdateDocumentCodeNo').value = data.DocumentCodeNo;
-                document.getElementById('txtUpdateDocumentCodeErpSource').value = data.ErpSource;
-                document.getElementById('txtUpdateDocumentCodeErp').value = data.DocumentCodeErp;
 
+                document.getElementById('ddlUpdateDocumentCodeErpSource').value = data.ErpSource;
+                document.getElementById('ddlUpdateDocumentCodeErp').value = data.DocumentCodeErp;
                 document.getElementById('ddlUpdateDocumentCodeRd').value = data.DocumentCodeRd;
 
-                var temp = data.DocumentCodeRd;
+                var tempDataSource = data.ErpSource;
+                var mySelectDataSource = document.getElementById('ddlUpdateDocumentCodeErpSource');
 
-                var mySelect = document.getElementById('ddlUpdateDocumentCodeRd');
+                for(var i, j = 0; i = mySelectDataSource.options[j]; j++) {
+                    if(i.value == tempDataSource) {
+                        mySelectDataSource.selectedIndex = j;
+                        break;
+                    }
+                }
 
-                for(var i, j = 0; i = mySelect.options[j]; j++) {
 
-                    if(i.value == temp) {
-                        mySelect.selectedIndex = j;
+                var tempCodeErp = data.DocumentCodeErp;
+                var mySelectCodeErp = document.getElementById('ddlUpdateDocumentCodeErp');
+
+                for(var i, j = 0; i = mySelectCodeErp.options[j]; j++) {
+                    if(i.value == tempCodeErp) {
+                        mySelectCodeErp.selectedIndex = j;
+                        break;
+                    }
+                }
+
+
+                var tempCodeRd = data.DocumentCodeRd;
+                var mySelectCodeRd = document.getElementById('ddlUpdateDocumentCodeRd');
+
+                for(var i, j = 0; i = mySelectCodeRd.options[j]; j++) {
+                    if(i.value == tempCodeRd) {
+                        mySelectCodeRd.selectedIndex = j;
                         break;
                     }
                 }
@@ -320,8 +401,8 @@
 
         var model = new Object();
 
-        model.ErpSource = $('#txtInsertDocumentCodeErpSource').val();
-        model.DocumentCodeErp = $('#txtInsertDocumentCodeErp').val();
+        model.ErpSource = $('#ddlInsertDocumentCodeErpSource').val();
+        model.DocumentCodeErp = $('#ddlInsertDocumentCodeErp').val();
         model.DocumentCodeRd = $('#ddlInsertDocumentCodeRd').val();
         model.DocumentDescription = $('#txtInsertDocumentCodeDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
@@ -344,9 +425,9 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertDocumentCodeErpSource').value = '';
-                    document.getElementById('txtInsertDocumentCodeErp').value = '';
-                    document.getElementById('ddlInsertDocumentCodeRd').selectedIndex = 0;
+                    $("#ddlInsertDocumentCodeErpSource").empty();
+                    $("#ddlInsertDocumentCodeErp").empty();
+                    $("#ddlInsertDocumentCodeRd").empty();
                     document.getElementById('txtInsertDocumentCodeDescription').value = '';
 
 
@@ -376,8 +457,8 @@
         var model = new Object();
 
         model.DocumentCodeNo = $('#txtUpdateDocumentCodeNo').val();
-        model.ErpSource = $('#txtUpdateDocumentCodeErpSource').val();
-        model.DocumentCodeErp = $('#txtUpdateDocumentCodeErp').val();
+        model.ErpSource = $('#ddlUpdateDocumentCodeErpSource').val();
+        model.DocumentCodeErp = $('#ddlUpdateDocumentCodeErp').val();
         model.DocumentCodeRd = $('#ddlUpdateDocumentCodeRd').val();
         model.DocumentDescription = $('#txtUpdateDocumentCodeDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
@@ -400,9 +481,9 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateDocumentCodeErpSource').value = '';
-                    document.getElementById('txtUpdateDocumentCodeErp').value = '';
-                    document.getElementById('ddlUpdateDocumentCodeRd').selectedIndex = 0;
+                    $("#ddlUpdateDocumentCodeErpSource").empty();
+                    $("#ddlUpdateDocumentCodeErp").empty();
+                    $("#ddlUpdateDocumentCodeRd").empty();
                     document.getElementById('txtUpdateDocumentCodeDescription').value = '';
 
 

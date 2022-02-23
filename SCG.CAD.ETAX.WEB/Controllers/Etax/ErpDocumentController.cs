@@ -182,6 +182,36 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<ErpDocument> tran = new List<ErpDocument>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ErpDocument/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ErpDocument>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x => x.Isactive == 1).ToList();
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
 
     }
 }
