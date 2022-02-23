@@ -15,12 +15,6 @@
         $('#txtInsertDocumentCodeErp').removeClass('form-control is-valid').addClass('form-control is-invalid');
     }
 
-    if ($('#ddlInsertDocumentCodeRd').val() != 0) {
-        $('#lbInsertDocumentCodeRdError').css('display:none');
-    }
-    else {
-        $('#lbInsertDocumentCodeRdError').css('display:block');
-    }
 
     // Not requierd
 
@@ -43,13 +37,6 @@ function validateUpdateDocumentCode() {
     }
     else {
         $('#txtUpdateDocumentCodeErp').removeClass('form-control is-valid').addClass('form-control is-invalid');
-    }
-
-    if ($('#txtUpdateDocumentCodeRd').val() != '') {
-        $('#txtUpdateDocumentCodeRd').removeClass('form-control is-invalid').addClass('form-control is-valid');
-    }
-    else {
-        $('#txtUpdateDocumentCodeRd').removeClass('form-control is-valid').addClass('form-control is-invalid');
     }
 
     // Not requierd

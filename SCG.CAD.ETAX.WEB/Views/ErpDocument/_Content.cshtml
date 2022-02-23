@@ -8,30 +8,30 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateDocumentCode" onclick="callModalInsertDocumentCode();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                <a id="btnCallModalCreateErpDocument" onclick="callModalInsertErpDocument();" data-toggle="modal" data-target="#modalCreateErpDocument" class="pointer btn btn-icon icon-left text-white btn-primary">
                     <i class="fas fa-plus"></i> Cerate New
                 </a>
                 &nbsp;&nbsp;
-                <a id="btnExportData" onclick="ExportDocumentCode()" class="pointer btn btn-icon icon-left text-white btn-success">
+                <a id="btnExportData" onclick="ExportErpDocument()" class="pointer btn btn-icon icon-left text-white btn-success">
                     <i class="fas fa-file-export"></i> Export (.csv)
                 </a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped" id="tbDocumentCodeMain">
+                    <table class="table table-striped" id="tbErpDocumentMain">
                         <thead>
                             <tr>
                                 <th class="text-center">PK Key</th>
                                 <th class="text-center">No</th>
-                                <th>Source</th>
-                                <th>Erp</th>
-                                <th>Revenue</th>
-                                <th>Description</th>
+                                <th>Code</th>
+                                <th>Name (TH)</th>
+                                <th>Name (EN)</th>
                                 <th>IsActive</th>
                                 <th></th>
-@*                                <th></th>
+                                @*                                <th></th>
 
-*@                            </tr>
+                                *@
+                            </tr>
                         </thead>
                     </table>
                 </div>

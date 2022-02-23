@@ -5,13 +5,15 @@ namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentCodeController : ControllerBase
+    public class ProfileSellOrgController : ControllerBase
     {
-        private readonly IDocumentCodeRepository repo;
 
-        public DocumentCodeController()
+
+        private readonly IProfileSellOrgRepository repo;
+
+        public ProfileSellOrgController()
         {
-            repo = new DocumentCodeRepository();
+            repo = new ProfileSellOrgRepository();
         }
 
 
@@ -35,7 +37,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(DocumentCode param)
+        public IActionResult Insert(ProfileSellOrg param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -44,7 +46,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(DocumentCode param)
+        public IActionResult Update(ProfileSellOrg param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -53,11 +55,13 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(DocumentCode param)
+        public IActionResult Delete(ProfileSellOrg param)
         {
             var result = repo.DELETE(param).Result;
 
             return Ok(result);
         }
+
+
     }
 }

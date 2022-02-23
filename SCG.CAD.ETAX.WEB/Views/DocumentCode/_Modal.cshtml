@@ -34,13 +34,11 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Revenue</label>
-                                    <input hidden type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">
+                                    @*<input hidden type="text" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();" class="form-control">*@
 
                                     <select class="select2 form-control" id="ddlInsertDocumentCodeRd">
-                                        <option value="0">--- Select Revenue Department Code ---</option>
+                                        
                                     </select>
-
-                                    <label id="lbInsertDocumentCodeRdError"><spa class="text-danger">*** Please select value</spa></label>
 
                                 </div>
 
@@ -61,7 +59,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelDocumentCode();" >Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnInsertDocumentCode();">Save changes</button>
             </div>
         </div>
@@ -102,7 +100,11 @@
 
                                 <div class="form-group">
                                     <label><spa class="text-danger">* </spa>Revenue</label>
-                                    <input type="text" id="txtUpdateDocumentCodeRd" onkeyup="validateUpdateDocumentCode();" class="form-control">
+
+                                     <select class="select2 form-control" id="ddlUpdateDocumentCodeRd">
+                                         
+                                    </select>
+
                                 </div>
 
                                 <div class="form-group">
@@ -123,7 +125,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelDocumentCode()">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnUpdateDocumentCode();">Save changes</button>
             </div>
         </div>

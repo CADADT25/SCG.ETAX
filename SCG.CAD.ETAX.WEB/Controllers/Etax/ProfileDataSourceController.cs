@@ -1,6 +1,8 @@
-﻿namespace SCG.CAD.ETAX.WEB.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace SCG.CAD.ETAX.WEB.Controllers
 {
-    public class RdDocumentController : Controller
+    public class ProfileDataSourceController : Controller
     {
         public IActionResult Index()
         {
@@ -21,26 +23,35 @@
 
         public async Task<JsonResult> Detail(int id)
         {
-            List<RdDocument> tran = new List<RdDocument>();
-
-            var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetDetail?id= " + id + " "));
+            List<ProfileDataSource> tran = new List<ProfileDataSource>();
 
             Response resp = new Response();
 
             var result = "";
 
-            if (task.STATUS)
+            try
             {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetDetail?id= " + id + " "));
 
-                tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
+                if (task.STATUS)
+                {
 
-                result = JsonConvert.SerializeObject(tran[0]);
+                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
 
+                    result = JsonConvert.SerializeObject(tran[0]);
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
             }
-            else
+
+            catch (Exception ex)
             {
-                ViewBag.Error = task.MESSAGE;
+                Console.WriteLine(ex.InnerException);
             }
+
             return Json(result);
         }
 
@@ -48,15 +59,15 @@
         {
             Response resp = new Response();
 
-            List<RdDocument> tran = new List<RdDocument>();
+            List<ProfileDataSource> tran = new List<ProfileDataSource>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -78,7 +89,7 @@
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Insert", httpContent));
 
             return Json(task);
         }
@@ -89,7 +100,7 @@
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Update", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Update", httpContent));
 
             return Json(task);
         }
@@ -100,7 +111,7 @@
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/RdDocument/Delete", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Delete", httpContent));
 
             return Json(task);
         }
@@ -109,25 +120,24 @@
         {
             Response resp = new Response();
 
-            List<RdDocument> tran = new List<RdDocument>();
+            List<ProfileDataSource> tran = new List<ProfileDataSource>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "RdDocumentNo," +
-                            "RdDocumentCode," +
-                            "RdDocumentNameTh," +
-                            "RdDocumentNameEn," +
+                            "DataSourceNo," +
+                            "DataSourceName," +
+                            "DataSourceDescription," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -139,10 +149,9 @@
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.RdDocumentNo}," +
-                                $"{item.RdDocumentCode}," +
-                                $"{item.RdDocumentNameTh}," +
-                                $"{item.RdDocumentNameEn}," +
+                                $"{item.DataSourceNo}," +
+                                $"{item.DataSourceName}," +
+                                $"{item.DataSourceDescription}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
@@ -167,39 +176,10 @@
                 Console.WriteLine(ex.InnerException.ToString());
             }
 
-            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProductUnit.csv");
+            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileDataSource.csv");
 
         }
 
-        public async Task<JsonResult> DropDownList()
-        {
-            Response resp = new Response();
-
-            List<RdDocument> tran = new List<RdDocument>();
-
-            try
-            {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
-
-                if (task.STATUS)
-                {
-                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
-
-                    tran = tran.Where(x => x.Isactive == 1).ToList();
-                }
-                else
-                {
-                    ViewBag.Error = task.MESSAGE;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException);
-            }
-
-
-            return Json(tran);
-        }
 
 
     }

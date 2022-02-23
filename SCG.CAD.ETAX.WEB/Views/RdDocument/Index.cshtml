@@ -114,7 +114,7 @@
     function fnInsertRdDocument(){
         debugger;
 
-        if ($('#txtInsertRdDocumentCode').val() != '' || $('#txtInsertRdDocumentNameTH').val() != '') {
+        if ($('#txtInsertRdDocumentCode').val() != '' && $('#txtInsertRdDocumentNameTH').val() != '') {
             callRdDocumentInsertController();
         } 
         else {
@@ -124,7 +124,7 @@
     }
 
     function fnUpdateRdDocument(){
-        if ($('#txtUpdateRdDocumentCode').val() != '' || $('#txtUpdateRdDocumentNameTH').val() != '') {
+        if ($('#txtUpdateRdDocumentCode').val() != '' && $('#txtUpdateRdDocumentNameTH').val() != '') {
             callRdDocumentUpdateController();
         } 
         else {
@@ -254,7 +254,7 @@
                     document.getElementById('txtInsertRdDocumentNameTH').value = '';
                     document.getElementById('txtInsertRdDocumentNameEn').value = '';
 
-                    $("#modalCreateRdDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateRdDocument").modal('hide');
                 }
 
             }
@@ -305,7 +305,7 @@
                     document.getElementById('txtUpdateRdDocumentNameTH').value = '';
                     document.getElementById('txtUpdateRdDocumentNameEN').value = '';
 
-                    $("#modalUpdateRdDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateRdDocument").modal('hide');
                 }
             }
         });

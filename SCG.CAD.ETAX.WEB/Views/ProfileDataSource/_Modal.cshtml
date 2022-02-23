@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "DataSource";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileDataSourceValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateDataSource" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>DataSource Name</label>
+                                    <input type="text" id="txtInsertDataSourceName" onkeyup="validateInsertDataSource();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>DataSource Description</label>
+                                    <input type="text" id="txtInsertDataSourceDescription" onkeyup="validateInsertDataSource();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertDataSource" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertDataSource-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelDataSource();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertDataSource();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateDataSource" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateDataSourceNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>DataSource Name</label>
+                                    <input type="text" id="txtUpdateDataSourceName" onkeyup="validateUpdateDataSource();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>DataSource Description</label>
+                                    <input type="text" id="txtUpdateDataSourceDescription" onkeyup="validateUpdateDataSource();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateDataSource" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateDataSource-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelDataSource();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateDataSource();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

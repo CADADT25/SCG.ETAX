@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "TaxCode Profile";
+    ViewData["Title"] = "Profile DataSource Profile";
     Layout = null;
 }
 
@@ -10,7 +10,7 @@
 
 <div class="section-body">
 
-    @await Html.PartialAsync("~/Views/TaxCode/_Content.cshtml")
+    @await Html.PartialAsync("~/Views/ProfileDataSource/_Content.cshtml")
 
 </div>
 
@@ -19,19 +19,18 @@
 
      $(document).ready(function () {
 
-        RenderTaxCode();
+        RenderDataSource();
 
-         $('#toggleUpdateTaxCode').change(function() {
-            $('#toggleUpdateTaxCode-event').html('Toggle: ' + $(this).prop('checked'))
-        })
+         $('#toggleUpdateDataSource').change(function() {
+            $('#toggleUpdateDataSource-event').html('Toggle: ' + $(this).prop('checked'))
+        });
 
     });
 
 
-    
-    function RenderTaxCode(){
+    function RenderDataSource(){
 
-        var table = $("#tbTaxCodeMain").DataTable({
+        var table = $("#tbDataSourceMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -41,7 +40,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "TaxCode")",
+                url: "@Url.Action("List", "ProfileDataSource")",
                 type: "POST",
                 datatype: "json"
             },
@@ -50,7 +49,7 @@
             "columns": [
 
                 {
-                    data: "taxCodeNo",
+                    data: "dataSourceNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -64,16 +63,12 @@
                     }
                 },
                 {
-                    data: "taxCodeErp",
+                    data: "dataSourceName",
                     width: "20%"
                 },
                 {
-                    data: "taxCodeRd",
+                    data: "dataSourceDescription",
                     width: "20%"
-                },
-                {
-                    data: "taxCodeDescription",
-                    width: "10%"
                 },
                 {
                     data: "isactive",
@@ -100,7 +95,6 @@
             ]
         });
 
-
         table.on( 'order.dt search.dt', function () {
             table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                 cell.innerHTML = i+1;
@@ -108,45 +102,72 @@
         } ).draw();
 
 
-        EditTaxCode(table);
-        DeleteTaxCode(table);
+        EditDataSource(table);
+        DeleteDataSource(table);
     }
 
-    function fnInsertTaxCode(){
-        if ($('#txtInsertTaxCodeErp').val() != '' && $('#txtInsertTaxCodeRd').val() != '') {
-            callTaxCodeInsertController();
-        } 
-        else {
-            validateInsertTaxCode();
+
+    function fnInsertCancelDataSource(){
+
+            document.getElementById('txtInsertDataSourceName').value = '';
+            document.getElementById('txtInsertDataSourceDescription').value = '';
+
+            $("#modalCreateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function fnUpdateCancelDataSource(){
+
+            document.getElementById('txtUpdateDataSourceName').value = '';
+            document.getElementById('txtUpdateDataSourceDescription').value = '';
+
+            $("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function callModalInsertDataSource(){
+
+        $("#modalCreateDataSource").modal('show');
+
+    }
+
+    function fnInsertDataSource(){
+
+        if ( $('#txtInsertDataSourceName').val() != '')
+        {
+            callDataSourceInsertController();
         }
-        callTaxCodeIndex();
-    }
-
-    function fnUpdateTaxCode(){
-        if ($('#txtUpdateTaxCodeErp').val() != '' && $('#txtUpdateTaxCodeRd').val() != '') {
-            callTaxCodeUpdateController();
-        } 
         else {
-            validateUpdateTaxCode();
+            fnToastrInputDataFail();
         }
-        callTaxCodeIndex();
+        callDataSourceIndex();
     }
 
-    function EditTaxCode(table){
+    function fnUpdateDataSource(){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-edit', function () {
+        if ($('#txtUpdateDataSourceName').val() != '') {
+            callDataSourceUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+        callDataSourceIndex();
+    }
+
+    function EditDataSource(table){
+
+        $('#tbDataSourceMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callTaxCodeGetDetailController(getPK);
+            callDataSourceGetDetailController(getPK);
+
         });
     }
 
-    function DeleteTaxCode(table){
+    function DeleteDataSource(table){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-delete', function () {
+        $('#tbDataSourceMain').on('click', 'td.editor-delete', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
@@ -165,59 +186,58 @@
                 buttonsStyling: false,
                 }).then(function (result) {
                     if (result) {
-                        callTaxCodeDeleteController(getPK);
-                        callTaxCodeIndex();
+                        callDataSourceDeleteController(getPK);
+                        callDataSourceIndex();
                       }
                     })
         });
     }
 
-    function ExportTaxCode(){
+    function ExportDataSource(){
 
         $.blockUI();
 
-        callTaxCodeExportController();
+        callDataSourceExportController();
 
         $.unblockUI();
     }
 
 
-    
-    // [Begin] Ajax call Controller 
 
-    function callTaxCodeGetDetailController(getPK){
+    // [Begin] Ajax call Controller
+
+    function callDataSourceGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "TaxCode")",
+            url: "@Url.Action("Detail", "ProfileDataSource")",
             data: { id : getPK },
             //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
-                document.getElementById('txtUpdateTaxCodeNo').value = data.TaxCodeNo;
-                document.getElementById('txtUpdateTaxCodeErp').value = data.TaxCodeErp;
-                document.getElementById('txtUpdateTaxCodeRd').value = data.TaxCodeRd;            
-                document.getElementById('txtUpdatetTaxCodeDescription').value = data.TaxCodeDescription;
+                document.getElementById('txtUpdateDataSourceNo').value = data.DataSourceNo;
+                document.getElementById('txtUpdateDataSourceName').value = data.DataSourceName;
+                document.getElementById('txtUpdateDataSourceDescription').value = data.DataSourceDescription;
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateTaxCode').bootstrapToggle('on');
+                    $('#toggleUpdateDataSource').bootstrapToggle('on');
                 }
                 else{
-                    $('#toggleUpdateTaxCode').bootstrapToggle('off');
+                    $('#toggleUpdateDataSource').bootstrapToggle('off');
                 }
 
-                $("#modalUpdateTaxCode").modal('show');
-                
+                $("#modalUpdateDataSource").modal('show');
+
             }
         });
     }
 
-    function callTaxCodeInsertController(){
+    function callDataSourceInsertController(){
 
         var IsActive = 1;
 
-        if($('#toggleInsertTaxCode').prop('checked')){
+        if($('#toggleInsertDataSource').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -226,9 +246,8 @@
 
         var model = new Object();
 
-        model.TaxCodeErp = $('#txtInsertTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtInsertTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtInsertTaxCodeDescription').val();
+        model.DataSourceName = $('#txtInsertDataSourceName').val();
+        model.DataSourceDescription = $('#txtInsertDataSourceDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -239,7 +258,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "TaxCode")",
+            url: "@Url.Action("Insert", "ProfileDataSource")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -249,22 +268,22 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertTaxCodeErp').value = '';
-                    document.getElementById('txtInsertTaxCodeRd').value = '';
-                    document.getElementById('txtInsertTaxCodeDescription').value = '';
+                    document.getElementById('txtInsertDataSourceName').value = '';
+                    document.getElementById('txtInsertDataSourceDescription').value = '';
 
-                    $("#modalCreateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
                 }
 
             }
         });
     }
 
-    function callTaxCodeUpdateController(){
-        
+    function callDataSourceUpdateController(){
+
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateTaxCode-event').text();
+        var getToggle = $('#toggleUpdateDataSource-event').text();
 
         if(getToggle.includes("true")){
             IsActive = 1;
@@ -276,10 +295,9 @@
 
         var model = new Object();
 
-        model.TaxCodeNo = $('#txtUpdateTaxCodeNo').val();
-        model.TaxCodeErp = $('#txtUpdateTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtUpdateTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtUpdatetTaxCodeDescription').val();
+        model.DataSourceNo = $('#txtUpdateDataSourceNo').val();
+        model.DataSourceName = $('#txtUpdateDataSourceName').val();
+        model.DataSourceDescription = $('#txtUpdateDataSourceDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -290,7 +308,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "TaxCode")",
+            url: "@Url.Action("Update", "ProfileDataSource")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -300,24 +318,24 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateTaxCodeErp').value = '';
-                    document.getElementById('txtUpdateTaxCodeRd').value = '';
-                    document.getElementById('txtUpdatetTaxCodeDescription').value = '';
+                    document.getElementById('txtUpdateDataSourceName').value = '';
+                    document.getElementById('txtUpdateDataSourceDescription').value = '';
 
-                    $("#modalUpdateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
                 }
             }
         });
     }
 
-    function callTaxCodeDeleteController(getPK){
+    function callDataSourceDeleteController(getPK){
 
         var model = new Object();
 
-        model.TaxCodeNo = getPK;
-        model.TaxCodeErp = "";
-        model.TaxCodeRd = "";
-        model.TaxCodeDescription = "";
+
+        model.DataSourceNo = getPK;
+        model.DataSourceName = "";
+        model.DataSourceDescription = "";
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -328,7 +346,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Delete", "TaxCode")",
+            url: "@Url.Action("Delete", "ProfileDataSource")",
             data: { jsonString : getJsonString },
             //contentType: "application/json; charset=utf-8",
             dataType: "text",
@@ -336,15 +354,15 @@
 
                     fnSweetAlert_DeleteSuccess();
 
-                    
+
                 }
         });
     }
 
-    function callTaxCodeExportController(){
+    function callDataSourceExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "TaxCode")",
+            url: "@Url.Action("ExportToCsv", "ProfileDataSource")",
             //data: { id : getPK },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
@@ -358,7 +376,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-TaxCode.csv";
+                a.download = "scg-etax-DataSource.csv";
 
                 document.body.appendChild(a);
 
@@ -367,15 +385,15 @@
         });
     }
 
-    // [end] Ajax call Controller 
+    // [end] Ajax call Controller
 
 
 
 
-    function callTaxCodeIndex() {
+    function callDataSourceIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
+            $("#contentPartial").load("@Url.Action("Index", "ProfileDataSource")");
             $.unblockUI();
         }, 500);
     }

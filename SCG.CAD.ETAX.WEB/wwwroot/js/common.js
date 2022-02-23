@@ -1,4 +1,8 @@
-﻿
+﻿function fnToastrInputDataFail() {
+    toastr.warning('Please check input your data and try again !', { "showDuration": 500 });
+}
+
+
 
 function fnSweetAlert_SaveSuccess() {
     Swal.fire({

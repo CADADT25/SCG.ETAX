@@ -110,7 +110,7 @@
     }
 
      function fnInsertProductUnit(){
-        if ($('#txtInsertProductUnitErp').val() != '' || $('#txtInsertProductUnitRd').val() != '') {
+        if ($('#txtInsertProductUnitErp').val() != '' && $('#txtInsertProductUnitRd').val() != '') {
             callProductUnitInsertController();
         } 
         else {
@@ -120,7 +120,7 @@
     }
 
     function fnUpdateProductUnit(){
-        if ($('#txtUpdateProductUnitErp').val() != '' || $('#txtUpdateProductUnitRd').val() != '') {
+        if ($('#txtUpdateProductUnitErp').val() != '' && $('#txtUpdateProductUnitRd').val() != '') {
             callProductUnitUpdateController();
         } 
         else {

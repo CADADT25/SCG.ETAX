@@ -42,6 +42,9 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ZipFilePost> zipFilePost { get; set; }
         public DbSet<ZipFileTransaction> zipFileTransaction { get; set; }
         public DbSet<ZipFileType> zipFileType { get; set; }
+        public DbSet<ProfileSellOrg> profileSellOrg { get; set; }
+        public DbSet<ProfileDataSource> profileDataSource { get; set; }
+        public DbSet<ErpDocument> erpDocument { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

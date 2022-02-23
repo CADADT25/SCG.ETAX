@@ -46,6 +46,7 @@
 
 
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/toastr.css">
 
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css" />
@@ -79,6 +80,8 @@
     @await Html.PartialAsync("~/Views/TaxCode/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/RdDocument/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/DocumentCode/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/ProfileDataSource/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/ErpDocument/_Modal.cshtml")
 
 
     <!-- General JS Scripts -->
@@ -101,6 +104,9 @@
 
     <script src="~/assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
     <script src="~/assets/js/scripts/extensions/sweet-alerts"></script>
+    <script src="~/assets/vendors/js/extensions/toastr.min.js"></script>
+
+
 
     <script src="~/js/common.js"></script>
     @*<script src="~/js/validate.js"></script>*@

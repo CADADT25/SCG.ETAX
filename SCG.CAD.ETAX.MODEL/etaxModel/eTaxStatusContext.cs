@@ -19,15 +19,18 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public virtual DbSet<CancelZipHeader> CancelZipHeaders { get; set; } = null!;
         public virtual DbSet<CancelZipLine> CancelZipLines { get; set; } = null!;
         public virtual DbSet<DocumentCode> DocumentCodes { get; set; } = null!;
+        public virtual DbSet<ErpDocument> ErpDocuments { get; set; } = null!;
         public virtual DbSet<NewsBoard> NewsBoards { get; set; } = null!;
         public virtual DbSet<ProductUnit> ProductUnits { get; set; } = null!;
         public virtual DbSet<ProfileCertificate> ProfileCertificates { get; set; } = null!;
         public virtual DbSet<ProfileCompany> ProfileCompanies { get; set; } = null!;
         public virtual DbSet<ProfileCustomer> ProfileCustomers { get; set; } = null!;
+        public virtual DbSet<ProfileDataSource> ProfileDataSources { get; set; } = null!;
         public virtual DbSet<ProfileEmailTemplate> ProfileEmailTemplates { get; set; } = null!;
         public virtual DbSet<ProfileEmailType> ProfileEmailTypes { get; set; } = null!;
         public virtual DbSet<ProfileIsActive> ProfileIsActives { get; set; } = null!;
         public virtual DbSet<ProfilePartner> ProfilePartners { get; set; } = null!;
+        public virtual DbSet<ProfileSellOrg> ProfileSellOrgs { get; set; } = null!;
         public virtual DbSet<ProfileSeller> ProfileSellers { get; set; } = null!;
         public virtual DbSet<ProfileStatus> ProfileStatuses { get; set; } = null!;
         public virtual DbSet<RdDocument> RdDocuments { get; set; } = null!;
@@ -156,6 +159,45 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.ErpSource)
                     .HasMaxLength(30)
                     .HasColumnName("erpSource");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("updateBy");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateDate");
+            });
+
+            modelBuilder.Entity<ErpDocument>(entity =>
+            {
+                entity.HasKey(e => e.ErpDocumentNo);
+
+                entity.ToTable("erpDocument");
+
+                entity.Property(e => e.ErpDocumentNo).HasColumnName("erpDocumentNo");
+
+                entity.Property(e => e.CreateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("createBy");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.ErpDocumentCode)
+                    .HasMaxLength(50)
+                    .HasColumnName("erpDocumentCode");
+
+                entity.Property(e => e.ErpDocumentNameEn)
+                    .HasMaxLength(500)
+                    .HasColumnName("erpDocumentNameEN");
+
+                entity.Property(e => e.ErpDocumentNameTh)
+                    .HasMaxLength(500)
+                    .HasColumnName("erpDocumentNameTH");
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
@@ -392,6 +434,41 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnName("updateDate");
             });
 
+            modelBuilder.Entity<ProfileDataSource>(entity =>
+            {
+                entity.HasKey(e => e.DataSourceNo);
+
+                entity.ToTable("profileDataSource");
+
+                entity.Property(e => e.DataSourceNo).HasColumnName("dataSourceNo");
+
+                entity.Property(e => e.CreateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("createBy");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.DataSourceDescription)
+                    .HasMaxLength(500)
+                    .HasColumnName("dataSourceDescription");
+
+                entity.Property(e => e.DataSourceName)
+                    .HasMaxLength(250)
+                    .HasColumnName("dataSourceName");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("updateBy");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateDate");
+            });
+
             modelBuilder.Entity<ProfileEmailTemplate>(entity =>
             {
                 entity.HasKey(e => e.EmailTemplateNo);
@@ -556,6 +633,41 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.SoldToEmail)
                     .HasMaxLength(50)
                     .HasColumnName("soldToEmail");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("updateBy");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateDate");
+            });
+
+            modelBuilder.Entity<ProfileSellOrg>(entity =>
+            {
+                entity.HasKey(e => e.SellOrgNo);
+
+                entity.ToTable("profileSellOrg");
+
+                entity.Property(e => e.SellOrgNo).HasColumnName("sellOrgNo");
+
+                entity.Property(e => e.CreateBy)
+                    .HasMaxLength(100)
+                    .HasColumnName("createBy");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.SellOrgDescripttion)
+                    .HasMaxLength(500)
+                    .HasColumnName("sellOrgDescripttion");
+
+                entity.Property(e => e.SellOrgName)
+                    .HasMaxLength(250)
+                    .HasColumnName("sellOrgName");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

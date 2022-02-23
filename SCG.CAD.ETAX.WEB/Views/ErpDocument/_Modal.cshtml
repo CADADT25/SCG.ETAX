@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "ErpDocument";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ErpDocumentValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateErpDocument" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ErpDocument Code</label>
+                                    <input type="text" id="txtInsertErpDocumentCode" onkeyup="validateInsertErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ErpDocument Name (TH)</label>
+                                    <input type="text" id="txtInsertErpDocumentNameTh" onkeyup="validateInsertErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ErpDocument Name (EN)</label>
+                                    <input type="text" id="txtInsertErpDocumentNameEn" onkeyup="validateInsertErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertErpDocument" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertErpDocument-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelErpDocument();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertErpDocument();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateErpDocument" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateErpDocumentNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ErpDocument Code</label>
+                                    <input type="text" id="txtUpdateErpDocumentCode" onkeyup="validateUpdateErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ErpDocument Name (TH)</label>
+                                    <input type="text" id="txtUpdateErpDocumentNameTh" onkeyup="validateUpdateErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ErpDocument Name (EN)</label>
+                                    <input type="text" id="txtUpdateErpDocumentNameEn" onkeyup="validateUpdateErpDocument();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateErpDocument" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateErpDocument-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelErpDocument();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateErpDocument();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

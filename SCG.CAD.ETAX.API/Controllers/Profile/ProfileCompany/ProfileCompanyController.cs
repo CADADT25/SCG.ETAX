@@ -15,7 +15,6 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
 
-
         [HttpGet]
         [Route("GetListAll")]
         public IActionResult GetListAll()
@@ -60,5 +59,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+    
+    
     }
 }

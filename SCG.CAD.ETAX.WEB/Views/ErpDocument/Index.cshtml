@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "TaxCode Profile";
+    ViewData["Title"] = " ErpDocument ";
     Layout = null;
 }
 
@@ -10,7 +10,7 @@
 
 <div class="section-body">
 
-    @await Html.PartialAsync("~/Views/TaxCode/_Content.cshtml")
+    @await Html.PartialAsync("~/Views/ErpDocument/_Content.cshtml")
 
 </div>
 
@@ -19,19 +19,18 @@
 
      $(document).ready(function () {
 
-        RenderTaxCode();
+        RenderErpDocument();
 
-         $('#toggleUpdateTaxCode').change(function() {
-            $('#toggleUpdateTaxCode-event').html('Toggle: ' + $(this).prop('checked'))
-        })
+         $('#toggleUpdateErpDocument').change(function() {
+            $('#toggleUpdateErpDocument-event').html('Toggle: ' + $(this).prop('checked'))
+        });
 
     });
 
 
-    
-    function RenderTaxCode(){
+    function RenderErpDocument(){
 
-        var table = $("#tbTaxCodeMain").DataTable({
+        var table = $("#tbErpDocumentMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -41,7 +40,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "TaxCode")",
+                url: "@Url.Action("List", "ErpDocument")",
                 type: "POST",
                 datatype: "json"
             },
@@ -50,7 +49,7 @@
             "columns": [
 
                 {
-                    data: "taxCodeNo",
+                    data: "erpDocumentNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -64,16 +63,16 @@
                     }
                 },
                 {
-                    data: "taxCodeErp",
+                    data: "erpDocumentCode",
                     width: "20%"
                 },
                 {
-                    data: "taxCodeRd",
+                    data: "erpDocumentNameTh",
                     width: "20%"
                 },
                 {
-                    data: "taxCodeDescription",
-                    width: "10%"
+                    data: "erpDocumentNameEn",
+                    width: "20%"
                 },
                 {
                     data: "isactive",
@@ -100,7 +99,6 @@
             ]
         });
 
-
         table.on( 'order.dt search.dt', function () {
             table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                 cell.innerHTML = i+1;
@@ -108,45 +106,74 @@
         } ).draw();
 
 
-        EditTaxCode(table);
-        DeleteTaxCode(table);
+        EditErpDocument(table);
+        DeleteErpDocument(table);
     }
 
-    function fnInsertTaxCode(){
-        if ($('#txtInsertTaxCodeErp').val() != '' && $('#txtInsertTaxCodeRd').val() != '') {
-            callTaxCodeInsertController();
-        } 
-        else {
-            validateInsertTaxCode();
+
+    function fnInsertCancelErpDocument(){
+
+            document.getElementById('txtInsertErpDocumentCode').value = '';
+            document.getElementById('txtInsertErpDocumentNameTh').value = '';
+            document.getElementById('txtInsertErpDocumentNameEn').value = '';
+
+            $("#modalCreateErpDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function fnUpdateCancelErpDocument(){
+
+            document.getElementById('txtUpdateErpDocumentCode').value = '';
+            document.getElementById('txtUpdateErpDocumentNameTh').value = '';
+            document.getElementById('txtUpdateErpDocumentNameEn').value = '';
+
+            $("#modalUpdateErpDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function callModalInsertErpDocument(){
+
+        $("#modalCreateErpDocument").modal('show');
+
+    }
+
+    function fnInsertErpDocument(){
+
+        if ( $('#txtInsertErpDocumentCode').val() != '')
+        {
+            callErpDocumentInsertController();
         }
-        callTaxCodeIndex();
-    }
-
-    function fnUpdateTaxCode(){
-        if ($('#txtUpdateTaxCodeErp').val() != '' && $('#txtUpdateTaxCodeRd').val() != '') {
-            callTaxCodeUpdateController();
-        } 
         else {
-            validateUpdateTaxCode();
+            fnToastrInputDataFail();
         }
-        callTaxCodeIndex();
+        callErpDocumentIndex();
     }
 
-    function EditTaxCode(table){
+    function fnUpdateErpDocument(){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-edit', function () {
+        if ($('#txtUpdateErpDocumentCode').val() != '') {
+            callErpDocumentUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+        callErpDocumentIndex();
+    }
+
+    function EditErpDocument(table){
+
+        $('#tbErpDocumentMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callTaxCodeGetDetailController(getPK);
+            callErpDocumentGetDetailController(getPK);
+
         });
     }
 
-    function DeleteTaxCode(table){
+    function DeleteErpDocument(table){
 
-        $('#tbTaxCodeMain').on('click', 'td.editor-delete', function () {
+        $('#tbErpDocumentMain').on('click', 'td.editor-delete', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
@@ -165,59 +192,59 @@
                 buttonsStyling: false,
                 }).then(function (result) {
                     if (result) {
-                        callTaxCodeDeleteController(getPK);
-                        callTaxCodeIndex();
+                        callErpDocumentDeleteController(getPK);
+                        callErpDocumentIndex();
                       }
                     })
         });
     }
 
-    function ExportTaxCode(){
+    function ExportErpDocument(){
 
         $.blockUI();
 
-        callTaxCodeExportController();
+        callErpDocumentExportController();
 
         $.unblockUI();
     }
 
 
-    
-    // [Begin] Ajax call Controller 
 
-    function callTaxCodeGetDetailController(getPK){
+    // [Begin] Ajax call Controller
+
+    function callErpDocumentGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "TaxCode")",
+            url: "@Url.Action("Detail", "ErpDocument")",
             data: { id : getPK },
             //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
-                document.getElementById('txtUpdateTaxCodeNo').value = data.TaxCodeNo;
-                document.getElementById('txtUpdateTaxCodeErp').value = data.TaxCodeErp;
-                document.getElementById('txtUpdateTaxCodeRd').value = data.TaxCodeRd;            
-                document.getElementById('txtUpdatetTaxCodeDescription').value = data.TaxCodeDescription;
+                document.getElementById('txtUpdateErpDocumentNo').value = data.ErpDocumentNo;
+                document.getElementById('txtUpdateErpDocumentCode').value = data.ErpDocumentCode;
+                document.getElementById('txtUpdateErpDocumentNameTh').value = data.ErpDocumentNameTh;
+                document.getElementById('txtUpdateErpDocumentNameEn').value = data.ErpDocumentNameEn;
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateTaxCode').bootstrapToggle('on');
+                    $('#toggleUpdateErpDocument').bootstrapToggle('on');
                 }
                 else{
-                    $('#toggleUpdateTaxCode').bootstrapToggle('off');
+                    $('#toggleUpdateErpDocument').bootstrapToggle('off');
                 }
 
-                $("#modalUpdateTaxCode").modal('show');
-                
+                $("#modalUpdateErpDocument").modal('show');
+
             }
         });
     }
 
-    function callTaxCodeInsertController(){
+    function callErpDocumentInsertController(){
 
         var IsActive = 1;
 
-        if($('#toggleInsertTaxCode').prop('checked')){
+        if($('#toggleInsertErpDocument').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -226,9 +253,9 @@
 
         var model = new Object();
 
-        model.TaxCodeErp = $('#txtInsertTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtInsertTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtInsertTaxCodeDescription').val();
+        model.ErpDocumentCode = $('#txtInsertErpDocumentCode').val();
+        model.ErpDocumentNameTh = $('#txtInsertErpDocumentNameTh').val();
+        model.ErpDocumentNameEn = $('#txtInsertErpDocumentNameEn').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -239,7 +266,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "TaxCode")",
+            url: "@Url.Action("Insert", "ErpDocument")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -249,22 +276,23 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertTaxCodeErp').value = '';
-                    document.getElementById('txtInsertTaxCodeRd').value = '';
-                    document.getElementById('txtInsertTaxCodeDescription').value = '';
+                    document.getElementById('txtInsertErpDocumentCode').value = '';
+                    document.getElementById('txtInsertErpDocumentNameTh').value = '';
+                    document.getElementById('txtInsertErpDocumentNameEn').value = '';
 
-                    $("#modalCreateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateErpDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
                 }
 
             }
         });
     }
 
-    function callTaxCodeUpdateController(){
-        
+    function callErpDocumentUpdateController(){
+
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateTaxCode-event').text();
+        var getToggle = $('#toggleUpdateErpDocument-event').text();
 
         if(getToggle.includes("true")){
             IsActive = 1;
@@ -276,10 +304,10 @@
 
         var model = new Object();
 
-        model.TaxCodeNo = $('#txtUpdateTaxCodeNo').val();
-        model.TaxCodeErp = $('#txtUpdateTaxCodeErp').val();
-        model.TaxCodeRd = $('#txtUpdateTaxCodeRd').val();
-        model.TaxCodeDescription = $('#txtUpdatetTaxCodeDescription').val();
+        model.ErpDocumentNo = $('#txtUpdateErpDocumentNo').val();
+        model.ErpDocumentCode = $('#txtUpdateErpDocumentCode').val();
+        model.ErpDocumentNameTh = $('#txtUpdateErpDocumentNameTh').val();
+        model.ErpDocumentNameEn = $('#txtUpdateErpDocumentNameEn').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -290,7 +318,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "TaxCode")",
+            url: "@Url.Action("Update", "ErpDocument")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -300,24 +328,26 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateTaxCodeErp').value = '';
-                    document.getElementById('txtUpdateTaxCodeRd').value = '';
-                    document.getElementById('txtUpdatetTaxCodeDescription').value = '';
+                    document.getElementById('txtUpdateErpDocumentCode').value = '';
+                    document.getElementById('txtUpdateErpDocumentNameTh').value = '';
+                    document.getElementById('txtUpdateErpDocumentNameEn').value = '';
 
-                    $("#modalUpdateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateErpDocument").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
                 }
             }
         });
     }
 
-    function callTaxCodeDeleteController(getPK){
+    function callErpDocumentDeleteController(getPK){
 
         var model = new Object();
 
-        model.TaxCodeNo = getPK;
-        model.TaxCodeErp = "";
-        model.TaxCodeRd = "";
-        model.TaxCodeDescription = "";
+
+        model.ErpDocumentNo = getPK;
+        model.ErpDocumentCode = "";
+        model.ErpDocumentNameTh = "";
+        model.ErpDocumentNameEn = "";
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -328,7 +358,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Delete", "TaxCode")",
+            url: "@Url.Action("Delete", "ErpDocument")",
             data: { jsonString : getJsonString },
             //contentType: "application/json; charset=utf-8",
             dataType: "text",
@@ -336,15 +366,15 @@
 
                     fnSweetAlert_DeleteSuccess();
 
-                    
+
                 }
         });
     }
 
-    function callTaxCodeExportController(){
+    function callErpDocumentExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "TaxCode")",
+            url: "@Url.Action("ExportToCsv", "ErpDocument")",
             //data: { id : getPK },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
@@ -358,7 +388,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-TaxCode.csv";
+                a.download = "scg-etax-ErpDocument.csv";
 
                 document.body.appendChild(a);
 
@@ -367,15 +397,15 @@
         });
     }
 
-    // [end] Ajax call Controller 
+    // [end] Ajax call Controller
 
 
 
 
-    function callTaxCodeIndex() {
+    function callErpDocumentIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
+            $("#contentPartial").load("@Url.Action("Index", "ErpDocument")");
             $.unblockUI();
         }, 500);
     }
