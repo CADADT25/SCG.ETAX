@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "ProfileCertificate";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileCertificateValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileCertificate" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>TaxNumber</label>
+                                    <input type="text" id="txtInsertProfileCertificatTaxNumber" onkeyup="validateInsertProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Name</label>
+                                    <input type="text" id="txtInsertProfileCertificateCompanyName" onkeyup="validateInsertProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Data</label>
+                                    <textarea style="height:100px" required id="txtInsertProfileCertificateData" onkeyup="validateInsertProfileCertificate();" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Serial</label>
+                                    <textarea style="height:100px" required type="text" id="txtInsertProfileCertificateSerial" onkeyup="validateInsertProfileCertificate();" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Key Alias</label>
+                                    <textarea style="height:100px" required type="text" id="txtInsertProfileCertificateKeyAlias" onkeyup="validateInsertProfileCertificate();" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Start Date</label>
+                                    <input type="text" id="txtInsertProfileCertificateStartDate" onkeyup="validateInsertProfileCertificate();" class="form-control datetimepicker">
+                                    
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>End Date</label>
+                                    <input type="text" id="txtInsertProfileCertificateEndDate" onkeyup="validateInsertProfileCertificate();" class="form-control datetimepicker">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertProfileCertificate" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertProfileCertificate-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileCertificate();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileCertificate();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileCertificate" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateNo" class="form-control">
+                                </div>
+                                
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>TaxNumber</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificatTaxNumber" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Name</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateCompanyName" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Data</label>
+                                    <input disabled height="300" type="text" id="txtUpdateProfileCertificateData" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Serial</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateSerial" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Key Alias</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateKeyAlias" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Start Date</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateStartDate" onkeyup="validateUpdateProfileCertificate();" class="form-control datetimepicker">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>End Date</label>
+                                    <input disabled type="text" id="txtUpdateProfileCertificateEndDate" onkeyup="validateUpdateProfileCertificate();" class="form-control datetimepicker">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateProfileCertificate" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateProfileCertificate-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCertificate();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCertificate();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

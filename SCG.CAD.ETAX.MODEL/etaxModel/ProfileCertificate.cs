@@ -7,7 +7,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int CertificateNo { get; set; }
-        public int CompanyCode { get; set; }
+        public int CompanyTaxNumber { get; set; }
+        public string CompanyName { get; set; } = null!;
+        public string CompanyCertificateData { get; set; } = null!;
         public string CompanyCertificateSerial { get; set; } = null!;
         public string CompanyCertificateKeyAlias { get; set; } = null!;
         public DateTime CompanyCertificateStartDate { get; set; }

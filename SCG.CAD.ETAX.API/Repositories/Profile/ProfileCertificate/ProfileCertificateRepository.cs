@@ -95,5 +95,23 @@
             return await Task.FromResult(resp);
         }
 
+        public async Task<Response> INSERTS(List<ProfileCertificate> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.INSERTS(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
     }
 }

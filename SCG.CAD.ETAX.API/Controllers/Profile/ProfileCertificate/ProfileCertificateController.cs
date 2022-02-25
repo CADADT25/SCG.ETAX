@@ -43,6 +43,17 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
+
+        [HttpPost]
+        [Route("Inserts")]
+        public IActionResult Inserts(List<ProfileCertificate> param)
+        {
+            var result = repo.INSERTS(param).Result;
+
+            return Ok(result);
+        }
+
+
         [HttpPost]
         [Route("Update")]
         public IActionResult Update(ProfileCertificate param)

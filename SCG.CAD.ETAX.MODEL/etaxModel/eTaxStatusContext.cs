@@ -306,6 +306,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.CertificateNo).HasColumnName("certificateNo");
 
+                entity.Property(e => e.CompanyCertificateData).HasColumnName("companyCertificateData");
+
                 entity.Property(e => e.CompanyCertificateEndDate)
                     .HasColumnType("datetime")
                     .HasColumnName("companyCertificateEndDate");
@@ -318,7 +320,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("companyCertificateStartDate");
 
-                entity.Property(e => e.CompanyCode).HasColumnName("companyCode");
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(500)
+                    .HasColumnName("companyName");
+
+                entity.Property(e => e.CompanyTaxNumber).HasColumnName("companyTaxNumber");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)

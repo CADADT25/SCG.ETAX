@@ -48,6 +48,9 @@
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/sweetalert2.min.css">
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/toastr.css">
 
+    <link rel="stylesheet" type="text/css" href="~/assets/datapicker/bootstrap-timepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/datapicker/daterangepicker.css">
+
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -83,6 +86,8 @@
     @await Html.PartialAsync("~/Views/ProfileDataSource/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ErpDocument/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ProfileSellOrg/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/ProfileCertificate/_Modal.cshtml")
+
 
     <!-- General JS Scripts -->
     <script src="~/assets/js/jquery-3.3.1.min.js"></script>
@@ -112,6 +117,10 @@
     @*<script src="~/js/validate.js"></script>*@
 
     <script src="~/assets/select2/select2.min.js"></script>
+
+    <script src="~/assets/datapicker/bootstrap-timepicker.min.js"></script>
+
+    <script src="~/assets/datapicker/daterangepicker.js"></script>
 
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>

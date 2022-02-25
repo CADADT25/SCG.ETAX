@@ -2,7 +2,6 @@
     Layout = null;
 }
 
-
 <script>
 
 
@@ -18,7 +17,7 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
-
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
 
         $.unblockUI();
@@ -36,7 +35,7 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
-
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
 
         $.unblockUI();
@@ -54,7 +53,7 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
-
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
 
         $.unblockUI();
@@ -72,6 +71,7 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
         $("#ddlInsertDocumentCodeErpSource").empty();
         $("#ddlInsertDocumentCodeErp").empty();
@@ -97,6 +97,7 @@
         $("#li-btnCallPageProfileDataSource").addClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
 
         $.unblockUI();
@@ -114,6 +115,7 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").addClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
 
         $.unblockUI();
     });
@@ -131,6 +133,25 @@
         $("#li-btnCallPageProfileDataSource").removeClass("active");
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").addClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+
+
+        $.unblockUI();
+    });
+
+     $("#btn-btnCallPageProfileCertificate").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ProfileCertificate")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").addClass("active");
 
         $.unblockUI();
     });

@@ -137,7 +137,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                     {
                         strBuilder.AppendLine("" +
                             "CertificateNo," +
-                            "CompanyCode," +
+                            "CompanyTaxNumber," +
+                            "CompanyCertificateData," +
                             "CompanyCertificateSerial," +
                             "CompanyCertificateKeyAlias," +
                             "CompanyCertificateStartDate," +
@@ -154,7 +155,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                         {
                             strBuilder.AppendLine($"" +
                                 $"{item.CertificateNo}," +
-                                $"{item.CompanyCode}," +
+                                $"{item.CompanyTaxNumber}," +
+                                $"{item.CompanyCertificateData}," +
                                 $"{item.CompanyCertificateSerial}," +
                                 $"{item.CompanyCertificateKeyAlias}," +
                                 $"{item.CompanyCertificateStartDate}," +

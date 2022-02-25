@@ -92,6 +92,43 @@
             return resp;
         }
 
+        public Response INSERTS(List<ProfileCertificate> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                using (_dbContext)
+                {
+                    if (param.Count() > 0)
+                    {
+                        foreach (var item in param)
+                        {
+                            item.CreateDate = dtNow;
+
+                            item.UpdateDate = dtNow;
+
+                            _dbContext.profileCertificate.Add(item);
+
+                            _dbContext.SaveChanges();
+                        }
+                    }
+
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Insert success.";
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Insert faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+
         public Response UPDATE(ProfileCertificate param)
         {
             Response resp = new Response();
@@ -104,7 +141,8 @@
                     if (update != null)
                     {
 
-                        update.CompanyCode = param.CompanyCode;
+                        update.CompanyTaxNumber = param.CompanyTaxNumber;
+                        update.CompanyCertificateData = param.CompanyCertificateData;
                         update.CompanyCertificateSerial = param.CompanyCertificateSerial;
                         update.CompanyCertificateKeyAlias = param.CompanyCertificateKeyAlias;
                         update.CompanyCertificateStartDate = param.CompanyCertificateStartDate;
