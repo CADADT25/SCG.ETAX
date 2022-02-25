@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileEmailType> ProfileEmailTypes { get; set; } = null!;
+        public virtual DbSet<ProfileReasonIssue> ProfileReasonIssues { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,13 +29,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileEmailType>(entity =>
+            modelBuilder.Entity<ProfileReasonIssue>(entity =>
             {
-                entity.HasKey(e => e.EmailTypeNo);
+                entity.HasKey(e => e.ReasonIssueNo);
 
-                entity.ToTable("profileEmailType");
+                entity.ToTable("profileReasonIssue");
 
-                entity.Property(e => e.EmailTypeNo).HasColumnName("emailTypeNo");
+                entity.Property(e => e.ReasonIssueNo).HasColumnName("reasonIssueNo");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -45,19 +45,29 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.EmailTypeCode)
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ReasonIssueDataSource)
                     .HasMaxLength(50)
-                    .HasColumnName("emailTypeCode");
+                    .HasColumnName("reasonIssueDataSource");
 
-                entity.Property(e => e.EmailTypeDescription)
-                    .HasMaxLength(500)
-                    .HasColumnName("emailTypeDescription");
+                entity.Property(e => e.ReasonIssueDescription)
+                    .HasMaxLength(590)
+                    .HasColumnName("reasonIssueDescription");
 
-                entity.Property(e => e.EmailTypeName)
-                    .HasMaxLength(250)
-                    .HasColumnName("emailTypeName");
+                entity.Property(e => e.ReasonIssueErpDocumentType)
+                    .HasMaxLength(50)
+                    .HasColumnName("reasonIssueErpDocumentType");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.ReasonIssueErpReasonCode)
+                    .HasMaxLength(50)
+                    .HasColumnName("reasonIssueErpReasonCode");
+
+                entity.Property(e => e.ReasonIssueRdReasonCode)
+                    .HasMaxLength(50)
+                    .HasColumnName("reasonIssueRdReasonCode");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

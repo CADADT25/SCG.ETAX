@@ -46,6 +46,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ProfileDataSource> profileDataSource { get; set; }
         public DbSet<ErpDocument> erpDocument { get; set; }
         public DbSet<ProfileCompanyCode> profileCompanyCode { get; set; }
+        public DbSet<ProfileReasonIssue> profileReasonIssue { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

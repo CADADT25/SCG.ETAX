@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+<h2 class="section-title">@ViewData["Title"] Table</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateProfileReasonIssue" onclick="callModalInsertProfileReasonIssue();" data-toggle="modal" data-target="#modalCreateProfileReasonIssue" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+                <a id="btnExportData" onclick="ExportProfileReasonIssue()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="tbProfileReasonIssueMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Data Source</th>
+                                <th>Erp Document Type</th>
+                                <th>Erp Document Code</th>
+                                <th>Rd Document Code</th>
+                                <th>Description</th>
+                                <th>IsActive</th>
+                                <th></th>
+                                @*                                <th></th>
+
+                                *@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@await Html.PartialAsync("~/Views/Sidebar/BottomSidebar.cshtml")
+
+

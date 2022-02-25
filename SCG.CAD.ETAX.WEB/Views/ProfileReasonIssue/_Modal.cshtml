@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "ProfileReasonIssue";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileReasonIssueValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileReasonIssue" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label>Data Source</label>
+                                    <select class="select2 form-control" id="ddlInsertProfileReasonIssueDataSource"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ERP Document Type</label>
+                                    <select class="select2 form-control" id="ddlInsertProfileReasonIssueErpDocumentType"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ERP Reason Code</label>
+                                    <input type="text" id="txtInsertProfileReasonIssueErpReasonCode" onkeyup="validateInsertProfileReasonIssue();" class="form-control">
+                                    
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Revenue Reason Code</label>
+                                    <input type="text" id="txtInsertProfileReasonIssueRdReasonCode" onkeyup="validateInsertProfileReasonIssue();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtInsertProfileReasonIssueDescription" onkeyup="validateInsertProfileReasonIssue();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertProfileReasonIssue" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertProfileReasonIssue-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileReasonIssue();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileReasonIssue();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileReasonIssue" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateProfileReasonIssueNo" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Data Source</label>
+                                    <select class="select2 form-control" id="ddlUpdateProfileReasonIssueDataSource"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ERP Document Type</label>
+                                    <select class="select2 form-control" id="ddlUpdateProfileReasonIssueErpDocumentType"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ERP Reason Code</label>
+                                    <input type="text" id="txtUpdateProfileReasonIssueErpReasonCode" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Revenue Reason Code</label>
+                                    <input type="text" id="txtUpdateProfileReasonIssueRdReasonCode" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtUpdateProfileReasonIssueDescription" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateProfileReasonIssue" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateProfileReasonIssue-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileReasonIssue();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileReasonIssue();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

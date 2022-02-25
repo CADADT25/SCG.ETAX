@@ -1,0 +1,454 @@
+﻿@{
+    ViewData["Title"] = "ProfileReasonIssue";
+    Layout = null;
+}
+
+<div class="section-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+
+<div class="section-body">
+
+    @await Html.PartialAsync("~/Views/ProfileReasonIssue/_Content.cshtml")
+
+</div>
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderProfileReasonIssue();
+
+         $('#toggleUpdateProfileReasonIssue').change(function() {
+            $('#toggleUpdateProfileReasonIssue-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+
+    });
+
+
+    function RenderProfileReasonIssue(){
+
+        var table = $("#tbProfileReasonIssueMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProfileReasonIssue")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "reasonIssueNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "reasonIssueDataSource",
+                    width: "20%"
+                },
+                {
+                    data: "reasonIssueErpDocumentType",
+                    width: "20%"
+                },
+                {
+                    data: "reasonIssueErpReasonCode",
+                    width: "20%"
+                },
+                {
+                    data: "reasonIssueRdReasonCode",
+                    width: "20%"
+                },
+                {
+                    data: "reasonIssueDescription",
+                    width: "20%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditProfileReasonIssue(table);
+        DeleteProfileReasonIssue(table);
+    }
+
+
+    function fnInsertCancelProfileReasonIssue(){
+
+            $("#ddlInsertProfileReasonIssueDataSource").empty();
+            $("#ddlInsertProfileReasonIssueErpDocumentType").empty();
+            document.getElementById('txtInsertProfileReasonIssueErpReasonCode').value = '';
+            document.getElementById('txtInsertProfileReasonIssueRdReasonCode').value = '';
+            document.getElementById('txtInsertProfileReasonIssueDescription').value = '';
+
+            $("#modalCreateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function fnUpdateCancelProfileReasonIssue(){
+
+            $("#ddlUpdateProfileReasonIssueDataSource").empty();
+            $("#ddlUpdateProfileReasonIssueErpDocumentType").empty();
+            document.getElementById('txtUpdateProfileReasonIssueErpReasonCode').value = '';
+            document.getElementById('txtUpdateProfileReasonIssueRdReasonCode').value = '';
+            document.getElementById('txtUpdateProfileReasonIssueDescription').value = '';
+
+            $("#modalUpdateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function callModalInsertProfileReasonIssue(){
+
+        $("#modalCreateProfileReasonIssue").modal('show');
+
+    }
+
+    function fnInsertProfileReasonIssue(){
+
+        var DataSource = $('#ddlInsertProfileReasonIssueDataSource').val();
+
+        var ErpDocumentType = $('#ddlInsertProfileReasonIssueErpDocumentType').val();
+
+        if ( 
+            DataSource != '0' &&
+            ErpDocumentType != '0' && 
+            $('#txtInsertProfileReasonIssueErpReasonCode').val() != '' &&
+            $('#txtInsertProfileReasonIssueRdReasonCode').val() != '' 
+            )
+        {
+            callProfileReasonIssueInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+        callProfileReasonIssueIndex();
+    }
+
+    function fnUpdateProfileReasonIssue(){
+
+         var DataSource = $('#ddlUpdateProfileReasonIssueDataSource').val();
+
+        var ErpDocumentType = $('#ddlUpdateProfileReasonIssueErpDocumentType').val();
+
+        if ( 
+            DataSource != '0' &&
+            ErpDocumentType != '0' && 
+            $('#txtUpdateProfileReasonIssueErpReasonCode').val() != '' &&
+            $('#txtUpdateProfileReasonIssueRdReasonCode').val() != '' 
+            )
+        {
+            callProfileReasonIssueUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+        callProfileReasonIssueIndex();
+    }
+
+    function EditProfileReasonIssue(table){
+
+        $('#tbProfileReasonIssueMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callProfileReasonIssueGetDetailController(getPK);
+
+        });
+    }
+
+    function DeleteProfileReasonIssue(table){
+
+        $('#tbProfileReasonIssueMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callProfileReasonIssueDeleteController(getPK);
+                        callProfileReasonIssueIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportProfileReasonIssue(){
+
+        $.blockUI();
+
+        callProfileReasonIssueExportController();
+
+        $.unblockUI();
+    }
+
+
+
+    // [Begin] Ajax call Controller
+
+    function callProfileReasonIssueGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileReasonIssue")",
+            data: { id : getPK },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+                document.getElementById('txtUpdateProfileReasonIssueNo').value = data.EmailTypeNo;
+                document.getElementById('txtUpdateProfileReasonIssueCode').value = data.EmailTypeCode;
+                document.getElementById('txtUpdateProfileReasonIssueName').value = data.EmailTypeName;
+                document.getElementById('txtUpdateProfileReasonIssueDescription').value = data.EmailTypeDescription;
+
+                if(data.Isactive == 1){
+                    $('#toggleUpdateProfileReasonIssue').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateProfileReasonIssue').bootstrapToggle('off');
+                }
+
+                $("#modalUpdateProfileReasonIssue").modal('show');
+
+            }
+        });
+    }
+
+    function callProfileReasonIssueInsertController(){
+
+        var IsActive = 1;
+
+        if($('#toggleInsertProfileReasonIssue').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.EmailTypeCode = $('#txtInsertProfileReasonIssueCode').val();
+        model.EmailTypeName = $('#txtInsertProfileReasonIssueName').val();
+        model.EmailTypeDescription = $('#txtInsertProfileReasonIssueDescription').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfileReasonIssue")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                if(resp.OUTPUT_STATUS = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+
+                    document.getElementById('txtInsertProfileReasonIssueCode').value = '';
+                    document.getElementById('txtInsertProfileReasonIssueName').value = '';
+                    document.getElementById('txtInsertProfileReasonIssueDescription').value = '';
+
+                    $("#modalCreateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
+                }
+
+            }
+        });
+    }
+
+    function callProfileReasonIssueUpdateController(){
+
+        var IsActive = 1;
+
+        var getToggle = $('#toggleUpdateProfileReasonIssue-event').text();
+
+        if(getToggle.includes("true")){
+            IsActive = 1;
+        }
+        else
+        {
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.EmailTypeNo = $('#txtUpdateProfileReasonIssueNo').val();
+        model.EmailTypeCode = $('#txtUpdateProfileReasonIssueCode').val();
+        model.EmailTypeName = $('#txtUpdateProfileReasonIssueName').val();
+        model.EmailTypeDescription = $('#txtUpdateProfileReasonIssueDescription').val();
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ProfileReasonIssue")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                if(resp.OUTPUT_STATUS = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateProfileReasonIssueCode').value = '';
+                    document.getElementById('txtUpdateProfileReasonIssueName').value = '';
+                    document.getElementById('txtUpdateProfileReasonIssueDescription').value = '';
+
+                    $("#modalUpdateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
+                }
+            }
+        });
+    }
+
+    function callProfileReasonIssueDeleteController(getPK){
+
+        var model = new Object();
+
+
+        model.EmailTypeNo = getPK;
+        model.EmailTypeCode = "";
+        model.EmailTypeName = "";
+        model.EmailTypeDescription = "";
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ProfileReasonIssue")",
+            data: { jsonString : getJsonString },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function () {
+
+                    fnSweetAlert_DeleteSuccess();
+
+
+                }
+        });
+    }
+
+    function callProfileReasonIssueExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ProfileReasonIssue")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ProfileReasonIssue.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    function callProfileReasonIssueIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ProfileReasonIssue")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+
+
+
+
+</script>
