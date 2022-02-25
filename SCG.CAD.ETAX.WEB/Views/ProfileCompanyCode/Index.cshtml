@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "ProfileEmailType";
+    ViewData["Title"] = "ProfileCompanyCode";
     Layout = null;
 }
 
@@ -10,7 +10,7 @@
 
 <div class="section-body">
 
-    @await Html.PartialAsync("~/Views/ProfileEmailType/_Content.cshtml")
+    @await Html.PartialAsync("~/Views/ProfileCompanyCode/_Content.cshtml")
 
 </div>
 
@@ -19,18 +19,18 @@
 
      $(document).ready(function () {
 
-        RenderProfileEmailType();
+        RenderProfileCompanyCode();
 
-         $('#toggleUpdateProfileEmailType').change(function() {
-            $('#toggleUpdateProfileEmailType-event').html('Toggle: ' + $(this).prop('checked'))
+         $('#toggleUpdateProfileCompanyCode').change(function() {
+            $('#toggleUpdateProfileCompanyCode-event').html('Toggle: ' + $(this).prop('checked'))
         });
 
     });
 
 
-    function RenderProfileEmailType(){
+    function RenderProfileCompanyCode(){
 
-        var table = $("#tbProfileEmailTypeMain").DataTable({
+        var table = $("#tbProfileCompanyCodeMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -40,7 +40,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "ProfileEmailType")",
+                url: "@Url.Action("List", "ProfileCompanyCode")",
                 type: "POST",
                 datatype: "json"
             },
@@ -49,7 +49,7 @@
             "columns": [
 
                 {
-                    data: "emailTypeNo",
+                    data: "companyCodeNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -63,15 +63,11 @@
                     }
                 },
                 {
-                    data: "emailTypeCode",
+                    data: "companyCode",
                     width: "20%"
                 },
                 {
-                    data: "emailTypeName",
-                    width: "20%"
-                },
-                {
-                    data: "emailTypeDescription",
+                    data: "companyCodeDescription",
                     width: "20%"
                 },
                 {
@@ -106,74 +102,72 @@
         } ).draw();
 
 
-        EditProfileEmailType(table);
-        DeleteProfileEmailType(table);
+        EditProfileCompanyCode(table);
+        DeleteProfileCompanyCode(table);
     }
 
 
-    function fnInsertCancelProfileEmailType(){
+    function fnInsertCancelProfileCompanyCode(){
 
-            document.getElementById('txtInsertProfileEmailTypeCode').value = '';
-            document.getElementById('txtInsertProfileEmailTypeName').value = '';
-            document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
+            document.getElementById('txtInsertProfileCompanyCode').value = '';
+            document.getElementById('txtInsertProfileCompanyCodeDescription').value = '';
 
-            $("#modalCreateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalCreateProfileCompanyCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
     }
 
-    function fnUpdateCancelProfileEmailType(){
+    function fnUpdateCancelProfileCompanyCode(){
 
-            document.getElementById('txtUpdateProfileEmailTypeCode').value = '';
-            document.getElementById('txtUpdateProfileEmailTypeName').value = '';
-            document.getElementById('txtUpdateProfileEmailTypeDescription').value = '';
+            document.getElementById('txtUpdateProfileCompanyCodeName').value = '';
+            document.getElementById('txtUpdateProfileCompanyCodeDescription').value = '';
 
-            $("#modalUpdateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalUpdateProfileCompanyCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
     }
 
-    function callModalInsertProfileEmailType(){
+    function callModalInsertProfileCompanyCode(){
 
-        $("#modalCreateProfileEmailType").modal('show');
+        $("#modalCreateProfileCompanyCode").modal('show');
 
     }
 
-    function fnInsertProfileEmailType(){
+    function fnInsertProfileCompanyCode(){
 
-        if ( $('#txtInsertProfileEmailTypeCode').val() != '')
+        if ( $('#txtInsertProfileCompanyCode').val() != '')
         {
-            callProfileEmailTypeInsertController();
+            callProfileCompanyCodeInsertController();
         }
         else {
             fnToastrInputDataFail();
         }
-        callProfileEmailTypeIndex();
+        callProfileCompanyCodeIndex();
     }
 
-    function fnUpdateProfileEmailType(){
+    function fnUpdateProfileCompanyCode(){
 
-        if ($('#txtUpdateProfileEmailTypeCode').val() != '') {
-            callProfileEmailTypeUpdateController();
+        if ($('#txtUpdateProfileCompanyCode').val() != '') {
+            callProfileCompanyCodeUpdateController();
         }
         else {
             fnToastrInputDataFail();
         }
-        callProfileEmailTypeIndex();
+        callProfileCompanyCodeIndex();
     }
 
-    function EditProfileEmailType(table){
+    function EditProfileCompanyCode(table){
 
-        $('#tbProfileEmailTypeMain').on('click', 'td.editor-edit', function () {
+        $('#tbProfileCompanyCodeMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callProfileEmailTypeGetDetailController(getPK);
+            callProfileCompanyCodeGetDetailController(getPK);
 
         });
     }
 
-    function DeleteProfileEmailType(table){
+    function DeleteProfileCompanyCode(table){
 
-        $('#tbProfileEmailTypeMain').on('click', 'td.editor-delete', function () {
+        $('#tbProfileCompanyCodeMain').on('click', 'td.editor-delete', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
@@ -192,18 +186,18 @@
                 buttonsStyling: false,
                 }).then(function (result) {
                     if (result) {
-                        callProfileEmailTypeDeleteController(getPK);
-                        callProfileEmailTypeIndex();
+                        callProfileCompanyCodeDeleteController(getPK);
+                        callProfileCompanyCodeIndex();
                       }
                     })
         });
     }
 
-    function ExportProfileEmailType(){
+    function ExportProfileCompanyCode(){
 
         $.blockUI();
 
-        callProfileEmailTypeExportController();
+        callProfileCompanyCodeExportController();
 
         $.unblockUI();
     }
@@ -212,39 +206,38 @@
 
     // [Begin] Ajax call Controller
 
-    function callProfileEmailTypeGetDetailController(getPK){
+    function callProfileCompanyCodeGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "ProfileEmailType")",
+            url: "@Url.Action("Detail", "ProfileCompanyCode")",
             data: { id : getPK },
             //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
-                document.getElementById('txtUpdateProfileEmailTypeNo').value = data.EmailTypeNo;
-                document.getElementById('txtUpdateProfileEmailTypeCode').value = data.EmailTypeCode;
-                document.getElementById('txtUpdateProfileEmailTypeName').value = data.EmailTypeName;
-                document.getElementById('txtUpdateProfileEmailTypeDescription').value = data.EmailTypeDescription;
+                document.getElementById('txtUpdateProfileCompanyCodeNo').value = data.CompanyCodeNo;
+                document.getElementById('txtUpdateProfileCompanyCode').value = data.CompanyCode;
+                document.getElementById('txtUpdateProfileCompanyCodeDescription').value = data.CompanyCodeDescription;
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileEmailType').bootstrapToggle('on');
+                    $('#toggleUpdateProfileCompanyCode').bootstrapToggle('on');
                 }
                 else{
-                    $('#toggleUpdateProfileEmailType').bootstrapToggle('off');
+                    $('#toggleUpdateProfileCompanyCode').bootstrapToggle('off');
                 }
 
-                $("#modalUpdateProfileEmailType").modal('show');
+                $("#modalUpdateProfileCompanyCode").modal('show');
 
             }
         });
     }
 
-    function callProfileEmailTypeInsertController(){
+    function callProfileCompanyCodeInsertController(){
 
         var IsActive = 1;
 
-        if($('#toggleInsertProfileEmailType').prop('checked')){
+        if($('#toggleInsertProfileCompanyCode').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -253,9 +246,8 @@
 
         var model = new Object();
 
-        model.EmailTypeCode = $('#txtInsertProfileEmailTypeCode').val();
-        model.EmailTypeName = $('#txtInsertProfileEmailTypeName').val();
-        model.EmailTypeDescription = $('#txtInsertProfileEmailTypeDescription').val();
+        model.CompanyCode = $('#txtInsertProfileCompanyCode').val();
+        model.CompanyCodeDescription = $('#txtInsertProfileCompanyCodeDescription').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -267,7 +259,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "ProfileEmailType")",
+            url: "@Url.Action("Insert", "ProfileCompanyCode")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -277,12 +269,10 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    
-                    document.getElementById('txtInsertProfileEmailTypeCode').value = '';
-                    document.getElementById('txtInsertProfileEmailTypeName').value = '';
-                    document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
+                    document.getElementById('txtInsertProfileCompanyCode').value = '';
+                    document.getElementById('txtInsertProfileCompanyCodeDescription').value = '';
 
-                    $("#modalCreateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateProfileCompanyCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
                 }
 
@@ -290,11 +280,11 @@
         });
     }
 
-    function callProfileEmailTypeUpdateController(){
+    function callProfileCompanyCodeUpdateController(){
 
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateProfileEmailType-event').text();
+        var getToggle = $('#toggleUpdateProfileCompanyCode-event').text();
 
         if(getToggle.includes("true")){
             IsActive = 1;
@@ -306,12 +296,9 @@
 
         var model = new Object();
 
-        model.EmailTypeNo = $('#txtUpdateProfileEmailTypeNo').val();
-        model.EmailTypeCode = $('#txtUpdateProfileEmailTypeCode').val();
-        model.EmailTypeName = $('#txtUpdateProfileEmailTypeName').val();
-        model.EmailTypeDescription = $('#txtUpdateProfileEmailTypeDescription').val();
-
-
+        model.CompanyCodeNo = $('#txtUpdateProfileCompanyCodeNo').val();
+        model.CompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        model.CompanyCodeDescription = $('#txtUpdateProfileCompanyCodeDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -322,7 +309,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "ProfileEmailType")",
+            url: "@Url.Action("Update", "ProfileCompanyCode")",
             data: { jsonString : getJsonString },
             //contentType: 'application/json; charset=utf-8',
             dataType: "text",
@@ -332,27 +319,24 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateProfileEmailTypeCode').value = '';
-                    document.getElementById('txtUpdateProfileEmailTypeName').value = '';
-                    document.getElementById('txtUpdateProfileEmailTypeDescription').value = '';
+                    document.getElementById('txtUpdateProfileCompanyCode').value = '';
+                    document.getElementById('txtUpdateProfileCompanyCodeDescription').value = '';
 
-                    $("#modalUpdateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateProfileCompanyCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
                 }
             }
         });
     }
 
-    function callProfileEmailTypeDeleteController(getPK){
+    function callProfileCompanyCodeDeleteController(getPK){
 
         var model = new Object();
 
 
-        model.EmailTypeNo = getPK;
-        model.EmailTypeCode = "";
-        model.EmailTypeName = "";
-        model.EmailTypeDescription = "";
-
+        model.CompanyCodeNo = getPK;
+        model.CompanyCode = "";
+        model.CompanyCodeDescription = "";
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -363,7 +347,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Delete", "ProfileEmailType")",
+            url: "@Url.Action("Delete", "ProfileCompanyCode")",
             data: { jsonString : getJsonString },
             //contentType: "application/json; charset=utf-8",
             dataType: "text",
@@ -376,10 +360,10 @@
         });
     }
 
-    function callProfileEmailTypeExportController(){
+    function callProfileCompanyCodeExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "ProfileEmailType")",
+            url: "@Url.Action("ExportToCsv", "ProfileCompanyCode")",
             //data: { id : getPK },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
@@ -393,7 +377,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-ProfileEmailType.csv";
+                a.download = "scg-etax-ProfileCompanyCode.csv";
 
                 document.body.appendChild(a);
 
@@ -407,10 +391,10 @@
 
 
 
-    function callProfileEmailTypeIndex() {
+    function callProfileCompanyCodeIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileEmailType")");
+            $("#contentPartial").load("@Url.Action("Index", "ProfileCompanyCode")");
             $.unblockUI();
         }, 500);
     }

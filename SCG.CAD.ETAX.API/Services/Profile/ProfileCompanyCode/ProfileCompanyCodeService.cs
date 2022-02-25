@@ -1,17 +1,18 @@
 ﻿namespace SCG.CAD.ETAX.API.Services
 {
-    public class ProfileEmailTypeService
+    public class ProfileCompanyCodeService
     {
 
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+
         public Response GET_LIST()
         {
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.profileEmailType.ToList();
+                var getList = _dbContext.profileCompanyCode.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -41,7 +42,7 @@
 
             try
             {
-                var getList = _dbContext.profileEmailType.Where(x => x.EmailTypeNo == id).ToList();
+                var getList = _dbContext.profileCompanyCode.Where(x => x.CompanyCodeNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -65,7 +66,7 @@
             return resp;
         }
 
-        public Response INSERT(ProfileEmailType param)
+        public Response INSERT(ProfileCompanyCode param)
         {
             Response resp = new Response();
             try
@@ -75,7 +76,7 @@
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
-                    _dbContext.profileEmailType.Add(param);
+                    _dbContext.profileCompanyCode.Add(param);
                     _dbContext.SaveChanges();
 
 
@@ -92,20 +93,19 @@
             return resp;
         }
 
-        public Response UPDATE(ProfileEmailType param)
+        public Response UPDATE(ProfileCompanyCode param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.profileEmailType.Where(x => x.EmailTypeNo == param.EmailTypeNo).FirstOrDefault();
+                    var update = _dbContext.profileCompanyCode.Where(x => x.CompanyCodeNo == param.CompanyCodeNo).FirstOrDefault();
 
                     if (update != null)
                     {
-                        update.EmailTypeCode = param.EmailTypeCode;
-                        update.EmailTypeName = param.EmailTypeName;
-                        update.EmailTypeDescription = param.EmailTypeDescription;
+                        update.CompanyCode = param.CompanyCode;
+                        update.CompanyCodeDescription = param.CompanyCodeDescription;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -131,18 +131,18 @@
             return resp;
         }
 
-        public Response DELETE(ProfileEmailType param)
+        public Response DELETE(ProfileCompanyCode param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.profileEmailType.Find(param.EmailTypeNo);
+                    var delete = _dbContext.profileCompanyCode.Find(param.CompanyCodeNo);
 
                     if (delete != null)
                     {
-                        _dbContext.profileEmailType.Remove(delete);
+                        _dbContext.profileCompanyCode.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;

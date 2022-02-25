@@ -101,6 +101,10 @@ namespace SCG.CAD.ETAX.UTILITY
 
                     res = JsonConvert.DeserializeObject<Response>(x.ToString());
                 }
+                else
+                {
+                    var ddd = response.Content.ReadAsStringAsync();
+                }
             }
             return res;
         }

@@ -18,6 +18,8 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
 
 
         $.unblockUI();
@@ -36,6 +38,8 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
 
 
         $.unblockUI();
@@ -54,6 +58,9 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+
 
 
         $.unblockUI();
@@ -72,6 +79,10 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+
+
 
         $("#ddlInsertDocumentCodeErpSource").empty();
         $("#ddlInsertDocumentCodeErp").empty();
@@ -98,6 +109,8 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
 
 
         $.unblockUI();
@@ -116,6 +129,10 @@
         $("#li-btnCallPageErpDocument").addClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+
+
 
         $.unblockUI();
     });
@@ -134,6 +151,8 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").addClass("active");
         $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
 
 
         $.unblockUI();
@@ -152,6 +171,50 @@
         $("#li-btnCallPageErpDocument").removeClass("active");
         $("#li-btnCallPageProfileSellOrg").removeClass("active");
         $("#li-btnCallPageProfileCertificate").addClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+
+
+        $.unblockUI();
+    });
+
+    $("#btn-btnCallPageProfileCompanyCode").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ProfileCompanyCode")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").addClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+
+
+
+        $.unblockUI();
+    });
+
+
+    $("#btn-btnCallPageProfileEmailType").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ProfileEmailType")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").addClass("active");
 
         $.unblockUI();
     });

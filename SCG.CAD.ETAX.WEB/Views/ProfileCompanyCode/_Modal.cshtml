@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "ProfileCompanyCode";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileCompanyCodeValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileCompanyCode" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ProfileCompany Code</label>
+                                    <input type="text" id="txtInsertProfileCompanyCode" onkeyup="validateInsertProfileCompanyCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtInsertProfileCompanyCodeDescription" onkeyup="validateInsertProfileCompanyCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertProfileCompanyCode" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertProfileCompanyCode-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileCompanyCode();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileCompanyCode();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileCompanyCode" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateProfileCompanyCodeNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>ProfileCompany Code</label>
+                                    <input type="text" id="txtUpdateProfileCompanyCode" onkeyup="validateUpdateProfileCompanyCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="txtUpdateProfileCompanyCodeDescription" onkeyup="validateUpdateProfileCompanyCode();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateProfileCompanyCode" type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateProfileCompanyCode-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCompanyCode();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCompanyCode();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
