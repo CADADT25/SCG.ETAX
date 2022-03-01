@@ -141,7 +141,7 @@
             value: 0,
         }).html("--- Select Erp Code ---").appendTo("#ddlInsertDocumentCodeErp");
 
-            
+
         $('<option>',
         {
             value: 0,
@@ -164,7 +164,7 @@
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlUpdateDocumentCodeErpSource");
             });
-        })        
+        })
 
 
         $.getJSON("@Url.Action("DropDownList", "ErpDocument")", function (data) {
@@ -194,7 +194,7 @@
                     {
                         value: data.rdDocumentCode,
                         text: data.rdDocumentCode
-                    }).html(data.rdDocumentCode  + '&nbsp; (' + data.rdDocumentNameTh + ')').appendTo("#ddlInsertDocumentCodeRd");
+                    }).html(data.rdDocumentCode).appendTo("#ddlInsertDocumentCodeRd");
             });
 
 
@@ -203,7 +203,7 @@
                     {
                         value: data.rdDocumentCode,
                         text: data.rdDocumentCode
-                    }).html(data.rdDocumentCode  + '&nbsp; (' + data.rdDocumentNameTh + ')').appendTo("#ddlUpdateDocumentCodeRd");
+                    }).html(data.rdDocumentCode).appendTo("#ddlUpdateDocumentCodeRd");
             });
         })
     }
@@ -334,43 +334,15 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
+
                 document.getElementById('txtUpdateDocumentCodeNo').value = data.DocumentCodeNo;
 
-                document.getElementById('ddlUpdateDocumentCodeErpSource').value = data.ErpSource;
-                document.getElementById('ddlUpdateDocumentCodeErp').value = data.DocumentCodeErp;
-                document.getElementById('ddlUpdateDocumentCodeRd').value = data.DocumentCodeRd;
+                $("#ddlUpdateDocumentCodeErpSource").select2("val", data.ErpSource);
+                $("#ddlUpdateDocumentCodeErp").select2("val", data.DocumentCodeErp);
+                $("#ddlUpdateDocumentCodeRd").select2("val", data.DocumentCodeRd);
 
-                var tempDataSource = data.ErpSource;
-                var mySelectDataSource = document.getElementById('ddlUpdateDocumentCodeErpSource');
+                //document.getElementById('ddlUpdateDocumentCodeRd').select2("val", data.DocumentCodeRd);
 
-                for(var i, j = 0; i = mySelectDataSource.options[j]; j++) {
-                    if(i.value == tempDataSource) {
-                        mySelectDataSource.selectedIndex = j;
-                        break;
-                    }
-                }
-
-
-                var tempCodeErp = data.DocumentCodeErp;
-                var mySelectCodeErp = document.getElementById('ddlUpdateDocumentCodeErp');
-
-                for(var i, j = 0; i = mySelectCodeErp.options[j]; j++) {
-                    if(i.value == tempCodeErp) {
-                        mySelectCodeErp.selectedIndex = j;
-                        break;
-                    }
-                }
-
-
-                var tempCodeRd = data.DocumentCodeRd;
-                var mySelectCodeRd = document.getElementById('ddlUpdateDocumentCodeRd');
-
-                for(var i, j = 0; i = mySelectCodeRd.options[j]; j++) {
-                    if(i.value == tempCodeRd) {
-                        mySelectCodeRd.selectedIndex = j;
-                        break;
-                    }
-                }
 
                 document.getElementById('txtUpdateDocumentCodeDescription').value = data.DocumentDescription;
 

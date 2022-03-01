@@ -1,4 +1,47 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    Layout = null;
+}
+
+<h2 class="section-title">@ViewData["Title"] Table</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateZipFileType" onclick="callModalInsertZipFileType();" data-toggle="modal" data-target="#modalCreateZipFileType" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+                <a id="btnExportData" onclick="ExportZipFileType()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="tbZipFileTypeMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>IsActive</th>
+                                <th></th>
+                                @*                                <th></th>
+
+                                *@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@await Html.PartialAsync("~/Views/Sidebar/BottomSidebar.cshtml")
+
+

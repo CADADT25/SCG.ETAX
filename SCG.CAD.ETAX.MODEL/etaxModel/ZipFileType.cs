@@ -7,8 +7,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int ZipFileTypeNo { get; set; }
-        public string? ZipFileTypeCode { get; set; }
+        public string ZipFileTypeCode { get; set; } = null!;
         public string? ZipFileTypeName { get; set; }
+        public string? ZipFileTypeDescription { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;

@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileReasonIssue> ProfileReasonIssues { get; set; } = null!;
+        public virtual DbSet<ZipFileType> ZipFileTypes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,13 +29,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileReasonIssue>(entity =>
+            modelBuilder.Entity<ZipFileType>(entity =>
             {
-                entity.HasKey(e => e.ReasonIssueNo);
+                entity.HasKey(e => e.ZipFileTypeNo);
 
-                entity.ToTable("profileReasonIssue");
+                entity.ToTable("zipFileType");
 
-                entity.Property(e => e.ReasonIssueNo).HasColumnName("reasonIssueNo");
+                entity.Property(e => e.ZipFileTypeNo).HasColumnName("zipFileTypeNo");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -45,29 +45,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive)
-                    .HasColumnName("isactive")
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ReasonIssueDataSource)
-                    .HasMaxLength(50)
-                    .HasColumnName("reasonIssueDataSource");
-
-                entity.Property(e => e.ReasonIssueDescription)
-                    .HasMaxLength(590)
-                    .HasColumnName("reasonIssueDescription");
-
-                entity.Property(e => e.ReasonIssueErpDocumentType)
-                    .HasMaxLength(50)
-                    .HasColumnName("reasonIssueErpDocumentType");
-
-                entity.Property(e => e.ReasonIssueErpReasonCode)
-                    .HasMaxLength(50)
-                    .HasColumnName("reasonIssueErpReasonCode");
-
-                entity.Property(e => e.ReasonIssueRdReasonCode)
-                    .HasMaxLength(50)
-                    .HasColumnName("reasonIssueRdReasonCode");
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
@@ -76,6 +54,18 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
+
+                entity.Property(e => e.ZipFileTypeCode)
+                    .HasMaxLength(100)
+                    .HasColumnName("zipFileTypeCode");
+
+                entity.Property(e => e.ZipFileTypeDescription)
+                    .HasMaxLength(300)
+                    .HasColumnName("zipFileTypeDescription");
+
+                entity.Property(e => e.ZipFileTypeName)
+                    .HasMaxLength(100)
+                    .HasColumnName("zipFileTypeName");
             });
 
             OnModelCreatingPartial(modelBuilder);

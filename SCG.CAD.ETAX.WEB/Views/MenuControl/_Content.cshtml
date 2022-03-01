@@ -20,6 +20,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -40,6 +44,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -60,7 +68,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
-
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -81,7 +92,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
-
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $("#ddlInsertDocumentCodeErpSource").empty();
@@ -111,6 +125,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -131,7 +149,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
-
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -153,6 +174,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -173,6 +198,10 @@
         $("#li-btnCallPageProfileCertificate").addClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -193,7 +222,10 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").addClass("active");
         $("#li-btnCallPageProfileEmailType").removeClass("active");
-
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
 
 
         $.unblockUI();
@@ -215,6 +247,125 @@
         $("#li-btnCallPageProfileCertificate").removeClass("active");
         $("#li-btnCallPageProfileCompanyCode").removeClass("active");
         $("#li-btnCallPageProfileEmailType").addClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+
+
+        $.unblockUI();
+    });
+
+
+     $("#btn-btnCallPageProfileReasonIssue").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ProfileReasonIssue")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").addClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+
+
+
+        $("#ddlInsertProfileReasonIssueDataSource").empty();
+        $("#ddlInsertProfileReasonIssueErpDocumentType").empty();
+
+
+        $("#ddlUpdateProfileReasonIssueDataSource").empty();
+        $("#ddlUpdateProfileReasonIssueErpDocumentType").empty();
+
+
+        $.unblockUI();
+    });
+
+
+
+    $("#btn-btnCallPageProfileEmailTemplate").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ProfileEmailTemplate")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").addClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+
+
+        $("#ddlInsertProfileEmailTemplateEmailTypeNo").empty();
+
+        $("#ddlUpdateProfileEmailTemplateEmailTypeNo").empty();
+
+
+        $.unblockUI();
+    });
+
+
+    $("#btn-btnCallPageZipFileType").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ZipFileType")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").addClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+
+        $.unblockUI();
+    });
+
+
+    $("#btn-btnCallPageZipFileConfig").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "ZipFileConfig")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").addClass("active");
+
 
         $.unblockUI();
     });
