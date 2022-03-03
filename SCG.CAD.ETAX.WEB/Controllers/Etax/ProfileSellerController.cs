@@ -165,7 +165,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.SubDistrict}," +
                                 $"{item.Road}," +
                                 $"{item.Building}," +
-                                $"{item.AddressNumber}," +
+                                $"{item.Addressnumber}," +
                                 $"{item.SellerEmail}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +

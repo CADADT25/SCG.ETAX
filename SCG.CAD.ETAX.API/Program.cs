@@ -35,6 +35,16 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
+//app.UseSwagger();
+//app.UseSwaggerUI(c =>
+//{
+//    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCG.CAD.ETAX.API");
+//    // c.RoutePrefix = "";
+//});
+
+
+//app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

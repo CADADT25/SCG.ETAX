@@ -3,16 +3,8 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
 
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/ProfileReasonIssue/_Content.cshtml")
-
-</div>
+@await Html.PartialAsync("~/Views/ProfileReasonIssue/_Content.cshtml")
 
 
 <script type="text/javascript">
@@ -163,7 +155,7 @@
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlUpdateProfileReasonIssueDataSource");
             });
-        })        
+        })
 
 
         $.getJSON("@Url.Action("DropDownList", "ErpDocument")", function (data) {
@@ -336,11 +328,11 @@
 
 
                 var tempDataSource = data.ReasonIssueDataSource;
-                
+
                 var mySelectDataSource = document.getElementById('ddlUpdateProfileReasonIssueDataSource');
 
                 for(var i, j = 0; i = mySelectDataSource.options[j]; j++) {
-                    
+
                     if(i.value == tempDataSource) {
                         mySelectDataSource.selectedIndex = j;
                         break;

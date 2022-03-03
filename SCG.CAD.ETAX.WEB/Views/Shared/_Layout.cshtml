@@ -1,84 +1,80 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SCG.CAD.ETAX.WEB</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+    <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Form Validation - Vuexy - Bootstrap HTML admin template</title>
+    <link rel="apple-touch-icon" href="~/app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/app-assets/images/ico/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
+
+    <link rel="stylesheet" href="@Url.Content("~/vendor/fontawesome/css/all.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/vendor/fontawesome/css/fontawesome.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/vendor/fontawesome/css/brands.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/vendor/fontawesome/css/solid.css")" />
 
 
-    <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.min.css")" />
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/components.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/bordered-layout.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/semi-dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/vertical-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/form-validation.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/charts/apexcharts.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/extensions/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/tables/datatable/responsive.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/charts/chart-apex.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/extensions/ext-component-toastr.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/app-invoice-list.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/extensions/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/select/select2.min.css">
 
-
-    <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/all.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/fontawesome.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/brands.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/assets/fontawesome/css/solid.css")" />
-
-
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="~/assets/css/style.css">
-    <link rel="stylesheet" href="~/assets/css/components.css">
-
-    <link rel="stylesheet" href="~/assets/select2/select2.min.css">
-
-
-
-    <link rel="apple-touch-icon" sizes="57x57" href="~/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="~/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="~/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="~/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="~/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="~/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="~/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="~/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="~/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="~/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="~/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/favicon/favicon-16x16.png">
-    <link rel="manifest" href="~/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="~/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <link rel="stylesheet" href="~/assets/css/cursor/cursor.css">
-    <link rel="stylesheet" href="~/assets/css/scroll/scroll.css">
-
-
-    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/sweetalert2.min.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/extensions/toastr.css">
-
-    <link rel="stylesheet" type="text/css" href="~/assets/datapicker/bootstrap-timepicker.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/datapicker/daterangepicker.css">
-
-    <link rel="stylesheet" type="text/css" href="~/assets/summernote/summernote.min.css">
-
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="~/vendor/cursor/cursor.css">
+
+
+
 
 
 </head>
-<body>
-    <div id="app">
-        <div class="main-wrapper">
-            <div class="navbar-bg"></div>
+<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
 
-            @await Html.PartialAsync("~/Views/Sidebar/TopSidebar.cshtml")
+    @await Html.PartialAsync("~/Views/Sidebar/TopSidebar.cshtml")
 
-            @await Html.PartialAsync("~/Views/Sidebar/LeftSidebar.cshtml")
+    @await Html.PartialAsync("~/Views/Sidebar/LeftSidebar.cshtml")
 
 
-
-            <div class="main-content">
-                <section class="section">
-                    <div id="contentPartial">
-                        @RenderBody()
-                    </div>
-                </section>
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row"></div>
+            <div class="content-body">
+                <div id="contentPartial">
+                    @RenderBody()
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
 
 
     @await Html.PartialAsync("~/Views/ProductUnit/_Modal.cshtml")
@@ -96,44 +92,53 @@
     @await Html.PartialAsync("~/Views/ZipFileType/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ZipFileConfig/_Modal.cshtml")
 
-    <!-- General JS Scripts -->
-    <script src="~/assets/js/jquery-3.3.1.min.js"></script>
-    <script src="~/assets/js/popper.min.js"></script>
-    <script src="~/assets/js/bootstrap.min.js"></script>
-    <script src="~/assets/js/jquery.nicescroll.min.js"></script>
-    <script src="~/assets/js/moment.min.js"></script>
-    <script src="~/assets/js/stisla.js"></script>
-    <script src="~/assets/BlockUI/BlockUI.js"></script>
 
 
-    <!-- Template JS File -->
-    <script src="~/assets/js/scripts.js"></script>
-    <script src="~/assets/js/custom.js"></script>
+    <script src="~/app-assets/vendors/js/vendors.min.js"></script>
+    <script src="~/app-assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
+    <script src="~/app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+    <script src="~/app-assets/js/core/app-menu.js"></script>
+    <script src="~/app-assets/js/core/app.js"></script>
+    <script src="~/app-assets/js/scripts/forms/form-validation.js"></script>
+    <script src="~/app-assets/vendors/js/charts/apexcharts.min.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/toastr.min.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/moment.min.js"></script>
+    <script src="~/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
+    <script src="~/app-assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
+    <script src="~/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js"></script>
+    <script src="~/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
+    <script src="~/app-assets/vendors/js/tables/datatable/responsive.bootstrap4.min.js"></script>
 
-    <!-- Page Specific JS File -->
-    <script src="~/assets/js/page/index.js"></script>
+    <script src="~/app-assets/js/scripts/pages/dashboard-analytics.js"></script>
+    <script src="~/app-assets/js/scripts/pages/app-invoice-list.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/polyfill.min.js"></script>
+    <script src="~/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
+    <script src="~/app-assets/js/scripts/extensions/ext-component-blockui.js"></script>
+    <script src="~/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+    <script src="~/app-assets/js/scripts/forms/form-select2.js"></script>
 
-
-    <script src="~/assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
-    <script src="~/assets/js/scripts/extensions/sweet-alerts"></script>
-    <script src="~/assets/vendors/js/extensions/toastr.min.js"></script>
-
-
-
-    <script src="~/js/common.js"></script>
-    @*<script src="~/js/validate.js"></script>*@
-
-    <script src="~/assets/select2/select2.min.js"></script>
-
-    <script src="~/assets/datapicker/bootstrap-timepicker.min.js"></script>
-
-    <script src="~/assets/datapicker/daterangepicker.js"></script>
-
-    <script src="~/assets/summernote/summernote.min.js"></script>
-
-
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="~/js/common.js"></script>
+
+
+
+    <script src="@Url.Content("~/vendor/fontawesome/js/all.js")"></script>
+    <script src="@Url.Content("~/vendor/fontawesome/js/brands.js")"></script>
+    <script src="@Url.Content("~/vendor/fontawesome/js/solid.js")"></script>
+    <script src="@Url.Content("~/vendor/fontawesome/js/fontawesome.js")"></script>
+
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 13,
+                    height: 13
+                });
+            }
+        })
+    </script>
+
 
 
     @await RenderSectionAsync("Scripts", required: false)

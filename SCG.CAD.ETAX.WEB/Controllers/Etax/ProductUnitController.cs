@@ -81,12 +81,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //ProductUnit tran = new ProductUnit();
-
-            //tran = JsonConvert.DeserializeObject<ProductUnit>(jsonString.ToString());
-
-            //string json = JsonConvert.SerializeObject(tran, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Insert", httpContent));
@@ -98,8 +92,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response res = new Response();
 
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
-
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             var task = await Task.Run(() => ApiHelper.PostURI("api/ProductUnit/Update", httpContent));
@@ -110,8 +102,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         public async Task<JsonResult> Delete(string jsonString)
         {
             Response res = new Response();
-
-            //string json = JsonConvert.SerializeObject(jsonString, Formatting.Indented);
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 

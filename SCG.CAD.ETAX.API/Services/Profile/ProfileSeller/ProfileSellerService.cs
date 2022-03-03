@@ -111,7 +111,7 @@
                         update.SubDistrict = param.SubDistrict;
                         update.Road = param.Road;
                         update.Building = param.Building;
-                        update.AddressNumber = param.AddressNumber;
+                        update.Addressnumber = param.Addressnumber;
                         update.SellerEmail = param.SellerEmail;
                         update.EmailTemplateNo = param.EmailTemplateNo;
                         update.UpdateBy = param.UpdateBy;

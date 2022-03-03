@@ -3,17 +3,8 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
 
-
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/ProductUnit/_Content.cshtml")
-
-</div>
+@await Html.PartialAsync("~/Views/ProductUnit/_Content.cshtml")
 
 
 <script type="text/javascript">
@@ -78,6 +69,7 @@
                     data: "isactive",
                     width: "10%",
                     className: "text-center",
+                    orderable: false,
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
                     }
@@ -85,7 +77,7 @@
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
                     orderable: false,
                     width: "2%"
                 }
@@ -109,27 +101,50 @@
         DeleteProductUnit(table);
     }
 
+
+     function fnInsertCancelProfileEmailTemplate(){
+
+            document.getElementById('txtInsertProductUnitErp').value = '';
+            document.getElementById('txtInsertProductUnitRd').value = '';
+            document.getElementById('txtInsertProductUnitDescription').value = '';
+
+            $("#modalProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
+    function fnUpdateCancelProfileEmailTemplate(){
+
+            document.getElementById('txtUpdateProductUnitErp').value = '';
+            document.getElementById('txtUpdateProductUnitRd').value = '';
+            document.getElementById('txtUpdatetProductUnitDescription').value = '';
+
+            $("#modalUpdateProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+    }
+
      function fnInsertProductUnit(){
         if ($('#txtInsertProductUnitErp').val() != '' && $('#txtInsertProductUnitRd').val() != '') {
             callProductUnitInsertController();
-        } 
+        }
         else {
             validateInsertProductUnit();
+
+            fnToastrInputDataFail();
         }
-        callProductUnitIndex();
     }
 
     function fnUpdateProductUnit(){
         if ($('#txtUpdateProductUnitErp').val() != '' && $('#txtUpdateProductUnitRd').val() != '') {
             callProductUnitUpdateController();
-        } 
+        }
         else {
             validateUpdateProductUnit();
+
+            fnToastrInputDataFail();
         }
-        callProductUnitIndex();
     }
 
     function EditProductUnit(table){
+
+        var allData = table.rows().data();
 
         $('#tbProductUnitMain').on('click', 'td.editor-edit', function () {
 
@@ -179,21 +194,21 @@
     }
 
 
-    // [Begin] Ajax call Controller 
+    // [Begin] Ajax call Controller
 
     function callProductUnitGetDetailController(getPK){
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProductUnit")",
             data: { id : getPK },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
+
                 document.getElementById('txtUpdateProductUnitNo').value = data.ProductUnitNo;
                 document.getElementById('txtUpdateProductUnitErp').value = data.ProductUnitErp;
-                document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;            
+                document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;
                 document.getElementById('txtUpdatetProductUnitDescription').value = data.ProductUnitDescription;
 
                 if(data.Isactive == 1){
@@ -204,7 +219,7 @@
                 }
 
                 $("#modalUpdateProductUnit").modal('show');
-                
+
             }
         });
     }
@@ -237,27 +252,28 @@
             type: "POST",
             url: "@Url.Action("Insert", "ProductUnit")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
 
+                if(resp.status = true){
                     fnSweetAlert_SaveSuccess();
-
                     document.getElementById('txtInsertProductUnitErp').value = '';
                     document.getElementById('txtInsertProductUnitRd').value = '';
                     document.getElementById('txtInsertProductUnitDescription').value = '';
-
-                    $("#modalProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalProductUnit").modal('hide');
+                    callProductUnitIndex();
                 }
-
+                else{
+                    fnSweetAlert_Error(resp.error_message);
+                }
             }
         });
     }
 
     function callProductUnitUpdateController(){
-        
+
         var IsActive = 1;
 
         var getToggle = $('#toggleUpdateProductUnit-event').text();
@@ -288,19 +304,25 @@
             type: "POST",
             url: "@Url.Action("Update", "ProductUnit")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
-
                     document.getElementById('txtUpdateProductUnitErp').value = '';
                     document.getElementById('txtUpdateProductUnitRd').value = '';
                     document.getElementById('txtUpdatetProductUnitDescription').value = '';
 
-                    $("#modalUpdateProductUnit").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateProductUnit").modal('hide');
+
+                    callProductUnitIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });
@@ -326,10 +348,8 @@
             type: "POST",
             url: "@Url.Action("Delete", "ProductUnit")",
             data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
             dataType: "text",
             success: function () {
-
                     fnSweetAlert_DeleteSuccess();
                 }
         });
@@ -361,7 +381,7 @@
         });
     }
 
-    // [end] Ajax call Controller 
+    // [end] Ajax call Controller
 
 
 

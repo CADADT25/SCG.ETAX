@@ -6,6 +6,7 @@
 
 
     $("#btn-CallPageProductUnit").click(function () {
+
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProductUnit")");

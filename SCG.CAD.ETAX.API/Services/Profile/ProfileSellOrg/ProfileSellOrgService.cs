@@ -106,6 +106,8 @@
                     {
                         update.SellOrgCode = param.SellOrgCode;
                         update.SellOrgDescripttion = param.SellOrgDescripttion;
+                        update.CompanyCode = param.CompanyCode;
+                        update.SellOrgEmail = param.SellOrgEmail;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;

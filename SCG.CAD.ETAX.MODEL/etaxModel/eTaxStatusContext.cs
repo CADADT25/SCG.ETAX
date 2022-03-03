@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ZipFileType> ZipFileTypes { get; set; } = null!;
+        public virtual DbSet<ProfileCompany> ProfileCompanies { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,13 +29,28 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ZipFileType>(entity =>
+            modelBuilder.Entity<ProfileCompany>(entity =>
             {
-                entity.HasKey(e => e.ZipFileTypeNo);
+                entity.HasKey(e => e.CompanyNo)
+                    .HasName("PK_compnanyProfile");
 
-                entity.ToTable("zipFileType");
+                entity.ToTable("profileCompany");
 
-                entity.Property(e => e.ZipFileTypeNo).HasColumnName("zipFileTypeNo");
+                entity.Property(e => e.CompanyNo).HasColumnName("companyNo");
+
+                entity.Property(e => e.CertificateProfileNo).HasColumnName("certificateProfileNo");
+
+                entity.Property(e => e.CompanyCode)
+                    .HasMaxLength(20)
+                    .HasColumnName("companyCode");
+
+                entity.Property(e => e.CompanyNameEn)
+                    .HasMaxLength(250)
+                    .HasColumnName("companyNameEN");
+
+                entity.Property(e => e.CompanyNameTh)
+                    .HasMaxLength(250)
+                    .HasColumnName("companyNameTH");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -44,6 +59,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
+
+                entity.Property(e => e.IsEbill).HasColumnName("isEbill");
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
@@ -54,18 +71,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
-
-                entity.Property(e => e.ZipFileTypeCode)
-                    .HasMaxLength(100)
-                    .HasColumnName("zipFileTypeCode");
-
-                entity.Property(e => e.ZipFileTypeDescription)
-                    .HasMaxLength(300)
-                    .HasColumnName("zipFileTypeDescription");
-
-                entity.Property(e => e.ZipFileTypeName)
-                    .HasMaxLength(100)
-                    .HasColumnName("zipFileTypeName");
             });
 
             OnModelCreatingPartial(modelBuilder);

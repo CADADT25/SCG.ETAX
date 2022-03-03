@@ -3,17 +3,7 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/TaxCode/_Content.cshtml")
-
-</div>
-
+@await Html.PartialAsync("~/Views/TaxCode/_Content.cshtml")
 
 <script type="text/javascript">
 
@@ -28,7 +18,7 @@
     });
 
 
-    
+
     function RenderTaxCode(){
 
         var table = $("#tbTaxCodeMain").DataTable({
@@ -112,24 +102,46 @@
         DeleteTaxCode(table);
     }
 
+
+    
+     function fnInsertCancelProfileEmailTemplate(){
+
+        document.getElementById('txtInsertTaxCodeErp').value = '';
+        document.getElementById('txtInsertTaxCodeRd').value = '';
+        document.getElementById('txtInsertTaxCodeDescription').value = '';
+
+        $("#modalCreateTaxCode").modal('hide');
+    }
+
+    function fnUpdateCancelProfileEmailTemplate(){
+
+        document.getElementById('txtUpdateTaxCodeErp').value = '';
+        document.getElementById('txtUpdateTaxCodeRd').value = '';
+        document.getElementById('txtUpdatetTaxCodeDescription').value = '';
+
+        $("#modalUpdateTaxCode").modal('hide');
+    }
+
+
+
     function fnInsertTaxCode(){
         if ($('#txtInsertTaxCodeErp').val() != '' && $('#txtInsertTaxCodeRd').val() != '') {
             callTaxCodeInsertController();
-        } 
+        }
         else {
             validateInsertTaxCode();
+            fnToastrInputDataFail();
         }
-        callTaxCodeIndex();
     }
 
     function fnUpdateTaxCode(){
         if ($('#txtUpdateTaxCodeErp').val() != '' && $('#txtUpdateTaxCodeRd').val() != '') {
             callTaxCodeUpdateController();
-        } 
+        }
         else {
             validateUpdateTaxCode();
+            fnToastrInputDataFail();
         }
-        callTaxCodeIndex();
     }
 
     function EditTaxCode(table){
@@ -182,8 +194,8 @@
     }
 
 
-    
-    // [Begin] Ajax call Controller 
+
+    // [Begin] Ajax call Controller
 
     function callTaxCodeGetDetailController(getPK){
         $.ajax({
@@ -197,7 +209,7 @@
                 data = $.parseJSON(result)
                 document.getElementById('txtUpdateTaxCodeNo').value = data.TaxCodeNo;
                 document.getElementById('txtUpdateTaxCodeErp').value = data.TaxCodeErp;
-                document.getElementById('txtUpdateTaxCodeRd').value = data.TaxCodeRd;            
+                document.getElementById('txtUpdateTaxCodeRd').value = data.TaxCodeRd;
                 document.getElementById('txtUpdatetTaxCodeDescription').value = data.TaxCodeDescription;
 
                 if(data.Isactive == 1){
@@ -208,7 +220,7 @@
                 }
 
                 $("#modalUpdateTaxCode").modal('show');
-                
+
             }
         });
     }
@@ -241,11 +253,12 @@
             type: "POST",
             url: "@Url.Action("Insert", "TaxCode")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -253,7 +266,12 @@
                     document.getElementById('txtInsertTaxCodeRd').value = '';
                     document.getElementById('txtInsertTaxCodeDescription').value = '';
 
-                    $("#modalCreateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateTaxCode").modal('hide');
+
+                    callTaxCodeIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -261,7 +279,7 @@
     }
 
     function callTaxCodeUpdateController(){
-        
+
         var IsActive = 1;
 
         var getToggle = $('#toggleUpdateTaxCode-event').text();
@@ -292,11 +310,12 @@
             type: "POST",
             url: "@Url.Action("Update", "TaxCode")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -304,7 +323,13 @@
                     document.getElementById('txtUpdateTaxCodeRd').value = '';
                     document.getElementById('txtUpdatetTaxCodeDescription').value = '';
 
-                    $("#modalUpdateTaxCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateTaxCode").modal('hide');
+
+                    callTaxCodeIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });
@@ -336,7 +361,7 @@
 
                     fnSweetAlert_DeleteSuccess();
 
-                    
+
                 }
         });
     }
@@ -367,7 +392,7 @@
         });
     }
 
-    // [end] Ajax call Controller 
+    // [end] Ajax call Controller
 
 
 

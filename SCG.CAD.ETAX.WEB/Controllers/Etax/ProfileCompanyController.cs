@@ -141,6 +141,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "CompanyNameTh," +
                             "CompanyNameEn," +
                             "CertificateProfileNo," +
+                            "IsEbill," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -156,6 +157,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.CompanyNameTh}," +
                                 $"{item.CompanyNameEn}," +
                                 $"{item.CertificateProfileNo}," +
+                                $"{item.IsEbill}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +

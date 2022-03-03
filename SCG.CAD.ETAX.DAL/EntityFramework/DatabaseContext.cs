@@ -27,7 +27,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<NewsBoard> newsBoard { get; set; }
         public DbSet<ProductUnit> productUnit { get; set; }
         public DbSet<ProfileCertificate> profileCertificate { get; set; }
-        public DbSet<ProfileCompany> profileCompanie { get; set; }
+        public DbSet<ProfileCompany> profileCompany { get; set; }
         public DbSet<ProfileCustomer> profileCustomer { get; set; }
         public DbSet<ProfileEmailTemplate> profileEmailTemplate { get; set; }
         public DbSet<ProfileEmailType> profileEmailType { get; set; }

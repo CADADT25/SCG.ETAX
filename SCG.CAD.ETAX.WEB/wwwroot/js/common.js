@@ -6,26 +6,34 @@
 
 function fnSweetAlert_SaveSuccess() {
     Swal.fire({
-        type: 'success',
-        title: 'Your work has been saved',
-        showConfirmButton: true
+        title: 'Good job!',
+        text: 'Your has been saved!',
+        icon: 'success',
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        },
+        buttonsStyling: false
     });
 }
 
 function fnSweetAlert_DeleteSuccess() {
     Swal.fire({
-        type: 'success',
-        title: 'Your work has been deleted',
-        showConfirmButton: true
+        title: 'Good job!',
+        text: 'Your has been deleted!',
+        icon: 'success',
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        },
+        buttonsStyling: false
     });
 }
 
-function fnSweetAlert_Error() {
+function fnSweetAlert_Error(error) {
     Swal.fire({
-        type: 'error',
+        icon: 'error',
         title: 'Oops...',
         text: 'Something went wrong!',
-        footer: '<a href="javascript:void();">Why do I have this issue?</a>'
+        footer: '<a href="javascript:void();">' + error + '</a>'
     });
 }
 

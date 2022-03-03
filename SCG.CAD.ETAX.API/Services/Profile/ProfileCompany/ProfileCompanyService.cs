@@ -12,7 +12,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.profileCompanie.ToList();
+                var getList = _dbContext.profileCompany.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -42,7 +42,7 @@
 
             try
             {
-                var getList = _dbContext.profileCompanie.Where(x => x.CompanyNo == id).ToList();
+                var getList = _dbContext.profileCompany.Where(x => x.CompanyNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -76,7 +76,7 @@
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
-                    _dbContext.profileCompanie.Add(param);
+                    _dbContext.profileCompany.Add(param);
                     _dbContext.SaveChanges();
 
 
@@ -100,7 +100,7 @@
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.profileCompanie.Where(x => x.CompanyNo == param.CompanyNo).FirstOrDefault();
+                    var update = _dbContext.profileCompany.Where(x => x.CompanyNo == param.CompanyNo).FirstOrDefault();
 
                     if (update != null)
                     {
@@ -108,6 +108,7 @@
                         update.CompanyNameTh = param.CompanyNameTh;
                         update.CompanyNameEn = param.CompanyNameEn;
                         update.CertificateProfileNo = param.CertificateProfileNo;
+                        update.IsEbill = param.IsEbill;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -140,11 +141,11 @@
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.profileCompanie.Find(param.CompanyNo);
+                    var delete = _dbContext.profileCompany.Find(param.CompanyNo);
 
                     if (delete != null)
                     {
-                        _dbContext.profileCompanie.Remove(delete);
+                        _dbContext.profileCompany.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;
