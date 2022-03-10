@@ -3,16 +3,7 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/DocumentCode/_Content.cshtml")
-
-</div>
+@await Html.PartialAsync("~/Views/DocumentCode/_Content.cshtml")
 
 
 <script type="text/javascript">
@@ -249,8 +240,9 @@
         }
         else {
             fnToastrInputDataFail();
+            validateInsertDocumentCode();
         }
-        callDocumentCodeIndex();
+
     }
 
     function fnUpdateDocumentCode(){
@@ -264,8 +256,9 @@
         }
         else {
             fnToastrInputDataFail();
+            validateUpdateDocumentCode();
         }
-        callDocumentCodeIndex();
+
     }
 
     function EditDocumentCode(table){
@@ -393,7 +386,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -402,10 +397,12 @@
                     $("#ddlInsertDocumentCodeRd").empty();
                     document.getElementById('txtInsertDocumentCodeDescription').value = '';
 
-
-
                     $("#modalCreateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
+                    callDocumentCodeIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -449,7 +446,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -457,10 +456,11 @@
                     $("#ddlUpdateDocumentCodeErp").empty();
                     $("#ddlUpdateDocumentCodeRd").empty();
                     document.getElementById('txtUpdateDocumentCodeDescription').value = '';
-
-
                     $("#modalUpdateDocumentCode").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
+                    callDocumentCodeIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });
@@ -527,9 +527,6 @@
 
     // [end] Ajax call Controller
 
-
-
-
     function callDocumentCodeIndex() {
         setTimeout(function(){
             $.blockUI();
@@ -537,10 +534,5 @@
             $.unblockUI();
         }, 500);
     }
-
-
-
-
-
 
 </script>

@@ -103,12 +103,33 @@
         DeleteRdDocument(table);
     }
 
+    function fnInsertCancelRdDocument(){
+
+            document.getElementById('txtInsertRdDocumentCode').value = '';
+            document.getElementById('txtInsertRdDocumentNameTH').value = '';
+            document.getElementById('txtInsertRdDocumentNameEN').value = '';
+
+            $("#modalCreateRdDocument").modal('hide');
+    }
+
+    function fnUpdateCancelRdDocument(){
+
+            document.getElementById('txtUpdateRdDocumentCode').value = '';
+            document.getElementById('txtUpdateRdDocumentNameTH').value = '';
+            document.getElementById('txtUpdateRdDocumentNameEN').value = '';
+
+            $("#modalUpdateRdDocument").modal('hide');
+    }
+
+
+
     function fnInsertRdDocument(){
 
         if ($('#txtInsertRdDocumentCode').val() != '' && $('#txtInsertRdDocumentNameTH').val() != '') {
             callRdDocumentInsertController();
         }
         else {
+            fnToastrInputDataFail();
             validateInsertRdDocument();
         }
     }
@@ -118,6 +139,7 @@
             callRdDocumentUpdateController();
         }
         else {
+            fnToastrInputDataFail();
             validateUpdateRdDocument();
         }
     }
@@ -235,7 +257,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -244,6 +268,10 @@
                     document.getElementById('txtInsertRdDocumentNameEn').value = '';
 
                     $("#modalCreateRdDocument").modal('hide');
+                    callRdDocumentIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -286,7 +314,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -295,6 +325,11 @@
                     document.getElementById('txtUpdateRdDocumentNameEN').value = '';
 
                     $("#modalUpdateRdDocument").modal('hide');
+
+                    callRdDocumentIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });

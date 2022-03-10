@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelRdDocument();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelRdDocument();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnInsertRdDocument();">Save changes</button>
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelRdDocument();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelRdDocument();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnUpdateRdDocument();">Save changes</button>
             </div>
         </div>

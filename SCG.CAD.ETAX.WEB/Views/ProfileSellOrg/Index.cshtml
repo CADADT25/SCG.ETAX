@@ -3,16 +3,7 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
-
-<div class="section-body">
-
     @await Html.PartialAsync("~/Views/ProfileSellOrg/_Content.cshtml")
-
-</div>
 
 
 <script type="text/javascript">
@@ -67,7 +58,15 @@
                     width: "20%"
                 },
                 {
+                    data: "companyCode",
+                    width: "20%"
+                },
+                {
                     data: "sellOrgDescripttion",
+                    width: "20%"
+                },
+                {
+                    data: "sellOrgEmail",
                     width: "20%"
                 },
                 {
@@ -112,7 +111,7 @@
             document.getElementById('txtInsertProfileSellOrgCode').value = '';
             document.getElementById('txtInsertProfileSellOrgDescription').value = '';
 
-            $("#modalCreateProfileSellOrg").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalCreateProfileSellOrg").modal('hide');
     }
 
     function fnUpdateCancelProfileSellOrg(){
@@ -120,7 +119,7 @@
             document.getElementById('txtUpdateProfileSellOrgCode').value = '';
             document.getElementById('txtUpdateProfileSellOrgDescription').value = '';
 
-            $("#modalUpdateProfileSellOrg").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalUpdateProfileSellOrg").modal('hide');
     }
 
     function callModalInsertProfileSellOrg(){
@@ -137,8 +136,9 @@
         }
         else {
             fnToastrInputDataFail();
+            validateInsertProfileSellOrg();
         }
-        callProfileSellOrgIndex();
+        
     }
 
     function fnUpdateProfileSellOrg(){
@@ -148,8 +148,8 @@
         }
         else {
             fnToastrInputDataFail();
+            validateUpdateProfileSellOrg();
         }
-        callProfileSellOrgIndex();
     }
 
     function EditProfileSellOrg(table){
@@ -264,15 +264,21 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
                     document.getElementById('txtUpdateProfileSellOrgCode').value = '';
                     document.getElementById('txtUpdateProfileSellOrgDescription').value = '';
 
-                    $("#modalCreateProfileSellOrg").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateProfileSellOrg").modal('hide');
 
+                    callProfileSellOrgIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -314,7 +320,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -322,8 +330,11 @@
                     document.getElementById('txtUpdateProfileSellOrgCode').value = '';
                     document.getElementById('txtUpdateProfileSellOrgDescription').value = '';
 
-                    $("#modalUpdateProfileSellOrg").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateProfileSellOrg").modal('hide');
 
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });

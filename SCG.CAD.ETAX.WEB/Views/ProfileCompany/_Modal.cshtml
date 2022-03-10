@@ -1,4 +1,148 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    ViewData["Title"] = "ProfileCompany";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileCompanyValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileCompany" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnInsertCancelProfileCompany();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Code</label>
+                                    <input type="text" id="txtInsertProfileCompanyCode" onkeyup="validateInsertProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Name TH</label>
+                                    <input type="text" id="txtInsertProfileCompanyNameTh" onkeyup="validateInsertProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Name EN</label>
+                                    <input type="text" id="txtInsertProfileCompanyNameEn" onkeyup="validateInsertProfileCompany()" class="form-control">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Certificate no.</label>
+                                    <select class="select2 form-control" id="ddlInsertProfileCompanyCertificate"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Tax no.</label>
+                                    <input type="text" id="txtInsertProfileCompanyTaxNumber" onkeyup="validateInsertProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch Is e-Bill</div>
+                                    <input id="toggleInsertProfileCompanyEbill" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertProfileCompanyEbill-event"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleInsertProfileCompanyIsActive" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleInsertProfileCompanyIsActive-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileCompany();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileCompany();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileCompany" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelProfileCompany();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="form-group" hidden>
+                                    <label>No</label>
+                                    <input disabled type="text" id="txtUpdateProfileCompanyNo" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Code</label>
+                                    <input type="text" id="txtUpdateProfileCompanyCode" onkeyup="validateUpdateProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Name TH</label>
+                                    <input type="text" id="txtUpdateProfileCompanyNameTh" onkeyup="validateUpdateProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Name EN</label>
+                                    <input type="text" id="txtUpdateProfileCompanyNameEn" onkeyup="validateUpdateProfileCompany()" class="form-control">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Certificate no.</label>
+                                    <select class="select2 form-control" id="ddlUpdateProfileCompanyCertificate"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Tax no.</label>
+                                    <input type="text" id="txtUpdateProfileCompanyTaxNumber" onkeyup="validateUpdateProfileCompany()" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch Is e-Bill</div>
+                                    <input id="toggleUpdateProfileCompanyEbill" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateProfileCompanyEbill-event"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="control-label">Toggle switch IsActive</div>
+                                    <input id="toggleUpdateProfileCompanyIsActive" checked type="checkbox" data-toggle="toggle">
+                                    <div hidden id="toggleUpdateProfileCompanyIsActive-event"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCompany();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCompany();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

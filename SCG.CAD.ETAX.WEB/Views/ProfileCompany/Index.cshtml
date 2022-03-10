@@ -1,8 +1,549 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    ViewData["Title"] = "ProfileCompany";
+    Layout = null;
 }
 
-<h1>Index</h1>
+@await Html.PartialAsync("~/Views/ProfileCompany/_Content.cshtml")
 
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderProfileCompany();
+
+        $('#toggleUpdateProfileCompanyEbill').change(function() {
+            $('#toggleUpdateProfileCompanyEbill-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+
+        $('#toggleUpdateProfileCompanyIsActive').change(function() {
+            $('#toggleUpdateProfileCompanyIsActive-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+
+    });
+
+    $(window).on('load', function() {
+
+        $('#modalCreateProfileCompany').select2({
+            dropdownParent: $('#modalCreateProfileCompany')
+        });
+
+
+        $('#modalUpdateProfileCompany').select2({
+            dropdownParent: $('#modalUpdateProfileCompany')
+        });
+
+    });
+
+
+
+    function RenderProfileCompany(){
+
+        var table = $("#tbProfileCompanyMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProfileCompany")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "companyNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "companyCode",
+                    width: "20%"
+                },
+                {
+                    data: "companyNameTh",
+                    width: "20%"
+                },
+                {
+                    data: "companyNameEn",
+                    width: "10%"
+                },
+                {
+                    data: "certificateProfileNo",
+                    width: "10%"
+                },
+                {
+                    data: "isEbill",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditProfileCompany(table);
+        DeleteProfileCompany(table);
+    }
+
+    function fnDropdownProfileCompanyCertificate() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Certificate Company ---").appendTo("#ddlInsertProfileCompanyCertificate");
+
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.CompanyName,
+                        text: data.CompanyName
+                    }).html(data.CompanyName).appendTo("#ddlInsertProfileCompanyCertificate");
+            });
+
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.CompanyName,
+                        text: data.CompanyName
+                    }).html(data.CompanyName).appendTo("#ddlUpdateProfileCompanyCertificate");
+            });
+        })
+
+    }
+
+    function fnInsertCancelProfileCompany(){
+
+            document.getElementById('txtInsertProfileCompanyCode').value = '';
+            document.getElementById('txtInsertProfileCompanyNameTh').value = '';
+            document.getElementById('txtInsertProfileCompanyNameEn').value = '';
+            $("#ddlInsertProfileCompanyCertificate").empty();
+            document.getElementById('txtInsertProfileCompanyTaxNumber').value = '';
+            $("#modalCreateProfileCompany").modal('hide');
+
+    }
+
+    function fnUpdateCancelProfileCompany(){
+
+            document.getElementById('txtUpdateProfileCompanyCode').value = '';
+            document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
+            document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
+            $("#ddlUpdateProfileCompanyCertificate").empty();
+            document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
+            $("#modalUpdateProfileCompany").modal('hide');
+
+    }
+
+    function callModalInsertProfileCompany(){
+
+        fnDropdownProfileCompanyCertificate();
+
+        $("#modalCreateProfileCompany").modal('show');
+
+    }
+
+    function fnInsertProfileCompany(){
+
+        var Certificate = $('#ddlInsertProfileCompanyCertificate').val();
+
+        if ( Certificate != '0' &&
+        $('#txtInsertProfileCompanyCode').val() != '' &&
+        $('#txtInsertProfileCompanyNameTh').val() != '' &&
+        $('#txtInsertProfileCompanyNameEn').val() != '' &&
+        $('#txtInsertProfileCompanyTaxNumber').val() != '' )
+        {
+            callProfileCompanyInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateInsertProfileCompany();
+        }
+    }
+
+    function fnUpdateProfileCompany(){
+
+        var Certificate = $('#ddlUpdateProfileCompanyCertificate').val();
+
+
+        if ( Certificate != '0' &&
+        $('#txtUpdateProfileCompanyCode').val() != '' &&
+        $('#txtUpdateProfileCompanyNameTh').val() != '' &&
+        $('#txtUpdateProfileCompanyNameEn').val() != '' &&
+        $('#txtUpdateProfileCompanyTaxNumber').val() != '' )
+        {
+            callProfileCompanyUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateUpdateProfileCompany();
+        }
+        
+    }
+
+    function EditProfileCompany(table){
+
+        $('#tbProfileCompanyMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            fnDropdownProfileCompanyCertificate();
+
+            callProfileCompanyGetDetailController(getPK);
+
+        });
+    }
+
+    function DeleteProfileCompany(table){
+
+        $('#tbProfileCompanyMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callProfileCompanyDeleteController(getPK);
+                        callProfileCompanyIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportProfileCompany(){
+
+        $.blockUI();
+
+        callProfileCompanyExportController();
+
+        $.unblockUI();
+    }
+
+
+
+    // [Begin] Ajax call Controller
+
+    function callProfileCompanyGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileCompany")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateProfileCompanyNo').value = data.CompanyNo;
+                document.getElementById('txtUpdateProfileCompanyCode').value = data.CompanyCode;
+                document.getElementById('txtUpdateProfileCompanyNameTh').value = data.CompanyNameTh;
+                document.getElementById('txtUpdateProfileCompanyNameEn').value = data.CompanyNameEn;
+
+                $("#ddlUpdateProfileCompanyCertificate").select2("val", data.CertificateProfileNo);
+
+                document.getElementById('txtUpdateProfileCompanyTaxNumber').value = data.TaxNumber;
+
+                if(data.IsEbill == 1){
+                    $('#toggleUpdateProfileCompanyEbill').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateProfileCompanyEbill').bootstrapToggle('off');
+                }
+
+
+                if(data.Isactive == 1){
+                    $('#toggleUpdateProfileCompanyIsActive').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateProfileCompanyIsActive').bootstrapToggle('off');
+                }
+
+                $("#modalUpdateProfileCompany").modal('show');
+
+            }
+        });
+    }
+
+    function callProfileCompanyInsertController(){
+
+        var IsActive = 1;
+        var IsEbill = 1;
+
+        if($('#toggleInsertProfileCompanyEbill').prop('checked')){
+            IsEbill = 1;
+        }
+        else{
+            IsEbill = 0;
+        }
+
+        if($('#toggleInsertProfileCompanyIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+
+        var model = new Object();
+
+        model.CompanyCode = $('#txtInsertProfileCompanyCode').val();
+        model.CompanyNameTh = $('#txtInsertProfileCompanyNameTh').val();
+        model.CompanyNameEn = $('#txtInsertProfileCompanyNameEn').val();
+        model.CertificateProfileNo = $('#ddlInsertProfileCompanyCertificate').val();
+        model.TaxNumber = $('#txtInsertProfileCompanyTaxNumber').val();
+        model.IsEbill = IsEbill;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfileCompany")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                JSON.parse(resp);
+
+                if(resp.status = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertProfileCompanyCode').value = '';
+                    document.getElementById('txtInsertProfileCompanyNameTh').value = '';
+                    document.getElementById('txtInsertProfileCompanyNameEn').value = '';
+
+                    $("#ddlInsertProfileCompanyCertificate").empty();
+
+                    document.getElementById('txtInsertProfileCompanyTaxNumber').value = '';
+
+                    $("#modalCreateProfileCompany").modal('hide');
+
+                    callProfileCompanyIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
+                }
+
+            }
+        });
+    }
+
+    function callProfileCompanyUpdateController(){
+
+        var IsEbill = 1;
+        var getToggleEbill = $('#toggleUpdateProfileCompanyEbill-event').text();
+
+        var IsActive = 1;
+        var getToggle = $('#toggleUpdateProfileCompanyIsActive-event').text();
+
+        if(getToggleEbill.includes("true")){
+            IsEbilll = 1;
+        }
+        else
+        {
+            IsEbilll = 0;
+        }
+
+        if(getToggle.includes("true")){
+            IsActive = 1;
+        }
+        else
+        {
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.CompanyNo = $('#txtUpdateProfileCompanyNo').val();
+        model.CompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        model.CompanyNameTh = $('#txtUpdateProfileCompanyNameTh').val();
+        model.CompanyNameEn = $('#txtUpdateProfileCompanyNameEn').val();
+        model.CertificateProfileNo = $('#ddlUpdateProfileCompanyCertificate').val();
+        model.TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
+        model.IsEbill = IsEbill;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ProfileCompany")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                JSON.parse(resp);
+
+                if(resp.status = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateProfileCompanyCode').value = '';
+                    document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
+                    document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
+
+                    $("#ddlUpdateProfileCompanyCertificate").empty();
+
+                    document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
+
+
+                    $("#modalUpdateProfileCompany").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
+                    callProfileCompanyIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
+                }
+            }
+        });
+    }
+
+    function callProfileCompanyDeleteController(getPK){
+
+        var model = new Object();
+
+        model.CompanyNo = $('#txtUpdateProfileCompanyNo').val();
+        model.CompanyCode = "";
+        model.CompanyNameTh = "";
+        model.CompanyNameEn = "";
+        model.CertificateProfileNo = "";
+        model.TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
+        model.IsEbill = 0;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ProfileCompany")",
+            data: { jsonString : getJsonString },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function () {
+
+                    fnSweetAlert_DeleteSuccess();
+
+
+                }
+        });
+    }
+
+    function callProfileCompanyExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ProfileCompany")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ProfileCompany.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    function callProfileCompanyIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ProfileCompany")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+
+
+
+
+</script>

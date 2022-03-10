@@ -3,17 +3,7 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/ProfileDataSource/_Content.cshtml")
-
-</div>
-
+@await Html.PartialAsync("~/Views/ProfileDataSource/_Content.cshtml")
 
 <script type="text/javascript">
 
@@ -51,28 +41,25 @@
                 {
                     data: "dataSourceNo",
                     className: "text-center",
-                    width: "5%",
                     visible: false
                 },
                 {
                     //data: "productUnitNo",
                     className: "text-center",
-                    width: "5%",
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
                     data: "dataSourceName",
-                    width: "20%"
+                    orderable: true
                 },
                 {
                     data: "dataSourceDescription",
-                    width: "20%"
+                    orderable: true
                 },
                 {
                     data: "isactive",
-                    width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
@@ -137,8 +124,8 @@
         }
         else {
             fnToastrInputDataFail();
+            validateInsertDataSource();
         }
-        callDataSourceIndex();
     }
 
     function fnUpdateDataSource(){
@@ -148,8 +135,8 @@
         }
         else {
             fnToastrInputDataFail();
+            validateUpdateDataSource();
         }
-        callDataSourceIndex();
     }
 
     function EditDataSource(table){
@@ -264,15 +251,22 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
                     document.getElementById('txtInsertDataSourceName').value = '';
+
                     document.getElementById('txtInsertDataSourceDescription').value = '';
 
                     $("#modalCreateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
+                    callDataSourceIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -314,15 +308,23 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
                     document.getElementById('txtUpdateDataSourceName').value = '';
+
                     document.getElementById('txtUpdateDataSourceDescription').value = '';
 
                     $("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
+                 callDataSourceIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });
@@ -331,7 +333,6 @@
     function callDataSourceDeleteController(getPK){
 
         var model = new Object();
-
 
         model.DataSourceNo = getPK;
         model.DataSourceName = "";
@@ -348,7 +349,6 @@
             type: "POST",
             url: "@Url.Action("Delete", "ProfileDataSource")",
             data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
             dataType: "text",
             success: function () {
 

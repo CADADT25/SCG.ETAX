@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? CompanyNameTh { get; set; }
         public string? CompanyNameEn { get; set; }
         public int? CertificateProfileNo { get; set; }
+        public string? TaxNumber { get; set; }
         public int? IsEbill { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }

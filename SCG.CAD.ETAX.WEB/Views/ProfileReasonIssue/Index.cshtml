@@ -57,40 +57,32 @@
                 {
                     data: "reasonIssueNo",
                     className: "text-center",
-                    width: "5%",
                     visible: false
                 },
                 {
                     //data: "productUnitNo",
                     className: "text-center",
-                    width: "5%",
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
                     data: "reasonIssueDataSource",
-                    width: "20%"
                 },
                 {
                     data: "reasonIssueErpDocumentType",
-                    width: "20%"
                 },
                 {
                     data: "reasonIssueErpReasonCode",
-                    width: "20%"
                 },
                 {
                     data: "reasonIssueRdReasonCode",
-                    width: "20%"
                 },
                 {
                     data: "reasonIssueDescription",
-                    width: "20%"
                 },
                 {
                     data: "isactive",
-                    width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
@@ -100,8 +92,7 @@
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
                     defaultContent: '<i class="pointer fas fa-pen"/>',
-                    orderable: false,
-                    width: "2%"
+                    orderable: false
                 }
                 //{
                 //    data: null,
@@ -228,8 +219,8 @@
         }
         else {
             fnToastrInputDataFail();
+            validateInsertProfileReasonIssue();
         }
-        callProfileReasonIssueIndex();
     }
 
     function fnUpdateProfileReasonIssue(){
@@ -249,8 +240,8 @@
         }
         else {
             fnToastrInputDataFail();
+            validateUpdateProfileReasonIssue();
         }
-        callProfileReasonIssueIndex();
     }
 
     function EditProfileReasonIssue(table){
@@ -400,10 +391,11 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
-
 
                     document.getElementById('ddlInsertProfileReasonIssueDataSource').empty();
                     document.getElementById('ddlInsertProfileReasonIssueErpDocumentType').empty();
@@ -413,6 +405,10 @@
 
                     $("#modalCreateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
+                    callProfileReasonIssueIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
 
             }
@@ -459,7 +455,9 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                JSON.parse(resp);
+
+                if(resp.status = true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -471,6 +469,10 @@
 
                     $("#modalUpdateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
+                    callProfileReasonIssueIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
                 }
             }
         });
@@ -500,12 +502,10 @@
             type: "POST",
             url: "@Url.Action("Delete", "ProfileReasonIssue")",
             data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
             dataType: "text",
             success: function () {
 
                     fnSweetAlert_DeleteSuccess();
-
 
                 }
         });

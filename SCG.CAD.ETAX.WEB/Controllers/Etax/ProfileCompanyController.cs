@@ -141,6 +141,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "CompanyNameTh," +
                             "CompanyNameEn," +
                             "CertificateProfileNo," +
+                            "TaxNumber," +
                             "IsEbill," +
                             "CreateBy," +
                             "CreateDate," +
@@ -157,6 +158,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.CompanyNameTh}," +
                                 $"{item.CompanyNameEn}," +
                                 $"{item.CertificateProfileNo}," +
+                                $"{item.TaxNumber}," +
                                 $"{item.IsEbill}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
@@ -186,6 +188,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<ProfileCompany> tran = new List<ProfileCompany>();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+
+                    if (tran.Count > 0 )
+                    {
+                        tran = tran.Where(x => x.Isactive == 1).ToList();
+                    }
+                }
+
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
 
     }
 }

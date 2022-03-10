@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
@@ -195,6 +198,94 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+
+        public async Task<JsonResult> GetProvince()
+        {
+            Response resp = new Response();
+
+            List<ETDAProvice> tran = new List<ETDAProvice>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ETDA/GetProviceFromETDA"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ETDAProvice>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.ToList();
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
+        public async Task<JsonResult> GetDistrict(string proviceCode)
+        {
+            Response resp = new Response();
+
+            List<ETDADistrict> tran = new List<ETDADistrict>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ETDA/GetDistrictFromETDA?ProviceCode=" + proviceCode + ""));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ETDADistrict>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.ToList();
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return Json(tran);
+        }
+
+        public async Task<JsonResult> GetSubDistrict(string districtCode)
+        {
+            Response resp = new Response();
+
+            List<ETDASubDistrict> tran = new List<ETDASubDistrict>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ETDA/GetSubDistrictFromETDA?DistrictCode=" + districtCode + ""));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ETDASubDistrict>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.ToList();
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return Json(tran);
+        }
 
     }
 }

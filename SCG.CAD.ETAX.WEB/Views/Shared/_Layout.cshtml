@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
-    <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="PIXINVENT">
-    <title>Form Validation - Vuexy - Bootstrap HTML admin template</title>
+    <meta name="description" content="SCG e-tax application">
+    <meta name="keywords" content="SCG e-tax application">
+    <meta name="author" content="SCG">
+    <title>E-TAX</title>
     <link rel="apple-touch-icon" href="~/app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="~/app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
@@ -43,8 +43,10 @@
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/select/select2.min.css">
-
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/vertical-menu.css">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/ui-feather.css">
+
 
     <link rel="stylesheet" type="text/css" href="~/vendor/cursor/cursor.css">
 
@@ -91,7 +93,8 @@
     @await Html.PartialAsync("~/Views/ProfileEmailTemplate/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ZipFileType/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ZipFileConfig/_Modal.cshtml")
-
+    @await Html.PartialAsync("~/Views/ProfileCompany/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/ProfileSeller/_Modal.cshtml")
 
 
     <script src="~/app-assets/vendors/js/vendors.min.js"></script>
@@ -108,7 +111,6 @@
     <script src="~/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js"></script>
     <script src="~/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
     <script src="~/app-assets/vendors/js/tables/datatable/responsive.bootstrap4.min.js"></script>
-
     <script src="~/app-assets/js/scripts/pages/dashboard-analytics.js"></script>
     <script src="~/app-assets/js/scripts/pages/app-invoice-list.js"></script>
     <script src="~/app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
@@ -116,8 +118,8 @@
     <script src="~/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
     <script src="~/app-assets/js/scripts/extensions/ext-component-blockui.js"></script>
     <script src="~/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
-    <script src="~/app-assets/js/scripts/forms/form-select2.js"></script>
-
+    <script src="~/app-assets/js/scripts/components/components-navs.js"></script>
+    <script src="~/app-assets/js/scripts/ui/ui-feather.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="~/js/common.js"></script>
 
@@ -129,6 +131,7 @@
     <script src="@Url.Content("~/vendor/fontawesome/js/fontawesome.js")"></script>
 
     <script>
+
         $(window).on('load', function() {
             if (feather) {
                 feather.replace({

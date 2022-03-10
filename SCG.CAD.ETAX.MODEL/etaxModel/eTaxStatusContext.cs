@@ -64,6 +64,10 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
+                entity.Property(e => e.TaxNumber)
+                    .HasMaxLength(50)
+                    .HasColumnName("taxNumber");
+
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
                     .HasColumnName("updateBy");

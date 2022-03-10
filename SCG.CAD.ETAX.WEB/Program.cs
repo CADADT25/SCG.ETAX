@@ -1,4 +1,3 @@
-global using ClosedXML.Excel;
 global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;
 global using SCG.CAD.ETAX.MODEL;
