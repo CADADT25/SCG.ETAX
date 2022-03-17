@@ -32,13 +32,15 @@ $(window).on('load', function () {
   var avgSessionsChart;
   var supportTrackerChart;
   var salesVisitChart;
-  var isRtl = $('html').attr('data-textdirection') === 'rtl';
+    var isRtl = $('html').attr('data-textdirection') === 'rtl';
+
+    var getMailLogin = $('#leftSideEmail').text();
 
   // On load Toast
   setTimeout(function () {
     toastr['success'](
       'You have successfully logged in to Vuexy. Now you can start to explore!',
-      '👋 Welcome John Doe!',
+      '👋 Welcome  Back',
       {
         closeButton: true,
         tapToDismiss: false,

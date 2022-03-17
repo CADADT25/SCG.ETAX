@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Document Code Profile";
+    ViewData["Title"] = "Company Address Profile";
     Layout = null;
 }
 
@@ -11,7 +11,9 @@
 
          $(document).ready(function () {
 
-            RenderProfileSeller();
+            var setCompanyCode = $("#companyCodeState").text();
+
+            RenderProfileSeller(setCompanyCode);
 
              $('#toggleUpdateProfileSeller').change(function() {
                 $('#toggleUpdateProfileSeller-event').html('Toggle: ' + $(this).prop('checked'))
@@ -19,7 +21,47 @@
 
             $("#ddlInsertProfileSellerProvince").change(function () {
 
-                alert("1123");
+               $("#ddlInsertProfileSellerDistrict").empty();
+
+               $("#ddlInsertProfileSellerSubDistrict").empty();
+
+               var provinceCode = $("#ddlInsertProfileSellerProvince").val();
+
+               fnDropdownProfileSellerDistrict(provinceCode);
+
+            });
+
+            $("#ddlInsertProfileSellerDistrict").change(function () {
+
+               $("#ddlInsertProfileSellerSubDistrict").empty();
+
+               var districtCode = $("#ddlInsertProfileSellerDistrict").val();
+
+
+               fnDropdownProfileSellerSubDistrict(districtCode);
+
+            });
+
+            $("#ddlUpdateProfileSellerProvince").change(function () {
+
+               $("#ddlUpdateProfileSellerDistrict").empty();
+
+               $("#ddlUpdateProfileSellerSubDistrict").empty();
+
+               var provinceCode = $("#ddlUpdateProfileSellerProvince").val();
+
+               fnDropdownProfileSellerDistrict(provinceCode);
+
+            });
+
+            $("#ddlUpdateProfileSellerDistrict").change(function () {
+
+               $("#ddlUpdateProfileSellerSubDistrict").empty();
+
+               var districtCode = $("#ddlUpdateProfileSellerDistrict").val();
+
+
+               fnDropdownProfileSellerSubDistrict(districtCode);
 
             });
 
@@ -40,13 +82,8 @@
         });
 
 
-        function getval(sel)
-    {
-        alert(sel.value);
-    }
 
-
-        function RenderProfileSeller(){
+        function RenderProfileSeller(setCompanyCode){
 
             var table = $("#tbProfileSellerMain").DataTable({
 
@@ -60,6 +97,7 @@
                 "ajax": {
                     url: "@Url.Action("List", "ProfileSeller")",
                     type: "POST",
+                    data: { companyCode : setCompanyCode },
                     datatype: "json"
                 },
 
@@ -132,32 +170,6 @@
             DeleteProfileSeller(table);
         }
 
-        function fnDropdownCompanyCode() {
-
-            $('<option>',
-            {
-                value: 0,
-            }).html("--- Select Company Code ---").appendTo("#ddlInsertProfileSellerCompanyCode");
-
-            $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.companyCode,
-                            text: data.companyCode
-                        }).html(data.companyCode).appendTo("#ddlInsertProfileSellerCompanyCode");
-                });
-
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.companyCode,
-                            text: data.companyCode
-                        }).html(data.companyCode).appendTo("#ddlUpdateProfileSellerCompanyCode");
-                });
-            })
-
-        }
 
         function fnDropdownProfileSellerProvince() {
 
@@ -171,7 +183,7 @@
                     $('<option>',
                         {
                             value: data.proviceCode,
-                            text: data.proviceName
+                            text: data.proviceCode
                         }).html(data.proviceName).appendTo("#ddlInsertProfileSellerProvince");
                 });
 
@@ -179,27 +191,25 @@
                     $('<option>',
                         {
                             value: data.proviceCode,
-                            text: data.proviceName
+                            text: data.proviceCode
                         }).html(data.proviceName).appendTo("#ddlUpdateProfileSellerProvince");
                 });
             })
         }
 
-        function fnDropdownProfileSellerDistrict() {
-
-            var getproviceCode = "12";
+        function fnDropdownProfileSellerDistrict(provinceCode) {
 
             $('<option>',
             {
                 value: 0,
-            }).html("--- Select GetDistrict ---").appendTo("#ddlInsertProfileSellerDistrict");
+            }).html("--- Select District ---").appendTo("#ddlInsertProfileSellerDistrict");
 
-            $.getJSON("@Url.Action("GetDistrict", "ProfileSeller")",{ proviceCode: getproviceCode }, function (data) {
+            $.getJSON("@Url.Action("GetDistrict", "ProfileSeller")?proviceCode="+provinceCode+"", function (data) {
                 $.each(data, function (i, data) {
                     $('<option>',
                         {
                             value: data.districtCode,
-                            text: data.districtName
+                            text: data.districtCode
                         }).html(data.districtName).appendTo("#ddlInsertProfileSellerDistrict");
                 });
 
@@ -207,24 +217,49 @@
                     $('<option>',
                         {
                             value: data.districtCode,
-                            text: data.districtName
+                            text: data.districtCode
                         }).html(data.districtName).appendTo("#ddlUpdateProfileSellerDistrict");
                 });
             })
         }
 
+        function fnDropdownProfileSellerSubDistrict(DistrictCode) {
+
+            $('<option>',
+            {
+                value: 0,
+            }).html("--- Select Sub District ---").appendTo("#ddlInsertProfileSellerSubDistrict");
+
+            $.getJSON("@Url.Action("GetSubDistrict", "ProfileSeller")?districtCode="+DistrictCode+"", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.subDistrictCode,
+                            text: data.subDistrictCode
+                        }).html(data.subDistrictName).appendTo("#ddlInsertProfileSellerSubDistrict");
+                });
+
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.subDistrictCode,
+                            text: data.subDistrictCode
+                        }).html(data.subDistrictName).appendTo("#ddlUpdateProfileSellerSubDistrict");
+                });
+            })
+        }
 
 
         function fnInsertCancelProfileSeller(){
 
-                $("#ddlInsertProfileSellerCompanyCode").empty();
+                document.getElementById('txtInsertProfileSellerCompanyCode').value = '';
                 document.getElementById('txtInsertProfileSellerBranch').value = '';
                 document.getElementById('txtInsertProfileSellerAddressNo').value = '';
                 document.getElementById('txtInsertProfileSellerBuilding').value = '';
                 $("#ddlInsertProfileSellerProvince").empty();
                 $("#ddlInsertProfileSellerDistrict").empty();
                 $("#ddlInsertProfileSellerSubDistrict").empty();
-                document.getElementById('txtInsertProfileSellerEmail').value = '';
+                document.getElementsByName('txtInsertProfileSellerEmail').text = '';
                 $("#ddlInsertProfileSellerEmailTemplate").empty();
 
                 $("#modalCreateProfileSeller").modal('hide');
@@ -232,14 +267,14 @@
 
         function fnUpdateCancelProfileSeller(){
 
-                $("#ddlUpdateProfileSellerCompanyCode").empty();
+                document.getElementById('txtUpdateProfileSellerCompanyCode').value = '';
                 document.getElementById('txtUpdateProfileSellerBranch').value = '';
                 document.getElementById('txtUpdateProfileSellerAddressNo').value = '';
                 document.getElementById('txtUpdateProfileSellerBuilding').value = '';
                 $("#ddlUpdateProfileSellerProvince").empty();
                 $("#ddlUpdateProfileSellerDistrict").empty();
                 $("#ddlUpdateProfileSellerSubDistrict").empty();
-                document.getElementById('txtUpdateProfileSellerEmail').value = '';
+                document.getElementsByName('txtUpdateProfileSellerEmail').text = '';
                 $("#ddlUpdateProfileSellerEmailTemplate").empty();
 
                 $("#modalUpdateProfileSeller").modal('hide');
@@ -247,8 +282,11 @@
 
         function callModalInsertProfileSeller(){
 
-            fnDropdownCompanyCode();
             fnDropdownProfileSellerProvince();
+
+            $('#companyCodeState').text($("#txtInsertProfileCompanyCode").val());
+
+            document.getElementById('txtInsertProfileSellerCompanyCode').value = $('#companyCodeState').text();
 
             $("#modalCreateProfileSeller").modal('show');
 
@@ -256,7 +294,7 @@
 
         function fnInsertProfileSeller(){
 
-            var GetCompanyCode = $('#ddlInsertProfileSellerCompanyCode').val();
+            var GetCompanyCode = $('#txtInsertProfileSellerCompanyCode').val();
             var GetProvince = $('#ddlInsertProfileSellerProvince').val();
             var GetDistrict = $('#ddlInsertProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlInsertProfileSellerSubDistrict').val();
@@ -281,12 +319,12 @@
 
         function fnUpdateProfileSeller(){
 
-            var GetCompanyCode = $('#ddlUpdateProfileSellerCompanyCode').val();
+            var GetCompanyCode = $('#txtUpdateProfileSellerCompanyCode').val();
             var GetProvince = $('#ddlUpdateProfileSellerProvince').val();
             var GetDistrict = $('#ddlUpdateProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlUpdateProfileSellerSubDistrict').val();
             var GetEmailTemplate = $('#ddlUpdateProfileSellerEmailTemplate').val();
-            var GetBranchCode = $('#txtUpdateProfileSellerBranch').val();
+            var GetBranchCode = $('#ddlUpdateProfileSellerBranch').val();
 
             if ( GetCompanyCode != '0' &&
             GetBranchCode != '' &&
@@ -312,7 +350,6 @@
 
                 var getPK = data[Object.keys(data)[0]];
 
-                fnDropdownProfileSellerRd();
 
                 callProfileSellerGetDetailController(getPK);
 
@@ -361,6 +398,8 @@
         // [Begin] Ajax call Controller
 
         function callProfileSellerGetDetailController(getPK){
+
+
             $.ajax({
                 type: "GET",
                 url: "@Url.Action("Detail", "ProfileSeller")",
@@ -372,22 +411,66 @@
                     data = $.parseJSON(result)
 
                     document.getElementById('txtUpdateProfileSellerNo').value = data.SellerNo;
-                    $("#ddlUpdateProfileSellerCompanyCode").select2("val", data.CompanyCode);
+                    document.getElementById('txtUpdateProfileSellerCompanyCode').value = data.CompanyCode;
                     document.getElementById('txtUpdateProfileSellerBranch').value = data.BranchCode;
                     document.getElementById('txtUpdateProfileSellerAddressNo').value = data.Addressnumber;
                     document.getElementById('txtUpdateProfileSellerBuilding').value = data.Building;
-                    document.getElementById('txtUpdateProfileSellerRoad').value = data.Building;
-                    $("#ddlUpdateProfileSellerProvince").select2("val", data.Province);
-                    $("#ddlUpdateProfileSellerDistrict").select2("val", data.District);
-                    $("#ddlUpdateProfileSellerSubDistrict").select2("val", data.SubDistrict);
-                    document.getElementById('txtUpdateProfileSellerEmail').value = data.SellerEmail;
+                    document.getElementById('txtUpdateProfileSellerRoad').value = data.Road;
+
+                    
+                    $("#ddlUpdateProfileSellerDistrict").empty();
+
+                    $("#ddlUpdateProfileSellerSubDistrict").empty();
+
+                    fnDropdownProfileSellerProvince();
+                    fnDropdownProfileSellerDistrict(data.Province);
+                    fnDropdownProfileSellerSubDistrict(data.District);
+
+
+                    var iNum = parseInt(data.Province);
+
+                    alert(iNum)
+
+
+                    //$("#ddlUpdateProfileSellerProvince").val(data.Province);
+
+                    //$("#ddlUpdateProfileSellerProvince option:selected").text();
+
+                    $('#ddlUpdateProfileSellerProvince').val(data.Province);
+                    $('#ddlUpdateProfileSellerProvince').trigger('change');
+
+                    $('#ddlUpdateProfileSellerDistrict').val(data.District);
+                    $('#ddlUpdateProfileSellerDistrict').trigger('change');
+
+                    $('#ddlUpdateProfileSellerSubDistrict').val(data.SubDistrict);
+                    $('#ddlUpdateProfileSellerSubDistrict').trigger('change');
+
+
+
+
+
+                    //fnDropdownProfileSellerDistrict(data.Province);
+
+                    //$("#ddlUpdateProfileSellerDistrict").select2("val", data.District);
+
+                    //fnDropdownProfileSellerSubDistrict(data.District);
+
+                    //$("#ddlUpdateProfileSellerSubDistrict").select2("val", data.SubDistrict);
+
+
                     $("#ddlUpdateProfileSellerEmailTemplate").select2("val", data.EmailTemplateNo);
 
+                    $("#txtUpdateProfileSellerEmail").select2("val", data.SellerEmail);
+
+
+
+
+
                     if(data.Isactive == 1){
-                        $('#toggleUpdateProfileSeller').bootstrapToggle('on');
+                        document.getElementById("toggleUpdateProfileSeller").checked = true;
                     }
                     else{
-                        $('#toggleUpdateProfileSeller').bootstrapToggle('off');
+                        document.getElementById("toggleUpdateProfileSeller").checked = false;
                     }
 
                     $("#modalUpdateProfileSeller").modal('show');
@@ -397,6 +480,10 @@
         }
 
         function callProfileSellerInsertController(){
+
+            var getEmailSeller = $("select[name=txtInsertProfileSellerEmail]").val();
+
+            const myJSON = JSON.stringify(getEmailSeller);
 
             var IsActive = 1;
 
@@ -409,15 +496,15 @@
 
             var model = new Object();
 
-            model.CompanyCode = $('#ddlInsertProfileSellerCompanyCode').val();
+            model.CompanyCode = $('#txtInsertProfileSellerCompanyCode').val();
             model.BranchCode = $('#txtInsertProfileSellerBranch').val();
-            model.Province = $('#ddlInsertProfileSellerProvince').val();
-            model.District = $('#ddlInsertProfileSellerDistrict').val();
-            model.SubDistrict = $('#ddlInsertProfileSellerSubDistrict').val();
+            model.Province = $("#ddlInsertProfileSellerProvince option:selected").val();
+            model.District = $("#ddlInsertProfileSellerDistrict option:selected").val();
+            model.SubDistrict = $("#ddlInsertProfileSellerSubDistrict option:selected").val();
             model.Road = $('#txtInsertProfileSellerRoad').val();
             model.Building = $('#txtInsertProfileSellerBuilding').val();
             model.Addressnumber = $('#txtInsertProfileSellerAddressNo').val();
-            model.SellerEmail = $('#txtInsertProfileSellerEmail').val();
+            model.SellerEmail = myJSON;
             model.EmailTemplateNo = $('#ddlInsertProfileSellerEmailTemplate').val();
             model.CreateBy = $("#leftSideEmail").text();
             model.CreateDate = new Date();
@@ -435,13 +522,15 @@
                 dataType: "text",
                 success: function (resp) {
 
-                    JSON.parse(resp);
+                    data = $.parseJSON(resp)
 
-                    if(resp.status = true){
+                    var errorMessage = data.erroR_MESSAGE;
+                    
+                    if(data.status == true){
 
                         fnSweetAlert_SaveSuccess();
 
-                        $("#ddlInsertProfileSellerCompanyCode").empty();
+                        $("#txtInsertProfileSellerCompanyCode").value = "";
                         document.getElementById('txtInsertProfileSellerBranch').value = "";
                         document.getElementById('txtInsertProfileSellerAddressNo').value = "";
                         document.getElementById('txtInsertProfileSellerBuilding').value = "";
@@ -449,15 +538,15 @@
                         $("#ddlInsertProfileSellerProvince").empty();
                         $("#ddlInsertProfileSellerDistrict").empty();
                         $("#ddlInsertProfileSellerSubDistrict").empty();
-                        document.getElementById('txtInsertProfileSellerEmail').value = "";
-                        $("#ddlInsertProfileSellerEmailTemplate").empty();
+                        document.getElementsByName('txtInsertProfileSellerEmail').value = "";
+                        $("select[name=ddlInsertProfileSellerEmailTemplate]").empty()
 
                         $("#modalCreateProfileSeller").modal('hide');
 
                         callProfileSellerIndex();
                     }
                     else{
-                        fnSweetAlert_Error(resp.error_message);
+                        fnSweetAlert_Error(errorMessage);
                     }
 
                 }
@@ -481,16 +570,16 @@
             var model = new Object();
 
             model.SellerNo = $('#txtUpdateProfileSellerNo').val();
-            model.CompanyCode = $('#ddlUpdateProfileSellerCompanyCode').val();
+            model.CompanyCode = $('#txtUpdateProfileSellerCompanyCode').val();
             model.BranchCode = $('#txtUpdateProfileSellerBranch').val();
-            model.Province = $('#ddlUpdateProfileSellerProvince').val();
-            model.District = $('#ddlUpdateProfileSellerDistrict').val();
-            model.SubDistrict = $('#ddlUpdateProfileSellerSubDistrict').val();
+            model.Province = $("#ddlUpdateProfileSellerProvince option:selected").val();
+            model.District = $("#ddlUpdateProfileSellerDistrict option:selected").val();
+            model.SubDistrict = $("#ddlUpdateProfileSellerSubDistrict option:selected").val();
             model.Road = $('#txtUpdateProfileSellerRoad').val();
             model.Building = $('#txtUpdateProfileSellerBuilding').val();
             model.Addressnumber = $('#txtUpdateProfileSellerAddressNo').val();
-            model.SellerEmail = $('#txtUpdateProfileSellerEmail').val();
-            model.EmailTemplateNo = $('#ddlUpdateProfileSellerEmailTemplate').val();
+            model.SellerEmail = myJSON;
+            model.EmailTemplateNo = $('#ddlInsertProfileSellerEmailTemplate').val();
             model.CreateBy = $("#leftSideEmail").text();
             model.CreateDate = new Date();
             model.UpdateBy = $("#leftSideEmail").text();
@@ -506,14 +595,16 @@
                 dataType: "text",
                 success: function (resp) {
 
-                    JSON.parse(resp);
+                    data = $.parseJSON(resp)
 
-                    if(resp.status = true){
+                    var errorMessage = data.erroR_MESSAGE;
+
+                    if(data.status == true){
 
                         fnSweetAlert_SaveSuccess();
 
-                        $("#ddlUpdateProfileSellerCompanyCode").empty();
-                        document.getElementById('txtUpdateProfileSellerBranch').value = "";
+                        $("#txtUpdateProfileSellerCompanyCode").val() = "";
+                        $("#ddlUpdateProfileSellerBranch").empty();
                         document.getElementById('txtUpdateProfileSellerAddressNo').value = "";
                         document.getElementById('txtUpdateProfileSellerBuilding').value = "";
                         document.getElementById('txtUpdateProfileSellerRoad').value = "";
@@ -527,7 +618,7 @@
                         callProfileSellerIndex();
                     }
                     else{
-                        fnSweetAlert_Error(resp.error_message);
+                        fnSweetAlert_Error(errorMessage);
                     }
                 }
             });
@@ -539,8 +630,8 @@
 
 
             model.SellerNo = $('#txtUpdateProfileSellerNo').val();
-            model.CompanyCode = $('#ddlUpdateProfileSellerCompanyCode').val();
-            model.BranchCode = $('#txtUpdateProfileSellerBranch').val();
+            model.CompanyCode = $('#txtUpdateProfileSellerCompanyCode').val();
+            model.BranchCode = $('#ddlUpdateProfileSellerBranch').val();
             model.Province = $('#ddlUpdateProfileSellerProvince').val();
             model.District = $('#ddlUpdateProfileSellerDistrict').val();
             model.SubDistrict = $('#ddlUpdateProfileSellerSubDistrict').val();
@@ -601,7 +692,7 @@
         function callProfileSellerIndex() {
             setTimeout(function(){
                 $.blockUI();
-                $("#contentPartial").load("@Url.Action("Index", "ProfileSeller")");
+                $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
                 $.unblockUI();
             }, 500);
         }

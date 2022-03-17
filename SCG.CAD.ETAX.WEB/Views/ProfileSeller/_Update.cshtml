@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+
+<form class="form">
+    <div class="row">
+        <div class="col-md-6 col-12" hidden>
+            <div class="form-group">
+                <label>No</label>
+                <input disabled type="text" id="txtUpdateProfileSellerNo" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <input disabled type="text" id="txtUpdateProfileSellerCompanyCode" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Branch</label>
+                <input type="text" maxlength="5" id="txtUpdateProfileSellerBranch" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Address no.</label>
+                <input type="text" id="txtUpdateProfileSellerAddressNo" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Building</label>
+                <input type="text" id="txtUpdateProfileSellerBuilding" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Road</label>
+                <input type="text" id="txtUpdateProfileSellerRoad" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Province</label>
+                <select class="select2 form-control" id="ddlUpdateProfileSellerProvince"></select>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>District</label>
+                <select class="select2 form-control" id="ddlUpdateProfileSellerDistrict"></select>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Sub-District</label>
+                <select class="select2 form-control" id="ddlUpdateProfileSellerSubDistrict"></select>
+            </div>
+        </div>
+
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Email Template</label>
+                <select class="select2 form-control" id="ddlUpdateProfileSellerEmailTemplate"></select>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="compose-mail-form-field select2-primary">
+                    <label for="email-to" class="form-label">Seller email: </label>
+                    <div class="flex-grow-1">
+                        <select name="txtUpdateProfileSellerEmail" class="select2 form-control w-100" id="email-to" multiple>
+                            
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileSeller" />
+                    <label class="custom-control-label" for="toggleUpdateProfileSeller">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>

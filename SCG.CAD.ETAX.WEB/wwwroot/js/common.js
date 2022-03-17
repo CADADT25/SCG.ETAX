@@ -4,6 +4,7 @@
 
 
 
+
 function fnSweetAlert_SaveSuccess() {
     Swal.fire({
         title: 'Good job!',
@@ -12,7 +13,9 @@ function fnSweetAlert_SaveSuccess() {
         customClass: {
             confirmButton: 'btn btn-primary'
         },
-        buttonsStyling: false
+        buttonsStyling: false,
+        showConfirmButton: false,
+        timer: 1000
     });
 }
 

@@ -1,0 +1,450 @@
+﻿@{
+    ViewData["Title"] = "ProfileBranch";
+    Layout = null;
+}
+
+
+
+
+@await Html.PartialAsync("~/Views/ProfileBranch/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        RenderProfileBranch(setCompanyCode);
+
+         $('#toggleUpdateProfileBranch').change(function() {
+            $('#toggleUpdateProfileBranch-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+
+    });
+
+
+    function RenderProfileBranch(setCompanyCode){
+
+        var table = $("#tbProfileBranchMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProfileBranch")",
+                data: { companyCode : setCompanyCode },
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "profileBranchNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "profileBranchCode",
+                    width: "20%"
+                },
+                {
+                    data: "profileBranchNameTh",
+                    width: "20%"
+                },
+                {
+                    data: "profileBranchNameEn",
+                    width: "20%"
+                },
+                {
+                    data: "profileBranchDescrition",
+                    width: "20%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditProfileBranch(table);
+        DeleteProfileBranch(table);
+    }
+
+
+    function fnInsertCancelProfileBranch(){
+
+            document.getElementById('txtInsertProfileBranchCode').value = '';
+            document.getElementById('txtInsertProfileBranchCompanyCode').value = '';
+            document.getElementById('txtInsertProfileBranchNameTh').value = '';
+            document.getElementById('txtInsertProfileBranchNameEn').value = '';
+            document.getElementById('txtInsertProfileBranchDescription').value = '';
+
+            $("#modalCreateProfileBranch").modal('hide');
+    }
+
+    function fnUpdateCancelProfileBranch(){
+
+            document.getElementById('txtUpdateProfileBranchCode').value = '';
+            document.getElementById('txtUpdateProfileBranchCompanyCode').value = '';
+            document.getElementById('txtUpdateProfileBranchNameTh').value = '';
+            document.getElementById('txtUpdateProfileBranchNameEn').value = '';
+            document.getElementById('txtUpdateProfileBranchDescription').value = '';
+
+            $("#modalUpdateProfileBranch").modal('hide');
+    }
+
+    function callModalInsertProfileBranch(){
+
+        $("#modalCreateProfileBranch").modal('show');
+
+        document.getElementById('txtInsertProfileBranchCompanyCode').value = $('#companyCodeState').text();
+    }
+
+    function fnInsertProfileBranch(){
+
+        if ($('#txtInsertProfileBranchCode').val() != '' &&
+            $('#txtInsertProfileBranchCompanyCode').val() != '' &&
+            $('#txtInsertProfileBranchNameTh').val() != '')
+        {
+            callProfileBranchInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+    }
+
+    function fnUpdateProfileBranch(){
+
+        if ($('#txtUpdateProfileBranchCode').val() != '' &&
+            $('#txtUpdateProfileBranchCompanyCode').val() != '' &&
+            $('#txtUpdateProfileBranchNameTh').val() != '')
+        {
+            callProfileBranchUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+        }
+    }
+
+    function EditProfileBranch(table){
+
+        $('#tbProfileBranchMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callProfileBranchGetDetailController(getPK);
+
+        });
+    }
+
+    function DeleteProfileBranch(table){
+
+        $('#tbProfileBranchMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callProfileBranchDeleteController(getPK);
+                        callProfileBranchIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportProfileBranch(){
+
+        $.blockUI();
+
+        callProfileBranchExportController();
+
+        $.unblockUI();
+    }
+
+
+
+    // [Begin] Ajax call Controller
+
+    function callProfileBranchGetDetailController(getPK){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileBranch")",
+            data: { id : getPK },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateProfileBranchNo').value = data.ProfileBranchNo;
+                document.getElementById('txtUpdateProfileBranchCode').value = data.ProfileBranchCode;
+                document.getElementById('txtUpdateProfileBranchCompanyCode').value = data.ProfileCompanyCode;
+                document.getElementById('txtUpdateProfileBranchNameTh').value = data.ProfileBranchNameTh;
+                document.getElementById('txtUpdateProfileBranchNameEn').value = data.ProfileBranchNameEn;
+                document.getElementById('txtUpdateProfileBranchDescription').value = data.ProfileBranchDescrition;
+
+                $("#txtUpdateProfileBranchCompanyCode").prop('disabled', true);
+
+                if(data.Isactive == 1){
+                    document.getElementById("toggleUpdateProfileBranch").checked = true;
+                }
+                else{
+                    document.getElementById("toggleUpdateProfileBranch").checked = false;
+                }
+
+                $("#modalUpdateProfileBranch").modal('show');
+
+            }
+        });
+    }
+
+    function callProfileBranchInsertController(){
+
+        var IsActive = 1;
+
+        if($('#toggleInsertProfileBranch').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.ProfileBranchCode = $('#txtInsertProfileBranchCode').val();
+        model.ProfileCompanyCode = $('#txtInsertProfileBranchCompanyCode').val();
+        model.ProfileBranchNameTh = $('#txtInsertProfileBranchNameTh').val();
+        model.ProfileBranchNameEn = $('#txtInsertProfileBranchNameEn').val();
+        model.ProfileBranchDescrition = $('#txtInsertProfileBranchDescription').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfileBranch")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertProfileBranchCode').value = '';
+                    document.getElementById('txtInsertProfileBranchCompanyCode').value = '';
+                    document.getElementById('txtInsertProfileBranchNameTh').value = '';
+                    document.getElementById('txtInsertProfileBranchNameEn').value = '';
+                    document.getElementById('txtInsertProfileBranchDescription').value = '';
+
+                    $("#modalCreateProfileBranch").modal('hide');
+
+
+                    callProfileBranchIndex()
+                }
+
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+
+            }
+        });
+    }
+
+    function callProfileBranchUpdateController(){
+
+        var IsActive = 1;
+
+        if($('#toggleUpdateProfileBranch').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.ProfileBranchNo = $('#txtUpdateProfileBranchNo').val();
+        model.ProfileBranchCode = $('#txtUpdateProfileBranchCode').val();
+        model.ProfileCompanyCode = $('#txtUpdateProfileBranchCompanyCode').val();
+        model.ProfileBranchNameTh = $('#txtUpdateProfileBranchNameTh').val();
+        model.ProfileBranchNameEn = $('#txtUpdateProfileBranchNameEn').val();
+        model.ProfileBranchDescrition = $('#txtUpdateProfileBranchDescription').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ProfileBranch")",
+            data: { jsonString : getJsonString },
+            //contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateProfileBranchCode').value = '';
+                    document.getElementById('txtUpdateProfileBranchCompanyCode').value = '';
+                    document.getElementById('txtUpdateProfileBranchNameTh').value = '';
+                    document.getElementById('txtUpdateProfileBranchNameEn').value = '';
+                    document.getElementById('txtUpdateProfileBranchDescription').value = '';
+
+                    $("#modalUpdateProfileBranch").modal('hide');
+
+                    callProfileBranchIndex();
+                }
+
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callProfileBranchDeleteController(getPK){
+
+        var model = new Object();
+
+
+        model.CompanyCodeNo = getPK;
+        model.CompanyCode = "";
+        model.CompanyCodeDescription = "";
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ProfileBranch")",
+            data: { jsonString : getJsonString },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function () {
+
+                    fnSweetAlert_DeleteSuccess();
+
+
+                }
+        });
+    }
+
+    function callProfileBranchExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ProfileBranch")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ProfileBranch.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    function callProfileBranchIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-profileBranch-create").load("@Url.Action("Index", "ProfileBranch")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+
+
+
+
+</script>

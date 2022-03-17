@@ -3,23 +3,26 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
-
-<div class="section-body">
-
     @await Html.PartialAsync("~/Views/ProfileCertificate/_Content.cshtml")
 
-</div>
 
 
 <script type="text/javascript">
 
      $(document).ready(function () {
 
-        RenderProfileCertificate();
+        $("#txtInsertProfileCertificateStartDate").flatpickr();
+
+        $("#txtInsertProfileCertificateEndDate").flatpickr();
+
+        $("#txtUpdateProfileCertificateStartDate").flatpickr();
+
+        $("#txtUpdateProfileCertificateEndDate").flatpickr();
+
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        RenderProfileCertificate(setCompanyCode);
 
          $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
@@ -28,7 +31,7 @@
     });
 
 
-    function RenderProfileCertificate(){
+    function RenderProfileCertificate(setCompanyCode){
 
         var table = $("#tbProfileCertificateMain").DataTable({
 
@@ -42,6 +45,7 @@
             "ajax": {
                 url: "@Url.Action("List", "ProfileCertificate")",
                 type: "POST",
+                data: { companyCode : setCompanyCode },
                 datatype: "json"
             },
 
@@ -156,6 +160,9 @@
 
     function callModalInsertProfileCertificate(){
 
+        document.getElementById('txtInsertProfileCertificatTaxNumber').value = $('#txtInsertProfileCompanyTaxNumber').val();
+        document.getElementById('txtInsertProfileCertificateCompanyName').value = $('#txtInsertProfileCompanyNameTh').val();
+        
         $("#modalCreateProfileCertificate").modal('show');
 
     }
@@ -263,11 +270,12 @@
                 document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CompanyCertificateStartDate;
                 document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CompanyCertificateEndDate;
 
+
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileCertificate').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileCertificate").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileCertificate').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileCertificate").checked = false;
                 }
 
                 $("#modalUpdateProfileCertificate").modal('show');
@@ -313,7 +321,11 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -325,8 +337,20 @@
                     document.getElementById('txtInsertProfileCertificateStartDate').value = '';
                     document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 
-                    $("#modalCreateProfileCertificate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateProfileCertificate").modal('hide');
 
+                    $("#ddlInsertProfileCompanyCertificate").empty();
+                    fnDropdownProfileCompanyCertificate();
+                    $('#ddlInsertProfileCompanyCertificate').removeAttr('disabled');
+
+
+                    callProfileCertificateIndex();
+
+
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
                 }
 
             }
@@ -337,13 +361,10 @@
 
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateProfileCertificate-event').text();
-
-        if(getToggle.includes("true")){
+        if($('#toggleUpdateProfileCertificate').prop('checked')){
             IsActive = 1;
         }
-        else
-        {
+        else{
             IsActive = 0;
         }
 
@@ -358,8 +379,6 @@
         model.CompanyCertificateKeyAlias = $('#txtUpdateProfileCertificateKeyAlias').val();
         model.CompanyCertificateStartDate = $('#txtUpdateProfileCertificateStartDate').val();
         model.CompanyCertificateEndDate = $('#txtUpdateProfileCertificateEndDate').val();
-
-
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -376,7 +395,11 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
@@ -388,8 +411,13 @@
                     document.getElementById('txtUpdateProfileCertificateStartDate').value = '';
                     document.getElementById('txtUpdateProfileCertificateEndDate').value = '';
 
-                    $("#modalUpdateProfileCertificate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateProfileCertificate").modal('hide');
 
+                    callProfileCertificateIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
                 }
             }
         });
@@ -468,7 +496,7 @@
     function callProfileCertificateIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileCertificate")");
+            $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
             $.unblockUI();
         }, 500);
     }

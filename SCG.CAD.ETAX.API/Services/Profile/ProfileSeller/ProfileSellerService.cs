@@ -73,15 +73,27 @@
             {
                 using (_dbContext)
                 {
-                    param.CreateDate = dtNow;
-                    param.UpdateDate = dtNow;
+                    var getDuplicate = _dbContext.profileSeller.Where(x => x.CompanyCode == param.CompanyCode && x.BranchCode == param.BranchCode).ToList();
 
-                    _dbContext.profileSeller.Add(param);
-                    _dbContext.SaveChanges();
+                    if (getDuplicate.Count <= 0)
+                    {
+                        param.CreateDate = dtNow;
+                        param.UpdateDate = dtNow;
+
+                        param.SellerEmail = param.SellerEmail.Replace("[", "").Replace("]", "").Replace("\"", "");
+
+                        _dbContext.profileSeller.Add(param);
+                        _dbContext.SaveChanges();
 
 
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Insert success.";
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Insert success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Can't insert new record becuase Company Code is duplicate.";
+                    }
                 }
             }
             catch (Exception ex)

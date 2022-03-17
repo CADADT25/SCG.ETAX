@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileCompany> ProfileCompanies { get; set; } = null!;
+        public virtual DbSet<ProfileBranch> ProfileBranches { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,28 +29,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileCompany>(entity =>
+            modelBuilder.Entity<ProfileBranch>(entity =>
             {
-                entity.HasKey(e => e.CompanyNo)
-                    .HasName("PK_compnanyProfile");
+                entity.HasKey(e => e.ProfileBranchNo);
 
-                entity.ToTable("profileCompany");
+                entity.ToTable("profileBranch");
 
-                entity.Property(e => e.CompanyNo).HasColumnName("companyNo");
-
-                entity.Property(e => e.CertificateProfileNo).HasColumnName("certificateProfileNo");
-
-                entity.Property(e => e.CompanyCode)
-                    .HasMaxLength(20)
-                    .HasColumnName("companyCode");
-
-                entity.Property(e => e.CompanyNameEn)
-                    .HasMaxLength(250)
-                    .HasColumnName("companyNameEN");
-
-                entity.Property(e => e.CompanyNameTh)
-                    .HasMaxLength(250)
-                    .HasColumnName("companyNameTH");
+                entity.Property(e => e.ProfileBranchNo).HasColumnName("profileBranchNo");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -60,13 +45,28 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.IsEbill).HasColumnName("isEbill");
-
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
-                entity.Property(e => e.TaxNumber)
+                entity.Property(e => e.ProfileBranchCode)
                     .HasMaxLength(50)
-                    .HasColumnName("taxNumber");
+                    .HasColumnName("profileBranchCode");
+
+                entity.Property(e => e.ProfileBranchDescrition)
+                    .HasMaxLength(500)
+                    .HasColumnName("profileBranchDescrition");
+
+                entity.Property(e => e.ProfileBranchNameEn)
+                    .HasMaxLength(500)
+                    .HasColumnName("profileBranchNameEn");
+
+                entity.Property(e => e.ProfileBranchNameTh)
+                    .HasMaxLength(500)
+                    .HasColumnName("profileBranchNameTh");
+
+                entity.Property(e => e.ProfileCompanyCode)
+                    .HasMaxLength(10)
+                    .HasColumnName("profileCompanyCode")
+                    .IsFixedLength();
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

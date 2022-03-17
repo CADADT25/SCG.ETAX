@@ -1,0 +1,89 @@
+﻿@{
+    Layout = null;
+}
+
+<form class="form">
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <input disabled type="text" id="txtInsertProfileSellerCompanyCode" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Branch</label>
+                <input type="text" pattern="\d*" maxlength="5" id="txtInsertProfileSellerBranch" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Address no.</label>
+                <input type="text" id="txtInsertProfileSellerAddressNo" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Building</label>
+                <input type="text" id="txtInsertProfileSellerBuilding" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Road</label>
+                <input type="text" id="txtInsertProfileSellerRoad" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Province</label>
+                <select class="select2 form-control" id="ddlInsertProfileSellerProvince"></select>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>District</label>
+                <select class="select2 form-control" id="ddlInsertProfileSellerDistrict"></select>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Sub-District</label>
+                <select class="select2 form-control" id="ddlInsertProfileSellerSubDistrict"></select>
+            </div>
+        </div>
+        
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Email Template</label>
+                <select class="select2 form-control" id="ddlInsertProfileSellerEmailTemplate"></select>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="compose-mail-form-field select2-primary">
+                    <label for="email-to" class="form-label">Seller email: </label>
+                    <div class="flex-grow-1">
+                        <select name="txtInsertProfileSellerEmail" class="select2 form-control w-100" id="email-to" multiple>
+                            
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" checked class="custom-control-input" id="toggleInsertProfileSeller" />
+                    <label class="custom-control-label" for="toggleInsertProfileSeller">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>

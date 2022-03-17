@@ -2,7 +2,7 @@
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item mr-auto">
-                <a class="navbar-brand" href="~/html/ltr/vertical-menu-template/index.html">
+                <a class="navbar-brand" onclick="location.reload();">
                     <span class="brand-logo">
                         <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                             <defs>
@@ -61,53 +61,66 @@
 
 
 
-
             <li class="nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="key Data">Master Data</span></a>
                 <ul class="menu-content">
 
-@*                    <li class="nav-item" id="li-btnCallPageProductUnit">
+                    @*                    <li class="nav-item" id="li-btnCallPageProductUnit">
                         <a class="d-flex align-items-center" id="btn-CallPageProductUnit">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="หน่วยสินค้า">ProductUnit</span>
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="หน่วยสินค้า">ProductUnit</span>
                         </a>
-                    </li>
+                        </li>
 
-                    <li class="nav-item" id="li-btnCallPageTaxCode">
+                        <li class="nav-item" id="li-btnCallPageTaxCode">
                         <a class="d-flex align-items-center" id="btn-btnCallPageTaxCode">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="TaxCode">TaxCode</span>
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="TaxCode">TaxCode</span>
                         </a>
-                    </li>
+                        </li>
 
-                    <li class="nav-item" id="li-btnCallPageProfileDataSource">
+                        <li class="nav-item" id="li-btnCallPageProfileDataSource">
                         <a class="d-flex align-items-center" id="btn-btnCallPageProfileDataSource">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile DataSource">ERP Source Type</span>
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="Profile DataSource">ERP Source Type</span>
                         </a>
-                    </li>
+                        </li>
 
-                    <li class="nav-item" id="li-btnCallPageErpDocument">
+                        <li class="nav-item" id="li-btnCallPageErpDocument">
                         <a class="d-flex align-items-center" id="btn-btnCallPageErpDocument">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="ERP Code">ERP Document Type</span>
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="ERP Code">ERP Document Type</span>
                         </a>
-                    </li>
+                        </li>
 
-                     <li class="nav-item" id="li-btnCallPageRdDocument">
+                        <li class="nav-item" id="li-btnCallPageRdDocument">
                         <a class="d-flex align-items-center" id="btn-btnCallPageRdDocument">
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="Revenue Code">RD Document Type</span>
+                        </a>
+                        </li>
+
+                        <li class="nav-item" id="li-btnCallPageDocumentCode">
+                        <a class="d-flex align-items-center" id="btn-btnCallPageDocumentCode">
+                        <i data-feather="file"></i>
+                        <span class="menu-title text-truncate" data-i18n="Etax Code">Document Code</span>
+                        </a>
+                        </li>*@
+
+                    <li class="nav-item" id="li-btnCallPageProfileCompany" hidden>
+                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileCompany">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Revenue Code">RD Document Type</span>
+                            <span class="menu-title text-truncate" data-i18n="Profile Company">Profile Company</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-btnCallPageDocumentCode">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageDocumentCode">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Etax Code">Document Code</span>
-                        </a>
-                    </li>*@
 
+                     <li class="nav-item" id="li-ManagementCompanyProfile">
+                        <a class="d-flex align-items-center" id="btn-ManagementCompanyProfile">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Company Management</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item" id="li-ManagementDocumentProfile">
                         <a class="d-flex align-items-center" id="btn-ManagementDocumentProfile">
@@ -116,12 +129,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-ManagementCompanyProfile">
-                        <a class="d-flex align-items-center" id="btn-ManagementCompanyProfile">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Company Management</span>
-                        </a>
-                    </li>
+                   
 
                     <li class="nav-item" id="li-btnCallPageProfileCertificate">
                         <a class="d-flex align-items-center" id="btn-btnCallPageProfileCertificate">
@@ -129,17 +137,12 @@
                             <span class="menu-title text-truncate" data-i18n="Profile Certificate">Profile Certificate</span>
                         </a>
                     </li>
-@*
+
                     <li>
                         <a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Second Level">Company Profile</span></a>
                         <ul class="menu-content">
 
-                             <li class="nav-item" id="li-btnCallPageProfileCompany">
-                                <a class="d-flex align-items-center" id="btn-btnCallPageProfileCompany">
-                                    <i data-feather="file"></i>
-                                    <span class="menu-title text-truncate" data-i18n="Profile Company">Profile Company</span>
-                                </a>
-                            </li>
+
 
                             <li class="nav-item" id="li-btnCallPageProfileCompanyCode" hidden>
                                 <a class="d-flex align-items-center" id="btn-btnCallPageProfileCompanyCode">
@@ -171,7 +174,7 @@
 
                         </ul>
                     </li>
-*@
+
                 </ul>
             </li>
 

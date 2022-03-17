@@ -8,33 +8,32 @@
 
 <script type="text/javascript">
 
-     $(document).ready(function () {
+        $(document).ready(function () {
 
-        RenderProfileCompany();
+            RenderProfileCompany();
 
-        $('#toggleUpdateProfileCompanyEbill').change(function() {
-            $('#toggleUpdateProfileCompanyEbill-event').html('Toggle: ' + $(this).prop('checked'))
+            $('#ddlInsertProfileCompanyCertificate').select2();
+
+
+            $("#ddlInsertProfileCompanyCertificate").change(function () {
+
+                alert("123");
+
+               callProfileCompanyUpdateCertificate();
+
+            });
+
         });
 
-        $('#toggleUpdateProfileCompanyIsActive').change(function() {
-            $('#toggleUpdateProfileCompanyIsActive-event').html('Toggle: ' + $(this).prop('checked'))
-        });
+    function createProfileCompany(){
 
-    });
+        
+        $('#ddlInsertProfileCompanyCertificate').select2();
 
-    $(window).on('load', function() {
-
-        $('#modalCreateProfileCompany').select2({
-            dropdownParent: $('#modalCreateProfileCompany')
-        });
+        $("#contentPartial").load("@Url.Action("_Create", "ManagementCompanyProfile")");
 
 
-        $('#modalUpdateProfileCompany').select2({
-            dropdownParent: $('#modalUpdateProfileCompany')
-        });
-
-    });
-
+    }
 
 
     function RenderProfileCompany(){
@@ -73,15 +72,15 @@
                 },
                 {
                     data: "companyCode",
-                    width: "20%"
+                    width: "5%"
                 },
                 {
                     data: "companyNameTh",
-                    width: "20%"
+                    width: "15%"
                 },
                 {
                     data: "companyNameEn",
-                    width: "10%"
+                    width: "15%"
                 },
                 {
                     data: "certificateProfileNo",
@@ -89,7 +88,7 @@
                 },
                 {
                     data: "isEbill",
-                    width: "10%",
+                    width: "5%",
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
@@ -97,7 +96,7 @@
                 },
                 {
                     data: "isactive",
-                    width: "10%",
+                    width: "5%",
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
@@ -109,14 +108,14 @@
                     defaultContent: '<i class="pointer fas fa-pen"/>',
                     orderable: false,
                     width: "2%"
+                },
+                {
+                    data: null,
+                    className: "dt-center text-center text-default",
+                    defaultContent: '<i class="pointer fas fa-eye"/>',
+                    orderable: false,
+                    width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -133,27 +132,22 @@
 
     function fnDropdownProfileCompanyCertificate() {
 
+        var setCompanyCode = $("#companyCodeState").text();
+
+
         $('<option>',
         {
             value: 0,
         }).html("--- Select Certificate Company ---").appendTo("#ddlInsertProfileCompanyCertificate");
 
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+setCompanyCode+"", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.CompanyName,
-                        text: data.CompanyName
-                    }).html(data.CompanyName).appendTo("#ddlInsertProfileCompanyCertificate");
-            });
-
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.CompanyName,
-                        text: data.CompanyName
-                    }).html(data.CompanyName).appendTo("#ddlUpdateProfileCompanyCertificate");
+                        value: data.certificateNo,
+                        text: data.certificateNo
+                    }).html(data.certificateNo).appendTo("#ddlInsertProfileCompanyCertificate");
             });
         })
 
@@ -181,13 +175,15 @@
 
     }
 
-    function callModalInsertProfileCompany(){
 
-        fnDropdownProfileCompanyCertificate();
 
-        $("#modalCreateProfileCompany").modal('show');
+    //function callModalInsertProfileCompany(){
 
-    }
+    //    fnDropdownProfileCompanyCertificate();
+
+    //    $("#modalCreateProfileCompany").modal('show');
+
+    //}
 
     function fnInsertProfileCompany(){
 
@@ -199,7 +195,11 @@
         $('#txtInsertProfileCompanyNameEn').val() != '' &&
         $('#txtInsertProfileCompanyTaxNumber').val() != '' )
         {
+            $.blockUI();
+
             callProfileCompanyInsertController();
+
+            $.unblockUI();
         }
         else {
             fnToastrInputDataFail();
@@ -224,7 +224,7 @@
             fnToastrInputDataFail();
             validateUpdateProfileCompany();
         }
-        
+
     }
 
     function EditProfileCompany(table){
@@ -302,20 +302,23 @@
 
                 document.getElementById('txtUpdateProfileCompanyTaxNumber').value = data.TaxNumber;
 
+
+
                 if(data.IsEbill == 1){
-                    $('#toggleUpdateProfileCompanyEbill').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileCompanyEbill").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileCompanyEbill').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileCompanyEbill").checked = false;
                 }
-
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileCompanyIsActive').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileCompanyIsActive").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileCompanyIsActive').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileCompanyIsActive").checked = false;
                 }
+
+                
 
                 $("#modalUpdateProfileCompany").modal('show');
 
@@ -366,55 +369,134 @@
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp)
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertProfileCompanyCode').value = '';
-                    document.getElementById('txtInsertProfileCompanyNameTh').value = '';
-                    document.getElementById('txtInsertProfileCompanyNameEn').value = '';
+                    $("#txtInsertProfileCompanyCode").prop('disabled', true);
+                    $("#txtInsertProfileCompanyNameTh").prop('disabled', true);
+                    $("#txtInsertProfileCompanyNameEn").prop('disabled', true);
+                    $("#ddlInsertProfileCompanyCertificate").prop('disabled', true);
+                    $("#txtInsertProfileCompanyTaxNumber").prop('disabled', true);
 
-                    $("#ddlInsertProfileCompanyCertificate").empty();
+                    document.getElementById("toggleInsertProfileCompanyEbill").disabled = true;
+                    document.getElementById("toggleInsertProfileCompanyIsActive").disabled = true;
 
-                    document.getElementById('txtInsertProfileCompanyTaxNumber').value = '';
+                    document.getElementById("toggleInsertProfileCompanyEbill").disabled = true;
+                    document.getElementById("toggleInsertProfileCompanyIsActive").disabled = true;
+                    document.getElementById("actionSaveCompanyProfile").hidden = true;
 
-                    $("#modalCreateProfileCompany").modal('hide');
+                    
+                     $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
+                     $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
+                     $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
 
-                    callProfileCompanyIndex();
+                     $('#companyCodeState').text($("#txtInsertProfileCompanyCode").val());
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
-                }
 
+                    fnSweetAlert_Error(errorMessage);
+                }
+            },
+            complete: function(data) {
+               
             }
+
         });
     }
 
-    function callProfileCompanyUpdateController(){
-
+        function callProfileCompanyUpdateCertificate(){
+            var IsActive = 1;
         var IsEbill = 1;
-        var getToggleEbill = $('#toggleUpdateProfileCompanyEbill-event').text();
 
-        var IsActive = 1;
-        var getToggle = $('#toggleUpdateProfileCompanyIsActive-event').text();
-
-        if(getToggleEbill.includes("true")){
-            IsEbilll = 1;
+        if($('#toggleInsertProfileCompanyEbill').prop('checked')){
+            IsEbill = 1;
         }
-        else
-        {
-            IsEbilll = 0;
+        else{
+            IsEbill = 0;
         }
 
-        if(getToggle.includes("true")){
+        if($('#toggleInsertProfileCompanyIsActive').prop('checked')){
             IsActive = 1;
         }
-        else
-        {
+        else{
             IsActive = 0;
         }
+
+
+        var model = new Object();
+
+        model.CompanyNo = $('#txtInsertProfileCompanyNo').val();
+        model.CompanyCode = $('#txtInsertProfileCompanyCode').val();
+        model.CompanyNameTh = $('#txtInsertProfileCompanyNameTh').val();
+        model.CompanyNameEn = $('#txtInsertProfileCompanyNameEn').val();
+        model.CertificateProfileNo = $('#ddlInsertProfileCompanyCertificate').val();
+        model.TaxNumber = $('#txtInsertProfileCompanyTaxNumber').val();
+        model.IsEbill = IsEbill;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfileCompany")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    //document.getElementById('txtUpdateProfileCompanyCode').value = '';
+
+                    //document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
+
+                    //document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
+
+                    //$("#ddlUpdateProfileCompanyCertificate").empty();
+
+                    //document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+        }
+
+    function callProfileCompanyUpdateController(){
+
+        var IsActive = 1;
+        var IsEbill = 1;
+
+        if($('#toggleUpdateProfileCompanyEbill').prop('checked')){
+            IsEbill = 1;
+        }
+        else{
+            IsEbill = 0;
+        }
+
+        if($('#toggleUpdateProfileCompanyIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
 
         var model = new Object();
 
@@ -437,32 +519,30 @@
             type: "POST",
             url: "@Url.Action("Update", "ProfileCompany")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp)
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateProfileCompanyCode').value = '';
-                    document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
-                    document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
+                    //document.getElementById('txtUpdateProfileCompanyCode').value = '';
 
-                    $("#ddlUpdateProfileCompanyCertificate").empty();
+                    //document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
 
-                    document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
+                    //document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
 
+                    //$("#ddlUpdateProfileCompanyCertificate").empty();
 
-                    $("#modalUpdateProfileCompany").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
-                    callProfileCompanyIndex();
-
+                    //document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
+                    fnSweetAlert_Error(errorMessage);
                 }
             }
         });
@@ -496,8 +576,6 @@
             success: function () {
 
                     fnSweetAlert_DeleteSuccess();
-
-
                 }
         });
     }
@@ -538,7 +616,7 @@
             $.blockUI();
             $("#contentPartial").load("@Url.Action("Index", "ProfileCompany")");
             $.unblockUI();
-        }, 500);
+        }, 0);
     }
 
 

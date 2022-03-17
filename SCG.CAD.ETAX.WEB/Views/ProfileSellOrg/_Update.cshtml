@@ -1,0 +1,41 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-md-6 col-12" hidden>
+            <div class="form-group" hidden>
+                <label>No</label>
+                <input disabled type="text" id="txtUpdateProfileSellOrgNo" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <input disabled type="text" id="txtUpdateProfileSellOrgCompanyCode" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>SellOrg Code</label>
+                <input disabled type="text" id="txtUpdateProfileSellOrgCode" onkeyup="validateUpdateProfileSellOrg();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="txtUpdateProfileSellOrgDescription" onkeyup="validateUpdateProfileSellOrg();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileSellOrg" />
+                    <label class="custom-control-label" for="toggleUpdateProfileSellOrg">Is Active</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

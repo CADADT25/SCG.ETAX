@@ -20,6 +20,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _Create()
+        {
+            return View();
+        }
+
 
 
         public async Task<JsonResult> Detail(int id)
@@ -86,13 +91,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         public async Task<JsonResult> Insert(string jsonString)
         {
-            Response res = new Response();
+            Response resp = new Response();
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCompany/Insert", httpContent));
 
-            return Json(task);
+            resp = task;
+
+            return Json(resp);
         }
 
         public async Task<JsonResult> Update(string jsonString)
@@ -188,7 +195,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
-
         public async Task<JsonResult> DropDownList()
         {
             Response resp = new Response();
@@ -205,7 +211,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
 
-                    if (tran.Count > 0 )
+                    if (tran.Count > 0)
                     {
                         tran = tran.Where(x => x.Isactive == 1).ToList();
                     }
@@ -224,6 +230,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(tran);
         }
+
+
 
     }
 }

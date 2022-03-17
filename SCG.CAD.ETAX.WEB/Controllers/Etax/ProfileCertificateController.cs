@@ -20,6 +20,18 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             return View();
         }
 
+        public IActionResult _Create()
+        {
+            return View();
+        }
+
+        public IActionResult _Update()
+        {
+            return View();
+        }
+
+
+
 
 
         public async Task<JsonResult> Detail(int id)
@@ -56,11 +68,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string companyCode)
         {
             Response resp = new Response();
 
             List<ProfileCertificate> tran = new List<ProfileCertificate>();
+
+            List<ProfileCompany> listProfileCompany = new List<ProfileCompany>();
 
             try
             {
@@ -69,6 +83,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCertificate>>(task.OUTPUT_DATA.ToString());
+
+                    var getComCodes = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+
+                    listProfileCompany = JsonConvert.DeserializeObject<List<ProfileCompany>>(getComCodes.OUTPUT_DATA.ToString());
+
+                    var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
+
+                    tran = tran.Where(x => x.CompanyTaxNumber == Convert.ToInt32(getTaxNo)).ToList();
+
                 }
                 else
                 {
@@ -189,11 +212,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
         }
 
-        public async Task<JsonResult> DropDownList()
+        public async Task<JsonResult> DropDownList(string companyCode)
         {
             Response resp = new Response();
 
             List<ProfileCertificate> tran = new List<ProfileCertificate>();
+
+            List<ProfileCompany> listProfileCompany = new List<ProfileCompany>();
+
 
             try
             {
@@ -203,7 +229,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCertificate>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.Where(x => x.Isactive == 1).ToList();
+                    var getComCodes = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+
+                    listProfileCompany = JsonConvert.DeserializeObject<List<ProfileCompany>>(getComCodes.OUTPUT_DATA.ToString());
+
+                    var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
+
+                    tran = tran.Where(x => x.CompanyTaxNumber == Convert.ToInt32(getTaxNo) && x.Isactive == 1).ToList();
                 }
                 else
                 {

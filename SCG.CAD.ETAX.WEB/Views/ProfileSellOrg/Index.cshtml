@@ -10,7 +10,9 @@
 
      $(document).ready(function () {
 
-        RenderProfileSellOrg();
+        var setCompanyCode = $("#companyCodeState").text();
+
+        RenderProfileSellOrg(setCompanyCode);
 
          $('#toggleUpdateProfileSellOrg').change(function() {
             $('#toggleUpdateProfileSellOrg-event').html('Toggle: ' + $(this).prop('checked'))
@@ -18,8 +20,21 @@
 
     });
 
+     $(window).on('load', function() {
 
-    function RenderProfileSellOrg(){
+        $('#modalCreateProfileSellOrg').select2({
+            dropdownParent: $('#modalCreateProfileSellOrg')
+        });
+
+
+        $('#modalUpdateProfileSellOrg').select2({
+            dropdownParent: $('#modalUpdateProfileSellOrg')
+        });
+
+    });
+
+
+    function RenderProfileSellOrg(setCompanyCode){
 
         var table = $("#tbProfileSellOrgMain").DataTable({
 
@@ -33,6 +48,7 @@
             "ajax": {
                 url: "@Url.Action("List", "ProfileSellOrg")",
                 type: "POST",
+                data: { companyCode : setCompanyCode },
                 datatype: "json"
             },
 
@@ -124,8 +140,11 @@
 
     function callModalInsertProfileSellOrg(){
 
-        $("#modalCreateProfileSellOrg").modal('show');
+        var setCompanyCode = $("#companyCodeState").text();
 
+        document.getElementById('txtInsertProfileSellOrgCompanyCode').value = setCompanyCode;
+
+        $("#modalCreateProfileSellOrg").modal('show');
     }
 
     function fnInsertProfileSellOrg(){
@@ -211,24 +230,24 @@
             type: "GET",
             url: "@Url.Action("Detail", "ProfileSellOrg")",
             data: { id : getPK },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
+
                 document.getElementById('txtUpdateProfileSellOrgNo').value = data.SellOrgNo;
+                document.getElementById('txtUpdateProfileSellOrgCompanyCode').value = data.CompanyCode;
                 document.getElementById('txtUpdateProfileSellOrgCode').value = data.SellOrgCode;
                 document.getElementById('txtUpdateProfileSellOrgDescription').value = data.SellOrgDescripttion;
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileSellOrg').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileSellOrg").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileSellOrg').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileSellOrg").checked = false;
                 }
 
                 $("#modalUpdateProfileSellOrg").modal('show');
-
             }
         });
     }
@@ -247,6 +266,7 @@
         var model = new Object();
 
         model.SellOrgCode = $('#txtInsertProfileSellOrgCode').val();
+        model.CompanyCode = $('#txtInsertProfileSellOrgCompanyCode').val();
         model.SellOrgDescripttion = $('#txtInsertProfileSellOrgDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -264,21 +284,23 @@
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp);
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateProfileSellOrgCode').value = '';
-                    document.getElementById('txtUpdateProfileSellOrgDescription').value = '';
+                    document.getElementById('txtInsertProfileSellOrgCode').value = '';
+                    document.getElementById('txtInsertProfileSellOrgDescription').value = '';
 
                     $("#modalCreateProfileSellOrg").modal('hide');
 
                     callProfileSellOrgIndex();
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
+                    fnSweetAlert_Error(errorMessage);
                 }
 
             }
@@ -289,13 +311,10 @@
 
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateProfileSellOrg-event').text();
-
-        if(getToggle.includes("true")){
+        if($('#toggleUpdateProfileSellOrg').prop('checked')){
             IsActive = 1;
         }
-        else
-        {
+        else{
             IsActive = 0;
         }
 
@@ -303,6 +322,7 @@
 
         model.SellOrgNo = $('#txtUpdateProfileSellOrgNo').val();
         model.SellOrgCode = $('#txtUpdateProfileSellOrgCode').val();
+        model.CompanyCode = $('#txtUpdateProfileSellOrgCompanyCode').val();
         model.SellOrgDescripttion = $('#txtUpdateProfileSellOrgDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -320,21 +340,26 @@
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp)
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
                     document.getElementById('txtUpdateProfileSellOrgNo').value = '';
                     document.getElementById('txtUpdateProfileSellOrgCode').value = '';
+                    document.getElementById('txtUpdateProfileSellOrgCompanyCode').value = '';
                     document.getElementById('txtUpdateProfileSellOrgDescription').value = '';
 
                     $("#modalUpdateProfileSellOrg").modal('hide');
 
+                    callProfileSellOrgIndex();
+
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
+                    fnSweetAlert_Error(errorMessage);
                 }
             }
         });
@@ -363,10 +388,7 @@
             //contentType: "application/json; charset=utf-8",
             dataType: "text",
             success: function () {
-
                     fnSweetAlert_DeleteSuccess();
-
-
                 }
         });
     }
@@ -405,7 +427,7 @@
     function callProfileSellOrgIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileSellOrg")");
+            $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
             $.unblockUI();
         }, 500);
     }
