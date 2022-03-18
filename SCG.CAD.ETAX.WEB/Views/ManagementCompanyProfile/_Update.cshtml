@@ -1,4 +1,21 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    Layout = null;
+}
+
+
+<!-- Basic multiple Column Form section start -->
+<section id="section-ProfileCompany-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Company Info</h4>
+                </div>
+                <div class="card-body">
+                   @await Html.PartialAsync("~/Views/ProfileCompany/_Update.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Basic Floating Label Form section end -->

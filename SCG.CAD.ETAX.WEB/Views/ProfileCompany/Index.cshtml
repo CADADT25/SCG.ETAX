@@ -13,6 +13,7 @@
             RenderProfileCompany();
 
             $('#ddlInsertProfileCompanyCertificate').select2();
+            $('#ddlUpdateProfileCompanyCertificate').select2();
 
 
             $("#ddlInsertProfileCompanyCertificate").change(function () {
@@ -31,6 +32,16 @@
         $('#ddlInsertProfileCompanyCertificate').select2();
 
         $("#contentPartial").load("@Url.Action("_Create", "ManagementCompanyProfile")");
+
+
+    }
+
+    function updateProfileCompany(){
+
+        
+        $('#ddlUpdateProfileCompanyCertificate').select2();
+
+        $("#contentPartial").load("@Url.Action("_Update", "ManagementCompanyProfile")");
 
 
     }
@@ -291,6 +302,8 @@
             dataType: "json",
             success: function (result) {
 
+                updateProfileCompany();                
+
                 data = $.parseJSON(result)
 
                 document.getElementById('txtUpdateProfileCompanyNo').value = data.CompanyNo;
@@ -318,9 +331,6 @@
                     document.getElementById("toggleUpdateProfileCompanyIsActive").checked = false;
                 }
 
-                
-
-                $("#modalUpdateProfileCompany").modal('show');
 
             }
         });
