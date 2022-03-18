@@ -51,8 +51,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
 
 
-                    foreach (X509CertificateEntry c in store.GetCertificateChain(alias))
-                        chain.Add(c.Certificate);
+                    //foreach (X509CertificateEntry c in store.GetCertificateChain(alias))
+                    //    chain.Add(c.Certificate);
 
 
                     RsaPrivateCrtKeyParameters parameters = pk.Key as RsaPrivateCrtKeyParameters;
