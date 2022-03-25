@@ -90,7 +90,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
                     var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
 
-                    tran = tran.Where(x => x.CompanyTaxNumber == Convert.ToInt32(getTaxNo)).ToList();
+                    tran = tran.Where(x => x.CompanyTaxNumber == getTaxNo).ToList();
 
                 }
                 else
@@ -235,7 +235,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
                     var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
 
-                    tran = tran.Where(x => x.CompanyTaxNumber == Convert.ToInt32(getTaxNo) && x.Isactive == 1).ToList();
+                    tran = tran.Where(x => x.CompanyTaxNumber == getTaxNo && x.Isactive == 1).ToList();
+
+                    if (tran.Count <= 0)
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Data not found !";
+                    }
                 }
                 else
                 {
@@ -245,6 +251,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             catch (Exception ex)
             {
                 Console.WriteLine(ex.InnerException);
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.ToString();
             }
 
 

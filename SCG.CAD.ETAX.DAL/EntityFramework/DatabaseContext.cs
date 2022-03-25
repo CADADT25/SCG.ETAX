@@ -48,6 +48,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ProfileCompanyCode> profileCompanyCode { get; set; }
         public DbSet<ProfileReasonIssue> profileReasonIssue { get; set; }
         public DbSet<ProfileBranch> profileBranch { get; set; }
+        public DbSet<AuthenUserProfile> authenUserProfile { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

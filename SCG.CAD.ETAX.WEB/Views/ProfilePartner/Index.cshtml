@@ -1,8 +1,431 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    ViewData["Title"] = " ProfilePartner ";
+    Layout = null;
 }
 
-<h1>Index</h1>
+@await Html.PartialAsync("~/Views/ProfilePartner/_Content.cshtml")
 
+
+<script type="text/javascript">
+
+        $(document).ready(function () {
+
+             RenderProfilePartner();
+
+        });
+
+
+    function RenderProfilePartner(){
+
+        var table = $("#tbProfilePartnerMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProfilePartner")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "partnerProfileNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "ProfilePartnerNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "customerId",
+                    width: "5%"
+                },
+                {
+                    data: "companyCode",
+                    width: "5%"
+                },
+                {
+                    data: "sellOrg",
+                    width: "5%"
+                },
+                {
+                    data: "soldToCode",
+                    width: "5%"
+                },
+                {
+                    data: "shipToCode",
+                    width: "5%"
+                },
+                {
+                    data: "partnerOutputType",
+                    width: "5%"
+                },
+                {
+                    data: "numberOfCopies",
+                    width: "5%"
+                },
+                {
+                    data: "partnerEmailType",
+                    width: "5%"
+                },
+                {
+                    data: "isactive",
+                    width: "5%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditProfilePartner(table);
+        DeleteProfilePartner(table);
+    }
+
+
+        function callModalInsertProfilePartner(){
+
+            $("#modalCreateProfilePartner").modal('show');
+        }
+
+
+     function fnInsertCancelProfilePartner(){
+
+            document.getElementById('txtInsertProfilePartnerCustomerId').value = '';
+            document.getElementById('txtInsertProfilePartnerPartnerOutputType').value = '';
+            document.getElementById('txtInsertProfilePartnerNumberOfCopies').value = '';
+            document.getElementById('txtInsertProfilePartnerSoldToCode').value = '';
+            document.getElementById('txtInsertProfilePartnerSoldToEmail').value = '';
+            document.getElementById('txtInsertProfilePartnerSoldToCCEmail').value = '';
+            document.getElementById('txtInsertProfilePartnerShipToCode').value = '';
+            document.getElementById('txtInsertProfilePartnerShipToEmail').value = '';
+            document.getElementById('txtInsertProfilePartnerShipToCCEmail').value = '';
+
+            $("#modalCreateProfilePartner").modal('hide');
+    }
+
+    function fnUpdateCancelProfilePartner(){
+
+            document.getElementById('txtUpdateProfilePartnerCustomerId').value = '';
+            document.getElementById('txtUpdateProfilePartnerPartnerOutputType').value = '';
+            document.getElementById('txtUpdateProfilePartnerNumberOfCopies').value = '';
+            document.getElementById('txtUpdateProfilePartnerSoldToCode').value = '';
+            document.getElementById('txtUpdateProfilePartnerSoldToEmail').value = '';
+            document.getElementById('txtUpdateProfilePartnerSoldToCCEmail').value = '';
+            document.getElementById('txtUpdateProfilePartnerShipToCode').value = '';
+            document.getElementById('txtUpdateProfilePartnerShipToEmail').value = '';
+            document.getElementById('txtUpdateProfilePartnerShipToCCEmail').value = '';
+
+            $("#modalUpdateProfilePartner").modal('hide');
+    }
+
+     function fnInsertProfilePartner(){
+        if ($('#txtInsertProfilePartnerCustomerId').val() != '' && $('#txtInsertProfilePartnerPartnerOutputType').val() != '') {
+            callProfilePartnerInsertController();
+        }
+        else {
+            validateInsertProfilePartner();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function fnUpdateProfilePartner(){
+        if ($('#txtUpdateProfilePartnerCustomerId').val() != '' && $('#txtUpdateProfilePartnerCustomerId').val() != '') {
+            callProfilePartnerUpdateController();
+        }
+        else {
+            validateUpdateProfilePartner();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function EditProfilePartner(table){
+
+        var allData = table.rows().data();
+
+        $('#tbProfilePartnerMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callProfilePartnerGetDetailController(getPK);
+        });
+    }
+
+    function DeleteProfilePartner(table){
+
+        $('#tbProfilePartnerMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callProfilePartnerDeleteController(getPK);
+                        callProfilePartnerIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportProfilePartner(){
+
+        $.blockUI();
+
+        callProfilePartnerExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callProfilePartnerGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfilePartner")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+
+                document.getElementById('txtUpdateProfilePartnerProfileNo').value = data.PartnerProfileNo;
+
+
+                if(data.Isactive == 1){
+                    $('#toggleUpdateProfilePartner').bootstrapToggle('on');
+                }
+                else{
+                    $('#toggleUpdateProfilePartner').bootstrapToggle('off');
+                }
+
+                $("#modalUpdateProfilePartner").modal('show');
+
+            }
+        });
+    }
+
+    function callProfilePartnerInsertController(){
+
+        var IsActive = 1;
+
+        if($('#toggle-event').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.CustomerId = $('#txtInsertProfilePartnerCustomerId').val();
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfilePartner")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                JSON.parse(resp);
+
+                if(resp.status = true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertProfilePartnerCustomerId').value = '';
+
+
+                    $("#modalCreateProfilePartner").modal('hide');
+                    callProfilePartnerIndex();
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
+                }
+            }
+        });
+    }
+
+    function callProfilePartnerUpdateController(){
+
+        var IsActive = 1;
+
+        var getToggle = $('#toggleUpdateProfilePartner-event').text();
+
+        if(getToggle.includes("true")){
+            IsActive = 1;
+        }
+        else
+        {
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.PartnerProfileNo = $('#txtUpdateProfilePartnerProfileNo').val();
+ 
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ProfilePartner")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                JSON.parse(resp);
+
+                if(resp.status = true){
+
+                    fnSweetAlert_SaveSuccess();
+                    document.getElementById('txtUpdateProfilePartnerProfileNo').value = '';
+
+
+                    $("#modalUpdateProfilePartner").modal('hide');
+
+                    callProfilePartnerIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(resp.error_message);
+                }
+            }
+        });
+    }
+
+    function callProfilePartnerDeleteController(getPK){
+
+        var model = new Object();
+
+        model.PartnerProfileNo = getPK;
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ProfilePartner")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function () {
+                    fnSweetAlert_DeleteSuccess();
+                }
+        });
+    }
+
+    function callProfilePartnerExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ProfilePartner")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ProfilePartner.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    // [end] Ajax call Controller
+
+    function callProfilePartnerIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ProfilePartner")");
+            $.unblockUI();
+        }, 500);
+
+    }
+
+</script>

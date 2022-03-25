@@ -12,7 +12,11 @@
 
         var setCompanyCode = $("#companyCodeState").text();
 
-        RenderProfileSellOrg(setCompanyCode);
+        setTimeout(function(){
+            RenderProfileSellOrg(setCompanyCode);
+        }, 1200);
+
+       
 
          $('#toggleUpdateProfileSellOrg').change(function() {
             $('#toggleUpdateProfileSellOrg-event').html('Toggle: ' + $(this).prop('checked'))
@@ -35,6 +39,10 @@
 
 
     function RenderProfileSellOrg(setCompanyCode){
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
 
         var table = $("#tbProfileSellOrgMain").DataTable({
 

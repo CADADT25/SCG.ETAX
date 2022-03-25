@@ -22,7 +22,11 @@
 
         var setCompanyCode = $("#companyCodeState").text();
 
-        RenderProfileCertificate(setCompanyCode);
+         setTimeout(function(){
+            RenderProfileCertificate(setCompanyCode);
+        }, 1200);
+
+        
 
          $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
@@ -32,6 +36,10 @@
 
 
     function RenderProfileCertificate(setCompanyCode){
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
 
         var table = $("#tbProfileCertificateMain").DataTable({
 

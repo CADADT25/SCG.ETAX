@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SCG.CAD.ETAX.WEB.Controllers
+namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
-    public class ProfileCompanyController : Controller
+    public class ProfileCustomerController : Controller
     {
-
         public IActionResult Index()
         {
             return View();
@@ -32,9 +31,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
 
 
+
+
         public async Task<JsonResult> Detail(int id)
         {
-            List<ProfileCompany> tran = new List<ProfileCompany>();
+            List<ProfileCustomer> tran = new List<ProfileCustomer>();
 
             Response resp = new Response();
 
@@ -42,18 +43,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetDetail?id= " + id + " "));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetDetail?id= " + id + " "));
 
                 if (task.STATUS)
                 {
 
-                    tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
-
-                    
+                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
 
                     result = JsonConvert.SerializeObject(tran[0]);
-
-                    ViewBag.CompanyCode = tran[0].CompanyCode;
 
                 }
                 else
@@ -74,15 +71,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProfileCompany> tran = new List<ProfileCompany>();
+            List<ProfileCustomer> tran = new List<ProfileCustomer>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -104,7 +101,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCompany/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCustomer/Insert", httpContent));
 
             resp = task;
 
@@ -117,7 +114,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCompany/Update", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCustomer/Update", httpContent));
 
             return Json(task);
         }
@@ -128,7 +125,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCompany/Delete", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileCustomer/Delete", httpContent));
 
             return Json(task);
         }
@@ -137,28 +134,29 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProfileCompany> tran = new List<ProfileCompany>();
+            List<ProfileCustomer> tran = new List<ProfileCustomer>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "CompanyNo," +
+                            "CustomerProfileNo," +
+                            "CustomerId," +
                             "CompanyCode," +
-                            "CompanyNameTh," +
-                            "CompanyNameEn," +
-                            "CertificateProfileNo," +
-                            "TaxNumber," +
-                            "IsEbill," +
+                            "OutputType," +
+                            "NumberOfCopies," +
+                            "CustomerEmail," +
+                            "CustomerCcemail," +
+                            "EmailTemplateNo," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -169,13 +167,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.CompanyNo}," +
+                                $"{item.CustomerProfileNo}," +
+                                $"{item.CustomerId}," +
                                 $"{item.CompanyCode}," +
-                                $"{item.CompanyNameTh}," +
-                                $"{item.CompanyNameEn}," +
-                                $"{item.CertificateProfileNo}," +
-                                $"{item.TaxNumber}," +
-                                $"{item.IsEbill}," +
+                                $"{item.OutputType}," +
+                                $"{item.NumberOfCopies}," +
+                                $"{item.CustomerEmail}," +
+                                $"{item.CustomerCcemail}," +
+                                $"{item.EmailTemplateNo}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
@@ -200,25 +199,61 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 Console.WriteLine(ex.InnerException.ToString());
             }
 
-            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileCompany.csv");
+            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileCustomer.csv");
 
         }
 
-        public async Task<JsonResult> DropDownList()
+        public async Task<JsonResult> DropDownList(string companyCode)
         {
             Response resp = new Response();
 
-            List<ProfileCompany> tran = new List<ProfileCompany>();
+            List<ProfileCustomer> tran = new List<ProfileCustomer>();
 
             var result = "";
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
+
+                    if (tran.Count > 0)
+                    {
+                        tran = tran.Where(x => x.Isactive == 1 && x.CompanyCode == companyCode).ToList();
+                    }
+                }
+
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
+        public async Task<JsonResult> GetEmailType()
+        {
+            Response resp = new Response();
+
+            List<ProfileEmailType> tran = new List<ProfileEmailType>();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailType/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailType>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count > 0)
                     {
@@ -239,7 +274,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(tran);
         }
-
 
 
     }

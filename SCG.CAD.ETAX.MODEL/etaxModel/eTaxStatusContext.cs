@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileBranch> ProfileBranches { get; set; } = null!;
+        public virtual DbSet<ProfileCustomer> ProfileCustomers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,47 +29,61 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileBranch>(entity =>
+            modelBuilder.Entity<ProfileCustomer>(entity =>
             {
-                entity.HasKey(e => e.ProfileBranchNo);
+                entity.HasKey(e => e.CustomerProfileNo)
+                    .HasName("PK_customerProfile");
 
-                entity.ToTable("profileBranch");
+                entity.ToTable("profileCustomer");
 
-                entity.Property(e => e.ProfileBranchNo).HasColumnName("profileBranchNo");
+                entity.Property(e => e.CustomerProfileNo).HasColumnName("customerProfileNo");
+
+                entity.Property(e => e.CompanyCode)
+                    .HasMaxLength(255)
+                    .HasColumnName("companyCode");
 
                 entity.Property(e => e.CreateBy)
-                    .HasMaxLength(100)
+                    .HasMaxLength(255)
                     .HasColumnName("createBy");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
+                entity.Property(e => e.CustomerCcemail)
+                    .HasMaxLength(255)
+                    .HasColumnName("customerCCEmail");
+
+                entity.Property(e => e.CustomerEmail)
+                    .HasMaxLength(255)
+                    .HasColumnName("customerEmail");
+
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(255)
+                    .HasColumnName("customerId");
+
+                entity.Property(e => e.EmailTemplateNo)
+                    .HasMaxLength(255)
+                    .HasColumnName("emailTemplateNo");
+
+                entity.Property(e => e.EmailType).HasColumnName("emailType");
+
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
-                entity.Property(e => e.ProfileBranchCode)
-                    .HasMaxLength(50)
-                    .HasColumnName("profileBranchCode");
+                entity.Property(e => e.NumberOfCopies).HasColumnName("numberOfCopies");
 
-                entity.Property(e => e.ProfileBranchDescrition)
-                    .HasMaxLength(500)
-                    .HasColumnName("profileBranchDescrition");
+                entity.Property(e => e.OutputType).HasColumnName("outputType");
 
-                entity.Property(e => e.ProfileBranchNameEn)
-                    .HasMaxLength(500)
-                    .HasColumnName("profileBranchNameEn");
+                entity.Property(e => e.StatusEmail).HasColumnName("statusEmail");
 
-                entity.Property(e => e.ProfileBranchNameTh)
-                    .HasMaxLength(500)
-                    .HasColumnName("profileBranchNameTh");
+                entity.Property(e => e.StatusPrint).HasColumnName("statusPrint");
 
-                entity.Property(e => e.ProfileCompanyCode)
-                    .HasMaxLength(10)
-                    .HasColumnName("profileCompanyCode")
-                    .IsFixedLength();
+                entity.Property(e => e.StatusSignPdf).HasColumnName("statusSignPdf");
+
+                entity.Property(e => e.StatusSignXml).HasColumnName("statusSignXml");
 
                 entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(100)
+                    .HasMaxLength(255)
                     .HasColumnName("updateBy");
 
                 entity.Property(e => e.UpdateDate)

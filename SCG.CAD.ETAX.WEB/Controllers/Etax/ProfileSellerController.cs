@@ -76,25 +76,27 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             List<ProfileSeller> tran = new List<ProfileSeller>();
 
-            try
-            {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAll"));
+            
 
-                if (task.STATUS)
+                try
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileSeller>>(task.OUTPUT_DATA.ToString());
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAll"));
 
-                    tran = tran.Where(x => x.CompanyCode == companyCode).ToList();
+                    if (task.STATUS)
+                    {
+                        tran = JsonConvert.DeserializeObject<List<ProfileSeller>>(task.OUTPUT_DATA.ToString());
+
+                        tran = tran.Where(x => x.CompanyCode == companyCode).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.Error = task.MESSAGE;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ViewBag.Error = task.MESSAGE;
+                    Console.WriteLine(ex.InnerException);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException);
-            }
 
 
             return Json(new { data = tran });

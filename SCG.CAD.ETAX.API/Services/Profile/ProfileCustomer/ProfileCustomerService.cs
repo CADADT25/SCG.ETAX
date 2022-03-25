@@ -115,6 +115,11 @@
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
+                        update.EmailTemplateNo = param.EmailTemplateNo;
+                        update.StatusPrint = param.StatusPrint;
+                        update.StatusEmail = param.StatusEmail;
+                        update.StatusSignPdf = param.StatusSignPdf;
+                        update.StatusSignXml = param.StatusSignXml;
 
                         _dbContext.SaveChanges();
 

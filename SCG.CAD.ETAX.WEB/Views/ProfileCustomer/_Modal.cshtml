@@ -1,0 +1,161 @@
+﻿@{
+    Layout = null;
+}
+
+<script src="~/assets/validate/ProfileCustomerValidate.js"></script>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileCustomer" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Customer Profile</h5>
+                <button type="button" class="close" onclick="fnInsertCancelProfileCustomer();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                    @await Html.PartialAsync("~/Views/ProfileCustomer/_Create.cshtml")
+
+
+@*                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer Id</label>
+                                    <input type="text" id="txtInsertCustomerId" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Code</label>
+                                    <input type="text" id="txtInsertCompanyCode" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Output Type</label>
+                                    <input type="text" id="txtInsertOutputType" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Number of copies</label>
+                                    <input type="text" id="txtInsertNumberOfCopies" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer email</label>
+                                    <input type="text" id="txtInsertCustomerEmail" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer CC email</label>
+                                    <input type="text" id="txtInsertCustomerCCEmail" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Email type</label>
+                                    <input type="text" id="txtInsertEmailType" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Email template</label>
+                                    <select class="select2 form-control" id="ddlInsertEmailTemplateNo"></select>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="custom-control custom-control-primary custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="toggleInsertProfileCustomer" checked />
+                                        <label class="custom-control-label" for="toggleInsertProfileCustomer">Is Active</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileCustomer();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileCustomer();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileCustomer" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Customer Profile</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelProfileCustomer();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer Id</label>
+                                    <input type="text" id="txtUpdateCustomerId" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Company Code</label>
+                                    <input type="text" id="txtUpdateCompanyCode" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Output Type</label>
+                                    <input type="text" id="txtUpdateOutputType" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Number of copies</label>
+                                    <input type="text" id="txtUpdateNumberOfCopies" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer email</label>
+                                    <input type="text" id="txtUpdateCustomerEmail" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Customer CC email</label>
+                                    <input type="text" id="txtUpdateCustomerCCEmail" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Email type</label>
+                                    <input type="text" id="txtUpdateEmailType" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><spa class="text-danger">* </spa>Email template</label>
+                                    <select class="select2 form-control" id="ddlUpdateEmailTemplateNo"></select>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="custom-control custom-control-primary custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileCustomer" checked />
+                                        <label class="custom-control-label" for="toggleUpdateProfileCustomer">Is Active</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCustomer();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCustomer();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

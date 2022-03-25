@@ -19,7 +19,7 @@
 
     function createProfileCompany(){
 
-        
+
         $('#ddlInsertProfileCompanyCertificate').select2();
 
         $("#contentPartial").load("@Url.Action("_Create", "ManagementCompanyProfile")");
@@ -29,7 +29,7 @@
 
     function updateProfileCompany(){
 
-        
+
         $('#ddlUpdateProfileCompanyCertificate').select2();
 
         $("#contentPartial").load("@Url.Action("_Update", "ManagementCompanyProfile")");
@@ -136,7 +136,6 @@
 
         var setCompanyCode = $("#companyCodeState").text();
 
-
         $('<option>',
         {
             value: 0,
@@ -145,14 +144,23 @@
 
         $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+setCompanyCode+"", function (data) {
             $.each(data, function (i, data) {
+                
+            });
+        })
+    }
+
+    function fnUpdateDropdownProfileCompanyCertificate(companyCode) {
+
+        
+        $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+companyCode+"", function (data) {
+            $.each(data, function (i, data) {
                 $('<option>',
                     {
                         value: data.certificateNo,
                         text: data.certificateNo
-                    }).html(data.certificateNo).appendTo("#ddlInsertProfileCompanyCertificate");
+                    }).html(data.certificateNo).appendTo("#ddlUpdateProfileCompanyCertificate");
             });
         })
-
     }
 
     function fnInsertCancelProfileCompany(){
@@ -236,8 +244,9 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
+            var getCompanyCpde = data[Object.keys(data)[1]];
 
-            fnDropdownProfileCompanyCertificate();
+            $('#companyCodeStateUpdate').text(getCompanyCpde);
 
             callProfileCompanyGetDetailController(getPK);
 
@@ -286,6 +295,9 @@
     // [Begin] Ajax call Controller
 
     function callProfileCompanyGetDetailController(getPK){
+
+        updateProfileCompany();
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileCompany")",
@@ -293,19 +305,18 @@
             dataType: "json",
             success: function (result) {
 
-                updateProfileCompany();                
-
                 data = $.parseJSON(result)
 
                 document.getElementById('txtUpdateProfileCompanyNo').value = data.CompanyNo;
                 document.getElementById('txtUpdateProfileCompanyCode').value = data.CompanyCode;
+                document.getElementById('txtUpdateProfileCompanyTaxNumber').value = data.TaxNumber;
                 document.getElementById('txtUpdateProfileCompanyNameTh').value = data.CompanyNameTh;
                 document.getElementById('txtUpdateProfileCompanyNameEn').value = data.CompanyNameEn;
 
+                $('#companyCodeStateUpdate').text(data.CompanyCode);
+                fnUpdateDropdownProfileCompanyCertificate(data.CompanyCode);
+
                 $("#ddlUpdateProfileCompanyCertificate").select2("val", data.CertificateProfileNo);
-
-                document.getElementById('txtUpdateProfileCompanyTaxNumber').value = data.TaxNumber;
-
 
 
                 if(data.IsEbill == 1){
@@ -321,6 +332,10 @@
                 else{
                     document.getElementById("toggleUpdateProfileCompanyIsActive").checked = false;
                 }
+
+                $("#render-profileSeller-update").load("@Url.Action("Index", "ProfileSeller")");
+                //$("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
+                //$("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
 
 
             }
@@ -391,7 +406,7 @@
                     document.getElementById("toggleInsertProfileCompanyIsActive").disabled = true;
                     document.getElementById("actionSaveCompanyProfile").hidden = true;
 
-                    
+
                      $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
                      $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
                      $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
@@ -404,7 +419,7 @@
                 }
             },
             complete: function(data) {
-               
+
             }
 
         });
