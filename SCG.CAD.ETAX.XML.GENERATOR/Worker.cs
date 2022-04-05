@@ -2,12 +2,14 @@ global using SCG.CAD.ETAX.MODEL;
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
+using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR
 {
     public class Worker : BackgroundService
     {
         PDFSign pDFSign = new PDFSign();
+        XMLGenerate xMLGenerate = new XMLGenerate();
         TaxCodeController taxCodeController = new TaxCodeController();
         List<TaxCode> tran = new List<TaxCode>();
 
@@ -25,10 +27,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
 
             // call business layer
+            xMLGenerate.ReadXMLFile();
+            //var layer1 = pDFSign.GetAllPDFFile();
 
-            var layer1 = pDFSign.GetAllPDFFile();
-
-            var layer2 = layer1;
+            //var layer2 = layer1;
 
 
             //Response resp = new Response();
