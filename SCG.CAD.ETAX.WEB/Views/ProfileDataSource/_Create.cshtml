@@ -1,0 +1,32 @@
+﻿<script src="~/assets/validate/ProfileDataSourceValidate.js"></script>
+
+<div class="row">
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>DataSource Name</label>
+            <input type="text" id="txtInsertDataSourceName" onkeyup="validateInsertDataSource();" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>DataSource Description</label>
+            <input type="text" id="txtInsertDataSourceDescription" onkeyup="validateInsertDataSource();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertDataSourceIsActive" checked />
+                <label class="custom-control-label" for="toggleInsertDataSourceIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="col-12 pull-right" id="actionSaveProfleDataSource">
+        <button type="button" class="btn btn-secondary" onclick="fnInsertCancelDataSource();">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="fnInsertDataSource();">Save changes</button>
+    </div>
+</div>

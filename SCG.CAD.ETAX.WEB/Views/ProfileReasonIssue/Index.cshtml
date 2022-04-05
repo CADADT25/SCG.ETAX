@@ -13,10 +13,6 @@
 
         RenderProfileReasonIssue();
 
-         $('#toggleUpdateProfileReasonIssue').change(function() {
-            $('#toggleUpdateProfileReasonIssue-event').html('Toggle: ' + $(this).prop('checked'))
-        });
-
     });
 
 
@@ -116,87 +112,33 @@
     }
 
 
-    function fnDropdownProfileReasonIssue() {
-
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Data Source Code ---").appendTo("#ddlInsertProfileReasonIssueDataSource");
-
-
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Erp Code ---").appendTo("#ddlInsertProfileReasonIssueErpDocumentType");
-
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.dataSourceName,
-                        text: data.dataSourceName
-                    }).html(data.dataSourceName).appendTo("#ddlInsertProfileReasonIssueDataSource");
-            });
-
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.dataSourceName,
-                        text: data.dataSourceName
-                    }).html(data.dataSourceName).appendTo("#ddlUpdateProfileReasonIssueDataSource");
-            });
-        })
-
-
-        $.getJSON("@Url.Action("DropDownList", "ErpDocument")", function (data) {
-
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.erpDocumentCode,
-                        text: data.erpDocumentCode
-                    }).html(data.erpDocumentCode).appendTo("#ddlInsertProfileReasonIssueErpDocumentType");
-            });
-
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.erpDocumentCode,
-                        text: data.erpDocumentCode
-                    }).html(data.erpDocumentCode).appendTo("#ddlUpdateProfileReasonIssueErpDocumentType");
-            });
-        })
-
-    }
-
-
-
     function fnInsertCancelProfileReasonIssue(){
 
-            $("#ddlInsertProfileReasonIssueDataSource").empty();
-            $("#ddlInsertProfileReasonIssueErpDocumentType").empty();
+            document.getElementById('txtInsertProfileReasonIssueDataSource').value = '';
+            document.getElementById('txtInsertProfileReasonIssueErpDocumentType').value = '';
             document.getElementById('txtInsertProfileReasonIssueErpReasonCode').value = '';
             document.getElementById('txtInsertProfileReasonIssueRdReasonCode').value = '';
             document.getElementById('txtInsertProfileReasonIssueDescription').value = '';
 
-            $("#modalCreateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalCreateProfileReasonIssue").modal('hide');
     }
 
     function fnUpdateCancelProfileReasonIssue(){
 
-            $("#ddlUpdateProfileReasonIssueDataSource").empty();
-            $("#ddlUpdateProfileReasonIssueErpDocumentType").empty();
+            document.getElementById('txtUpdateProfileReasonIssueDataSource').value = '';
+            document.getElementById('txtUpdateProfileReasonIssueErpDocumentType').value = '';
             document.getElementById('txtUpdateProfileReasonIssueErpReasonCode').value = '';
             document.getElementById('txtUpdateProfileReasonIssueRdReasonCode').value = '';
             document.getElementById('txtUpdateProfileReasonIssueDescription').value = '';
 
-            $("#modalUpdateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalUpdateProfileReasonIssue").modal('hide');
     }
 
     function callModalInsertProfileReasonIssue(){
 
-        fnDropdownProfileReasonIssue();
+        var setDataSource = $("#dataSourceState").text();
+
+        document.getElementById('txtInsertProfileReasonIssueDataSource').value = setDataSource;
 
         $("#modalCreateProfileReasonIssue").modal('show');
 
@@ -204,13 +146,13 @@
 
     function fnInsertProfileReasonIssue(){
 
-        var DataSource = $('#ddlInsertProfileReasonIssueDataSource').val();
+        var DataSource = $('#txtInsertProfileReasonIssueDataSource').val();
 
-        var ErpDocumentType = $('#ddlInsertProfileReasonIssueErpDocumentType').val();
+        var ErpDocumentType = $('#txtInsertProfileReasonIssueErpDocumentType').val();
 
         if (
-            DataSource != '0' &&
-            ErpDocumentType != '0' &&
+            DataSource != '' &&
+            ErpDocumentType != '' &&
             $('#txtInsertProfileReasonIssueErpReasonCode').val() != '' &&
             $('#txtInsertProfileReasonIssueRdReasonCode').val() != ''
             )
@@ -225,13 +167,13 @@
 
     function fnUpdateProfileReasonIssue(){
 
-        var DataSource = $('#ddlUpdateProfileReasonIssueDataSource').val();
+        var DataSource = $('#txtUpdateProfileReasonIssueDataSource').val();
 
-        var ErpDocumentType = $('#ddlUpdateProfileReasonIssueErpDocumentType').val();
+        var ErpDocumentType = $('#txtUpdateProfileReasonIssueErpDocumentType').val();
 
         if (
-            DataSource != '0' &&
-            ErpDocumentType != '0' &&
+            DataSource != '' &&
+            ErpDocumentType != '' &&
             $('#txtUpdateProfileReasonIssueErpReasonCode').val() != '' &&
             $('#txtUpdateProfileReasonIssueRdReasonCode').val() != ''
             )
@@ -251,8 +193,6 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
-            fnDropdownProfileReasonIssue();
 
             callProfileReasonIssueGetDetailController(getPK);
 
@@ -311,43 +251,18 @@
 
                 data = $.parseJSON(result)
                 document.getElementById('txtUpdateProfileReasonIssueNo').value = data.ReasonIssueNo;
-                document.getElementById('ddlUpdateProfileReasonIssueDataSource').value = data.ReasonIssueDataSource;
-                document.getElementById('ddlUpdateProfileReasonIssueErpDocumentType').value = data.ReasonIssueErpDocumentType;
+                document.getElementById('txtUpdateProfileReasonIssueDataSource').value = data.ReasonIssueDataSource;
+                document.getElementById('txtUpdateProfileReasonIssueErpDocumentType').value = data.ReasonIssueErpDocumentType;
                 document.getElementById('txtUpdateProfileReasonIssueErpReasonCode').value = data.ReasonIssueErpReasonCode;
                 document.getElementById('txtUpdateProfileReasonIssueRdReasonCode').value = data.ReasonIssueRdReasonCode;
                 document.getElementById('txtUpdateProfileReasonIssueDescription').value = data.ReasonIssueDescription;
 
 
-                var tempDataSource = data.ReasonIssueDataSource;
-
-                var mySelectDataSource = document.getElementById('ddlUpdateProfileReasonIssueDataSource');
-
-                for(var i, j = 0; i = mySelectDataSource.options[j]; j++) {
-
-                    if(i.value == tempDataSource) {
-                        mySelectDataSource.selectedIndex = j;
-                        break;
-                    }
-                }
-
-
-                var tempCodeErp = data.ReasonIssueErpDocumentType;
-                var mySelectCodeErp = document.getElementById('ddlUpdateProfileReasonIssueErpDocumentType');
-
-                for(var i, j = 0; i = mySelectCodeErp.options[j]; j++) {
-                    if(i.value == tempCodeErp) {
-                        mySelectCodeErp.selectedIndex = j;
-                        break;
-                    }
-                }
-
-
-
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileReasonIssue').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileReasonIssueIsActive").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileReasonIssue').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileReasonIssueIsActive").checked = false;
                 }
 
                 $("#modalUpdateProfileReasonIssue").modal('show');
@@ -360,7 +275,7 @@
 
         var IsActive = 1;
 
-        if($('#toggleInsertProfileReasonIssue').prop('checked')){
+        if($('#toggleInsertProfileReasonIssueIsActive').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -369,8 +284,8 @@
 
         var model = new Object();
 
-        model.ReasonIssueDataSource = $('#ddlInsertProfileReasonIssueDataSource').val();
-        model.ReasonIssueErpDocumentType = $('#ddlInsertProfileReasonIssueErpDocumentType').val();
+        model.ReasonIssueDataSource = $('#txtInsertProfileReasonIssueDataSource').val();
+        model.ReasonIssueErpDocumentType = $('#txtInsertProfileReasonIssueErpDocumentType').val();
         model.ReasonIssueErpReasonCode = $('#txtInsertProfileReasonIssueErpReasonCode').val();
         model.ReasonIssueRdReasonCode = $('#txtInsertProfileReasonIssueRdReasonCode').val();
         model.ReasonIssueDescription = $('#txtInsertProfileReasonIssueDescription').val();
@@ -391,24 +306,26 @@
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp)
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('ddlInsertProfileReasonIssueDataSource').empty();
-                    document.getElementById('ddlInsertProfileReasonIssueErpDocumentType').empty();
+                    document.getElementById('txtInsertProfileReasonIssueDataSource').value = '';
+                    document.getElementById('txtInsertProfileReasonIssueErpDocumentType').value = '';
                     document.getElementById('txtInsertProfileReasonIssueErpReasonCode').value = '';
                     document.getElementById('txtInsertProfileReasonIssueRdReasonCode').value = '';
                     document.getElementById('txtInsertProfileReasonIssueDescription').value = '';
 
-                    $("#modalCreateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalCreateProfileReasonIssue").modal('hide');
 
-                    callProfileReasonIssueIndex();
+                    $("#render-ProfileReasonIssue-create").load("@Url.Action("Index", "ProfileReasonIssue")");
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
+                    fnSweetAlert_Error(errorMessage);
                 }
 
             }
@@ -419,21 +336,18 @@
 
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateProfileReasonIssue-event').text();
-
-        if(getToggle.includes("true")){
+        if($('#toggleUpdateProfileReasonIssueIsActive').prop('checked')){
             IsActive = 1;
         }
-        else
-        {
+        else{
             IsActive = 0;
         }
 
         var model = new Object();
 
         model.ReasonIssueNo = $('#txtUpdateProfileReasonIssueNo').val();
-        model.ReasonIssueDataSource = $('#ddlUpdateProfileReasonIssueDataSource').val();
-        model.ReasonIssueErpDocumentType = $('#ddlUpdateProfileReasonIssueErpDocumentType').val();
+        model.ReasonIssueDataSource = $('#txtUpdateProfileReasonIssueDataSource').val();
+        model.ReasonIssueErpDocumentType = $('#txtUpdateProfileReasonIssueErpDocumentType').val();
         model.ReasonIssueErpReasonCode = $('#txtUpdateProfileReasonIssueErpReasonCode').val();
         model.ReasonIssueRdReasonCode = $('#txtUpdateProfileReasonIssueRdReasonCode').val();
         model.ReasonIssueDescription = $('#txtUpdateProfileReasonIssueDescription').val();
@@ -455,24 +369,26 @@
             dataType: "text",
             success: function (resp) {
 
-                JSON.parse(resp);
+                data = $.parseJSON(resp)
 
-                if(resp.status = true){
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('ddlUpdateProfileReasonIssueDataSource').empty();
-                    document.getElementById('ddlUpdateProfileReasonIssueErpDocumentType').empty();
+                    document.getElementById('txtUpdateProfileReasonIssueDataSource').value = '';
+                    document.getElementById('txtUpdateProfileReasonIssueErpDocumentType').value = '';
                     document.getElementById('txtUpdateProfileReasonIssueErpReasonCode').value = '';
                     document.getElementById('txtUpdateProfileReasonIssueRdReasonCode').value = '';
                     document.getElementById('txtUpdateProfileReasonIssueDescription').value = '';
 
-                    $("#modalUpdateProfileReasonIssue").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                    $("#modalUpdateProfileReasonIssue").modal('hide');
 
-                    callProfileReasonIssueIndex();
+                    $("#render-ProfileReasonIssue-create").load("@Url.Action("Index", "ProfileReasonIssue")");
                 }
                 else{
-                    fnSweetAlert_Error(resp.error_message);
+                    fnSweetAlert_Error(errorMessage);
                 }
             }
         });
@@ -545,7 +461,7 @@
     function callProfileReasonIssueIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileReasonIssue")");
+            $("#render-ProfileReasonIssue-create").load("@Url.Action("Index", "ProfileReasonIssue")");
             $.unblockUI();
         }, 500);
     }

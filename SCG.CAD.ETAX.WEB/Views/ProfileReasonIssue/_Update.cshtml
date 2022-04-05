@@ -1,0 +1,60 @@
+﻿
+<script src="~/assets/validate/ProfileReasonIssueValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12" hidden>
+        <div class="form-group">
+            <label>No</label>
+            <input disabled type="text" id="txtUpdateProfileReasonIssueNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Data Source</label>
+            <input type="text" disabled id="txtUpdateProfileReasonIssueDataSource" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Erp Document Type</label>
+            <input type="text" id="txtUpdateProfileReasonIssueErpDocumentType" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label>ERP Reason Code</label>
+            <input type="text" id="txtUpdateProfileReasonIssueErpReasonCode" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label>Revenue Reason Code</label>
+            <input type="text" id="txtUpdateProfileReasonIssueRdReasonCode" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="txtUpdateProfileReasonIssueDescription" onkeyup="validateUpdateProfileReasonIssue();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileReasonIssueIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateProfileReasonIssueIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

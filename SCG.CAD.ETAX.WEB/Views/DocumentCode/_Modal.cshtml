@@ -5,115 +5,38 @@
 
 <script src="~/assets/validate/DocumentCodeValidate.js"></script>
 
-
-@* [Begin] Modal Create *@
 <div class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalCreateDocumentCode" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create @ViewData["Title"]</h5>
-                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Create Document Code</h5>
+                <button type="button" class="close" onclick="fnInsertCancelDocumentCode();">
                     <span aria-hidden="true">&times;</span>
-                </button>*@
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Source</label>
-                                    <select class="select2 form-control" id="ddlInsertDocumentCodeErpSource"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ERP</label>
-                                    <select class="select2 form-control" id="ddlInsertDocumentCodeErp"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Revenue</label>
-                                    <select class="select2 form-control" id="ddlInsertDocumentCodeRd"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <input type="text" id="txtInsertDocumentCodeDescription" onkeyup="validateInsertDocumentCode();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleInsertDocumentCode" checked type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleInsertDocumentCode-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 @await Html.PartialAsync("~/Views/DocumentCode/_Create.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelDocumentCode();" >Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelDocumentCode();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnInsertDocumentCode();">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
-@* [End] Modal Create *@
-
 
 <div class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalUpdateDocumentCode" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update @ViewData["Title"]</h5>
-               @* <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Update Document Code</h5>
+                <button type="button" class="close" onclick="fnInsertCancelDocumentCode();">
                     <span aria-hidden="true">&times;</span>
-                </button>*@
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group" hidden>
-                                    <label>No</label>
-                                    <input disabled type="text" id="txtUpdateDocumentCodeNo" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Source</label>
-                                    <select class="select2 form-control" id="ddlUpdateDocumentCodeErpSource"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ERP</label>
-                                    <select class="select2 form-control" id="ddlUpdateDocumentCodeErp"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Revenue</label>
-                                     <select class="select2 form-control" id="ddlUpdateDocumentCodeRd"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <input type="text" id="txtUpdateDocumentCodeDescription" onkeyup="validateUpdateDocumentCode();" class="form-control">
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleUpdateDocumentCode" type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleUpdateDocumentCode-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 @await Html.PartialAsync("~/Views/DocumentCode/_Update.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelDocumentCode()">Close</button>

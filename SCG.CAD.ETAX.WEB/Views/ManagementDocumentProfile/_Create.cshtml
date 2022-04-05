@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="content-header row">
+    <div class="content-header-left col-md-9 col-12 mb-2">
+        <div class="row breadcrumbs-top">
+            <div class="col-12">
+                <h2 class="content-header-title float-left mb-0">DataSource Create</h2>
+                <div class="breadcrumb-wrapper">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-primary" onclick="#">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a class="text-primary" onclick="callDataSourceIndex();">DataSource Profile</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a onclick="createProfileDataSource();">Create</a> :
+                            <label id="dataSourceState"></label>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section id="section-ProfileDataSource-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> DataSource Info</h4>
+                </div>
+                <div class="card-body">
+                   @await Html.PartialAsync("~/Views/ProfileDataSource/_Create.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="section-DocumentCode-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Document Code </h4>
+                </div>
+                <div class="card-body" id="render-DocumentCode-create">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-ProfileReasonIssue-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> ProfileReasonIssue Code </h4>
+                </div>
+                <div class="card-body" id="render-ProfileReasonIssue-create">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-TaxCode-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Tax Code </h4>
+                </div>
+                <div class="card-body" id="render-TaxCode-create">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-ProductUnit-create">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> ProductUnit Code </h4>
+                </div>
+                <div class="card-body" id="render-ProductUnit-create">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

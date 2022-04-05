@@ -2,50 +2,10 @@
     Layout = null;
 }
 
-<section id="basic-tabs-components">
-    <div class="row match-height">
 
-        <!-- Tabs with Icon starts -->
-        <div class="col-xl-12 col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Document Type Management</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="ErpSource-tab" data-toggle="tab" href="#ErpSourceTab" aria-controls="ErpSource" role="tab" aria-selected="false">
-                                <i class="fas fa-user"></i> ERP Source
-                            </a>
-                        </li>
 
-                         <li class="nav-item">
-                            <a class="nav-link" id="ErpDocumentType-tab" data-toggle="tab" href="#ErpDocumentTypeTab" aria-controls="ErpDocumentType" role="tab" aria-selected="false">
-                                <i class="fas fa-user"></i> ERP Document Type
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" id="RevenueDocumentType-tab" data-toggle="tab" href="#RevenueDocumentTypeTab" aria-controls="RevenueDocumentType" role="tab" aria-selected="false">
-                                <i class="fas fa-user"></i> Revenue Document Type
-                            </a>
-                        </li>
 
-                    </ul>
-                    <div class="tab-content" id="tabDocument">
-                        <div class="tab-pane active" id="ErpSourceTab" aria-labelledby="ErpSourceTab-tab" role="tabpanel">
-                            @await Html.PartialAsync("~/Views/ProfileDataSource/Index.cshtml")
-                        </div>
-                        <div class="tab-pane" id="ErpDocumentTypeTab" aria-labelledby="ErpDocumentTypeTab-tab" role="tabpanel">
-                            @await Html.PartialAsync("~/Views/ErpDocument/Index.cshtml")
-                        </div>
-                        <div class="tab-pane" id="RevenueDocumentTypeTab" aria-labelledby="RevenueDocumentTypeTab-tab" role="tabpanel">
-                            @await Html.PartialAsync("~/Views/RdDocument/Index.cshtml")
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Tabs with Icon ends -->
-    </div>
-</section>
+
+
+

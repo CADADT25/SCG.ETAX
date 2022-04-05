@@ -10,13 +10,14 @@
      $(document).ready(function () {
 
         RenderDataSource();
-
-         $('#toggleUpdateDataSource').change(function() {
-            $('#toggleUpdateDataSource-event').html('Toggle: ' + $(this).prop('checked'))
-        });
-
     });
 
+    
+    function createProfileDataSource(){
+
+        $("#contentPartial").load("@Url.Action("_Create", "ManagementDocumentProfile")");
+
+    }
 
     function RenderDataSource(){
 
@@ -98,22 +99,12 @@
 
             document.getElementById('txtInsertDataSourceName').value = '';
             document.getElementById('txtInsertDataSourceDescription').value = '';
-
-            $("#modalCreateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
     }
 
     function fnUpdateCancelDataSource(){
 
             document.getElementById('txtUpdateDataSourceName').value = '';
             document.getElementById('txtUpdateDataSourceDescription').value = '';
-
-            $("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-    }
-
-    function callModalInsertDataSource(){
-
-        $("#modalCreateDataSource").modal('show');
-
     }
 
     function fnInsertDataSource(){
@@ -146,6 +137,9 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
+            var getDocumentCode = data[Object.keys(data)[1]];
+
+            $('#dataSourceStateUpdate').text(getDocumentCode);
 
             callDataSourceGetDetailController(getPK);
 
@@ -190,10 +184,18 @@
     }
 
 
+    function updateDocumentProfile(){
+
+        $("#contentPartial").load("@Url.Action("_Update", "ManagementDocumentProfile")");
+
+    }
 
     // [Begin] Ajax call Controller
 
     function callDataSourceGetDetailController(getPK){
+
+        updateDocumentProfile();
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileDataSource")",
@@ -206,6 +208,8 @@
                 document.getElementById('txtUpdateDataSourceNo').value = data.DataSourceNo;
                 document.getElementById('txtUpdateDataSourceName').value = data.DataSourceName;
                 document.getElementById('txtUpdateDataSourceDescription').value = data.DataSourceDescription;
+
+                $('#dataSourceStateUpdate').text(data.DataSourceName);
 
                 if(data.Isactive == 1){
                     $('#toggleUpdateDataSource').bootstrapToggle('on');
@@ -224,7 +228,7 @@
 
         var IsActive = 1;
 
-        if($('#toggleInsertDataSource').prop('checked')){
+        if($('#toggleInsertDataSourceIsActive').prop('checked')){
             IsActive = 1;
         }
         else{
@@ -247,7 +251,6 @@
             type: "POST",
             url: "@Url.Action("Insert", "ProfileDataSource")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
@@ -257,13 +260,21 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertDataSourceName').value = '';
+                    $("#txtInsertDataSourceName").prop('disabled', true);
+                    $("#txtInsertDataSourceDescription").prop('disabled', true);
 
-                    document.getElementById('txtInsertDataSourceDescription').value = '';
+                    document.getElementById("actionSaveProfleDataSource").hidden = true;
+                    document.getElementById("toggleInsertDataSourceIsActive").disabled = true;
 
-                    $("#modalCreateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
-                    callDataSourceIndex();
+                    $("#render-DocumentCode-create").load("@Url.Action("Index", "DocumentCode")");
+                    $("#render-ProfileReasonIssue-create").load("@Url.Action("Index", "ProfileReasonIssue")");
+                    $("#render-TaxCode-create").load("@Url.Action("Index", "TaxCode")");
+                    $("#render-ProductUnit-create").load("@Url.Action("Index", "ProductUnit")");
+
+                    $('#dataSourceState').text($("#txtInsertDataSourceName").val());
+
+
                 }
                 else{
                     fnSweetAlert_Error(resp.error_message);
@@ -388,14 +399,13 @@
     // [end] Ajax call Controller
 
 
-
-
+    
     function callDataSourceIndex() {
         setTimeout(function(){
             $.blockUI();
             $("#contentPartial").load("@Url.Action("Index", "ProfileDataSource")");
             $.unblockUI();
-        }, 500);
+        }, 0);
     }
 
 

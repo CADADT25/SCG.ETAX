@@ -1,0 +1,53 @@
+﻿
+<script src="~/assets/validate/ProductUnitValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12" hidden>
+        <div class="form-group" hidden>
+            <label>No</label>
+            <input disabled type="text" id="txtUpdateProductUnitNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source Code</label>
+            <input type="text" disabled id="txtUpdateProductUnitSource" onkeyup="validateInsertProductUnit();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ProductUnit for ERP</label>
+            <input type="text" id="txtUpdateProductUnitErp" onkeyup="validateUpdateProductUnit()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ProductUnit for Revenue</label>
+            <input type="text" id="txtUpdateProductUnitRd" onkeyup="validateUpdateProductUnit()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="txtUpdateProductUnitDescription" onkeyup="validateUpdateProductUnit()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateProductUnitIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateProductUnitIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

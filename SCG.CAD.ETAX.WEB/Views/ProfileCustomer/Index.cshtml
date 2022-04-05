@@ -13,9 +13,6 @@
 
         RenderProfileCustomer();
 
-        fnDropdownProfileCustomerEmailType();
-
-
     });
 
     $(window).on('load', function() {
@@ -24,7 +21,40 @@
             dropdownParent: $('#modalCreateProfileCustomer')
         });
 
+
+        $('#modalUpdateProfileCustomer').select2({
+            dropdownParent: $('#modalUpdateProfileCustomer')
+        });
+
     });
+
+    function fnDropdownProfileCustomerCompanyCode() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Company Code ---").appendTo("#ddlInsertCompanyCode");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
+            });
+        })
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
+            });
+        })
+    }
 
     function fnDropdownProfileCustomerEmailType() {
 
@@ -37,15 +67,21 @@
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.EmailTypeNo,
-                        text: data.EmailTypeName
-                    }).html(data.EmailTypeName).appendTo("#ddlInsertEmailType");
+                        value: data.emailTypeNo,
+                        text: data.emailTypeName
+                    }).html(data.emailTypeName).appendTo("#ddlInsertEmailType");
             });
-
-           
         })
 
-
+        $.getJSON("@Url.Action("GetEmailType", "ProfileCustomer")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTypeNo,
+                        text: data.emailTypeName
+                    }).html(data.emailTypeName).appendTo("#ddlUpdateEmailType");
+            });
+        })
     }
 
 
@@ -85,6 +121,49 @@
             $('#grpInsertSingedPdf').addClass('hidden');
             $('#grpInsertSingedXml').addClass('hidden');
             $('#grpInsertEmailType').addClass('hidden');
+
+        }
+    }
+
+    function onChangeUpdateProfileCustomerPrint(){
+
+        if(document.getElementById("toggleUpdateProfileCustomerPrint").checked){
+            $('#grpUpdateNumberOfCopies').removeClass('hidden');
+        }else{
+            $('#grpUpdateNumberOfCopies').addClass('hidden');
+        }
+    }
+
+
+    function onChangeUpdateProfileCustomerEmail(){
+
+        if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
+
+            $('#grpUpdateEmail').removeClass('hidden');
+        
+        }else{
+
+            $('#grpUpdateEmail').addClass('hidden');
+        
+        }
+
+        if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
+
+            $('#grpUpdateEmail').removeClass('hidden');
+            $('#grpUpdateCcEmail').removeClass('hidden');
+            $('#grpUpdateFileAttach').removeClass('hidden');
+            $('#grpUpdateSingedPdf').removeClass('hidden');
+            $('#grpUpdateSingedXml').removeClass('hidden');
+            $('#grpUpdateEmailType').removeClass('hidden');
+
+        }else{
+
+            $('#grpUpdateEmail').addClass('hidden');
+            $('#grpUpdateCcEmail').addClass('hidden');
+            $('#grpUpdateFileAttach').addClass('hidden');
+            $('#grpUpdateSingedPdf').addClass('hidden');
+            $('#grpUpdateSingedXml').addClass('hidden');
+            $('#grpUpdateEmailType').addClass('hidden');
 
         }
     }
@@ -181,37 +260,32 @@
     }
 
     function fnInsertCancelProfileCustomer(){
-        document.getElementById('txtInsertCustomerId').value = '';
-        document.getElementById('txtInsertCompanyCode').value = '';
+        $("#ddlInsertEmailType").empty();
+        $("#ddlInsertCompanyCode").empty();
         $("#modalCreateProfileCustomer").modal('hide');
     }
 
     function fnUpdateCancelProfileCustomer(){
 
-            document.getElementById('txtUpdateCustomerId').value = '';
-            document.getElementById('txtUpdateCompanyCode').value = '';
-            document.getElementById('txtUpdateOutputType').value = '';
-            document.getElementById('txtUpdateNumberOfCopies').value = '';
-            document.getElementById('txtUpdateCustomerEmail').value = '';
-            document.getElementById('txtUpdateCustomerCCEmail').value = '';
-            document.getElementById('txtUpdateEmailType').value = '';
-
-            $("#modalUpdateProfileCustomer").modal('hide');
+        $("#ddlUpdateEmailType").empty();
+        $("#ddlUpdateCompanyCode").empty();
+        $("#modalUpdateProfileCustomer").modal('hide');
     }
 
     function callModalInsertProfileCustomer(){
+
+        $("#ddlInsertEmailType").empty();
+        $("#ddlInsertCompanyCode").empty();
+
+        fnDropdownProfileCustomerEmailType();
+        fnDropdownProfileCustomerCompanyCode();
         $("#modalCreateProfileCustomer").modal('show');
     }
 
     function fnInsertProfileCustomer(){
 
         if ( $('#txtInsertCustomerId').val() != '' ||
-             $('#txtInsertCompanyCode').val() != '' ||
-             $('#txtInsertOutputType').val() != '' ||
-             $('#txtInsertNumberOfCopies').val() != '' ||
-             $('#txtInsertCustomerEmail').val() != '' ||
-             $('#txtInsertCustomerCCEmail').val() != '' ||
-             $('#txtInsertEmailType').val() != '')
+             $('#ddlInsertCompanyCode').val() != '0' )
         {
             callProfileCustomerInsertController();
         }
@@ -225,12 +299,7 @@
     function fnUpdateProfileCustomer(){
 
          if ( $('#txtUpdateCustomerId').val() != '' ||
-             $('#txtUpdateCompanyCode').val() != '' ||
-             $('#txtUpdateOutputType').val() != '' ||
-             $('#txtUpdateNumberOfCopies').val() != '' ||
-             $('#txtUpdateCustomerEmail').val() != '' ||
-             $('#txtUpdateCustomerCCEmail').val() != '' ||
-             $('#txtUpdateEmailType').val() != '')
+              $('#txtUpdateCompanyCode').val() != '' )
              
         {
             callProfileCustomerUpdateController();
@@ -296,6 +365,13 @@
     // [Begin] Ajax call Controller
 
     function callProfileCustomerGetDetailController(getPK){
+
+        $("#ddlUpdateEmailType").empty();
+        $("#ddlUpdateCompanyCode").empty();
+
+        fnDropdownProfileCustomerEmailType();
+        fnDropdownProfileCustomerCompanyCode();
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileCustomer")",
@@ -305,13 +381,122 @@
 
                 data = $.parseJSON(result)
 
+                document.getElementById('txtUpdateCustomerProfileNo').value = data.CustomerProfileNo;
                 document.getElementById('txtUpdateCustomerId').value = data.CustomerId;
-                document.getElementById('txtUpdateCompanyCode').value = data.CompanyCode;
-                document.getElementById('txtUpdateOutputType').value = data.OutputType;
+                //document.getElementById('txtUpdateCompanyCode').value = data.CompanyCode;
+
+                $('#ddlUpdateCompanyCode').val(data.CompanyCode);
+                $('#ddlUpdateCompanyCode').trigger('change');
+
                 document.getElementById('txtUpdateNumberOfCopies').value = data.NumberOfCopies;
+
+                var getOutputType = data.OutputType;
+
+                if(getOutputType == '1'){
+
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
+                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = false;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
+
+                }else if(getOutputType == '2'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
+                    $('#grpUpdateNumberOfCopies').addClass('hidden');
+
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+                    
+
+                }else if(getOutputType == '3'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
+                    $('#grpUpdateNumberOfCopies').addClass('hidden');
+
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+
+                }else if(getOutputType == '4'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
+                    $('#grpUpdateNumberOfCopies').addClass('hidden');
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+                }else if(getOutputType == '5'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
+                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+                }else if(getOutputType == '6'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
+                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+                }else if(getOutputType == '7'){
+                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
+                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
+
+                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
+                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
+
+                    $('#grpUpdateEmail').removeClass('hidden');
+                    $('#grpUpdateCcEmail').removeClass('hidden');
+                    $('#grpUpdateFileAttach').removeClass('hidden');
+                    $('#grpUpdateSingedPdf').removeClass('hidden');
+                    $('#grpUpdateSingedXml').removeClass('hidden');
+                    $('#grpUpdateEmailType').removeClass('hidden');
+                }
+
                 document.getElementById('txtUpdateCustomerEmail').value = data.CustomerEmail;
                 document.getElementById('txtUpdateCustomerCCEmail').value = data.CustomerCcemail;
-                document.getElementById('txtUpdateEmailType').value = data.EmailType;
+
+                $('#ddlUpdateEmailType').val(data.EmailType);
+                $('#ddlUpdateEmailType').trigger('change');
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfileCustomer").checked = true;
@@ -328,23 +513,49 @@
     function callProfileCustomerInsertController(){
 
         var IsActive = 1;
+        var OutPutType = 1;
+        var StatusPrint = 1;
+        var StatusEmail = 1;
+        var StatusSignPdf = 1;
+        var StatusSignxml = 1;
 
-        if($('#toggleInsertProfileCustomer').prop('checked')){
-            IsActive = 1;
+        var IsActive = ($('#toggleInsertProfileCustomer').prop('checked')) ? 1 : 0 ;
+        var StatusPrint = ($('#toggleInsertProfileCustomerPrint').prop('checked')) ? 1 : 0 ;
+        var StatusEmail = ($('#toggleInsertProfileCustomerEmail').prop('checked')) ? 1 : 0 ;
+        var StatusSignPdf = ($('#toggleInsertProfileCustomerFileSignedPdf').prop('checked')) ? 1 : 0 ;
+        var StatusSignxml = ($('#toggleInsertProfileCustomerFileSignedXml').prop('checked')) ? 1 : 0 ;
+
+        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
+            OutPutType = 1;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+            OutPutType = 2;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+            OutPutType = 3;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+            OutPutType = 4;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+            OutPutType = 5;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+            OutPutType = 6;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+            OutPutType = 7;
         }
-        else{
-            IsActive = 0;
-        }
+
 
         var model = new Object();
 
-        model.CustomerId = $('#txtInsertProfileCustomerCode').val();
-        model.CompanyCode = $('#txtInsertProfileCustomerCompanyCode').val();
-        model.OutputType = $('#txtInsertProfileCustomerDescription').val();
-        model.NumberOfCopies = $('#txtInsertProfileCustomerDescription').val();
-        model.CustomerEmail = $('#txtInsertProfileCustomerDescription').val();
-        model.CustomerCcemail = $('#txtInsertProfileCustomerDescription').val();
-        model.EmailType = $('#txtInsertProfileCustomerDescription').val();
+        model.CustomerId = $('#txtInsertCustomerId').val();
+        model.CompanyCode = $('#ddlInsertCompanyCode').val();
+        model.OutputType = OutPutType;
+        model.NumberOfCopies = $('#txtInsertNumberOfCopies').val();
+        model.CustomerEmail = $('#txtInsertCustomerEmail').val();
+        model.CustomerCcemail = $('#txtInsertCustomerCCEmail').val();
+        model.EmailType = $('#ddlInsertEmailType').val();
+
+        model.StatusPrint = StatusPrint;
+        model.StatusEmail = StatusEmail;
+        model.StatusSignPdf = StatusSignPdf;
+        model.StatusSignXml = StatusSignxml;
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -358,7 +569,6 @@
             type: "POST",
             url: "@Url.Action("Insert", "ProfileCustomer")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
@@ -369,16 +579,6 @@
                 if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
-
-                    document.getElementById('txtInsertCustomerId').value = '';
-                    document.getElementById('txtInsertCompanyCode').value = '';
-                    document.getElementById('txtInsertOutputType').value = '';
-                    document.getElementById('txtInsertNumberOfCopies').value = '';
-                    document.getElementById('txtInsertCustomerEmail').value = '';
-                    document.getElementById('txtInsertCustomerCCEmail').value = '';
-                    document.getElementById('txtInsertEmailType').value = '';
-
-                    $("#modalCreateProfileCustomer").modal('hide');
 
                     callProfileCustomerIndex();
                 }
@@ -393,23 +593,50 @@
     function callProfileCustomerUpdateController(){
 
         var IsActive = 1;
+        var OutPutType = 1;
+        var StatusPrint = 1;
+        var StatusEmail = 1;
+        var StatusSignPdf = 1;
+        var StatusSignxml = 1;
 
-        if($('#toggleUpdateProfileCustomer').prop('checked')){
-            IsActive = 1;
-        }
-        else{
-            IsActive = 0;
+        var IsActive = ($('#toggleUpdateProfileCustomer').prop('checked')) ? 1 : 0 ;
+        var StatusPrint = ($('#toggleUpdateProfileCustomerPrint').prop('checked')) ? 1 : 0 ;
+        var StatusEmail = ($('#toggleUpdateProfileCustomerEmail').prop('checked')) ? 1 : 0 ;
+        var StatusSignPdf = ($('#toggleUpdateProfileCustomerFileSignedPdf').prop('checked')) ? 1 : 0 ;
+        var StatusSignxml = ($('#toggleUpdateProfileCustomerFileSignedXml').prop('checked')) ? 1 : 0 ;
+
+        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
+            OutPutType = 1;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+            OutPutType = 2;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+            OutPutType = 3;
+        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+            OutPutType = 4;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+            OutPutType = 5;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+            OutPutType = 6;
+        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+            OutPutType = 7;
         }
 
         var model = new Object();
 
-        model.CustomerId = $('#txtUpdateProfileCustomerCode').val();
-        model.CompanyCode = $('#txtUpdateProfileCustomerCompanyCode').val();
-        model.OutputType = $('#txtUpdateProfileCustomerDescription').val();
-        model.NumberOfCopies = $('#txtUpdateProfileCustomerDescription').val();
-        model.CustomerEmail = $('#txtUpdateProfileCustomerDescription').val();
-        model.CustomerCcemail = $('#txtUpdateProfileCustomerDescription').val();
-        model.EmailType = $('#txtUpdateProfileCustomerDescription').val();
+        model.CustomerProfileNo = $('#txtUpdateCustomerProfileNo').val();
+        model.CustomerId = $('#txtUpdateCustomerId').val();
+        model.CompanyCode = $('#txtUpdateCompanyCode').val();
+        model.OutputType = OutPutType;
+        model.NumberOfCopies = $('#txtUpdateNumberOfCopies').val();
+        model.CustomerEmail = $('#txtUpdateCustomerEmail').val();
+        model.CustomerCcemail = $('#txtUpdateCustomerCCEmail').val();
+        model.EmailType = $('#ddlUpdateEmailType').val();
+
+        model.StatusPrint = StatusPrint;
+        model.StatusEmail = StatusEmail;
+        model.StatusSignPdf = StatusSignPdf;
+        model.StatusSignXml = StatusSignxml;
+
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -422,7 +649,6 @@
             type: "POST",
             url: "@Url.Action("Update", "ProfileCustomer")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
@@ -433,16 +659,6 @@
                 if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
-
-                    document.getElementById('txtUpdateCustomerId').value = '';
-                    document.getElementById('txtUpdateCompanyCode').value = '';
-                    document.getElementById('txtUpdateOutputType').value = '';
-                    document.getElementById('txtUpdateNumberOfCopies').value = '';
-                    document.getElementById('txtUpdateCustomerEmail').value = '';
-                    document.getElementById('txtUpdateCustomerCCEmail').value = '';
-                    document.getElementById('txtUpdateEmailType').value = '';
-
-                    $("#modalUpdateProfileCustomer").modal('hide');
 
                     callProfileCustomerIndex();
 

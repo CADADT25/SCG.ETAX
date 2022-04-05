@@ -13,5 +13,17 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
         {
             return View();
         }
+
+
+        public IActionResult _Create()
+        {
+            return View();
+        }
+
+
+        public IActionResult _Update()
+        {
+            return View();
+        }
     }
 }

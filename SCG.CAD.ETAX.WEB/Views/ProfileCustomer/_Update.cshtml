@@ -1,4 +1,152 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12" hidden>
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Customer Id</label>
+                <input disabled type="text" id="txtUpdateCustomerProfileNo" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Customer Id</label>
+                <input disabled type="text" id="txtUpdateCustomerId" maxlength="20" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <select class="select2 form-control" id="ddlUpdateCompanyCode"></select>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Select Output type</label>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input onchange="onChangeUpdateProfileCustomerPrint()" type="checkbox" class="custom-control-input" id="toggleUpdateProfileCustomerPrint" />
+                    <label class="custom-control-label" for="toggleUpdateProfileCustomerPrint">Print to spool</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateNumberOfCopies">
+                <label><spa class="text-danger">* </spa>Number of copies</label>
+                <input type="number" id="txtUpdateNumberOfCopies" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Email setting</label>
+            </div>
+        </div>
+
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" onchange="onChangeUpdateProfileCustomerEmail()" class="custom-control-input" id="toggleUpdateProfileCustomerEmail" />
+                    <label class="custom-control-label" for="toggleUpdateProfileCustomerEmail">Sending email</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateEmail">
+                <label><spa class="text-danger">* </spa>To : </label>
+                <input type="text" id="txtUpdateCustomerEmail" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateCcEmail">
+                <label><spa class="text-danger">* </spa>CC : </label>
+                <input type="text" id="txtUpdateCustomerCCEmail" onkeyup="validateUpdateProfileCustomer();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateFileAttach">
+                <label><spa class="text-danger">* </spa>File attachment</label>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateSingedPdf">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileCustomerFileSignedPdf" />
+                    <label class="custom-control-label" for="toggleUpdateProfileCustomerFileSignedPdf">with Signed PDF</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateSingedXml">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileCustomerFileSignedXml" />
+                    <label class="custom-control-label" for="toggleUpdateProfileCustomerFileSignedXml">with Signed XML</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdateEmailType">
+                <label><spa class="text-danger">* </spa>Email Type</label>
+                <select class="select2 form-control" id="ddlUpdateEmailType"></select>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileCustomer" checked />
+                    <label class="custom-control-label" for="toggleUpdateProfileCustomer">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+

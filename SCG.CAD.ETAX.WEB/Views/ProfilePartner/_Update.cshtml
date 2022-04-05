@@ -3,101 +3,161 @@
 
         <div class="col-12" hidden>
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>partnerProfileNo</label>
-                <input type="text" id="txtUpdateProfilePartnerProfileNo" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <label><spa class="text-danger">* </spa>No</label>
+                <input type="text" disabled id="txtUpdateProfilePartnerNo" maxlength="20" class="form-control">
             </div>
         </div>
 
         <div class="col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>Customer Id</label>
-                <input type="text" id="txtUpdateProfilePartnerCustomerId" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <input type="text" disabled id="txtUpdateProfilePartnerCustomerId" maxlength="20" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
+        <div class="col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>Company Code</label>
-                <select class="select2 form-control" id="ddlUpdateProfilePartnerCompanyCode"></select>
+                <select class="select2 form-control" id="ddlUpdateProfilePartnerCompanyCode" onchange="onChangeDdlUpdatePartnerSaleOrg();"></select>
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>Sell Org</label>
-                <select class="select2 form-control" id="ddlUpdateProfilePartnerSellOrg"></select>
+                <label><spa class="text-danger">* </spa>SalesOrg Code</label>
+                <select class="select2 form-control" id="ddlUpdateProfilePartnerSaleOrg"></select>
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>PartnerOutputType</label>
-                <input type="text" id="txtUpdateProfilePartnerPartnerOutputType" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <label><spa class="text-danger">* </spa>Sold To</label>
+                <input type="text" id="txtUpdateProfilePartnerSoldTo" maxlength="4" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>NumberOfCopies</label>
-                <input type="text" id="txtUpdateProfilePartnerNumberOfCopies" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <label><spa class="text-danger">* </spa>Ship To</label>
+                <input type="text" id="txtUpdateProfilePartnerShipTo" maxlength="4" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
+        <hr />
+
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>Serial</label>
-                <input type="text" id="txtUpdateProfilePartnerSoldToCode" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <label><spa class="text-danger">* </spa>Select Output type</label>
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>SoldToEmail</label>
-                <input type="text" id="txtUpdateProfilePartnerSoldToEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input onchange="onChangeUpdateProfilePartnerPrint()" type="checkbox" class="custom-control-input" id="toggleUpdateProfilePartnerPrint" />
+                    <label class="custom-control-label" for="toggleUpdateProfilePartnerPrint">Print to spool</label>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>SoldToCCEmail</label>
-                <input type="text" id="txtUpdateProfilePartnerSoldToCCEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerNumberOfCopies">
+                <label><spa class="text-danger">* </spa>Number of copies</label>
+                <input type="number" id="txtUpdateProfilePartnerNumberOfCopies" value="0" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>shipToCode</label>
-                <input type="text" id="txtUpdateProfilePartnerShipToCode" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <label><spa class="text-danger">* </spa>Email setting</label>
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>shipToEmail</label>
-                <input type="text" id="txtUpdateProfilePartnerShipToEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" onchange="onChangeUpdateProfilePartnerEmail()" class="custom-control-input" id="toggleUpdateProfilePartnerEmail" />
+                    <label class="custom-control-label" for="toggleUpdateProfilePartnerEmail">Sending email</label>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-4 col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>shipToCCEmail</label>
-                <input type="text" id="txtUpdateProfilePartnerShipToCCEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
+        <div class="col-md-1 col-12">
+        </div>
+
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerEmail">
+                <label><spa class="text-danger">* </spa>To : </label>
+                <input type="text" id="txtUpdateProfilePartnerCustomerEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>PartnermailType</label>
-                <select class="select2 form-control" id="ddlUpdateProfilePartnerPartnermailType"></select>
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerCcEmail">
+                <label><spa class="text-danger">* </spa>CC : </label>
+                <input type="text" id="txtUpdateProfilePartnerCustomerCCEmail" onkeyup="validateUpdateProfilePartner();" class="form-control">
             </div>
         </div>
 
-        <div class="col-md-6 col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>emailTemplateNo</label>
-                <select class="select2 form-control" id="ddlUpdateProfilePartnermailTemplateNo"></select>
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerFileAttach">
+                <label><spa class="text-danger">* </spa>File attachment</label>
             </div>
         </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerSingedPdf">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfilePartnerFileSignedPdf" checked />
+                    <label class="custom-control-label" for="toggleUpdateProfilePartnerFileSignedPdf">with Signed PDF</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerSingedXml">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfilePartnerFileSignedXml" checked />
+                    <label class="custom-control-label" for="toggleUpdateProfilePartnerFileSignedXml">with Signed XML</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpUpdatePartnerEmailType">
+                <label><spa class="text-danger">* </spa>Email Type</label>
+                <select class="select2 form-control" id="ddlUpdateProfilePartnerEmailType"></select>
+            </div>
+        </div>
+
+
+
 
         <div class="col-12">
             <div class="form-group">
@@ -107,6 +167,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </form>
 

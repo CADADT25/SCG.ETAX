@@ -1,0 +1,54 @@
+﻿
+<script src="~/assets/validate/DocumentCodeValidate.js"></script>
+
+
+<div class="row">
+
+     <div class="col-md-12 col-12" hidden>
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source</label>
+            <input type="text" id="txtUpdateDocumentCodeNo" onkeyup="validateUpdateDocumentCode();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source</label>
+            <input disabled type="text" id="txtUpdateDocumentCodeErpSource" onkeyup="validateUpdateDocumentCode();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ERP</label>
+            <input type="text" class="form-control" id="txtUpdateDocumentCodeErp" onkeyup="validateUpdateDocumentCode();">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Revenue</label>
+            <input type="text" class="form-control" id="txtUpdateDocumentCodeRd" onkeyup="validateUpdateDocumentCode();">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="txtUpdateDocumentCodeDescription" onkeyup="validateUpdateDocumentCode();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateDocumentCodeIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateDocumentCodeIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+
+</div>

@@ -12,43 +12,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create @ViewData["Title"]</h5>
-                <button type="button" class="close" onclick="fnInsertCancelProfileEmailTemplate();" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelProductUnit();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ProductUnit for ERP</label>
-                                    <input type="text" id="txtInsertProductUnitErp" onkeyup="validateInsertProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ProductUnit for Revenue</label>
-                                    <input type="text" id="txtInsertProductUnitRd" onkeyup="validateInsertProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <input type="text" id="txtInsertProductUnitDescription" onkeyup="validateInsertProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggle-event" checked type="checkbox" data-toggle="toggle">
-                                    <div hidden id="console-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProductUnit/_Create.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileEmailTemplate();">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProductUnit();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnInsertProductUnit();">Save changes</button>
             </div>
         </div>
@@ -63,47 +35,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update @ViewData["Title"]</h5>
-                <button type="button" class="close" onclick="fnUpdateCancelProfileEmailTemplate();" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelProductUnit();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group" hidden>
-                                    <label>No</label>
-                                    <input disabled type="text" id="txtUpdateProductUnitNo" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ProductUnit for ERP</label>
-                                    <input type="text" id="txtUpdateProductUnitErp" onkeyup="validateUpdateProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>ProductUnit for Revenue</label>
-                                    <input type="text" id="txtUpdateProductUnitRd" onkeyup="validateUpdateProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <input type="text" id="txtUpdatetProductUnitDescription" onkeyup="validateUpdateProductUnit()" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleUpdateProductUnit" type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleUpdateProductUnit-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProductUnit/_Update.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileEmailTemplate();">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProductUnit();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnUpdateProductUnit();">Save changes</button>
             </div>
         </div>

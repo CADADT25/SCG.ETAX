@@ -11,7 +11,7 @@
         <div class="col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>Company Code</label>
-                <input type="text" id="txtInsertCompanyCode" maxlength="4" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                <select class="select2 form-control" id="ddlInsertCompanyCode"></select>
             </div>
         </div>
 
@@ -41,7 +41,7 @@
         <div class="col-md-11 col-12">
             <div class="form-group hidden" id="grpInsertNumberOfCopies">
                 <label><spa class="text-danger">* </spa>Number of copies</label>
-                <input type="number" id="txtInsertNumberOfCopies" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                <input type="number" id="txtInsertNumberOfCopies" value="0" onkeyup="validateInsertProfileCustomer();" class="form-control">
             </div>
         </div>
 
@@ -134,8 +134,8 @@
         <div class="col-12">
             <div class="form-group">
                 <div class="custom-control custom-control-primary custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="toggleInsertProfilePartner" checked />
-                    <label class="custom-control-label" for="toggleInsertProfilePartner">Is Active</label>
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertProfileCustomer" checked />
+                    <label class="custom-control-label" for="toggleInsertProfileCustomer">Is Active</label>
                 </div>
             </div>
         </div>
