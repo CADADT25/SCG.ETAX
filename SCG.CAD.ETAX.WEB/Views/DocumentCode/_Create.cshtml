@@ -1,0 +1,45 @@
+﻿
+<script src="~/assets/validate/DocumentCodeValidate.js"></script>
+
+
+<div class="row">
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source</label>
+            <input type="text" disabled id="txtInsertDocumentCodeErpSource" onkeyup="validateInsertDocumentCode();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ERP</label>
+            <input type="text" class="form-control" id="txtInsertDocumentCodeErp" onkeyup="validateInsertDocumentCode();">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Revenue</label>
+            <input type="text" class="form-control" id="txtInsertDocumentCodeRd" onkeyup="validateInsertDocumentCode();">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="txtInsertDocumentCodeDescription" onkeyup="validateInsertDocumentCode();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertDocumentCodeIsActive" checked />
+                <label class="custom-control-label" for="toggleInsertDocumentCodeIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

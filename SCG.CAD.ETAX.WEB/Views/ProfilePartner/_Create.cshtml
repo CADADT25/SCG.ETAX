@@ -1,0 +1,166 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Customer Id</label>
+                <input type="text" id="txtInsertProfilePartnerCustomerId" maxlength="20" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <select class="select2 form-control" id="ddlInsertProfilePartnerCompanyCode" onchange="onChangeDdlInsertPartnerSaleOrg();"></select>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>SalesOrg Code</label>
+                <select class="select2 form-control" id="ddlInsertProfilePartnerSaleOrg"></select>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Sold To</label>
+                <input type="text" id="txtInsertProfilePartnerSoldTo" maxlength="4" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Ship To</label>
+                <input type="text" id="txtInsertProfilePartnerShipTo" maxlength="4" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Select Output type</label>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input onchange="onChangeInsertProfilePartnerPrint()" type="checkbox" class="custom-control-input" id="toggleInsertProfilePartnerPrint" />
+                    <label class="custom-control-label" for="toggleInsertProfilePartnerPrint">Print to spool</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerNumberOfCopies">
+                <label><spa class="text-danger">* </spa>Number of copies</label>
+                <input type="number" id="txtInsertProfilePartnerNumberOfCopies" value="0" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Email setting</label>
+            </div>
+        </div>
+
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" onchange="onChangeInsertProfilePartnerEmail()" class="custom-control-input" id="toggleInsertProfilePartnerEmail" />
+                    <label class="custom-control-label" for="toggleInsertProfilePartnerEmail">Sending email</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerEmail">
+                <label><spa class="text-danger">* </spa>To : </label>
+                <input type="text" id="txtInsertProfilePartnerCustomerEmail" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerCcEmail">
+                <label><spa class="text-danger">* </spa>CC : </label>
+                <input type="text" id="txtInsertProfilePartnerCustomerCCEmail" onkeyup="validateInsertProfilePartner();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerFileAttach">
+                <label><spa class="text-danger">* </spa>File attachment</label>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerSingedPdf">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertProfilePartnerFileSignedPdf" checked />
+                    <label class="custom-control-label" for="toggleInsertProfilePartnerFileSignedPdf">with Signed PDF</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerSingedXml">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertProfilePartnerFileSignedXml" checked />
+                    <label class="custom-control-label" for="toggleInsertProfilePartnerFileSignedXml">with Signed XML</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group hidden" id="grpInsertPartnerEmailType">
+                <label><spa class="text-danger">* </spa>Email Type</label>
+                <select class="select2 form-control" id="ddlInsertProfilePartnerEmailType"></select>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertProfilePartner" checked />
+                    <label class="custom-control-label" for="toggleInsertProfilePartner">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+

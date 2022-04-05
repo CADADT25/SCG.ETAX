@@ -59,6 +59,9 @@
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/pickers/form-pickadate.css">
 
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/page-auth.css">
+
+
 
     <link rel="stylesheet" type="text/css" href="~/vendor/cursor/cursor.css">
 
@@ -110,7 +113,8 @@
     @await Html.PartialAsync("~/Views/ProfileCompany/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ProfileSeller/_Modal.cshtml")
     @await Html.PartialAsync("~/Views/ProfileBranch/_Modal.cshtml")
-
+    @await Html.PartialAsync("~/Views/ProfileCustomer/_Modal.cshtml")
+    @await Html.PartialAsync("~/Views/ProfilePartner/_Modal.cshtml")
 
     <script src="~/app-assets/vendors/js/vendors.min.js"></script>
     <script src="~/app-assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
@@ -152,6 +156,8 @@
     <script src=".~/app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
     <script src=".~/app-assets/js/scripts/forms/pickers/form-pickers.js"></script>
 
+    <script src="~/app-assets/js/scripts/pages/page-auth-login.js"></script>
+
     <script src="@Url.Content("~/vendor/fontawesome/js/all.js")"></script>
     <script src="@Url.Content("~/vendor/fontawesome/js/brands.js")"></script>
     <script src="@Url.Content("~/vendor/fontawesome/js/solid.js")"></script>
@@ -166,9 +172,6 @@
                         height: 13
                     });
                 }
-
-                
-
             })
 
         function callHomeIndex() {

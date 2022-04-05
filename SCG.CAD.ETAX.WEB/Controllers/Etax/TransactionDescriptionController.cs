@@ -142,7 +142,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "ShipTo," + "BillTo," + "Payer," + "SourceName," + "Foc," +
                             "Ic," + "PostingYear," + "FiDoc," + "ImageDocType," + "DocType," +
                             "SellOrg," + "PoNumber," + "TypeInput," + "GenerateStatus," + "GenerateDetail," +
-                            "GenerateDateTime," + "XmlSignStatus," + "XmlSignDetail," + "XmlSignDateTime," + "PdfSignStatus," +
+                            "XmlSignStatus," + "XmlSignDetail," + "XmlSignDateTime," + "PdfSignStatus," +
                             "PdfSignDetail," + "PdfSignDateTime," + "PrintStatus," + "PrintDetail," + "PrintDateTime," +
                             "EmailSendStatus," + "EmailSendDetail," + "EmailSendDateTime," + "XmlCompressStatus," + "XmlCompressDetail," +
                             "XmlCompressDateTime," + "PdfIndexingStatus," + "PdfIndexingDetail," + "PdfIndexingDateTime," + "PdfSignLocation," +
@@ -160,7 +160,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.ShipTo}," + $"{item.BillTo}," + $"{item.Payer}," + $"{item.SourceName}," + $"{item.Foc}," +
                                 $"{item.Ic}," + $"{item.PostingYear}," + $"{item.FiDoc}," + $"{item.ImageDocType}," + $"{item.DocType}," +
                                 $"{item.SellOrg}," + $"{item.PoNumber}," + $"{item.TypeInput}," + $"{item.GenerateStatus}," + $"{item.GenerateDetail}," +
-                                $"{item.GenerateDateTime}," + $"{item.XmlSignStatus}," + $"{item.XmlSignDetail}," + $"{item.XmlSignDateTime}," + $"{item.PdfSignStatus}," +
+                                $"{item.XmlSignStatus}," + $"{item.XmlSignDetail}," + $"{item.XmlSignDateTime}," + $"{item.PdfSignStatus}," +
                                 $"{item.PdfSignDetail}," + $"{item.PdfSignDateTime}," + $"{item.PrintStatus}," + $"{item.PrintDetail}," + $"{item.PrintDateTime}," +
                                 $"{item.EmailSendStatus}," + $"{item.EmailSendDetail}," + $"{item.EmailSendDateTime}," + $"{item.XmlCompressStatus}," + $"{item.XmlCompressDetail}," +
                                 $"{item.XmlCompressDateTime}," + $"{item.PdfIndexingStatus}," + $"{item.PdfIndexingDetail}," + $"{item.PdfIndexingDateTime}," + $"{item.PdfSignLocation}," +

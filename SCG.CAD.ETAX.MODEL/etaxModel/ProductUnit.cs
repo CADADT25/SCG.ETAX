@@ -7,13 +7,14 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int ProductUnitNo { get; set; }
-        public string ProductUnitErp { get; set; } = null!;
-        public string ProductUnitRd { get; set; } = null!;
+        public string? ErpSource { get; set; }
+        public string? ProductUnitErp { get; set; }
+        public string? ProductUnitRd { get; set; }
         public string? ProductUnitDescription { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
-        public int Isactive { get; set; }
+        public int? Isactive { get; set; }
     }
 }

@@ -25,6 +25,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _Update()
+        {
+            return View();
+        }
+
 
 
         public async Task<JsonResult> Detail(int id)
@@ -44,7 +49,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
 
+                    
+
                     result = JsonConvert.SerializeObject(tran[0]);
+
+                    ViewBag.CompanyCode = tran[0].CompanyCode;
 
                 }
                 else

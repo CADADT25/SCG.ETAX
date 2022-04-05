@@ -1,0 +1,46 @@
+﻿
+<script src="~/assets/validate/ProductUnitValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source Code</label>
+            <input type="text" disabled id="txtInsertProductUnitSource" onkeyup="validateInsertProductUnit();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ProductUnit for ERP</label>
+            <input type="text" id="txtInsertProductUnitErp" onkeyup="validateInsertProductUnit()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ProductUnit for Revenue</label>
+            <input type="text" id="txtInsertProductUnitRd" onkeyup="validateInsertProductUnit()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="txtInsertProductUnitDescription" onkeyup="validateInsertProductUnit()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertProductUnitIsActive" checked />
+                <label class="custom-control-label" for="toggleInsertProductUnitIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

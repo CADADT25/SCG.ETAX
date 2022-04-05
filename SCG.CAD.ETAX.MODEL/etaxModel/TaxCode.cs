@@ -7,6 +7,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int TaxCodeNo { get; set; }
+        public string? ErpSource { get; set; }
         public string TaxCodeErp { get; set; } = null!;
         public string TaxCodeRd { get; set; } = null!;
         public string? TaxCodeDescription { get; set; }

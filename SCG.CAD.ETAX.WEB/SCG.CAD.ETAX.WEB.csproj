@@ -3138,7 +3138,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Authentication\" />
     <Folder Include="wwwroot\app-assets\vendors\css\tables\datatable\extensions\" />
   </ItemGroup>
 

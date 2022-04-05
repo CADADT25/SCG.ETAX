@@ -1,0 +1,53 @@
+﻿
+<script src="~/assets/validate/TaxCodeValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12">
+        <div class="form-group" hidden>
+            <label>No</label>
+            <input disabled type="text" id="txtUpdateTaxCodeNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Source Code</label>
+            <input type="text" disabled id="txtUpdateTaxCodeSource" onkeyup="validateUpdateTaxCode();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>ERP</label>
+            <input type="text" disabled id="txtUpdateTaxCodeErp" onkeyup="validateUpdateTaxCode();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>RD</label>
+            <input type="text" class="form-control" id="txtUpdateTaxCodeRd" onkeyup="validateUpdateTaxCode();">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>Revenue</label>
+            <input type="text" class="form-control" id="txtUpdateTaxCodeDescription" onkeyup="validateUpdateTaxCode();">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateTaxCodeIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateTaxCodeIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

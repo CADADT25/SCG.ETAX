@@ -1,0 +1,40 @@
+﻿<script src="~/assets/validate/ProfileDataSourceValidate.js"></script>
+
+<div class="row">
+
+    <div class="col-md-12 col-12">
+        <div class="form-group" hidden>
+            <label>No</label>
+            <input disabled type="text" id="txtUpdateDataSourceNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa>DataSource Name</label>
+            <input disabled type="text" id="txtUpdateDataSourceName" onkeyup="validateUpdateDataSource();" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label>DataSource Description</label>
+            <input type="text" id="txtUpdateDataSourceDescription" onkeyup="validateUpdateDataSource();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateDataSourceIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateDataSourceIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="col-12 pull-right" id="actionSaveCompanyProfile">
+        <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCompany();">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCompany();">Save changes</button>
+    </div>
+</div>

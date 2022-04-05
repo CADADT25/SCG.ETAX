@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="content-header row">
+    <div class="content-header-left col-md-9 col-12 mb-2">
+        <div class="row breadcrumbs-top">
+            <div class="col-12">
+                <h2 class="content-header-title float-left mb-0">DataSource Create</h2>
+                <div class="breadcrumb-wrapper">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-primary" onclick="#">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a class="text-primary" onclick="callDataSourceIndex();">DataSource Profile</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a onclick="javascript:void(0);">Update</a> :
+                            <label id="dataSourceStateUpdate"></label>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Basic multiple Column Form section start -->
+<section id="section-ProfileDataSource-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> DataSource Info</h4>
+                </div>
+                <div class="card-body">
+                   @await Html.PartialAsync("~/Views/ProfileDataSource/_Update.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Basic Floating Label Form section end -->
+
+
+
+<section id="section-DocumentCode-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Document Code </h4>
+                </div>
+                <div class="card-body" id="render-DocumentCode-update">
+                   @await Html.PartialAsync("~/Views/DocumentCode/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-ProfileReasonIssue-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> ProfileReasonIssue Code </h4>
+                </div>
+                <div class="card-body" id="render-ProfileReasonIssue-update">
+                    @await Html.PartialAsync("~/Views/ProfileReasonIssue/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-TaxCode-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Tax Code </h4>
+                </div>
+                <div class="card-body" id="render-TaxCode-update">
+                    @await Html.PartialAsync("~/Views/TaxCode/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-ProductUnit-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> ProductUnit Code </h4>
+                </div>
+                <div class="card-body" id="render-ProductUnit-update">
+                    @await Html.PartialAsync("~/Views/ProductUnit/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

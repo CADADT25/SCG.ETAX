@@ -1,6 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Company Address Profile";
     Layout = null;
+
+    ViewData["companyCode"] = ViewBag.CompanyCode;
+
 }
 
 
@@ -13,7 +16,11 @@
 
             var setCompanyCode = $("#companyCodeState").text();
 
-            RenderProfileSeller(setCompanyCode);
+            setTimeout(function(){
+                RenderProfileSeller(setCompanyCode);
+            }, 1200);
+
+            
 
              $('#toggleUpdateProfileSeller').change(function() {
                 $('#toggleUpdateProfileSeller-event').html('Toggle: ' + $(this).prop('checked'))
@@ -84,6 +91,10 @@
 
 
         function RenderProfileSeller(setCompanyCode){
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeStateUpdate").text();
+            }
 
             var table = $("#tbProfileSellerMain").DataTable({
 
@@ -429,7 +440,6 @@
 
                     var iNum = parseInt(data.Province);
 
-                    alert(iNum)
 
 
                     //$("#ddlUpdateProfileSellerProvince").val(data.Province);

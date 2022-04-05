@@ -41,7 +41,16 @@
                 <a class="d-flex align-items-center" href="index.html"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Dashboards</span><span class="badge badge-light-warning badge-pill ml-auto mr-1">2</span></a>
                 <ul class="menu-content">
                     <li>
-                        <a class="d-flex align-items-center" href="dashboard-analytics.html"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Analytics">Analytics</span></a>
+                        <a class="d-flex align-items-center" href="#">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="Analytics">User Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="d-flex align-items-center" href="#">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="Analytics">Operation Support Dashboard</span>
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -54,179 +63,163 @@
             <li class="nav-item" id="li-">
                 <a class="d-flex align-items-center" id="btn-">
                     <i data-feather="file"></i>
+                    <span class="menu-title text-truncate" data-i18n="eTax Inbox">eTax Inbox</span>
+                </a>
+            </li>
+
+            <li class="nav-item" id="li-btnCallPageTransactionDescription">
+                <a class="d-flex align-items-center" id="btn-btnCallPageTransactionDescription">
+                    <i data-feather="file"></i>
                     <span class="menu-title text-truncate" data-i18n="E-tax Transaction">E-tax Transaction</span>
                 </a>
             </li>
 
 
-
-
             <li class="nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="key Data">Master Data</span></a>
+                <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="key Data">Output Search</span></a>
                 <ul class="menu-content">
 
-                    @*                    <li class="nav-item" id="li-btnCallPageProductUnit">
-                        <a class="d-flex align-items-center" id="btn-CallPageProductUnit">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="หน่วยสินค้า">ProductUnit</span>
-                        </a>
-                        </li>
-
-                        <li class="nav-item" id="li-btnCallPageTaxCode">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageTaxCode">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="TaxCode">TaxCode</span>
-                        </a>
-                        </li>
-
-                        <li class="nav-item" id="li-btnCallPageProfileDataSource">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileDataSource">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="Profile DataSource">ERP Source Type</span>
-                        </a>
-                        </li>
-
-                        <li class="nav-item" id="li-btnCallPageErpDocument">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageErpDocument">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="ERP Code">ERP Document Type</span>
-                        </a>
-                        </li>
-
-                        <li class="nav-item" id="li-btnCallPageRdDocument">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageRdDocument">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="Revenue Code">RD Document Type</span>
-                        </a>
-                        </li>
-
-                        <li class="nav-item" id="li-btnCallPageDocumentCode">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageDocumentCode">
-                        <i data-feather="file"></i>
-                        <span class="menu-title text-truncate" data-i18n="Etax Code">Document Code</span>
-                        </a>
-                        </li>*@
-
-                    <li class="nav-item" id="li-btnCallPageProfileCompany" hidden>
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileCompany">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile Company">Profile Company</span>
+                            <span class="menu-title text-truncate" data-i18n="">Printing Search</span>
                         </a>
                     </li>
 
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">XML Zip Search</span>
+                        </a>
+                    </li>
 
-                     <li class="nav-item" id="li-ManagementCompanyProfile">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">eMail Search</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item" id="li-ManagementCustomer">
+                <a class="d-flex align-items-center" id="btn-ManagementCustomer">
+                    <i data-feather="file"></i>
+                    <span class="menu-title text-truncate" data-i18n="Profile Certificate">Customer Profile</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="key Data">User Management</span></a>
+                <ul class="menu-content">
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">User Profile</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">User Group</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">User Role</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="Administrator">Administrator</span></a>
+                <ul class="menu-content">
+
+                    <li class="nav-item" id="li-ManagementCompanyProfile">
                         <a class="d-flex align-items-center" id="btn-ManagementCompanyProfile">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Company Management</span>
+                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Company Profile</span>
                         </a>
                     </li>
 
                     <li class="nav-item" id="li-ManagementDocumentProfile">
                         <a class="d-flex align-items-center" id="btn-ManagementDocumentProfile">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Document Type Management</span>
+                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Data Source Profile</span>
                         </a>
-                    </li>
-
-                   
-
-                    <li class="nav-item" id="li-btnCallPageProfileCertificate">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileCertificate">
-                            <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Profile Certificate">Profile Certificate</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Second Level">Company Profile</span></a>
-                        <ul class="menu-content">
-
-
-
-                            <li class="nav-item" id="li-btnCallPageProfileCompanyCode" hidden>
-                                <a class="d-flex align-items-center" id="btn-btnCallPageProfileCompanyCode">
-                                    <i data-feather="file"></i>
-                                    <span class="menu-title text-truncate" data-i18n="Profile Company Code">Company Code</span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item" id="li-btnCallPageProfileSellOrg">
-                                <a class="d-flex align-items-center" id="btn-btnCallPageProfileSellOrg">
-                                    <i data-feather="file"></i>
-                                    <span class="menu-title text-truncate" data-i18n="Profile SellOrg">SellOrg</span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item" id="li-btnCallPageProfileSeller">
-                                <a class="d-flex align-items-center" id="btn-btnCallPageProfileSeller">
-                                    <i data-feather="file"></i>
-                                    <span class="menu-title text-truncate" data-i18n="Seller">Seller Address </span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item" id="li-btnCallPageProfileSellOrg">
-                                <a class="d-flex align-items-center" id="btn-btnCallPageProfileSellOrg">
-                                    <i data-feather="file"></i>
-                                    <span class="menu-title text-truncate" data-i18n="Partner">Partner</span>
-                                </a>
-                            </li>
-
-                        </ul>
                     </li>
 
                 </ul>
             </li>
 
 
-            <li class=" nav-item">
+            <li class="nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate" data-i18n="Configuration">Configuration</span></a>
                 <ul class="menu-content">
-                    <li class="nav-item" id="li-btnCallPageProfileReasonIssue">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileReasonIssue">
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Documentation">Profile ReasonIssue</span>
+                            <span class="menu-title text-truncate" data-i18n="">XML Generator Input/Output</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-btnCallPageProfileEmailTemplate">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileEmailTemplate">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Documentation">Profile EmailTemplate</span>
+                            <span class="menu-title text-truncate" data-i18n="">XML Sign Input/Output</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-btnCallPageProfileEmailType">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageProfileEmailType">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Documentation">Profile EmailType</span>
+                            <span class="menu-title text-truncate" data-i18n="">PDF Sign Input/Output</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-btnCallPageZipFileType">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageZipFileType">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Documentation">Zip FileType</span>
+                            <span class="menu-title text-truncate" data-i18n="">PDF Sign Stamp Area</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-btnCallPageZipFileConfig">
-                        <a class="d-flex align-items-center" id="btn-btnCallPageZipFileConfig">
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
-                            <span class="menu-title text-truncate" data-i18n="Documentation">ZipFile Config</span>
+                            <span class="menu-title text-truncate" data-i18n="">e-Mail profile setting</span>
                         </a>
                     </li>
-                    <li>
-                        <a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Second Level">Second Level 2.2</span></a>
-                        <ul class="menu-content">
-                            <li>
-                                <a class="d-flex align-items-center" href="#"><span class="menu-item text-truncate" data-i18n="Third Level">Third Level 3.1</span></a>
-                            </li>
-                            <li>
-                                <a class="d-flex align-items-center" href="#"><span class="menu-item text-truncate" data-i18n="Third Level">Third Level 3.2</span></a>
-                            </li>
-                        </ul>
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n="">XML Zip setting</span>
+                        </a>
                     </li>
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n=""></span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item" id="li-">
+                        <a class="d-flex align-items-center" id="btn-">
+                            <i data-feather="file"></i>
+                            <span class="menu-title text-truncate" data-i18n=""></span>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
 
@@ -237,7 +230,7 @@
             </li>
 
             <li class="nav-item" id="li-">
-                <a class="d-flex btn btn-danger" id="btn-">
+                <a class="d-flex btn btn-danger" id="btn-" href="@Url.Action("Index", "AuthSinIn")">
                     <i data-feather="log-out"></i>
                     <span class="menu-title text-truncate" data-i18n="">Sign Out</span>
                 </a>
@@ -247,4 +240,10 @@
         </ul>
     </div>
 </div>
+
+<script>
+
+
+
+</script>
 

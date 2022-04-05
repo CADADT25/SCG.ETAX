@@ -20,5 +20,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime? UpdateDate { get; set; }
         public int? Isactive { get; set; }
         public string? EmailTemplateNo { get; set; }
+        public int? StatusPrint { get; set; }
+        public int? StatusEmail { get; set; }
+        public int? StatusSignPdf { get; set; }
+        public int? StatusSignXml { get; set; }
     }
 }
