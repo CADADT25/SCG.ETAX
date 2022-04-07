@@ -25,7 +25,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? PostingYear { get; set; }
         public double? FiDoc { get; set; }
         public string? ImageDocType { get; set; }
-        public double? DocType { get; set; }
+        public string? DocType { get; set; }
         public double? SellOrg { get; set; }
         public string? PoNumber { get; set; }
         public string? TypeInput { get; set; }
