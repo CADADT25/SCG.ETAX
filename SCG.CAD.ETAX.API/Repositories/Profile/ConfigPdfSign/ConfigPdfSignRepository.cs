@@ -1,9 +1,8 @@
 ﻿namespace SCG.CAD.ETAX.API.Repositories
 {
-    public class TransactionDescriptionRepository : ITransactionDescriptionRepository
+    public class ConfigPdfSignRepository : IConfigPdfSignRepository
     {
-        TransactionDescriptionService service = new TransactionDescriptionService();
-
+        ConfigPdfSignService service = new ConfigPdfSignService();
 
         public async Task<Response> GET_DETAIL(int id)
         {
@@ -24,28 +23,10 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> GET_BILLING(int billingNo)
-        {
-            Response resp = new Response();
-
-            try
-            {
-                var result = service.GET_BILLING(billingNo);
-
-                resp = result;
-            }
-            catch (Exception ex)
-            {
-                resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
-            }
-
-            return await Task.FromResult(resp);
-        }
-
         public async Task<Response> GET_LIST()
         {
             Response resp = new Response();
+
             try
             {
                 var result = service.GET_LIST();
@@ -61,7 +42,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(TransactionDescription param)
+        public async Task<Response> INSERT(ConfigPdfSign param)
         {
             Response resp = new Response();
 
@@ -74,13 +55,13 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.Message.ToString();
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(TransactionDescription param)
+        public async Task<Response> UPDATE(ConfigPdfSign param)
         {
             Response resp = new Response();
 
@@ -93,13 +74,13 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.Message.ToString();
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(TransactionDescription param)
+        public async Task<Response> DELETE(ConfigPdfSign param)
         {
             Response resp = new Response();
 
@@ -112,13 +93,11 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.Message.ToString();
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
-
-
 
     }
 }

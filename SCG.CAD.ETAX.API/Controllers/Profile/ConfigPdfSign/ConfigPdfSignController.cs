@@ -5,14 +5,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionDescriptionController : ControllerBase
+    public class ConfigPdfSignController : ControllerBase
     {
-        private readonly ITransactionDescriptionRepository repo;
-        public TransactionDescriptionController()
-        {
-            repo = new TransactionDescriptionRepository();
-        }
+        private readonly IConfigPdfSignRepository repo;
 
+        public ConfigPdfSignController()
+        {
+            repo = new ConfigPdfSignRepository();
+        }
 
 
         [HttpGet]
@@ -33,18 +33,9 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("GetBilling")]
-        public IActionResult GetBilling(int billingNo)
-        {
-            var result = repo.GET_BILLING(billingNo).Result;
-
-            return Ok(result);
-        }
-
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(TransactionDescription param)
+        public IActionResult Insert(ConfigPdfSign param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -53,7 +44,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(TransactionDescription param)
+        public IActionResult Update(ConfigPdfSign param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -62,7 +53,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(TransactionDescription param)
+        public IActionResult Delete(ConfigPdfSign param)
         {
             var result = repo.DELETE(param).Result;
 

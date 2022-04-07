@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "ConfigXmlSign";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ConfigXmlSignValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalInsertConfigXmlSign" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnInsertCancelConfigXmlSign();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigXmlSign/_Create.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelConfigXmlSign();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertConfigXmlSign();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigXmlSign" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigXmlSign();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigXmlSign/_Update.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigXmlSign();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateConfigXmlSign();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿
+<script src="~/assets/validate/ConfigXmlGeneratorValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Customer Code </label>
+            <input type="text" disabled id="txtInsertConfigXmlGeneratorCustomerCode" onkeyup="validateInsertProductUnit();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsBatch" onclick="onChangeBath();"/>
+                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsBatch">Batch</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-3 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Input Source </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorInputSource" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-3 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Input Type </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorInputType" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Input Path </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorInputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            <input type="file" webkitdirectory directory/>
+        <input id="design" type="file" directory/>
+
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-3 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Output Source </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputSource" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-3 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Output Type </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputType" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Output Path </label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsOnline" onclick="onChangeOnline();" />
+                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsOnline">Online</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-11 col-12">
+        <div class="form-group">
+            <label>Online Record Number</label>
+            <input disabled type="text" id="txtInsertConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsActive" checked />
+                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>
