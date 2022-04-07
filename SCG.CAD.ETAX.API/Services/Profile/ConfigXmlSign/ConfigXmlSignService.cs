@@ -1,8 +1,7 @@
 ﻿namespace SCG.CAD.ETAX.API.Services
 {
-    public class TransactionDescriptionService
+    public class ConfigXmlSignService
     {
-
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
@@ -11,7 +10,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.transactionDescription.ToList();
+                var getList = _dbContext.configXmlSign.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -41,7 +40,7 @@
 
             try
             {
-                var getList = _dbContext.transactionDescription.Where(x => x.TransactionNo == id).ToList();
+                var getList = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -64,37 +63,8 @@
             }
             return resp;
         }
-        public Response GET_BILLING(int billingNo)
-        {
-            Response resp = new Response();
 
-            try
-            {
-                var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == billingNo).ToList();
-
-                if (getList.Count > 0)
-                {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Get data from ID '" + billingNo + "' success. ";
-                    resp.OUTPUT_DATA = getList;
-                }
-                else
-                {
-                    resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
-            }
-            return resp;
-        }
-
-        public Response INSERT(TransactionDescription param)
+        public Response INSERT(ConfigXmlSign param)
         {
             Response resp = new Response();
             try
@@ -104,7 +74,7 @@
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
-                    _dbContext.transactionDescription.Add(param);
+                    _dbContext.configXmlSign.Add(param);
                     _dbContext.SaveChanges();
 
 
@@ -121,19 +91,25 @@
             return resp;
         }
 
-        public Response UPDATE(TransactionDescription param)
+        public Response UPDATE(ConfigXmlSign param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.transactionDescription.Where(x => x.TransactionNo == param.TransactionNo).FirstOrDefault();
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.ConfigXmlsignNo).FirstOrDefault();
 
                     if (update != null)
                     {
-
-
+                        update.ConfigXmlsignOnlineRecordNumber = param.ConfigXmlsignOnlineRecordNumber;
+                        update.ConfigXmlsignInputSource = param.ConfigXmlsignInputSource;
+                        update.ConfigXmlsignInputPath = param.ConfigXmlsignInputPath;
+                        update.ConfigXmlsignOutputSource = param.ConfigXmlsignOutputSource;
+                        update.ConfigXmlsignOutputPath = param.ConfigXmlsignOutputPath;
+                        update.ConfigXmlsignOutputConvertPath = param.ConfigXmlsignOutputConvertPath;
+                        update.ConfigXmlsignHsmSerial = param.ConfigXmlsignHsmSerial;
+                        update.ConfigXmlsignCertificateSerial = param.ConfigXmlsignCertificateSerial;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -159,18 +135,18 @@
             return resp;
         }
 
-        public Response DELETE(TransactionDescription param)
+        public Response DELETE(ConfigXmlSign param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.transactionDescription.Find(param.TransactionNo);
+                    var delete = _dbContext.configXmlSign.Find(param.ConfigXmlsignNo);
 
                     if (delete != null)
                     {
-                        _dbContext.transactionDescription.Remove(delete);
+                        _dbContext.configXmlSign.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;
@@ -191,8 +167,6 @@
             }
             return resp;
         }
-
-
 
     }
 }

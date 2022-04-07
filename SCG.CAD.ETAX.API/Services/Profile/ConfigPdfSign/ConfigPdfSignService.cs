@@ -1,8 +1,7 @@
 ﻿namespace SCG.CAD.ETAX.API.Services
 {
-    public class TransactionDescriptionService
+    public class ConfigPdfSignService
     {
-
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
@@ -11,7 +10,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.transactionDescription.ToList();
+                var getList = _dbContext.configPdfSign.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -41,7 +40,7 @@
 
             try
             {
-                var getList = _dbContext.transactionDescription.Where(x => x.TransactionNo == id).ToList();
+                var getList = _dbContext.configPdfSign.Where(x => x.ConfigPdfsignNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -64,37 +63,8 @@
             }
             return resp;
         }
-        public Response GET_BILLING(int billingNo)
-        {
-            Response resp = new Response();
 
-            try
-            {
-                var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == billingNo).ToList();
-
-                if (getList.Count > 0)
-                {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Get data from ID '" + billingNo + "' success. ";
-                    resp.OUTPUT_DATA = getList;
-                }
-                else
-                {
-                    resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
-            }
-            return resp;
-        }
-
-        public Response INSERT(TransactionDescription param)
+        public Response INSERT(ConfigPdfSign param)
         {
             Response resp = new Response();
             try
@@ -104,7 +74,7 @@
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
-                    _dbContext.transactionDescription.Add(param);
+                    _dbContext.configPdfSign.Add(param);
                     _dbContext.SaveChanges();
 
 
@@ -121,18 +91,30 @@
             return resp;
         }
 
-        public Response UPDATE(TransactionDescription param)
+        public Response UPDATE(ConfigPdfSign param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.transactionDescription.Where(x => x.TransactionNo == param.TransactionNo).FirstOrDefault();
+                    var update = _dbContext.configPdfSign.Where(x => x.ConfigPdfsignNo == param.ConfigPdfsignNo).FirstOrDefault();
 
                     if (update != null)
                     {
-
+                        update.ConfigPdfsignUlx = param.ConfigPdfsignUlx;
+                        update.ConfigPdfsignUly = param.ConfigPdfsignUly;
+                        update.ConfigPdfsignPage = param.ConfigPdfsignPage;
+                        update.ConfigPdfsignOnlineRecordNumber = param.ConfigPdfsignOnlineRecordNumber;
+                        update.ConfigPdfsignInputSource = param.ConfigPdfsignInputSource;
+                        update.ConfigPdfsignInputType = param.ConfigPdfsignInputType;
+                        update.ConfigPdfsignInputPath = param.ConfigPdfsignInputPath;
+                        update.ConfigPdfsignOutputSource = param.ConfigPdfsignOutputSource;
+                        update.ConfigPdfsignOutputType = param.ConfigPdfsignOutputType;
+                        update.ConfigPdfsignOutputPath = param.ConfigPdfsignOutputPath;
+                        update.ConfigPdfsignKeyAlias = param.ConfigPdfsignHsmSerial;
+                        update.ConfigPdfsignKeyAlias = param.ConfigPdfsignKeyAlias;
+                      
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
@@ -159,18 +141,18 @@
             return resp;
         }
 
-        public Response DELETE(TransactionDescription param)
+        public Response DELETE(ConfigPdfSign param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.transactionDescription.Find(param.TransactionNo);
+                    var delete = _dbContext.configPdfSign.Find(param.ConfigPdfsignNo);
 
                     if (delete != null)
                     {
-                        _dbContext.transactionDescription.Remove(delete);
+                        _dbContext.configPdfSign.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;
@@ -191,8 +173,6 @@
             }
             return resp;
         }
-
-
 
     }
 }

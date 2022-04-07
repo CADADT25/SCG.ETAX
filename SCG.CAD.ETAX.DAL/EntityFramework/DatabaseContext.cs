@@ -49,6 +49,9 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ProfileReasonIssue> profileReasonIssue { get; set; }
         public DbSet<ProfileBranch> profileBranch { get; set; }
         public DbSet<AuthenUserProfile> authenUserProfile { get; set; }
+        public DbSet<ConfigXmlGenerator> configXmlGenerator { get; set; }
+        public DbSet<ConfigXmlSign> configXmlSign { get; set; }
+        public DbSet<ConfigPdfSign> configPdfSign { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateConfigXmlSign" onclick="callModalInsertConfigXmlSign();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+                <a id="btnExportConfigXmlSign" onclick="ExportConfigXmlSign()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-hover-animation" id="tbConfigXmlSignMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Input Source</th>
+                                <th>Input Path</th>
+                                <th>Output Source</th>
+                                <th>Output Path</th>
+                                <th>Online Record</th>
+                                <th>IsActive</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

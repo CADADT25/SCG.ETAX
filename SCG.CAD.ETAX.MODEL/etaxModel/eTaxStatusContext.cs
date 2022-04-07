@@ -75,7 +75,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasMaxLength(255)
                     .HasColumnName("dmsAttachmentFilePath");
 
-                entity.Property(e => e.DocType).HasColumnName("docType");
+                entity.Property(e => e.DocType)
+                    .HasMaxLength(255)
+                    .HasColumnName("docType");
 
                 entity.Property(e => e.EmailSendDateTime)
                     .HasMaxLength(255)

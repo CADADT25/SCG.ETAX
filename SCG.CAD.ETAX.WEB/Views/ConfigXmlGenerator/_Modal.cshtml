@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "ConfigXmlGenerator";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ConfigXmlGeneratorValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalInsertConfigXmlGenerator" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnInsertCancelConfigXmlGenerator();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigXmlGenerator/_Create.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelConfigXmlGenerator();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertConfigXmlGenerator();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigXmlGenerator" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigXmlGenerator();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigXmlGenerator/_Update.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigXmlGenerator();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateConfigXmlGenerator();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
