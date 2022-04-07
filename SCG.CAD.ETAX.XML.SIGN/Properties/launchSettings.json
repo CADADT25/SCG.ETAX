@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "SCG.CAD.ETAX.XML.SIGN": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
