@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
+using SCG.CAD.ETAX.XML.GENERATOR.Models;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR
 {
@@ -10,6 +11,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
     {
         PDFSign pDFSign = new PDFSign();
         XMLGenerate xMLGenerate = new XMLGenerate();
+        Template_TaxInvoice template = new Template_TaxInvoice();
         TaxCodeController taxCodeController = new TaxCodeController();
         List<TaxCode> tran = new List<TaxCode>();
 
@@ -23,7 +25,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            tran = taxCodeController.List().Result;
+            //CrossIndustryInvoice data = new CrossIndustryInvoice();
+            //var xml = template.XMLtemplate(data);
+            //tran = taxCodeController.List().Result;
 
 
             // call business layer

@@ -26,10 +26,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     errormessage.Add("RCT-Document-003 กรณีระบุรหัสสาเหตุการออกเอกสาร (PurposeCode) มีค่าเท่ากับ RCTC99 ต้องระบุสาเหตุการออกเอกสาร (Purpose) (Purpose must be present since PurposeCode equals to RCTC99)");
                 }
 
-                if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(1,13) == dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Substring(1,13))
-                {
-                    errormessage.Add("RCT-Document-004 เลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน ต้องไม่เท่ากับเลขประจำตัวผู้เสียภาษีอากรของผู้ขาย (InvoicerTradeParty/SpecifiedTaxRegistration/ID must not equal to SellerTradeParty/SpecifiedTaxRegistration/ID)");
-                }
+                //if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(0,13) == dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Substring(0,13))
+                //{
+                //    errormessage.Add("RCT-Document-004 เลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน ต้องไม่เท่ากับเลขประจำตัวผู้เสียภาษีอากรของผู้ขาย (InvoicerTradeParty/SpecifiedTaxRegistration/ID must not equal to SellerTradeParty/SpecifiedTaxRegistration/ID)");
+                //}
 
                 if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument != null &&
                     Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode,"T01"))
@@ -84,14 +86,16 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id, "") &&
                     Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID, "NIDN") &&
-                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(1,13), "0000000000000|1111111111111"))
+                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(0,13), "0000000000000|1111111111111"))
                 {
                     errormessage.Add("RCT-SellerTradeParty-014 ระบุเลขประจำตัวผู้เสียภาษีอากรของผู้ขายไม่ถูกต้อง (SellerTradeParty/SpecifiedTaxRegistration/ID incorrect)");
                 }
 
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id, "") &&
                     Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
-                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(1, 13), "0000000000000|1111111111111"))
+                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Substring(0, 13), "0000000000000|1111111111111"))
                 {
                     errormessage.Add("RCT-SellerTradeParty-014 ระบุเลขประจำตัวผู้เสียภาษีอากรของผู้ขายไม่ถูกต้อง (SellerTradeParty/SpecifiedTaxRegistration/ID incorrect)");
                 }
@@ -104,7 +108,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID, "TH"))
                 {
-                    errormessage.Add("RCT-SellerTradeParty-008 ต้องระบุรหัสประเทศผู้ขาย ต้องมีค่าเท่ากับ TH เท่านั้น (CountryID must be present since SellerTradeParty/PostalAddress is present.) ");
+                    errormessage.Add("RCT-SellerTradeParty-008 ต้องระบุรหัสประเทศผู้ขาย ต้องมีค่าเท่ากับ TH เท่านั้น (CountryID must be present since SellerTradeParty/PostalAddress is present.)");
                 }
 
                 if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.buildingNumber,""))
@@ -177,14 +181,16 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id, "") &&
                     Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.schemeID, "NIDN") &&
-                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Substring(1,13), "0000000000000|1111111111111"))
+                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Substring(0,13), "0000000000000|1111111111111"))
                 {
                     errormessage.Add("RCT-BuyerTradeParty-011 ระบุเลขประจำตัวผู้เสียภาษีอากรของผู้ซื้อไม่ถูกต้อง (BuyerTradeParty/SpecifiedTaxRegistration/ID incorrect)");
                 }
 
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id, "") &&
                     Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
-                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Substring(1, 13), "0000000000000|1111111111111"))
+                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Length >= 13 &&
+                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id.Substring(0, 13), "0000000000000|1111111111111"))
                 {
                     errormessage.Add("RCT-BuyerTradeParty-011 ระบุเลขประจำตัวผู้เสียภาษีอากรของผู้ซื้อไม่ถูกต้อง (BuyerTradeParty/SpecifiedTaxRegistration/ID incorrect)");
                 }
@@ -210,81 +216,81 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     errormessage.Add("RCT-BuyerTradeParty-009 ต้องระบุรหัสประเทศของผู้ซื้อ  (BuyerTradeParty/PostalAddress/BuyerTradeParty/CountryID) (CountryID must be present since BuyerTradeParty/PostalAddress is present.)");
                 }
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.name, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-001 ต้องระบุชื่อผู้ออกเอกสารแทน (Name must be present since InvoicerTradeParty is present.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.name, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-001 ต้องระบุชื่อผู้ออกเอกสารแทน (Name must be present since InvoicerTradeParty is present.)");
+                //}
 
-                if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration == null)
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-002  ต้องระบุข้อมูลเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (SpecifiedTaxRegistration) (SpecifiedTaxRegistration must be present since InvoicerTradeParty is present.)");
-                }
+                //if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration == null)
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-002  ต้องระบุข้อมูลเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (SpecifiedTaxRegistration) (SpecifiedTaxRegistration must be present since InvoicerTradeParty is present.)");
+                //}
 
-                if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress == null)
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-003 ต้องระบุที่อยู่ของผู้ออกเอกสารแทน (PostalTradeAddress must be present since InvoicerTradeParty is present.)");
-                }
+                //if (dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress == null)
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-003 ต้องระบุที่อยู่ของผู้ออกเอกสารแทน (PostalTradeAddress must be present since InvoicerTradeParty is present.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-004 ต้องระบุข้อมูลเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (SpecifiedTaxRegistration/ID) (ID must be present since InvoicerTradePart/SpecifiedTaxRegistration)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-004 ต้องระบุข้อมูลเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (SpecifiedTaxRegistration/ID) (ID must be present since InvoicerTradePart/SpecifiedTaxRegistration)");
+                //}
 
-                if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID|NIDN"))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-005 ต้องระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID)  และต้องมีค่าเป็น TXID หรือ NIDN เท่านั้น (schemeID must equal to TXID or NIDN.)");
-                }
+                //if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID|NIDN"))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-005 ต้องระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID)  และต้องมีค่าเป็น TXID หรือ NIDN เท่านั้น (schemeID must equal to TXID or NIDN.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
-                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length != 18)
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-006 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น TXID ต้องมีจำนวนตัวเลขเท่ากับ 18 หลัก (เลขประจำตัวผู้เสียภาษีอากร 13 หลัก และเลขสาขา 5 หลัก) (InvoicerTradeParty/SpecifiedTaxRegistration/ID must length equal to 18 since schemeID is TXID)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length != 18)
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-006 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น TXID ต้องมีจำนวนตัวเลขเท่ากับ 18 หลัก (เลขประจำตัวผู้เสียภาษีอากร 13 หลัก และเลขสาขา 5 หลัก) (InvoicerTradeParty/SpecifiedTaxRegistration/ID must length equal to 18 since schemeID is TXID)");
+                //}
 
-                if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, "") &&
-                    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
-                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length == 18 &&
-                    !Tool.CheckDataType(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, TypeData.Interger))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-014 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น TXID เลขสาขาต้องเป็นตัวเลขเท่านั้น (InvoicerTradeParty/SpecifiedTaxRegistration/ID must number only because schemeID is TXID.)");
-                }
+                //if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, "") &&
+                //    Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length == 18 &&
+                //    !Tool.CheckDataType(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id, TypeData.Interger))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-014 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น TXID เลขสาขาต้องเป็นตัวเลขเท่านั้น (InvoicerTradeParty/SpecifiedTaxRegistration/ID must number only because schemeID is TXID.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "NIDN") &&
-                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length != 13)
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-007 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น NIDN ต้องมีจำนวนตัวเลขเท่ากับ 13 หลัก (เลขประจำตัวประชาชน 13 หลัก) (InvoicerTradeParty/SpecifiedTaxRegistration/ID must length equal to 13 since schemeID is NIDN)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.schemeID, "NIDN") &&
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.specifiedTaxRegistration.id.Length != 13)
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-007 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน (schemeID) เป็น NIDN ต้องมีจำนวนตัวเลขเท่ากับ 13 หลัก (เลขประจำตัวประชาชน 13 หลัก) (InvoicerTradeParty/SpecifiedTaxRegistration/ID must length equal to 13 since schemeID is NIDN)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.postcodeCode, "") ||
-                    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.postcodeCode.Length != 5)
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-008 ต้องระบุรหัสไปรษณีย์ผู้ออกเอกสารแทน มีจำนวนตัวเลขเท่ากับ 5 หลัก (PostcodeCode must be present since InvoicerTradeParty/PostalAddress is present.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.postcodeCode, "") ||
+                //    dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.postcodeCode.Length != 5)
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-008 ต้องระบุรหัสไปรษณีย์ผู้ออกเอกสารแทน มีจำนวนตัวเลขเท่ากับ 5 หลัก (PostcodeCode must be present since InvoicerTradeParty/PostalAddress is present.)");
+                //}
 
-                if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.countryID, "TH"))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-009 ต้องระบุรหัสประเทศผู้ออกเอกสารแทน ต้องมีค่าเท่ากับ TH เท่านั้น (CountryID must be present since InvoicerTradeParty/PostalAddress is present.)");
-                }
+                //if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.countryID, "TH"))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-009 ต้องระบุรหัสประเทศผู้ออกเอกสารแทน ต้องมีค่าเท่ากับ TH เท่านั้น (CountryID must be present since InvoicerTradeParty/PostalAddress is present.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.buildingNumber, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-010 ต้องระบุ บ้านเลขที่ (BuildingNumber) (BuildingNumber must be present since CountryID is TH.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.buildingNumber, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-010 ต้องระบุ บ้านเลขที่ (BuildingNumber) (BuildingNumber must be present since CountryID is TH.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.cityName, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-011 ต้องระบุ ชื่ออำเภอ (CityName) (CityName must be present since CountryID is TH.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.cityName, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-011 ต้องระบุ ชื่ออำเภอ (CityName) (CityName must be present since CountryID is TH.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.citySubDivisionName, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-012 ต้องระบุ ชื่อตำบล (CitySubDivisionName) (CitySubDivisionName must be present since CountryID is TH.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.citySubDivisionName, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-012 ต้องระบุ ชื่อตำบล (CitySubDivisionName) (CitySubDivisionName must be present since CountryID is TH.)");
+                //}
 
-                if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.countrySubDivisionID, ""))
-                {
-                    errormessage.Add("RCT-InvoicerTradeParty-013 ต้องระบุ รหัสจังหวัด (CountrySubDivisionID) (CountrySubDivisionID must be present since CountryID is TH.)");
-                }
+                //if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoicerTradeParty.postalTradeAddress.countrySubDivisionID, ""))
+                //{
+                //    errormessage.Add("RCT-InvoicerTradeParty-013 ต้องระบุ รหัสจังหวัด (CountrySubDivisionID) (CountrySubDivisionID must be present since CountryID is TH.)");
+                //}
 
                 if (dataXml.supplyChainTradeTransaction.includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity == null)
                 {

@@ -64,6 +64,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             bool result = false;
             try
             {
+                data = data ?? "";
                 string[] splitdate = datarule.Split("|");
                 foreach (string item in splitdate)
                 {
