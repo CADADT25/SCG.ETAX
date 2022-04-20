@@ -19,12 +19,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 SetPrefix();
-                //int row = 56;
-                //var allTextFile = ReadTextFile();
-                //var dt = ConvertToDataTable(allTextFile, row);
-                //var cs = ConvertDTtoClass(dt);
-                //var data = ConvertClasstoXMLFormat(cs);
-                List<CrossIndustryInvoice> data = new List<CrossIndustryInvoice>();
+                int row = 56;
+                var allTextFile = ReadTextFile();
+                var dt = ConvertToDataTable(allTextFile, row);
+                var cs = ConvertDTtoClass(dt);
+                var data = ConvertClasstoXMLFormat(cs);
+                //List<CrossIndustryInvoice> data = new List<CrossIndustryInvoice>();
                 GenXMLFile(data);
                 //ValidateSchema();
                 //ValidateSchematron(data);
@@ -531,6 +531,137 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             {
                 throw ex;
             }
+        }
+
+        public bool CheckDataTransactionDescription(TextFileSchematic dataxml)
+        {
+            TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
+            bool result = false;
+            try
+            {
+                var listdatatransactionDescription = transactionDescription.List().Result;
+                var datatransactionDescription = listdatatransactionDescription.FirstOrDefault(x => x.BillingNumber.ToString() == dataxml.BILLING_NO);
+                if(datatransactionDescription != null)
+                {
+
+                }
+                else
+                {
+                    TransactionDescription datainsert = new TransactionDescription();
+                    var billingdate = Convert.ToDateTime(dataxml.BILLING_DATE);
+                    datainsert.BillingDate = billingdate;
+                    datainsert.BillingNumber = Convert.ToDouble(dataxml.BILLING_NO);
+                    datainsert.BillingYear = billingdate.Year;
+                    datainsert.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
+                    datainsert.CompanyCode = "";//
+                    datainsert.CompanyName = "";//
+                    datainsert.CreateBy = "Batch";
+                    datainsert.CreateDate = DateTime.Now;
+                    datainsert.CustomerId = null;
+                    datainsert.CustomerName = null;
+                    datainsert.DmsAttachmentFileName = null;
+                    datainsert.DmsAttachmentFilePath = null;
+                    datainsert.DocType = dataxml.FI_DOC_TYPE;//string
+                    datainsert.EmailSendDateTime = null;
+                    datainsert.EmailSendDetail = null;
+                    datainsert.EmailSendStatus = null;
+                    datainsert.FiDoc = Convert.ToDouble(dataxml.FI_DOC);
+                    datainsert.Foc = 0;// if FOC = 1
+                    datainsert.GenerateDateTime = null;
+                    datainsert.GenerateDetail = null;
+                    datainsert.GenerateStatus = null;
+                    datainsert.Ic = (string.IsNullOrEmpty(dataxml.IC_FLAG)) ? 0 : 1;
+                    datainsert.ImageDocType = null;// mapping
+                    datainsert.Isactive = 1;
+                    datainsert.OneTimeEmail = null;
+                    datainsert.Payer = Convert.ToDouble(dataxml.Number_Payer);
+                    datainsert.PdfIndexingDateTime = null;
+                    datainsert.PdfIndexingDetail = null;
+                    datainsert.PdfIndexingStatus = null;
+                    datainsert.PdfSignDateTime = null;
+                    datainsert.PdfSignDetail = null;
+                    datainsert.PdfSignLocation = null;
+                    datainsert.PdfSignStatus = null;
+                    datainsert.PoNumber = "";// item + , 
+                    datainsert.PostingYear = null;
+                    datainsert.PrintDateTime = null;
+                    datainsert.PrintDetail = null;
+                    datainsert.PrintStatus = null;
+                    datainsert.ProcessingDate = null;
+                    datainsert.SellOrg = Convert.ToDouble(dataxml.SALES_ORG);
+                    datainsert.ShipTo = Convert.ToDouble(dataxml.Number_Ship_to);
+                    datainsert.SoldTo = Convert.ToDouble(dataxml.Number_Sold_to);
+                    datainsert.SourceName = "";//
+                    datainsert.TypeInput = "Batch";
+                    datainsert.UpdateBy = "Batch";
+                    datainsert.UpdateDate = DateTime.Now;
+                    datainsert.XmlCompressDateTime = null;
+                    datainsert.XmlCompressDetail = null;
+                    datainsert.XmlCompressStatus = null;
+                    datainsert.XmlSignDateTime = null;
+                    datainsert.XmlSignDetail = null;
+                    datainsert.XmlSignLocation = null;
+                    datainsert.XmlSignStatus = null;
+                    datainsert.ZipTransactionNo = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool UpdateStatusAfterGenXMLFile(TransactionDescription data, bool status)
+        {
+            bool result = false;
+            string jsondata = "";
+            try
+            {
+
+                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
+                if (status)
+                {
+
+                }
+                else
+                {
+
+                }
+                var jsonresult = transactiondescriptioncontroller.Update(jsondata);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool InsertDataAfterGenXMLFile(bool status)
+        {
+            bool result = false;
+            string jsondata = "";
+            try
+            {
+
+                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
+                if (status)
+                {
+
+                }
+                else
+                {
+
+                }
+                var jsonresult = transactiondescriptioncontroller.Insert(jsondata);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
 
     }

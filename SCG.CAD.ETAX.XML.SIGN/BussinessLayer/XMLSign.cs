@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SCG.CAD.ETAX.PDF.SIGN.Controller;
+using SCG.CAD.ETAX.XML.SIGN.Controller;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 
-namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
+namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
-    public class PDFSign
+    public class XMLSign
     {
-        public string[] ReadPdfFile()
+        public string[] ReadXmlFile()
         {
             string[] result = new string[0];
             try
             {
                 StringBuilder sb = new StringBuilder();
                 string pathFolder = @"D:\sign";
-                string fileType = "*.pdf";
+                string fileType = "*.xml";
                 result = Directory.GetFiles(pathFolder, fileType);
 
             }
@@ -33,28 +33,28 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             string folderDest = @"D:/";
             string fileNameDest = "";
-            string fileType = ".pdf";
+            string fileType = ".xml";
             bool resultPDFSign = false;
             try
             {
                 var allfile = ReadPdfFile();
                 if (allfile != null && allfile.Length > 0)
                 {
-                    var alldataTransactionDes = CheckDatainDataBase();
+                    var alldataTransactionDes = GetAllTransactionDescriptions();
                     foreach (string src in allfile)
                     {
-                        fileNameDest = Path.GetFileName(src).Replace(".pdf", "");
+                        fileNameDest = Path.GetFileName(src).Replace(".xml", "");
                         PdfReader reader = new PdfReader(src);
                         FileStream os = new FileStream(folderDest + fileNameDest + "_sign" + fileType, FileMode.Create);
                         PdfStamper stamper = PdfStamper.CreateSignature(reader, os, '\0');
                         resultPDFSign = SendFilePDFSign();
                         if (alldataTransactionDes.Count > 0)
                         {
-                            UpdateStatusAfterSignPDF(resultPDFSign);
+                            UpdateStatusAfterSignXML(resultPDFSign);
                         }
                         else
                         {
-                            InsertDataAfterSignPDF(resultPDFSign);
+                            InsertDataAfterSignXML(resultPDFSign);
                         }
 
                         ExportPDFAfterSign(resultPDFSign);
@@ -82,7 +82,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
         
-        public bool UpdateStatusAfterSignPDF(bool status)
+        public bool UpdateStatusAfterSignXML(bool status)
         {
             bool result = false;
             string jsondata = "";
@@ -108,7 +108,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public bool InsertDataAfterSignPDF(bool status)
+        public bool InsertDataAfterSignXML(bool status)
         {
             bool result = false;
             string jsondata = "";
@@ -134,7 +134,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public List<TransactionDescription> CheckDatainDataBase()
+        public List<TransactionDescription> GetAllTransactionDescriptions()
         {
             List<TransactionDescription> result = new List<TransactionDescription>();
             try

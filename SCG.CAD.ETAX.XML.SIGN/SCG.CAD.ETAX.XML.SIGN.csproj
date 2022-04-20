@@ -4,18 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-SCG.CAD.ETAX.PDF.SIGN-9494DF71-9B33-431B-9AF5-D576DC1DA153</UserSecretsId>
+    <UserSecretsId>dotnet-SCG.CAD.ETAX.XML.SIGN-7356A0E2-0809-42D3-8A97-BB2E2BEC4F98</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
