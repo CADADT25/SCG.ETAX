@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SCG.CAD.ETAX.PDF.SIGN.Controller;
 using SCG.CAD.ETAX.MODEL.etaxModel;
+using SCG.CAD.ETAX.MODEL;
+using System.Text.Json;
 
 namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 {
@@ -35,12 +37,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             string fileNameDest = "";
             string fileType = ".pdf";
             bool resultPDFSign = false;
+            int billno = 0;
+            int billyear = 0;
             try
             {
                 var allfile = ReadPdfFile();
                 if (allfile != null && allfile.Length > 0)
                 {
-                    var alldataTransactionDes = CheckDatainDataBase();
                     foreach (string src in allfile)
                     {
                         fileNameDest = Path.GetFileName(src).Replace(".pdf", "");
@@ -48,14 +51,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         FileStream os = new FileStream(folderDest + fileNameDest + "_sign" + fileType, FileMode.Create);
                         PdfStamper stamper = PdfStamper.CreateSignature(reader, os, '\0');
                         resultPDFSign = SendFilePDFSign();
-                        if (alldataTransactionDes.Count > 0)
-                        {
-                            UpdateStatusAfterSignPDF(resultPDFSign);
-                        }
-                        else
-                        {
-                            InsertDataAfterSignPDF(resultPDFSign);
-                        }
+
+                        UpdateStatusAfterSignPDF(resultPDFSign, billno, billyear);
 
                         ExportPDFAfterSign(resultPDFSign);
 
@@ -82,24 +79,91 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
         
-        public bool UpdateStatusAfterSignPDF(bool status)
+        public bool UpdateStatusAfterSignPDF(bool status, int billno, int billyear)
         {
             bool result = false;
-            string jsondata = "";
             try
             {
 
-                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
-                if (status)
+                Task<Response> res;
+                TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
+                var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
+                if(dataTran == null)
                 {
+                    dataTran = new TransactionDescription();
 
+                    dataTran.BillingNumber = billno;
+                    dataTran.BillingYear = billyear;
+                    dataTran.CreateBy = "Batch";
+                    dataTran.CreateDate = DateTime.Now;
+                    dataTran.SourceName = "";//
+                    dataTran.TypeInput = "Batch";
+                    dataTran.UpdateBy = "Batch";
+                    dataTran.UpdateDate = DateTime.Now;
+                    if (status)
+                    {
+                        dataTran.XmlSignDateTime = DateTime.Now;
+                        dataTran.XmlSignDetail = "PDF was signed completely";
+                        dataTran.XmlSignStatus = "Successful";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
+
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Insert(json);
+                        if (res.Result.MESSAGE == "Insert success.")
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        dataTran.XmlSignDateTime = DateTime.Now;
+                        dataTran.XmlSignDetail = "PDF was signed Failed";
+                        dataTran.XmlSignStatus = "Failed";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
+
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Insert(json);
+                        if (res.Result.MESSAGE == "Insert success.")
+                        {
+                            result = true;
+                        }
+                    }
                 }
                 else
                 {
+                    if (status)
+                    {
+                        dataTran.XmlSignDateTime = DateTime.Now;
+                        dataTran.XmlSignDetail = "XML was signed completely";
+                        dataTran.XmlSignStatus = "Successful";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
 
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Update(json);
+                        if (res.Result.MESSAGE == "Updated Success.")
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        dataTran.XmlSignDateTime = DateTime.Now;
+                        dataTran.XmlSignDetail = "XML was signed Failed";
+                        dataTran.XmlSignStatus = "Failed";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
+
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Update(json);
+                        if (res.Result.MESSAGE == "Updated Success.")
+                        {
+                            result = true;
+                        }
+                    }
                 }
-                var jsonresult = transactiondescriptioncontroller.Update(jsondata);
-                result = true;
             }
             catch (Exception ex)
             {
@@ -108,7 +172,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public bool InsertDataAfterSignPDF(bool status)
+        public bool InsertDataAfterSignPDF(bool status, int billno)
         {
             bool result = false;
             string jsondata = "";
@@ -126,22 +190,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 }
                 var jsonresult = transactiondescriptioncontroller.Insert(jsondata);
                 result = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        public List<TransactionDescription> CheckDatainDataBase()
-        {
-            List<TransactionDescription> result = new List<TransactionDescription>();
-            try
-            {
-                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
-                result = transactiondescriptioncontroller.List().Result;
-
             }
             catch (Exception ex)
             {

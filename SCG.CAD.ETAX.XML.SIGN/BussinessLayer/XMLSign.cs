@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SCG.CAD.ETAX.XML.SIGN.Controller;
 using SCG.CAD.ETAX.MODEL.etaxModel;
+using System.Text.Json;
+using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
@@ -34,30 +36,24 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             string folderDest = @"D:/";
             string fileNameDest = "";
             string fileType = ".xml";
-            bool resultPDFSign = false;
+            bool resultXMLSign = false;
+            int billno = 0;
             try
             {
-                var allfile = ReadPdfFile();
+                var allfile = ReadXmlFile();
                 if (allfile != null && allfile.Length > 0)
                 {
-                    var alldataTransactionDes = GetAllTransactionDescriptions();
                     foreach (string src in allfile)
                     {
                         fileNameDest = Path.GetFileName(src).Replace(".xml", "");
                         PdfReader reader = new PdfReader(src);
                         FileStream os = new FileStream(folderDest + fileNameDest + "_sign" + fileType, FileMode.Create);
                         PdfStamper stamper = PdfStamper.CreateSignature(reader, os, '\0');
-                        resultPDFSign = SendFilePDFSign();
-                        if (alldataTransactionDes.Count > 0)
-                        {
-                            UpdateStatusAfterSignXML(resultPDFSign);
-                        }
-                        else
-                        {
-                            InsertDataAfterSignXML(resultPDFSign);
-                        }
+                        resultXMLSign = SendFilePDFSign();
 
-                        ExportPDFAfterSign(resultPDFSign);
+                        UpdateStatusAfterSignXML(resultXMLSign, billno);
+
+                        ExportXMLAfterSign(resultXMLSign);
 
                     }
                 }
@@ -82,24 +78,45 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
         
-        public bool UpdateStatusAfterSignXML(bool status)
+        public bool UpdateStatusAfterSignXML(bool status, int billno)
         {
             bool result = false;
             string jsondata = "";
             try
             {
-
-                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
+                Task<Response> res;
+                TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
+                var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
                 if (status)
                 {
+                    dataTran.XmlSignDateTime = DateTime.Now;
+                    dataTran.XmlSignDetail = "XML was signed completely";
+                    dataTran.XmlSignStatus = "Successful";
+                    dataTran.UpdateBy = "Batch";
+                    dataTran.UpdateDate = DateTime.Now;
 
+                    var json = JsonSerializer.Serialize(dataTran);
+                    res = transactionDescription.Update(json);
+                    if (res.Result.MESSAGE == "Updated Success.")
+                    {
+                        result = true;
+                    }
                 }
                 else
                 {
+                    dataTran.XmlSignDateTime = DateTime.Now;
+                    dataTran.XmlSignDetail = "XML was signed Failed";
+                    dataTran.XmlSignStatus = "Failed";
+                    dataTran.UpdateBy = "Batch";
+                    dataTran.UpdateDate = DateTime.Now;
 
+                    var json = JsonSerializer.Serialize(dataTran);
+                    res = transactionDescription.Update(json);
+                    if (res.Result.MESSAGE == "Updated Success.")
+                    {
+                        result = true;
+                    }
                 }
-                var jsonresult = transactiondescriptioncontroller.Update(jsondata);
-                result = true;
             }
             catch (Exception ex)
             {
@@ -108,49 +125,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool InsertDataAfterSignXML(bool status)
-        {
-            bool result = false;
-            string jsondata = "";
-            try
-            {
-
-                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
-                if (status)
-                {
-
-                }
-                else
-                {
-
-                }
-                var jsonresult = transactiondescriptioncontroller.Insert(jsondata);
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        public List<TransactionDescription> GetAllTransactionDescriptions()
-        {
-            List<TransactionDescription> result = new List<TransactionDescription>();
-            try
-            {
-                TransactionDescriptionController transactiondescriptioncontroller = new TransactionDescriptionController();
-                result = transactiondescriptioncontroller.List().Result;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        public void ExportPDFAfterSign(bool resultPDFSign)
+        public void ExportXMLAfterSign(bool resultPDFSign)
         {
             try
             {
