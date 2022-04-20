@@ -132,7 +132,55 @@
 
                     if (update != null)
                     {
-
+                        update.BillingNumber = param.BillingNumber;
+                        update.BillingDate = param.BillingDate;
+                        update.BillingYear = param.BillingYear;
+                        update.ProcessingDate = param.ProcessingDate;
+                        update.CompanyCode = param.CompanyCode;
+                        update.CompanyName = param.CompanyName;
+                        update.CustomerId = param.CustomerId;
+                        update.CustomerName = param.CustomerName;
+                        update.SoldTo = param.SoldTo;
+                        update.ShipTo = param.ShipTo;
+                        update.BillTo = param.BillTo;
+                        update.Payer = param.Payer;
+                        update.SourceName = param.SourceName;
+                        update.Foc = param.Foc;
+                        update.Ic = param.Ic;
+                        update.PostingYear = param.PostingYear;
+                        update.FiDoc = param.FiDoc;
+                        update.ImageDocType = param.ImageDocType;
+                        update.DocType = param.DocType;
+                        update.SellOrg = param.SellOrg;
+                        update.PoNumber = param.PoNumber;
+                        update.TypeInput = param.TypeInput;
+                        update.GenerateStatus = param.GenerateStatus;
+                        update.GenerateDetail = param.GenerateDetail;
+                        update.GenerateDateTime = param.GenerateDateTime;
+                        update.XmlSignStatus = param.XmlSignStatus;
+                        update.XmlSignDetail = param.XmlSignDetail;
+                        update.XmlSignDateTime = param.XmlSignDateTime;
+                        update.PdfSignStatus = param.PdfSignStatus;
+                        update.PdfSignDetail = param.PdfSignDetail;
+                        update.PdfSignDateTime = param.PdfSignDateTime;
+                        update.PrintStatus = param.PrintStatus;
+                        update.PrintDetail = param.PrintDetail;
+                        update.PrintDateTime = param.PrintDateTime;
+                        update.EmailSendStatus = param.EmailSendStatus;
+                        update.EmailSendDetail = param.EmailSendDetail;
+                        update.EmailSendDateTime = param.EmailSendDateTime;
+                        update.XmlCompressStatus = param.XmlCompressStatus;
+                        update.XmlCompressDetail = param.XmlCompressDetail;
+                        update.XmlCompressDateTime = param.XmlCompressDateTime;
+                        update.PdfIndexingStatus = param.PdfIndexingStatus;
+                        update.PdfIndexingDetail = param.PdfIndexingDetail;
+                        update.PdfIndexingDateTime = param.PdfIndexingDateTime;
+                        update.PdfSignLocation = param.PdfSignLocation;
+                        update.XmlSignLocation = param.XmlSignLocation;
+                        update.ZipTransactionNo = param.ZipTransactionNo;
+                        update.DmsAttachmentFileName = param.DmsAttachmentFileName;
+                        update.DmsAttachmentFilePath = param.DmsAttachmentFilePath;
+                        update.OneTimeEmail = param.OneTimeEmail;
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
