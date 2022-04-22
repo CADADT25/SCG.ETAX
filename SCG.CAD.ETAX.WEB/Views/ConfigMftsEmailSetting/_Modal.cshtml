@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "ConfigMftsEmailSetting";
+    Layout = null;
+}
+
+<script src="~/assets/validate/ConfigMftsEmailSettingValidate.js"></script>
+
+
+@* [Begin] Modal Create *@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalInsertConfigMftsEmailSetting" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnInsertCancelConfigMftsEmailSetting();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigMftsEmailSetting/_Create.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelConfigMftsEmailSetting();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertConfigMftsEmailSetting();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* [End] Modal Create *@
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigMftsEmailSetting" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigMftsEmailSetting();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigMftsEmailSetting/_Update.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigMftsEmailSetting();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateConfigMftsEmailSetting();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

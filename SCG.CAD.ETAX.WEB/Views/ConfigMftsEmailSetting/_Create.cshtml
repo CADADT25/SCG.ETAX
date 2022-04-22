@@ -1,0 +1,107 @@
+﻿
+<script src="~/assets/validate/ConfigMftsEmailSettingValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Customer Code </label>
+            <input type="text" disabled id="txtInsertConfigMftsEmailSettingCompanyCode" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Email </label>
+            <input type="text" id="txtInsertConfigMftsEmailSettingEmail" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Email Template </label>
+            <select class="select2 form-control" id="ddlInsertConfigMftsEmailSettingEmailTemplate"></select>
+        </div>
+    </div>
+
+    <div class="divider">
+        <div class="divider-text"></div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigEmailSmtp" onclick="onChangeConfigEmailSmtp();" />
+                <label class="custom-control-label" for="toggleInsertConfigEmailSmtp">SMTP</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Host </label>
+            <input type="text" disabled id="txtInsertConfigMftsEmailSettingHost" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Port </label>
+            <input type="text" disabled id="txtInsertConfigMftsEmailSettingPort" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Username </label>
+            <input type="text" disabled id="txtInsertConfigMftsEmailSettingUsername" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Password </label>
+            <input type="text" disabled id="txtInsertConfigMftsEmailSettingPassword" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigEmailApi" onclick="onChangeConfigEmailApi();" />
+                <label class="custom-control-label" for="toggleInsertConfigEmailApi">API Key</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-11 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Api Key </label>
+            <input disabled type="text" id="txtInsertConfigMftsEmailSettingApiKey" onkeyup="validateInsertConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigMftsEmailSettingIsActive" checked />
+                <label class="custom-control-label" for="toggleInsertConfigMftsEmailSettingIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,410 @@
+﻿@{
+    ViewData["Title"] = "ConfigMftsIndexGenerationSettingInput";
+    Layout = null;
+}
+
+
+@await Html.PartialAsync("~/Views/ConfigMftsIndexGenerationSettingInput/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        setTimeout(function(){
+            RenderConfigMftsIndexGenerationSettingInput(setCompanyCode);
+        }, 1200);
+
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').select2();
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').select2();
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').select2();
+
+        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
+        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
+        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
+
+    });
+
+    $(window).on('load', function() {
+
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').select2({
+            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName')
+        });
+
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').select2({
+            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName')
+        });
+
+        $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').select2({
+            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType')
+        });
+
+    });
+
+
+
+    function RenderConfigMftsIndexGenerationSettingInput(setCompanyCode){
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
+
+        var table = $("#tbConfigMftsIndexGenerationSettingInputMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigMftsIndexGenerationSettingInput")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "configMftsIndexGenerationSettingInputNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "configMftsIndexGenerationSettingInputNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "configMftsIndexGenerationSettingInputCompanyCode",
+                    width: "20%"
+                },
+                {
+                    data: "configMftsIndexGenerationSettingInputSourceName",
+                    width: "10%"
+                },
+                {
+                    data: "configMftsIndexGenerationSettingInputSourceNameOut",
+                    width: "10%"
+                },
+                {
+                    data: "configMftsIndexGenerationSettingInputOcType",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        EditConfigMftsIndexGenerationSettingInput(table);
+        DeleteConfigMftsIndexGenerationSettingInput(table);
+    }
+
+
+    function fnInsertCancelConfigMftsIndexGenerationSettingInput(){
+
+        $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('hide');
+    }
+
+    function fnUpdateCancelConfigMftsIndexGenerationSettingInput(){
+
+        $("#modalUpdateConfigMftsIndexGenerationSettingInput").modal('hide');
+    }
+
+    function callModalInsertConfigMftsIndexGenerationSettingInput(){
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').value = setCompanyCode;
+
+        $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('show');
+    }
+
+     function fnInsertConfigMftsIndexGenerationSettingInput(){
+
+        if ($('#txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').val() != '' && $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').val() != '') {
+            callConfigMftsIndexGenerationSettingInputInsertController();
+        }
+        else {
+            validateInsertConfigMftsIndexGenerationSettingInput();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function fnUpdateConfigMftsIndexGenerationSettingInput(){
+        if ($('#txtUpdateConfigMftsIndexGenerationSettingInputCompanyCode').val() != '' && $('#txtUpdateConfigMftsIndexGenerationSettingInputCompanyCode').val() != '') {
+            callConfigMftsIndexGenerationSettingInputUpdateController();
+        }
+        else {
+            validateUpdateConfigMftsIndexGenerationSettingInput();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function EditConfigMftsIndexGenerationSettingInput(table){
+
+        $('#tbConfigMftsIndexGenerationSettingInputMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callConfigMftsIndexGenerationSettingInputGetDetailController(getPK);
+        });
+    }
+
+    function DeleteConfigMftsIndexGenerationSettingInput(table){
+
+        $('#tbConfigMftsIndexGenerationSettingInputMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callConfigMftsIndexGenerationSettingInputDeleteController(getPK);
+                        callConfigMftsIndexGenerationSettingInputIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportConfigMftsIndexGenerationSettingInput(){
+
+        $.blockUI();
+
+        callConfigMftsIndexGenerationSettingInputExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callConfigMftsIndexGenerationSettingInputGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsIndexGenerationSettingInput")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateConfigMftsIndexGenerationSettingInputNo').value = data.ConfigMftsIndexGenerationSettingInputNo;
+                document.getElementById('txtUpdateConfigMftsIndexGenerationSettingInputCompanyCode').value = data.ConfigMftsIndexGenerationSettingInputCompanyCode;
+
+                $("#ddlUpdateConfigMftsIndexGenerationSettingInputSourceName").select2("val", data.ConfigMftsIndexGenerationSettingInputSourceName);
+                $("#ddlUpdateConfigMftsIndexGenerationSettingInputOutputSourceName").select2("val", data.ConfigMftsIndexGenerationSettingInputSourceNameOut);
+                $("#ddlUpdateConfigMftsIndexGenerationSettingInputOCType").select2("val", data.ConfigMftsIndexGenerationSettingInputOcType);
+
+                if(data.Isactive == 1){
+                    document.getElementById("toggleUpdateConfigMftsIndexGenerationSettingInputIsActive").checked = true;
+                }
+                else{
+                    document.getElementById("toggleUpdateConfigMftsIndexGenerationSettingInputIsActive").checked = false;
+                }
+
+                $("#modalUpdateConfigMftsIndexGenerationSettingInput").modal('show');
+
+            }
+        });
+    }
+
+    function callConfigMftsIndexGenerationSettingInputInsertController(){
+
+        var IsActive = 1;
+
+
+        if($('#toggleInsertConfigMftsIndexGenerationSettingInputIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.ConfigMftsIndexGenerationSettingInputCompanyCode = $('#txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').val();
+        model.ConfigMftsIndexGenerationSettingInputSourceName = $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').val();
+        model.ConfigMftsIndexGenerationSettingInputSourceNameOut = $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').val();
+        model.ConfigMftsIndexGenerationSettingInputOcType = $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').val();
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ConfigMftsIndexGenerationSettingInput")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').value = '';
+
+
+                    $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('hide');
+
+                    callConfigMftsIndexGenerationSettingInputIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsIndexGenerationSettingInputUpdateController(){
+
+        var IsActive = 1;
+
+        if($('#toggleUpdateConfigMftsIndexGenerationSettingInputIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+        
+        model.ConfigMftsIndexGenerationSettingInputCompanyCode = $('#txtUpdateConfigMftsIndexGenerationSettingInputCompanyCode').val();
+        model.ConfigMftsIndexGenerationSettingInputSourceName = $('#ddlUpdateConfigMftsIndexGenerationSettingInputSourceName').val();
+        model.ConfigMftsIndexGenerationSettingInputSourceNameOut = $('#ddlUpdateConfigMftsIndexGenerationSettingInputOutputSourceName').val();
+        model.ConfigMftsIndexGenerationSettingInputOcType = $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ConfigMftsIndexGenerationSettingInput")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    $("#modalUpdateConfigMftsIndexGenerationSettingInput").modal('hide');
+
+                    callConfigMftsIndexGenerationSettingInputIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsIndexGenerationSettingInputDeleteController(getPK){
+
+        var model = new Object();
+
+        model.ConfigMftsIndexGenerationSettingInputNo = getPK;
+        model.ConfigMftsIndexGenerationSettingInputCompanyCode = '';
+        model.ConfigMftsIndexGenerationSettingInputSourceName = '';
+        model.ConfigMftsIndexGenerationSettingInputSourceNameOut = '';
+        model.ConfigMftsIndexGenerationSettingInputOcType = '';
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ConfigMftsIndexGenerationSettingInput")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function () {
+                    fnSweetAlert_DeleteSuccess();
+                }
+        });
+    }
+
+    function callConfigMftsIndexGenerationSettingInputIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-ConfigMftsIndexGenerationSettingInput-create").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingInput")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>
+
+
+
+
+
+

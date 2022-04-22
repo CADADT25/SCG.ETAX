@@ -1,0 +1,75 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Company Code</label>
+                <input disabled type="text" id="txtInsertConfigMftsCompressXmlSettingCompanyCode" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Data Source </label>
+                <select class="select2 form-control" id="ddlInsertConfigMftsCompressXmlSettingDataSource"></select>
+            </div>
+        </div>
+
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Compress Type </label>
+                <select class="select2 form-control" id="ddlInsertConfigMftsCompressXmlSettingCompressType" onchange="onChangeMftsXmlCompressType(this)">
+                    <option value="FOLDER">Folder</option>
+                    <option value="FTP">Ftp</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Compress Folder</label>
+                <input type="text" id="txtInsertConfigMftsCompressXmlSettingFolder" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Host</label>
+                <input disabled type="text" id="txtInsertConfigMftsCompressXmlSettingHost" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Port</label>
+                <input disabled type="text" id="txtInsertConfigMftsCompressXmlSettingPort" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Username</label>
+                <input disabled type="text" id="txtInsertConfigMftsCompressXmlSettingUsername" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Password</label>
+                <input disabled type="text" id="txtInsertConfigMftsCompressXmlSettingPassword" class="form-control">
+            </div>
+        </div>
+
+
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" checked class="custom-control-input" id="toggleInsertConfigMftsCompressXmlSettingIsActive" />
+                    <label class="custom-control-label" for="toggleInsertConfigMftsCompressXmlSettingIsActive">Is Active</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

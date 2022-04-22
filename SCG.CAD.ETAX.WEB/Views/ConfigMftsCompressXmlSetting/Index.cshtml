@@ -1,0 +1,447 @@
+﻿@{
+    ViewData["Title"] = "ConfigMftsCompressXmlSetting";
+    Layout = null;
+}
+
+
+@await Html.PartialAsync("~/Views/ConfigMftsCompressXmlSetting/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        setTimeout(function(){
+            RenderConfigMftsCompressXmlSetting(setCompanyCode);
+        }, 1200);
+
+    });
+
+    $(window).on('load', function() {
+
+        $('#ddlInsertConfigMftsCompressXmlSettingDataSource').select2({
+            dropdownParent: $('#ddlInsertConfigMftsCompressXmlSettingDataSource')
+        });
+
+    });
+
+    function onChangeMftsXmlCompressType(selectObject){
+
+          var value = selectObject.value;
+
+          if(value == 'FOLDER'){
+
+            $('#txtInsertConfigMftsCompressXmlSettingFolder').prop('disabled', false)
+
+            $('#txtInsertConfigMftsCompressXmlSettingHost').prop('disabled', true)
+            $('#txtInsertConfigMftsCompressXmlSettingPort').prop('disabled', true)
+            $('#txtInsertConfigMftsCompressXmlSettingUsername').prop('disabled', true)
+            $('#txtInsertConfigMftsCompressXmlSettingPassword').prop('disabled', true)
+
+          }else{
+
+            $('#txtInsertConfigMftsCompressXmlSettingFolder').prop('disabled', true)
+
+            $('#txtInsertConfigMftsCompressXmlSettingHost').prop('disabled', false)
+            $('#txtInsertConfigMftsCompressXmlSettingPort').prop('disabled', false)
+            $('#txtInsertConfigMftsCompressXmlSettingUsername').prop('disabled', false)
+            $('#txtInsertConfigMftsCompressXmlSettingPassword').prop('disabled', false)
+
+          }
+    }
+
+
+    function RenderConfigMftsCompressXmlSetting(setCompanyCode){
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
+
+        var table = $("#tbConfigMftsCompressXmlSettingMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigMftsCompressXmlSetting")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "configMftsCompressXmlSettingNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "ConfigMftsCompressXmlSettingNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "configMftsCompressXmlSettingCompanyCode",
+                    width: "20%"
+                },
+                {
+                    data: "configMftsCompressXmlSettingSourceName",
+                    width: "10%"
+                },
+                {
+                    data: "configMftsCompressXmlSettingOutputFolder",
+                    width: "20%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        EditConfigMftsCompressXmlSetting(table);
+        DeleteConfigMftsCompressXmlSetting(table);
+    }
+
+
+    function fnInsertCancelConfigMftsCompressXmlSetting(){
+
+        $("#modalCreateConfigMftsCompressXmlSetting").modal('hide');
+    }
+
+    function fnUpdateCancelConfigMftsCompressXmlSetting(){
+
+        $("#modalUpdateConfigMftsCompressXmlSetting").modal('hide');
+    }
+
+    function callModalInsertConfigMftsCompressXmlSetting(){
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = setCompanyCode;
+
+        $("#modalInsertConfigMftsCompressXmlSetting").modal('show');
+    }
+
+     function fnInsertConfigMftsCompressXmlSetting(){
+
+        if ($('#txtInsertConfigMftsCompressXmlSettingCompanyCode').val() != '' && $('#ddlInsertConfigMftsCompressXmlSettingDataSource').val() != '') {
+            callConfigMftsCompressXmlSettingInsertController();
+        }
+        else {
+            validateInsertConfigMftsCompressXmlSetting();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function fnUpdateConfigMftsCompressXmlSetting(){
+        if ($('#txtUpdateConfigMftsCompressXmlSettingCompanyCode').val() != '' && $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val() != '') {
+            callConfigMftsCompressXmlSettingUpdateController();
+        }
+        else {
+            validateUpdateConfigMftsCompressXmlSetting();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function EditConfigMftsCompressXmlSetting(table){
+
+        $('#tbConfigMftsCompressXmlSettingMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callConfigMftsCompressXmlSettingGetDetailController(getPK);
+        });
+    }
+
+    function DeleteConfigMftsCompressXmlSetting(table){
+
+        $('#tbConfigMftsCompressXmlSettingMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callConfigMftsCompressXmlSettingDeleteController(getPK);
+                        callConfigMftsCompressXmlSettingIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportConfigMftsCompressXmlSetting(){
+
+        $.blockUI();
+
+        callConfigMftsCompressXmlSettingExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callConfigMftsCompressXmlSettingGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsCompressXmlSetting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingNo').value = data.ConfigMftsCompressXmlSettingNo;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCode').value = data.ConfigMftsCompressXmlSettingCompanyCode;
+                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingEmail;
+                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = data.ConfigMftsCompressXmlSettingHost;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingFolder').value = data.ConfigMftsCompressXmlSettingPort;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = data.ConfigMftsCompressXmlSettingUsername;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingPort').value = data.ConfigMftsCompressXmlSettingPassword;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = data.ConfigMftsCompressXmlSettingApiKey;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCodePassword').value = data.ConfigMftsCompressXmlSettingApiKey;
+
+
+                if(data.Isactive == 1){
+                    document.getElementById("toggleUpdateConfigMftsCompressXmlSettingIsActive").checked = true;
+                }
+                else{
+                    document.getElementById("toggleUpdateConfigMftsCompressXmlSettingIsActive").checked = false;
+                }
+
+                $("#modalUpdateConfigMftsCompressXmlSetting").modal('show');
+
+            }
+        });
+    }
+
+    function callConfigMftsCompressXmlSettingInsertController(){
+
+        var IsActive = 1;
+
+
+        if($('#toggleInsertConfigMftsCompressXmlSettingIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.configMftsCompressXmlSettingCompanyCode = $('#txtInsertConfigMftsCompressXmlSettingCompanyCode').val();
+        model.configMftsCompressXmlSettingSourceName = $('#ddlInsertConfigMftsCompressXmlSettingDataSource').val();
+        model.configMftsCompressXmlSettingCompressType = $('#ddlInsertConfigMftsCompressXmlSettingCompressType').val();
+        model.configMftsCompressXmlSettingOutputFolder = $('#txtInsertConfigMftsCompressXmlSettingFolder').val();
+        model.configMftsCompressXmlSettingHost = $('#txtInsertConfigMftsCompressXmlSettingHost').val();
+        model.configMftsCompressXmlSettingPort = $('#txtInsertConfigMftsCompressXmlSettingPort').val();
+        model.configMftsCompressXmlSettingUsername = $('#txtInsertConfigMftsCompressXmlSettingUsername').val();
+        model.configMftsCompressXmlSettingPassword = $('#txtInsertConfigMftsCompressXmlSettingPassword').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = '';
+                    document.getElementById('ddlInsertConfigMftsCompressXmlSettingDataSource').value = '';
+                    document.getElementById('ddlInsertConfigMftsCompressXmlSettingCompressType').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingFolder').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingHost').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingPort').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingUsername').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingPassword').value = '';
+
+                    $("#modalInsertConfigMftsCompressXmlSetting").modal('hide');
+
+                    callConfigMftsCompressXmlSettingIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsCompressXmlSettingUpdateController(){
+
+        var IsActive = 1;
+
+        if($('#toggleUpdateConfigMftsCompressXmlSettingIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.ConfigMftsCompressXmlSettingNo = $('#txtUpdateConfigMftsCompressXmlSettingNo').val();
+
+        model.configMftsCompressXmlSettingCompanyCode = $('#txtUpdateConfigMftsCompressXmlSettingCompanyCode').val();
+        model.configMftsCompressXmlSettingSourceName = $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val();
+        model.configMftsCompressXmlSettingCompressType = $('#ddlUpdateConfigMftsCompressXmlSettingCompressType').val();
+        model.configMftsCompressXmlSettingOutputFolder = $('#txtUpdateConfigMftsCompressXmlSettingFolder').val();
+        model.configMftsCompressXmlSettingHost = $('#txtUpdateConfigMftsCompressXmlSettingHost').val();
+        model.configMftsCompressXmlSettingPort = $('#txtUpdateConfigMftsCompressXmlSettingPort').val();
+        model.configMftsCompressXmlSettingUsername = $('#txtUpdateConfigMftsCompressXmlSettingUsername').val();
+        model.configMftsCompressXmlSettingPassword = $('#txtUpdateConfigMftsCompressXmlSettingPassword').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCode').value = '';
+                    document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = '';
+                    document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingFolder').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingPort').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingPassword').value = '';
+
+                    $("#modalUpdateConfigMftsCompressXmlSetting").modal('hide');
+
+                    callConfigMftsCompressXmlSettingIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsCompressXmlSettingDeleteController(getPK){
+
+        var model = new Object();
+
+        model.ConfigMftsCompressXmlSettingNo = getPK;
+
+        model.configMftsCompressXmlSettingCompanyCode = '';
+        model.configMftsCompressXmlSettingSourceName = '';
+        model.configMftsCompressXmlSettingCompressType '';
+        model.configMftsCompressXmlSettingOutputFolder =  '';
+        model.configMftsCompressXmlSettingHost =  '';
+        model.configMftsCompressXmlSettingPort =  '';
+        model.configMftsCompressXmlSettingUsername =  '';
+        model.configMftsCompressXmlSettingPassword =  '';
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function () {
+                    fnSweetAlert_DeleteSuccess();
+                }
+        });
+    }
+
+    function callConfigMftsCompressXmlSettingIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-ConfigMftsCompressXmlSetting-create").load("@Url.Action("Index", "ConfigMftsCompressXmlSetting")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>
+
+
+
+
+
+

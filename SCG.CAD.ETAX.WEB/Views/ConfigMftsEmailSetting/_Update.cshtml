@@ -1,0 +1,114 @@
+﻿
+<script src="~/assets/validate/ConfigMftsEmailSettingValidate.js"></script>
+
+
+<div class="row">
+
+    <div class="col-md-12 col-12" hidden>
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> No </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Customer Code </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingCompanyCode" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Email </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingEmail" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Email Template </label>
+            <select class="select2 form-control" id="ddlUpdateConfigMftsEmailSettingEmailTemplate"></select>
+        </div>
+    </div>
+
+    <div class="divider">
+        <div class="divider-text"></div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailSmtp" onclick="onChangeConfigEmailSmtp();" />
+                <label class="custom-control-label" for="toggleUpdateConfigEmailSmtp">Batch</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Host </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingHost" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Port </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingPort" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-5 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> User name </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingUsername" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Password </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingPassword" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailApi" onclick="onChangeConfigEmailApi();" />
+                <label class="custom-control-label" for="toggleUpdateConfigEmailApi">Batch</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-11 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Email </label>
+            <input type="text" id="txtUpdateConfigMftsEmailSettingApiKey" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigMftsEmailSettingIsActive" checked />
+                <label class="custom-control-label" for="toggleUpdateConfigMftsEmailSettingIsActive">Is Active</label>
+            </div>
+        </div>
+    </div>
+
+</div>
