@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
+
 {
     public class ConfigMftsIndexGenerationSettingController : Controller
     {

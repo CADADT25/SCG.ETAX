@@ -102,6 +102,7 @@
 
                     if (update != null)
                     {
+                        update.ConfigXmlGeneratorCompanyCode = param.ConfigXmlGeneratorCompanyCode;
                         update.ConfigXmlGeneratorInputSource = param.ConfigXmlGeneratorInputSource;
                         update.ConfigXmlGeneratorInputType = param.ConfigXmlGeneratorInputType;
                         update.ConfigXmlGeneratorInputPath = param.ConfigXmlGeneratorInputPath;

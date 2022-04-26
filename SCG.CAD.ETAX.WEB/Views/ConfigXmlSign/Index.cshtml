@@ -110,6 +110,10 @@
 
         if(setCompanyCode == null || setCompanyCode == ''){
             setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }
         }
 
         var table = $("#tbConfigXmlSignMain").DataTable({
@@ -124,6 +128,7 @@
             "ajax": {
                 url: "@Url.Action("List", "ConfigXmlSign")",
                 type: "POST",
+                data: { companyCode : setCompanyCode },
                 datatype: "json"
             },
 

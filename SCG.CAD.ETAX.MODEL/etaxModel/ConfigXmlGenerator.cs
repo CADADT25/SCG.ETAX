@@ -7,7 +7,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int ConfigXmlGeneratorNo { get; set; }
-        public string CustomerCode { get; set; } = null!;
+        public string ConfigXmlGeneratorCompanyCode { get; set; } = null!;
         public string? ConfigXmlGeneratorInputSource { get; set; }
         public string? ConfigXmlGeneratorInputType { get; set; }
         public string? ConfigXmlGeneratorInputPath { get; set; }

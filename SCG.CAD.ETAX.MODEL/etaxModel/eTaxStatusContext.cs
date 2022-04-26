@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigMftsIndexGenerationSettingInput> ConfigMftsIndexGenerationSettingInputs { get; set; } = null!;
+        public virtual DbSet<ConfigXmlGenerator> ConfigXmlGenerators { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,29 +29,45 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigMftsIndexGenerationSettingInput>(entity =>
+            modelBuilder.Entity<ConfigXmlGenerator>(entity =>
             {
-                entity.HasKey(e => e.ConfigMftsIndexGenerationSettingInputNo);
+                entity.HasKey(e => e.ConfigXmlGeneratorNo);
 
-                entity.ToTable("configMftsIndexGenerationSettingInput");
+                entity.ToTable("configXmlGenerator");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingInputNo).HasColumnName("configMftsIndexGenerationSettingInputNo");
+                entity.Property(e => e.ConfigXmlGeneratorNo).HasColumnName("configXmlGeneratorNo");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingInputCompanyCode)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsIndexGenerationSettingInputCompanyCode");
+                entity.Property(e => e.ConfigXmlGeneratorCompanyCode)
+                    .HasMaxLength(10)
+                    .HasColumnName("configXmlGeneratorCompanyCode");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingInputOcType)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsIndexGenerationSettingInputOcType");
+                entity.Property(e => e.ConfigXmlGeneratorInputPath)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorInputPath");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingInputSourceName)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsIndexGenerationSettingInputSourceName");
+                entity.Property(e => e.ConfigXmlGeneratorInputSource)
+                    .HasMaxLength(50)
+                    .HasColumnName("configXmlGeneratorInputSource");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingInputSourceNameOut)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsIndexGenerationSettingInputSourceNameOut");
+                entity.Property(e => e.ConfigXmlGeneratorInputType)
+                    .HasMaxLength(50)
+                    .HasColumnName("configXmlGeneratorInputType");
+
+                entity.Property(e => e.ConfigXmlGeneratorOnlineRecordNumber)
+                    .HasMaxLength(50)
+                    .HasColumnName("configXmlGeneratorOnlineRecordNumber");
+
+                entity.Property(e => e.ConfigXmlGeneratorOutputPath)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorOutputPath");
+
+                entity.Property(e => e.ConfigXmlGeneratorOutputSource)
+                    .HasMaxLength(50)
+                    .HasColumnName("configXmlGeneratorOutputSource");
+
+                entity.Property(e => e.ConfigXmlGeneratorOutputType)
+                    .HasMaxLength(50)
+                    .HasColumnName("configXmlGeneratorOutputType");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -61,9 +77,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive)
-                    .HasColumnName("isactive")
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
