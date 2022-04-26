@@ -41,6 +41,10 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasMaxLength(10)
                     .HasColumnName("configXmlGeneratorCompanyCode");
 
+                entity.Property(e => e.ConfigXmlGeneratorHost)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorHost");
+
                 entity.Property(e => e.ConfigXmlGeneratorInputPath)
                     .HasMaxLength(255)
                     .HasColumnName("configXmlGeneratorInputPath");
@@ -68,6 +72,18 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.ConfigXmlGeneratorOutputType)
                     .HasMaxLength(50)
                     .HasColumnName("configXmlGeneratorOutputType");
+
+                entity.Property(e => e.ConfigXmlGeneratorPassword)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorPassword");
+
+                entity.Property(e => e.ConfigXmlGeneratorPort)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorPort");
+
+                entity.Property(e => e.ConfigXmlGeneratorUsername)
+                    .HasMaxLength(255)
+                    .HasColumnName("configXmlGeneratorUsername");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)

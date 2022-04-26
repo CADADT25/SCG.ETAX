@@ -152,7 +152,15 @@
 
     function callModalInsertConfigMftsEmailSetting(){
 
-        var setCompanyCode = $("#companyCodeState").text();
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
 
         document.getElementById('txtInsertConfigMftsEmailSettingCompanyCode').value = setCompanyCode;
 

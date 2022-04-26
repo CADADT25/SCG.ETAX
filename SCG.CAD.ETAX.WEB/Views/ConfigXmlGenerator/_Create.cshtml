@@ -26,7 +26,7 @@
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Source </label>
-            <input disabled type="text" id="txtInsertConfigXmlGeneratorInputSource" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            <select class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputSource"></select>
         </div>
     </div>
 
@@ -35,6 +35,10 @@
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Type </label>
             <input disabled type="text" id="txtInsertConfigXmlGeneratorInputType" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            <select class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputType">
+                <option value="FOLDER">Folder</option>
+                <option value="FTP">FTP</option>
+            </select>
         </div>
     </div>
 
@@ -42,9 +46,6 @@
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Path </label>
             <input disabled type="text" id="txtInsertConfigXmlGeneratorInputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
-            <input type="file" webkitdirectory directory/>
-        <input id="design" type="file" directory/>
-
         </div>
     </div>
 
@@ -54,7 +55,7 @@
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Source </label>
-            <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputSource" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            <select class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputSource"></select>
         </div>
     </div>
 
@@ -63,6 +64,10 @@
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Type </label>
             <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputType" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            <select class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputType">
+                <option value="FOLDER">Folder</option>
+                <option value="FTP">FTP</option>
+            </select>
         </div>
     </div>
 

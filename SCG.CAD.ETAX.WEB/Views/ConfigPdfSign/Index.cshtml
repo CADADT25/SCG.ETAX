@@ -250,9 +250,17 @@
 
     function callModalInsertConfigPdfSign(){
 
-        fnDropdownDataSource();
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
 
-         var setCompanyCode = $("#companyCodeState").text();
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
+
+        fnDropdownDataSource();
 
         document.getElementById('txtInsertConfigPdfSignCustomerCode').value = setCompanyCode;
 

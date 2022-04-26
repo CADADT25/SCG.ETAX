@@ -18,21 +18,44 @@
             RenderConfigXmlGenerator(setCompanyCode);
         }, 1200);
 
-        
-        
-
     });
+
+    function fnDropdownConfigXmlGeneratorDataSource() {
+
+            $('<option>',
+            {
+                value: 0,
+            }).html("--- Select Data Source ---").appendTo("#txtInsertConfigXmlGeneratorInputSource");
+
+            $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.DataSourceName,
+                            text: data.DataSourceName
+                        }).html(data.DataSourceName).appendTo("#ddlInsertConfigXmlGeneratorInputSource");
+                });
+
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.DataSourceName,
+                            text: data.DataSourceName
+                        }).html(data.DataSourceName).appendTo("#ddlUpdateConfigXmlGeneratorInputSource");
+                });
+            })
+        }
 
     function onChangeBath(){
         $('#toggleInsertConfigXmlGeneratorIsBatch').prop('checked', true)
         $('#toggleInsertConfigXmlGeneratorIsOnline').prop('checked', false)
 
 
-        $('#txtInsertConfigXmlGeneratorInputSource').prop('disabled', false)
-        $('#txtInsertConfigXmlGeneratorInputType').prop('disabled', false)
+        $('#ddlInsertConfigXmlGeneratorInputSource').prop('disabled', false)
+        $('#ddlInsertConfigXmlGeneratorInputType').prop('disabled', false)
         $('#txtInsertConfigXmlGeneratorInputPath').prop('disabled', false)
-        $('#txtInsertConfigXmlGeneratorOutputSource').prop('disabled', false)
-        $('#txtInsertConfigXmlGeneratorOutputType').prop('disabled', false)
+        $('#ddlInsertConfigXmlGeneratorOutputSource').prop('disabled', false)
+        $('#ddlInsertConfigXmlGeneratorOutputType').prop('disabled', false)
         $('#txtInsertConfigXmlGeneratorOutputPath').prop('disabled', false)
 
         $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').prop('disabled', true)
@@ -45,22 +68,22 @@
         $('#toggleInsertConfigXmlGeneratorIsOnline').prop('checked', true)
         $('#toggleInsertConfigXmlGeneratorIsBatch').prop('checked', false)
 
-        $('#txtInsertConfigXmlGeneratorInputSource').prop('disabled', true)
-        $('#txtInsertConfigXmlGeneratorInputType').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorInputSource').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorInputType').prop('disabled', true)
         $('#txtInsertConfigXmlGeneratorInputPath').prop('disabled', true)
-        $('#txtInsertConfigXmlGeneratorOutputSource').prop('disabled', true)
-        $('#txtInsertConfigXmlGeneratorOutputType').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorOutputSource').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorOutputType').prop('disabled', true)
         $('#txtInsertConfigXmlGeneratorOutputPath').prop('disabled', true)
 
         $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').prop('disabled', false)
 
         // ====================
 
-        $('#txtInsertConfigXmlGeneratorInputSource').val('');
-        $('#txtInsertConfigXmlGeneratorInputType').val('');
+        //$('#txtInsertConfigXmlGeneratorInputSource').val('');
+        //$('#txtInsertConfigXmlGeneratorInputType').val('');
         $('#txtInsertConfigXmlGeneratorInputPath').val('');
-        $('#txtInsertConfigXmlGeneratorOutputSource').val('');
-        $('#txtInsertConfigXmlGeneratorOutputType').val('');
+        //$('#txtInsertConfigXmlGeneratorOutputSource').val('');
+        //$('#txtInsertConfigXmlGeneratorOutputType').val('');
         $('#txtInsertConfigXmlGeneratorOutputPath').val('');
 
     }
@@ -174,7 +197,15 @@
 
     function callModalInsertConfigXmlGenerator(){
 
-         var setCompanyCode = $("#companyCodeState").text();
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
 
         document.getElementById('txtInsertConfigXmlGeneratorCustomerCode').value = setCompanyCode;
 

@@ -138,7 +138,15 @@
 
     function callModalInsertConfigMftsIndexGenerationSettingOutput(){
 
-        var setCompanyCode = $("#companyCodeState").text();
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
 
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputCompanyCode').value = setCompanyCode;
 

@@ -39,6 +39,10 @@
 
         if(setCompanyCode == null || setCompanyCode == ''){
             setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }
         }
 
         var table = $("#tbProfileCertificateMain").DataTable({
@@ -168,8 +172,30 @@
 
     function callModalInsertProfileCertificate(){
 
-        document.getElementById('txtInsertProfileCertificatTaxNumber').value = $('#txtInsertProfileCompanyTaxNumber').val();
-        document.getElementById('txtInsertProfileCertificateCompanyName').value = $('#txtInsertProfileCompanyNameTh').val();
+
+        var setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+        if(setTaxNumber == null || setTaxNumber == ''){
+            setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+            if(setTaxNumber == null || setTaxNumber == ''){
+                setTaxNumber = $("#txtInsertProfileCompanyTaxNumber").val();
+            }   
+        }
+
+        var setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+        if(setCompanyName == null || setCompanyName == ''){
+            setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+            if(setCompanyName == null || setCompanyName == ''){
+                setCompanyName = $("#txtInsertProfileCompanyNameTh").val();
+            }   
+        }
+
+
+        document.getElementById('txtInsertProfileCertificatTaxNumber').value = setTaxNumber;
+        document.getElementById('txtInsertProfileCertificateCompanyName').value = setCompanyName;
         
         $("#modalCreateProfileCertificate").modal('show');
 
