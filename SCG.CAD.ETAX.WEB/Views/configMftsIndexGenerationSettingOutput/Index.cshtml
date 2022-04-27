@@ -430,7 +430,10 @@
     function callConfigMftsIndexGenerationSettingOutputIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#render-ConfigMftsIndexGenerationSettingOutput-create").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingOutput")");
+            $("#render-configMftsIndexGenerationSettingOutput-create").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingOutput")");
+
+            $("#render-configMftsIndexGenerationSettingOutput-update").empty();
+            $("#render-configMftsIndexGenerationSettingOutput-update").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingOutput")");
             $.unblockUI();
         }, 500);
     }

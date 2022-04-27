@@ -7,7 +7,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int TransactionNo { get; set; }
-        public double? BillingNumber { get; set; }
+        public string? BillingNumber { get; set; }
         public DateTime? BillingDate { get; set; }
         public double? BillingYear { get; set; }
         public DateTime? ProcessingDate { get; set; }

@@ -673,6 +673,10 @@
             setTimeout(function(){
                 $.blockUI();
                 $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
+
+                $("#render-profileSeller-update").empty();
+                $("#render-profileSeller-update").load("@Url.Action("Index", "ProfileSeller")");
+
                 $.unblockUI();
             }, 500);
         }

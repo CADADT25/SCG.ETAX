@@ -368,7 +368,11 @@
     function callConfigMftsCompressPrintSettingIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#render-ConfigMftsCompressPrintSetting-create").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+            $("#render-configMftsCompressPrintSetting-create").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+
+            $("#render-configMftsCompressPrintSetting-update").empty();
+            $("#render-configMftsCompressPrintSetting-update").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+
             $.unblockUI();
         }, 500);
     }

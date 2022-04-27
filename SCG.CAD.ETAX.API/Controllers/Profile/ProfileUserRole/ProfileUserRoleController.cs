@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SCG.CAD.ETAX.MODEL.etaxModel;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RdDocumentController : ControllerBase
+    public class ProfileUserRoleController : ControllerBase
     {
 
-        private readonly IRdDocumentRepository repo;
-        public RdDocumentController()
+
+        private readonly IProfileUserRoleRepository repo;
+        public ProfileUserRoleController()
         {
-            repo = new RdDocumentRepository();
+            repo = new ProfileUserRoleRepository();
         }
-
-
 
         [HttpGet]
         [Route("GetListAll")]
@@ -37,7 +35,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(RdDocument param)
+        public IActionResult Insert(ProfileUserRole param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -46,7 +44,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(RdDocument param)
+        public IActionResult Update(ProfileUserRole param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -55,7 +53,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(RdDocument param)
+        public IActionResult Delete(ProfileUserRole param)
         {
             var result = repo.DELETE(param).Result;
 

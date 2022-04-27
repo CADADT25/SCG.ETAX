@@ -14,6 +14,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigXmlsignInputPath { get; set; }
         public string? ConfigXmlsignOutputSource { get; set; }
         public string? ConfigXmlsignOutputPath { get; set; }
+        public string? ConfigXmlsignOutputConvertSource { get; set; }
         public string? ConfigXmlsignOutputConvertPath { get; set; }
         public string? ConfigXmlsignHsmSerial { get; set; }
         public string? ConfigXmlsignCertificateSerial { get; set; }

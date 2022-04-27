@@ -483,7 +483,11 @@
     function callConfigMftsEmailSettingIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#render-ConfigMftsEmailSetting-create").load("@Url.Action("Index", "ConfigMftsEmailSetting")");
+            $("#render-configMftsEmailSetting-create").load("@Url.Action("Index", "ConfigMftsEmailSetting")");
+
+            $("#render-configMftsEmailSetting-update").empty();
+            $("#render-configMftsEmailSetting-update").load("@Url.Action("Index", "ConfigMftsEmailSetting")");
+
             $.unblockUI();
         }, 500);
     }

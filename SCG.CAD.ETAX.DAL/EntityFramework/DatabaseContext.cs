@@ -57,6 +57,8 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ConfigMftsCompressPrintSetting> configMftsCompressPrintSetting { get; set; }
         public DbSet<ConfigMftsIndexGenerationSettingInput> configMftsIndexGenerationSettingInput { get; set; }
         public DbSet<ConfigMftsIndexGenerationSettingOutput> configMftsIndexGenerationSettingOutput { get; set; }
+        public DbSet<ProfileUserRole> profileUserRole { get; set; }
+        public DbSet<ProfileUserGroup> profileUserGroup { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

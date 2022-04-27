@@ -404,7 +404,11 @@
     function callConfigMftsIndexGenerationSettingInputIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#render-ConfigMftsIndexGenerationSettingInput-create").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingInput")");
+            $("#render-configMftsIndexGenerationSettingInput-create").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingInput")");
+
+            $("#render-configMftsIndexGenerationSettingInput-update").empty();
+            $("#render-configMftsIndexGenerationSettingInput-update").load("@Url.Action("Index", "ConfigMftsIndexGenerationSettingInput")");
+
             $.unblockUI();
         }, 500);
     }

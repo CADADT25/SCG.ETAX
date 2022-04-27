@@ -4,17 +4,32 @@
 
 <div class="row">
 
-    <div class="col-md-12 col-12">
+
+    <div class="col-md-12 col-12" hidden>
         <div class="form-group">
-            <label><spa class="text-danger">* </spa> Customer Code </label>
-            <input type="text" disabled id="txtUpdateConfigXmlSignCustomerCode" onkeyup="validateUpdateProductUnit();" class="form-control">
+            <label><spa class="text-danger">* </spa> No </label>
+            <input type="text" disabled id="txtUpdateConfigXmlSignNo" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Company Code </label>
+            <input type="text" disabled id="txtUpdateConfigXmlSignCompanyCode" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+        <div class="form-group">
+            <label><spa class="text-danger">* </spa> Tax Number </label>
+            <input type="text" disabled id="txtUpdateConfigXmlSignTaxNumber" class="form-control">
         </div>
     </div>
 
     <div class="col-md-12 col-12">
         <div class="form-group">
             <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlSignIsBatch" onclick="onChangeBath();" />
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlSignIsBatch" onclick="onChangeBathXmlSignUpdate();" />
                 <label class="custom-control-label" for="toggleUpdateConfigXmlSignIsBatch">Batch</label>
             </div>
         </div>
@@ -26,7 +41,7 @@
     <div class="col-md-5 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Source </label>
-            <input disabled type="text" id="txtUpdateConfigXmlSignInputSource" onkeyup="validateUpdateConfigXmlSign()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlSignInputSource"></select>
         </div>
     </div>
 
@@ -43,13 +58,13 @@
     <div class="col-md-5 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Source </label>
-            <input disabled type="text" id="txtUpdateConfigXmlSignOutputSource" onkeyup="validateUpdateConfigXmlSign()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlSignOutputSource"></select>
         </div>
     </div>
 
     <div class="col-md-6 col-12">
         <div class="form-group">
-            <label><spa class="text-danger">* </spa> Output Source </label>
+            <label><spa class="text-danger">* </spa> Output Path </label>
             <input disabled type="text" id="txtUpdateConfigXmlSignOutputPath" onkeyup="validateUpdateConfigXmlSign()" class="form-control">
         </div>
     </div>
@@ -62,7 +77,7 @@
     <div class="col-md-5 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Convert Source </label>
-            <input disabled type="text" id="txtUpdateConfigXmlSignOutputConvertSource" onkeyup="validateUpdateConfigXmlSign()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlSignOutputConvertSource"></select>
         </div>
     </div>
 
@@ -77,7 +92,7 @@
     <div class="col-md-12 col-12">
         <div class="form-group">
             <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlSignIsOnline" onclick="onChangeOnline();" />
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlSignIsOnline" onclick="onChangeOnlineXmlSignUpdate();" />
                 <label class="custom-control-label" for="toggleUpdateConfigXmlSignIsOnline">Online</label>
             </div>
         </div>

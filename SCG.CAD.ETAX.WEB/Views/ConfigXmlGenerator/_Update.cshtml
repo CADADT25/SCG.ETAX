@@ -4,7 +4,7 @@
 
 <div class="row">
 
-        <div class="col-md-12 col-12" hidden>
+    <div class="col-md-12 col-12" hidden>
         <div class="form-group">
             <label><spa class="text-danger">* </spa> No </label>
             <input type="text" disabled id="txtUpdateConfigXmlGeneratorNo" class="form-control">
@@ -13,15 +13,27 @@
 
     <div class="col-md-12 col-12">
         <div class="form-group">
-            <label><spa class="text-danger">* </spa> Customer Code </label>
-            <input type="text" disabled id="txtUpdateConfigXmlGeneratorCustomerCode" onkeyup="validateUpdateProductUnit();" class="form-control">
+            <label><spa class="text-danger">* </spa> Company Code </label>
+            <input type="text" disabled id="txtUpdateConfigXmlGeneratorCompanyCode" onkeyup="validateUpdateProductUnit();" class="form-control">
         </div>
+    </div>
+
+    <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlGeneratorIsBatch" onclick="onChangeBathUpdate();" />
+                <label class="custom-control-label" for="toggleUpdateConfigXmlGeneratorIsBatch">Batch</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
     </div>
 
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Source </label>
-            <input type="text" id="txtUpdateConfigXmlGeneratorInputSource" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlGeneratorInputSource"></select>
         </div>
     </div>
 
@@ -29,22 +41,27 @@
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Type </label>
-            <input type="text" id="txtUpdateConfigXmlGeneratorInputType" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlGeneratorInputType">
+                <option value="FOLDER">Folder</option>
+                <option value="FTP">FTP</option>
+            </select>
         </div>
     </div>
 
-    <div class="col-md-6 col-12">
+    <div class="col-md-5 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Input Path </label>
             <input type="text" id="txtUpdateConfigXmlGeneratorInputPath" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
         </div>
     </div>
 
-    
+    <div class="col-md-1 col-12">
+    </div>
+
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Source </label>
-            <input type="text" id="txtUpdateConfigXmlGeneratorOutputSource" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlGeneratorOutputSource"></select>
         </div>
     </div>
 
@@ -52,11 +69,14 @@
     <div class="col-md-3 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Type </label>
-            <input type="text" id="txtUpdateConfigXmlGeneratorOutputType" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
+            <select disabled class="select2 form-control" id="ddlUpdateConfigXmlGeneratorOutputType">
+                <option value="FOLDER">Folder</option>
+                <option value="FTP">FTP</option>
+            </select>
         </div>
     </div>
 
-    <div class="col-md-6 col-12">
+    <div class="col-md-5 col-12">
         <div class="form-group">
             <label><spa class="text-danger">* </spa> Output Path </label>
             <input type="text" id="txtUpdateConfigXmlGeneratorOutputPath" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">
@@ -64,6 +84,18 @@
     </div>
 
     <div class="col-md-12 col-12">
+        <div class="form-group">
+            <div class="custom-control custom-control-primary custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigXmlGeneratorIsOnline" onclick="onChangeOnlineUpdate();" />
+                <label class="custom-control-label" for="toggleUpdateConfigXmlGeneratorIsOnline">Online</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-12">
+    </div>
+
+    <div class="col-md-11 col-12">
         <div class="form-group">
             <label>Online Record Number</label>
             <input type="text" id="txtUpdateConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateUpdateConfigXmlGenerator()" class="form-control">

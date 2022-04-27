@@ -448,6 +448,10 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
+
+            $("#render-profileSellOrg-update").empty();
+            $("#render-profileSellOrg-update").load("@Url.Action("Index", "ProfileSellOrg")");
+
             $.unblockUI();
         }, 500);
     }
