@@ -1,4 +1,48 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateConfigPdfSign" onclick="callModalInsertConfigPdfSign();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+@*                <a id="btnExportConfigPdfSign" onclick="ExportConfigPdfSign()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>*@
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-hover-animation" id="tbConfigPdfSignMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Corporate ID</th>
+                                <th>ULX</th>
+                                <th>ULY</th>
+                                <th>Font Size</th>
+                                <th>Page</th>
+                                <th>Online Record Number</th>
+                                <th>Input Type</th>
+                                <th>Input Path</th>
+                                <th>Output Type</th>
+                                <th>Output Path</th>
+                                <th>HSM Serial</th>
+                                <th>Key Alias</th>
+                                <th>IsActive</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

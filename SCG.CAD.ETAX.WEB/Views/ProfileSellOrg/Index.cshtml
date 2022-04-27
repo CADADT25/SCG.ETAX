@@ -42,6 +42,10 @@
 
         if(setCompanyCode == null || setCompanyCode == ''){
             setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }  
         }
 
         var table = $("#tbProfileSellOrgMain").DataTable({
@@ -148,7 +152,15 @@
 
     function callModalInsertProfileSellOrg(){
 
-        var setCompanyCode = $("#companyCodeState").text();
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
 
         document.getElementById('txtInsertProfileSellOrgCompanyCode').value = setCompanyCode;
 
@@ -436,6 +448,10 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
+
+            $("#render-profileSellOrg-update").empty();
+            $("#render-profileSellOrg-update").load("@Url.Action("Index", "ProfileSellOrg")");
+
             $.unblockUI();
         }, 500);
     }

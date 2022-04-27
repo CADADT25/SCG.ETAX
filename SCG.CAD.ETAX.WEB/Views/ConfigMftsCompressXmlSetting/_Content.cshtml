@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateConfigMftsCompressXmlSetting" onclick="callModalInsertConfigMftsCompressXmlSetting();" data-toggle="modal" data-target="#modalCreateConfigMftsCompressXmlSetting" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+@*                <a id="btnExportData" onclick="ExportConfigMftsCompressXmlSetting()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>*@
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped hover table-hover-animation" id="tbConfigMftsCompressXmlSettingMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Company Code</th>
+                                <th>Source Name</th>
+                                <th>Output Folder</th>
+                                <th>IsActive</th>
+                                <th></th>
+                                @*                                <th></th>
+
+                                *@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -43,7 +43,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("date")
                     .HasColumnName("billingDate");
 
-                entity.Property(e => e.BillingNumber).HasColumnName("billingNumber");
+                entity.Property(e => e.BillingNumber)
+                    .HasMaxLength(255)
+                    .HasColumnName("billingNumber");
 
                 entity.Property(e => e.BillingYear).HasColumnName("billingYear");
 

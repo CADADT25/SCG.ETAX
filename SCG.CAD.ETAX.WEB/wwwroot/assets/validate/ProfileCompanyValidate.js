@@ -20,7 +20,13 @@
     else {
         $('#txtInsertProfileCompanyNameEn').removeClass('form-control is-valid').addClass('form-control is-invalid');
     }
-    if ($('#txtInsertProfileCompanyTaxNumber').val() != '') {
+
+    var getCountCompanyTaxNumber = $('#txtInsertProfileCompanyTaxNumber').val();
+
+    var CheckTaxCount = getCountCompanyTaxNumber.length;
+
+
+    if (CheckTaxCount >= 13) {
         $('#txtInsertProfileCompanyTaxNumber').removeClass('form-control is-invalid').addClass('form-control is-valid');
     }
     else {

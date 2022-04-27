@@ -39,11 +39,15 @@
 
         if(setCompanyCode == null || setCompanyCode == ''){
             setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }
         }
 
         var table = $("#tbProfileCertificateMain").DataTable({
 
-            "scrollY": false,
+            "scrollY": true,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
@@ -82,22 +86,22 @@
                     data: "companyName",
                     width: "20%"
                 },
-                {
-                    data: "companyCertificateData",
-                    width: "20%"
-                },
-                {
-                    data: "companyCertificateSerial",
-                    width: "20%"
-                },
-                {
-                    data: "companyCertificateKeyAlias",
-                    width: "20%"
-                },
-                {
-                    data: "companyCertificateStartDate",
-                    width: "20%"
-                },
+                //{
+                //    data: "companyCertificateData",
+                //    width: "20%"
+                //},
+                //{
+                //    data: "companyCertificateSerial",
+                //    width: "20%"
+                //},
+                //{
+                //    data: "companyCertificateKeyAlias",
+                //    width: "20%"
+                //},
+                //{
+                //    data: "companyCertificateStartDate",
+                //    width: "20%"
+                //},
                 {
                     data: "companyCertificateEndDate",
                     width: "20%"
@@ -168,8 +172,30 @@
 
     function callModalInsertProfileCertificate(){
 
-        document.getElementById('txtInsertProfileCertificatTaxNumber').value = $('#txtInsertProfileCompanyTaxNumber').val();
-        document.getElementById('txtInsertProfileCertificateCompanyName').value = $('#txtInsertProfileCompanyNameTh').val();
+
+        var setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+        if(setTaxNumber == null || setTaxNumber == ''){
+            setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+            if(setTaxNumber == null || setTaxNumber == ''){
+                setTaxNumber = $("#txtInsertProfileCompanyTaxNumber").val();
+            }   
+        }
+
+        var setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+        if(setCompanyName == null || setCompanyName == ''){
+            setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+            if(setCompanyName == null || setCompanyName == ''){
+                setCompanyName = $("#txtInsertProfileCompanyNameTh").val();
+            }   
+        }
+
+
+        document.getElementById('txtInsertProfileCertificatTaxNumber').value = setTaxNumber;
+        document.getElementById('txtInsertProfileCertificateCompanyName').value = setCompanyName;
         
         $("#modalCreateProfileCertificate").modal('show');
 
@@ -505,6 +531,10 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
+
+            $("#render-profileCertificate-update").empty();
+            $("#render-profileCertificate-update").load("@Url.Action("Index", "ProfileCertificate")");
+
             $.unblockUI();
         }, 500);
     }

@@ -27,7 +27,6 @@
     </div>
 </div>
 
-<!-- Basic multiple Column Form section start -->
 <section id="section-ProfileCompany-create">
     <div class="row">
         <div class="col-12">
@@ -42,9 +41,7 @@
         </div>
     </div>
 </section>
-<!-- Basic Floating Label Form section end -->
 
-<!-- Basic multiple Column Form section start -->
 <section id="section-profileSeller-create">
     <div class="row">
         <div class="col-12">
@@ -59,11 +56,9 @@
         </div>
     </div>
 </section>
-<!-- Basic Floating Label Form section end -->
 
 
 
-<!-- Basic multiple Column Form section start -->
 <section id="section-profileSellOrg-create">
     <div class="row">
         <div class="col-12">
@@ -78,9 +73,7 @@
         </div>
     </div>
 </section>
-<!-- Basic Floating Label Form section end -->
 
-<!-- Basic multiple Column Form section start -->
 <section id="section-profileCertificate-create">
     <div class="row">
         <div class="col-12">
@@ -95,4 +88,130 @@
         </div>
     </div>
 </section>
-<!-- Basic Floating Label Form section end -->
+
+
+<section id="section-configXmlGenerator-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Xml Generator </h4>
+                </div>
+                <div class="card-body" id="render-configXmlGenerator-update">
+                    @await Html.PartialAsync("~/Views/ConfigXmlGenerator/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-configXmlSign-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Xml Sign </h4>
+                </div>
+                <div class="card-body" id="render-configXmlSign-update">
+                    @await Html.PartialAsync("~/Views/ConfigXmlSign/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="section-configPdfSign-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Pdf Sign </h4>
+                </div>
+                <div class="card-body" id="render-configPdfSign-update">
+                    @await Html.PartialAsync("~/Views/ConfigPdfSign/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="section-configMftsEmailSetting-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Mfts Email Setting </h4>
+                </div>
+                <div class="card-body" id="render-configMftsEmailSetting-update">
+                    @await Html.PartialAsync("~/Views/ConfigMftsEmailSetting/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="section-configMftsCompressXmlSetting-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Mfts Compress Xml Setting </h4>
+                </div>
+                <div class="card-body" id="render-configMftsCompressXmlSetting-update">
+                    @await Html.PartialAsync("~/Views/ConfigMftsCompressXmlSetting/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="section-configMftsCompressPrintSetting-update">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Config Mfts Compress Print Setting </h4>
+                </div>
+                <div class="card-body" id="render-configMftsCompressPrintSetting-update">
+                    @await Html.PartialAsync("~/Views/ConfigMftsCompressPrintSetting/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="section-configMftsIndexGenerationSetting-update">
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Index Generation Input ( MFTS ) </h4>
+                </div>
+                <div class="card-body" id="render-configMftsIndexGenerationSettingInput-update">
+                    @await Html.PartialAsync("~/Views/configMftsIndexGenerationSettingInput/Index.cshtml")
+                </div>
+            </div>
+        </div>
+
+
+         <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"> Index Generation Output ( MFTS ) </h4>
+                </div>
+                <div class="card-body" id="render-configMftsIndexGenerationSettingOutput-update">
+                    @await Html.PartialAsync("~/Views/configMftsIndexGenerationSettingOutput/Index.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

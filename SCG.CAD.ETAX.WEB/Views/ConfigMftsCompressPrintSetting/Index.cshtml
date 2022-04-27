@@ -1,0 +1,387 @@
+﻿@{
+    ViewData["Title"] = "ConfigMftsCompressPrintSetting";
+    Layout = null;
+}
+
+
+@await Html.PartialAsync("~/Views/ConfigMftsCompressPrintSetting/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var setCompanyCode = $("#companyCodeState").text();
+
+        setTimeout(function(){
+            RenderConfigMftsCompressPrintSetting(setCompanyCode);
+        }, 1200);
+
+    });
+
+
+
+    function RenderConfigMftsCompressPrintSetting(setCompanyCode){
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
+
+        var table = $("#tbConfigMftsCompressPrintSettingMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigMftsCompressPrintSetting")",
+                type: "POST",
+                data: { companyCode : setCompanyCode },
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "configMftsCompressPrintSettingNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "ConfigMftsCompressPrintSettingNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "configMftsCompressPrintSettingCompanyCode",
+                    width: "20%"
+                },
+                {
+                    data: "configMftsCompressPrintSettingOutputPdf",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        EditConfigMftsCompressPrintSetting(table);
+        DeleteConfigMftsCompressPrintSetting(table);
+    }
+
+
+    function fnInsertCancelConfigMftsCompressPrintSetting(){
+
+        $("#modalCreateConfigMftsCompressPrintSetting").modal('hide');
+    }
+
+    function fnUpdateCancelConfigMftsCompressPrintSetting(){
+
+        $("#modalUpdateConfigMftsCompressPrintSetting").modal('hide');
+    }
+
+    function callModalInsertConfigMftsCompressPrintSetting(){
+
+        var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+        if(setCompanyCode == null || setCompanyCode == ''){
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeState").text();
+            }   
+        }
+
+        document.getElementById('txtInsertConfigMftsCompressPrintSettingCompanyCode').value = setCompanyCode;
+
+        $("#modalCreateConfigMftsCompressPrintSetting").modal('show');
+    }
+
+     function fnInsertConfigMftsCompressPrintSetting(){
+
+        if ($('#txtInsertConfigMftsCompressPrintSettingCompanyCode').val() != '' && $('#txtInsertConfigMftsCompressPrintSettingFolder').val() != '') {
+            callConfigMftsCompressPrintSettingInsertController();
+        }
+        else {
+            validateInsertConfigMftsCompressPrintSetting();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function fnUpdateConfigMftsCompressPrintSetting(){
+        if ($('#txtUpdateConfigMftsCompressPrintSettingCompanyCode').val() != '' && $('#txtUpdateConfigMftsCompressPrintSettingFolder').val() != '') {
+            callConfigMftsCompressPrintSettingUpdateController();
+        }
+        else {
+            validateUpdateConfigMftsCompressPrintSetting();
+
+            fnToastrInputDataFail();
+        }
+    }
+
+    function EditConfigMftsCompressPrintSetting(table){
+
+        $('#tbConfigMftsCompressPrintSettingMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callConfigMftsCompressPrintSettingGetDetailController(getPK);
+        });
+    }
+
+    function DeleteConfigMftsCompressPrintSetting(table){
+
+        $('#tbConfigMftsCompressPrintSettingMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callConfigMftsCompressPrintSettingDeleteController(getPK);
+                        callConfigMftsCompressPrintSettingIndex();
+                      }
+                    })
+        });
+    }
+
+    function ExportConfigMftsCompressPrintSetting(){
+
+        $.blockUI();
+
+        callConfigMftsCompressPrintSettingExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callConfigMftsCompressPrintSettingGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsCompressPrintSetting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateConfigMftsCompressPrintSettingNo').value = data.ConfigMftsCompressPrintSettingNo;
+                document.getElementById('txtUpdateConfigMftsCompressPrintSettingCompanyCode').value = data.ConfigMftsCompressPrintSettingCompanyCode;
+                document.getElementById('txtUpdateConfigMftsCompressPrintSettingFolder').value = data.ConfigMftsCompressPrintSettingOutputPdf;
+
+
+                if(data.Isactive == 1){
+                    document.getElementById("toggleInsertConfigMftsCompressPrintSettingIsActive").checked = true;
+                }
+                else{
+                    document.getElementById("toggleUpdateConfigMftsCompressPrintSettingIsActive").checked = false;
+                }
+
+                $("#modalUpdateConfigMftsCompressPrintSetting").modal('show');
+
+            }
+        });
+    }
+
+    function callConfigMftsCompressPrintSettingInsertController(){
+
+        var IsActive = 1;
+
+
+        if($('#toggleInsertConfigMftsCompressPrintSettingIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.configMftsCompressPrintSettingCompanyCode = $('#txtInsertConfigMftsCompressPrintSettingCompanyCode').val();
+        model.configMftsCompressPrintSettingOutputPdf = $('#txtInsertConfigMftsCompressPrintSettingFolder').val();
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ConfigMftsCompressPrintSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    document.getElementById('txtInsertConfigMftsCompressPrintSettingCompanyCode').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressPrintSettingFolder').value = '';
+
+
+                    $("#modalInsertConfigMftsCompressPrintSetting").modal('hide');
+
+                    callConfigMftsCompressPrintSettingIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsCompressPrintSettingUpdateController(){
+
+        var IsActive = 1;
+
+        if($('#toggleUpdateConfigMftsCompressPrintSettingIsActive').prop('checked')){
+            IsActive = 1;
+        }
+        else{
+            IsActive = 0;
+        }
+
+        var model = new Object();
+
+        model.configMftsCompressPrintSettingNo = $('#txtUpdateConfigMftsCompressPrintSettingNo').val();
+        model.configMftsCompressPrintSettingCompanyCode = $('#txtUpdateConfigMftsCompressPrintSettingCompanyCode').val();
+        model.configMftsCompressPrintSettingOutputPdf = $('#txtUpdateConfigMftsCompressPrintSettingFolder').val();
+
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ConfigMftsCompressPrintSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    fnSweetAlert_SaveSuccess();
+
+                    $("#modalUpdateConfigMftsCompressPrintSetting").modal('hide');
+
+                    callConfigMftsCompressPrintSettingIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigMftsCompressPrintSettingDeleteController(getPK){
+
+        var model = new Object();
+
+        model.configMftsCompressPrintSettingNo = getPK;
+
+        model.configMftsCompressPrintSettingCompanyCode = '';
+        model.configMftsCompressPrintSettingOutputPdf = '';
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete", "ConfigMftsCompressPrintSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function () {
+                    fnSweetAlert_DeleteSuccess();
+                }
+        });
+    }
+
+    function callConfigMftsCompressPrintSettingIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-configMftsCompressPrintSetting-create").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+
+            $("#render-configMftsCompressPrintSetting-update").empty();
+            $("#render-configMftsCompressPrintSetting-update").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>
+
+
+
+
+
+

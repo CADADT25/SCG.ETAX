@@ -8,6 +8,7 @@ namespace SCG.CAD.ETAX.API.Controllers
     [ApiController]
     public class RdDocumentController : ControllerBase
     {
+
         private readonly IRdDocumentRepository repo;
         public RdDocumentController()
         {
@@ -60,5 +61,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+
     }
 }

@@ -94,6 +94,10 @@
 
             if(setCompanyCode == null || setCompanyCode == ''){
                 setCompanyCode = $("#companyCodeStateUpdate").text();
+
+                if(setCompanyCode == null || setCompanyCode == ''){
+                    setCompanyCode = $("#companyCodeState").text();
+                }   
             }
 
             var table = $("#tbProfileSellerMain").DataTable({
@@ -271,7 +275,6 @@
                 $("#ddlInsertProfileSellerDistrict").empty();
                 $("#ddlInsertProfileSellerSubDistrict").empty();
                 document.getElementsByName('txtInsertProfileSellerEmail').text = '';
-                $("#ddlInsertProfileSellerEmailTemplate").empty();
 
                 $("#modalCreateProfileSeller").modal('hide');
         }
@@ -286,18 +289,26 @@
                 $("#ddlUpdateProfileSellerDistrict").empty();
                 $("#ddlUpdateProfileSellerSubDistrict").empty();
                 document.getElementsByName('txtUpdateProfileSellerEmail').text = '';
-                $("#ddlUpdateProfileSellerEmailTemplate").empty();
+
 
                 $("#modalUpdateProfileSeller").modal('hide');
         }
 
         function callModalInsertProfileSeller(){
 
+            var setCompanyCode = $("#companyCodeStateUpdate").text();
+
+            if(setCompanyCode == null || setCompanyCode == ''){
+                setCompanyCode = $("#companyCodeStateUpdate").text();
+
+                if(setCompanyCode == null || setCompanyCode == ''){
+                    setCompanyCode = $("#companyCodeState").text();
+                }   
+            }
+
             fnDropdownProfileSellerProvince();
 
-            $('#companyCodeState').text($("#txtInsertProfileCompanyCode").val());
-
-            document.getElementById('txtInsertProfileSellerCompanyCode').value = $('#companyCodeState').text();
+            document.getElementById('txtInsertProfileSellerCompanyCode').value = setCompanyCode;
 
             $("#modalCreateProfileSeller").modal('show');
 
@@ -309,15 +320,13 @@
             var GetProvince = $('#ddlInsertProfileSellerProvince').val();
             var GetDistrict = $('#ddlInsertProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlInsertProfileSellerSubDistrict').val();
-            var GetEmailTemplate = $('#ddlInsertProfileSellerEmailTemplate').val();
             var GetBranchCode = $('#txtInsertProfileSellerBranch').val();
 
             if ( GetCompanyCode != '0' &&
             GetBranchCode != '' &&
             GetProvince != '0' &&
             GetDistrict != '0' &&
-            GetSubDistrict != '0' &&
-            GetEmailTemplate != '0')
+            GetSubDistrict != '0')
             {
                 callProfileSellerInsertController();
             }
@@ -334,15 +343,13 @@
             var GetProvince = $('#ddlUpdateProfileSellerProvince').val();
             var GetDistrict = $('#ddlUpdateProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlUpdateProfileSellerSubDistrict').val();
-            var GetEmailTemplate = $('#ddlUpdateProfileSellerEmailTemplate').val();
             var GetBranchCode = $('#ddlUpdateProfileSellerBranch').val();
 
             if ( GetCompanyCode != '0' &&
             GetBranchCode != '' &&
             GetProvince != '0' &&
             GetDistrict != '0' &&
-            GetSubDistrict != '0' &&
-            GetEmailTemplate != '0')
+            GetSubDistrict != '0')
             {
                 callProfileSellerUpdateController();
             }
@@ -410,6 +417,7 @@
 
         function callProfileSellerGetDetailController(getPK){
 
+            
 
             $.ajax({
                 type: "GET",
@@ -441,11 +449,6 @@
                     var iNum = parseInt(data.Province);
 
 
-
-                    //$("#ddlUpdateProfileSellerProvince").val(data.Province);
-
-                    //$("#ddlUpdateProfileSellerProvince option:selected").text();
-
                     $('#ddlUpdateProfileSellerProvince').val(data.Province);
                     $('#ddlUpdateProfileSellerProvince').trigger('change');
 
@@ -457,21 +460,7 @@
 
 
 
-
-
-                    //fnDropdownProfileSellerDistrict(data.Province);
-
-                    //$("#ddlUpdateProfileSellerDistrict").select2("val", data.District);
-
-                    //fnDropdownProfileSellerSubDistrict(data.District);
-
-                    //$("#ddlUpdateProfileSellerSubDistrict").select2("val", data.SubDistrict);
-
-
-                    $("#ddlUpdateProfileSellerEmailTemplate").select2("val", data.EmailTemplateNo);
-
-                    $("#txtUpdateProfileSellerEmail").select2("val", data.SellerEmail);
-
+                    document.getElementById('txtUpdateProfileSellerEmail').value = data.SellerEmail;
 
 
 
@@ -514,8 +503,7 @@
             model.Road = $('#txtInsertProfileSellerRoad').val();
             model.Building = $('#txtInsertProfileSellerBuilding').val();
             model.Addressnumber = $('#txtInsertProfileSellerAddressNo').val();
-            model.SellerEmail = myJSON;
-            model.EmailTemplateNo = $('#ddlInsertProfileSellerEmailTemplate').val();
+            model.SellerEmail = $('#txtInsertProfileSellerEmail').val();
             model.CreateBy = $("#leftSideEmail").text();
             model.CreateDate = new Date();
             model.UpdateBy = $("#leftSideEmail").text();
@@ -549,7 +537,6 @@
                         $("#ddlInsertProfileSellerDistrict").empty();
                         $("#ddlInsertProfileSellerSubDistrict").empty();
                         document.getElementsByName('txtInsertProfileSellerEmail').value = "";
-                        $("select[name=ddlInsertProfileSellerEmailTemplate]").empty()
 
                         $("#modalCreateProfileSeller").modal('hide');
 
@@ -567,13 +554,10 @@
 
             var IsActive = 1;
 
-            var getToggle = $('#toggleUpdateProfileSeller-event').text();
-
-            if(getToggle.includes("true")){
+            if($('#toggleUpdateProfileSeller').prop('checked')){
                 IsActive = 1;
             }
-            else
-            {
+            else{
                 IsActive = 0;
             }
 
@@ -588,8 +572,7 @@
             model.Road = $('#txtUpdateProfileSellerRoad').val();
             model.Building = $('#txtUpdateProfileSellerBuilding').val();
             model.Addressnumber = $('#txtUpdateProfileSellerAddressNo').val();
-            model.SellerEmail = myJSON;
-            model.EmailTemplateNo = $('#ddlInsertProfileSellerEmailTemplate').val();
+            model.SellerEmail = $('#txtUpdateProfileSellerEmail').val();;
             model.CreateBy = $("#leftSideEmail").text();
             model.CreateDate = new Date();
             model.UpdateBy = $("#leftSideEmail").text();
@@ -613,18 +596,6 @@
 
                         fnSweetAlert_SaveSuccess();
 
-                        $("#txtUpdateProfileSellerCompanyCode").val() = "";
-                        $("#ddlUpdateProfileSellerBranch").empty();
-                        document.getElementById('txtUpdateProfileSellerAddressNo').value = "";
-                        document.getElementById('txtUpdateProfileSellerBuilding').value = "";
-                        document.getElementById('txtUpdateProfileSellerRoad').value = "";
-                        $("#ddlUpdateProfileSellerProvince").empty();
-                        $("#ddlUpdateProfileSellerDistrict").empty();
-                        $("#ddlUpdateProfileSellerSubDistrict").empty();
-                        document.getElementById('txtUpdateProfileSellerEmail').value = "";
-                        $("#ddlUpdateProfileSellerEmailTemplate").empty();
-
-                        $("#modalUpdateProfileSeller").modal('hide');
                         callProfileSellerIndex();
                     }
                     else{
@@ -649,7 +620,6 @@
             model.Building = $('#txtUpdateProfileSellerBuilding').val();
             model.Addressnumber = $('#txtUpdateProfileSellerAddressNo').val();
             model.SellerEmail = $('#txtUpdateProfileSellerEmail').val();
-            model.EmailTemplateNo = $('#ddlUpdateProfileSellerEmailTemplate').val();
             model.CreateBy = $("#leftSideEmail").text();
             model.CreateDate = new Date();
             model.UpdateBy = $("#leftSideEmail").text();
@@ -703,6 +673,10 @@
             setTimeout(function(){
                 $.blockUI();
                 $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
+
+                $("#render-profileSeller-update").empty();
+                $("#render-profileSeller-update").load("@Url.Action("Index", "ProfileSeller")");
+
                 $.unblockUI();
             }, 500);
         }

@@ -67,7 +67,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string companyCode)
         {
             Response resp = new Response();
 
@@ -80,6 +80,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ConfigXmlGenerator>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x => x.ConfigXmlGeneratorCompanyCode == companyCode).ToList();
+
                 }
                 else
                 {

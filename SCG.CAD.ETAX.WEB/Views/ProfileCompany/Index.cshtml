@@ -82,10 +82,10 @@
                     data: "companyNameEn",
                     width: "15%"
                 },
-                {
-                    data: "certificateProfileNo",
-                    width: "10%"
-                },
+                //{
+                //    data: "certificateProfileNo",
+                //    width: "10%"
+                //},
                 {
                     data: "isEbill",
                     width: "5%",
@@ -106,13 +106,6 @@
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
                     defaultContent: '<i class="pointer fas fa-pen"/>',
-                    orderable: false,
-                    width: "2%"
-                },
-                {
-                    data: null,
-                    className: "dt-center text-center text-default",
-                    defaultContent: '<i class="pointer fas fa-eye"/>',
                     orderable: false,
                     width: "2%"
                 }
@@ -197,7 +190,9 @@
 
         var Certificate = $('#ddlInsertProfileCompanyCertificate').val();
 
-        if ( Certificate != '0' &&
+        var TaxNumber = $('#txtInsertProfileCompanyTaxNumber').val();
+
+        if ( Certificate != '0' && TaxNumber.length == 13 &&
         $('#txtInsertProfileCompanyCode').val() != '' &&
         $('#txtInsertProfileCompanyNameTh').val() != '' &&
         $('#txtInsertProfileCompanyNameEn').val() != '' &&
@@ -219,8 +214,10 @@
 
         var Certificate = $('#ddlUpdateProfileCompanyCertificate').val();
 
+        var TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
 
-        if ( Certificate != '0' &&
+
+        if ( Certificate != '0' && TaxNumber.length == 13 &&
         $('#txtUpdateProfileCompanyCode').val() != '' &&
         $('#txtUpdateProfileCompanyNameTh').val() != '' &&
         $('#txtUpdateProfileCompanyNameEn').val() != '' &&
@@ -405,13 +402,23 @@
                     document.getElementById("actionSaveCompanyProfile").hidden = true;
 
 
-                     $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
-                     $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
-                     $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
-                     $("#render-configXmlGenerator-create").load("@Url.Action("Index", "ConfigXmlGenerator")");
-                     $("#render-configXmlSign-create").load("@Url.Action("Index", "ConfigXmlSign")");
+                    $("#render-profileSeller-create").load("@Url.Action("Index", "ProfileSeller")");
+                    $("#render-profileSellOrg-create").load("@Url.Action("Index", "ProfileSellOrg")");
+                    $("#render-profileCertificate-create").load("@Url.Action("Index", "ProfileCertificate")");
+                    $("#render-configXmlGenerator-create").load("@Url.Action("Index", "ConfigXmlGenerator")");
+                    $("#render-configXmlSign-create").load("@Url.Action("Index", "ConfigXmlSign")");
+                    $("#render-configPdfSign-create").load("@Url.Action("Index", "ConfigPdfSign")");
 
-                     $('#companyCodeState').text($("#txtInsertProfileCompanyCode").val());
+
+                    $("#render-ConfigMftsEmailSetting-create").load("@Url.Action("Index", "ConfigMftsEmailSetting")");
+                    $("#render-ConfigMftsCompressXmlSetting-create").load("@Url.Action("Index", "ConfigMftsCompressXmlSetting")");
+                    $("#render-ConfigMftsCompressPrintSetting-create").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
+                     
+                     
+                    $("#render-configMftsIndexGenerationSettingInput-create").load("@Url.Action("Index", "configMftsIndexGenerationSettingInput")");
+                    $("#render-configMftsIndexGenerationSettingOutput-create").load("@Url.Action("Index", "configMftsIndexGenerationSettingOutput")");
+
+                    $('#companyCodeState').text($("#txtInsertProfileCompanyCode").val());
                 }
                 else{
 
