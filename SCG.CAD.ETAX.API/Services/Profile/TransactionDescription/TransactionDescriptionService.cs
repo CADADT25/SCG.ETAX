@@ -70,7 +70,7 @@
 
             try
             {
-                var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == billingNo).ToList();
+                var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == Convert.ToString(billingNo)).ToList();
 
                 if (getList.Count > 0)
                 {
