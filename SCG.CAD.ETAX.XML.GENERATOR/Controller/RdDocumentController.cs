@@ -15,7 +15,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.Controller
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/DocumentCode/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
 
                 if (task.STATUS)
                 {

@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.Models
         public ApplicableHeaderTradeAgreement applicableHeaderTradeAgreement { get; set; }
         public ApplicableHeaderTradeDelivery applicableHeaderTradeDelivery { get; set; }
         public ApplicableHeaderTradeSettlement applicableHeaderTradeSettlement { get; set; }
-        public IncludedSupplyChainTradeLineItem includedSupplyChainTradeLineItem { get; set; }
+        public List<IncludedSupplyChainTradeLineItem> includedSupplyChainTradeLineItem { get; set; }
     }
 
     public class ApplicableHeaderTradeDelivery
@@ -320,7 +320,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.Models
     public class SpecifiedLineTradeSettlement
     {
         public ApplicableTradeTax applicableTradeTax { get; set; }
-        public List<SpecifiedTradeAllowanceCharge> specifiedTradeAllowanceCharge { get; set; }
+        public SpecifiedTradeAllowanceCharge specifiedTradeAllowanceCharge { get; set; }
         public SpecifiedTradeSettlementLineMonetarySummation specifiedTradeSettlementLineMonetarySummation { get; set; }
     }
     public class SpecifiedTradeAllowanceCharge
@@ -350,6 +350,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.Models
 
     public class TextFileSchematic
     {
+        public string pathfile { get; set; }
         public string HEADER_FLAG { get; set; }
         public string FI_DOC_TYPE { get; set; }
         public string FISCAL_YEAR { get; set; }

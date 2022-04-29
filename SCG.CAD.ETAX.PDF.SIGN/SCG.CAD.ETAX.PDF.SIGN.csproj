@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SCG.CAD.ETAX.API\SCG.CAD.ETAX.API.csproj" />
     <ProjectReference Include="..\SCG.CAD.ETAX.DAL\SCG.CAD.ETAX.DAL.csproj" />
     <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />

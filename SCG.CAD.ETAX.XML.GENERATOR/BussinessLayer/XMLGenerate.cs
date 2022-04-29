@@ -15,26 +15,99 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
     public class XMLGenerate
     {
+        ConfigXMLGeneratorController configXMLGeneratorController = new ConfigXMLGeneratorController();
+        TaxCodeController taxCodeController = new TaxCodeController();
+        DocumentCodeController documentCodeController = new DocumentCodeController();
+        //ErpDocumentController erpDocumentController = new ErpDocumentController();
+        //RdDocumentController rdDocumentController = new RdDocumentController();
+        ProfileController profileController = new ProfileController();
+        TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
+        ProfileBranchController profileBranchController = new ProfileBranchController();
+        ProductUnitController productUnitController = new ProductUnitController();
+
+
+        List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
+        List<TaxCode> taxCode = new List<TaxCode>();
+        List<DocumentCode> documentCode = new List<DocumentCode>();
+        //List<ErpDocument> erpDocument = new List<ErpDocument>();
+        //List<RdDocument> rdDocument = new List<RdDocument>();
+        List<ProfileCompany> profileCompany = new List<ProfileCompany>();
+        List<ProfileSeller> profileSeller = new List<ProfileSeller>();
+        List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
+        List<ProfileBranch> profileBranches = new List<ProfileBranch>();
+        List<ProductUnit> productUnit = new List<ProductUnit>();
+
         public void ReadXMLFile()
         {
             try
             {
+                int round = 0;
                 int row = 56;
+                GetDataFromDataBase();
                 var allTextFile = ReadTextFile();
-                var dt = ConvertToDataTable(allTextFile, row);
-                var cs = ConvertDTtoClass(dt);
                 List<string> errormessage = new List<string>();
+                TextFileValidate textFileValidate = new TextFileValidate();
+                foreach (var textfile in allTextFile)
+                {
+                    var filename = Path.GetFileName(textfile);
+                    Console.WriteLine("Start Read TextFile : " + textfile);
+                    var dt = ConvertToDataTable(textfile, row);
+                    Console.WriteLine("ConvertToDataTable success");
+                    var cs = ConvertDTtoClass(dt);
+                    Console.WriteLine("ConvertToClass success");
+                    round = 1;
+                    foreach (var classtextfile in cs)
+                    {
 
-                foreach (var dataxml in cs)
-                {
-                    InsertDataTransactionDescription(dataxml);
+                        var companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
+                        var configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
+                        Console.WriteLine("Start round : " + round);
+
+                        Console.WriteLine("Start Insert Data TransactionDescription");
+                        InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
+                        Console.WriteLine("End Insert Data TransactionDescription");
+
+                        Console.WriteLine("Start ValidateFileText");
+                        errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
+                        if (errormessage.Count > 0)
+                        {
+                            Console.WriteLine("ValidateFileText Fail");
+                            UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                            GenTextFileFail(filename, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "/Fail");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ValidateFileText Success");
+                            errormessage = new List<string>();
+
+                            var dataxml = ConvertClasstoXMLFormat(classtextfile);
+                            Console.WriteLine("ConvertClasstoXMLFormat success");
+
+                            Console.WriteLine("Start ValidateSchematron");
+                            errormessage.AddRange(ValidateSchematron(dataxml));
+                            Console.WriteLine("End ValidateSchematron");
+
+                            if (errormessage.Count > 0)
+                            {
+                                Console.WriteLine("ValidateSchematron Fail");
+                                UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                                GenTextFileFail(filename, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "/Fail");
+                            }
+
+                            Console.WriteLine("Start Gen XML File");
+                            string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                            var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "/Success/", xmlfilename, classtextfile.BILLING_NO);
+
+                            Console.WriteLine("Move Text File");
+                            MoveTextFile(textfile, configXML.ConfigXmlGeneratorOutputPath + "/Success/" + filename);
+                            Console.WriteLine("End Gen XML File");
+                        }
+                        round += 1;
+                    }
+                    Console.WriteLine("End Read TextFile : " + textfile);
+
                 }
-                var data = ConvertClasstoXMLFormat(cs);
-                foreach (var dataxml in data)
-                {
-                    errormessage.AddRange(ValidateSchematron(dataxml));
-                    var xml = GenXMLFromTemplate(dataxml, errormessage);
-                }
+
             }
             catch (Exception ex)
             {
@@ -61,16 +134,24 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
         }
 
-        public string[] ReadTextFile()
+        public List<string> ReadTextFile()
         {
-            string[] result = new string[0];
+            List<string> result = new List<string>();
+            string[] fullpath = new string[0];
+            string pathFolder = "";
+            List<string> listpath;
             try
             {
-                StringBuilder sb = new StringBuilder();
-                string pathFolder = @"D:\sign";
-                string fileType = "*.txt";
-                result = Directory.GetFiles(pathFolder, fileType);
-
+                //pathFolder = @"C:\Code_Dev\sign";
+                foreach (var path in configXMLGenerator)
+                {
+                    pathFolder = path.ConfigXmlGeneratorInputPath;
+                    string fileType = "*.txt";
+                    fullpath = Directory.GetFiles(pathFolder, fileType);
+                    listpath = fullpath.ToList();
+                    result.AddRange(listpath);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -79,33 +160,30 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public DataTable ConvertToDataTable(string[] filePath, int numberOfColumns)
+        public DataTable ConvertToDataTable(string filePath, int numberOfColumns)
         {
             DataTable tbl = new DataTable();
 
-            for (int col = 0; col < numberOfColumns; col++)
+            for (int col = 0; col < numberOfColumns + 1; col++)
                 tbl.Columns.Add(new DataColumn("Column" + (col + 1).ToString()));
 
+            string[] lines = System.IO.File.ReadAllLines(filePath);
 
-            foreach (string path in filePath)
+            foreach (string line in lines)
             {
-                string[] lines = System.IO.File.ReadAllLines(path);
-
-                foreach (string line in lines)
+                if (!string.IsNullOrEmpty(line))
                 {
-                    if (!string.IsNullOrEmpty(line))
+                    var separator = @"\|";
+                    var replateseparator = line.Replace(separator, "|");
+                    var cols = replateseparator.Split('|');
+                    DataRow dr = tbl.NewRow();
+                    for (int cIndex = 0; cIndex < cols.Count(); cIndex++)
                     {
-                        var separator = @"\|";
-                        var replateseparator = line.Replace(separator, "|");
-                        var cols = replateseparator.Split('|');
-                        DataRow dr = tbl.NewRow();
-                        for (int cIndex = 0; cIndex < cols.Count(); cIndex++)
-                        {
-                            dr[cIndex] = cols[cIndex];
-                        }
-
-                        tbl.Rows.Add(dr);
+                        dr[cIndex] = cols[cIndex];
                     }
+                    dr[numberOfColumns] = filePath;
+
+                    tbl.Rows.Add(dr);
                 }
             }
             return tbl;
@@ -186,6 +264,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         row.Number_Bill_to = dt.Rows[i][53].ToString();
                         row.Number_Payer = dt.Rows[i][54].ToString();
                         row.CORRECT_AMOUNT = dt.Rows[i][55].ToString();
+                        row.pathfile = dt.Rows[i][57].ToString();
                     }
                     else
                     {
@@ -241,161 +320,140 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public List<CrossIndustryInvoice> ConvertClasstoXMLFormat(List<TextFileSchematic> data)
+        public CrossIndustryInvoice ConvertClasstoXMLFormat(TextFileSchematic data)
         {
-            List<CrossIndustryInvoice> result = new List<CrossIndustryInvoice>();
+            CrossIndustryInvoice result = new CrossIndustryInvoice();
             try
             {
                 CrossIndustryInvoice xmldata;
                 ExchangedDocument exchangedDocument;
                 SupplyChainTradeTransaction supplyChainTradeTransaction;
                 IncludedSupplyChainTradeLineItem includedSupplyChainTradeLineItem;
-
-
-                TaxCodeController taxCodeController = new TaxCodeController();
-                DocumentCodeController documentCodeController = new DocumentCodeController();
-                ErpDocumentController erpDocumentController = new ErpDocumentController();
-                ProductUnitController productUnitController = new ProductUnitController();
-                RdDocumentController rdDocumentController = new RdDocumentController();
-                ProfileController profileController = new ProfileController();
-                List<TaxCode> taxCode = taxCodeController.List().Result;
-                List<DocumentCode> documentCode = documentCodeController.List().Result;
-                List<ErpDocument> erpDocument = erpDocumentController.List().Result;
-                List<ProductUnit> productUnit = productUnitController.List().Result;
-                List<RdDocument> rdDocument = rdDocumentController.List().Result;
-                List<ProfileCompany> profileCompany = profileController.ProfileCompanyList().Result;
-                List<ProfileSeller> profileSeller = profileController.ProfileSellerList().Result;
                 ProfileSeller profile = new ProfileSeller();
-
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
                 LogicTool Tool = new LogicTool();
                 string schemeID = "OTHR";
-                foreach (var item in data)
+                xmldata = new CrossIndustryInvoice();
+                supplyChainTradeTransaction = new SupplyChainTradeTransaction();
+                doccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == data.FI_DOC_TYPE);
+                profiledetail = profileCompany.FirstOrDefault(x => x.TaxNumber == data.SELLER_TIN);
+
+                xmldata.exchangedDocumentContext = new ExchangedDocumentContext();
+                xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter = new GuidelineSpecifiedDocumentContextParameter();
+                xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeAgencyID = "ETDA";
+                xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id = "ER3-2560";
+                xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID = "v2.0";
+
+                xmldata.exchangedDocument = new ExchangedDocument();
+                xmldata.exchangedDocument.id = data.BILLING_NO ?? "";
+                xmldata.exchangedDocument.name = doccode.DocumentDescription ?? "";
+                xmldata.exchangedDocument.typeCode = doccode.DocumentCodeRd ?? "";
+                xmldata.exchangedDocument.issueDateTime = data.BILLING_DATE ?? "";
+                xmldata.exchangedDocument.createionDateTime = data.CREATE_DATE_TIME ?? "";
+
+                profile = profileController.ProfileAddress(profileSeller, profiledetail.CompanyCode, data.SELLER_BRANCH);
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement = new ApplicableHeaderTradeAgreement();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty = new SellerTradeParty();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.name = data.SELLER_NAME ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id = data.SELLER_TIN ?? "";
+                if ((!Tool.CheckDataRule(data.BUYER_TAXID, "") && !Tool.CheckDataRule(data.BUYER_BRANCH, "")) && (data.BUYER_TAXID.Length == 13 && data.BUYER_BRANCH.Length == 5))
                 {
-                    xmldata = new CrossIndustryInvoice();
-                    supplyChainTradeTransaction = new SupplyChainTradeTransaction();
-                    doccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == item.FI_DOC_TYPE);
-                    profiledetail = profileCompany.FirstOrDefault(x => x.TaxNumber == item.SELLER_TIN);
-
-                    xmldata.exchangedDocumentContext = new ExchangedDocumentContext();
-                    xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter = new GuidelineSpecifiedDocumentContextParameter();
-                    xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeAgencyID = "ETDA";
-                    xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id = "ER3-2560";
-                    xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID = "v2.0";
-
-                    xmldata.exchangedDocument = new ExchangedDocument();
-                    xmldata.exchangedDocument.id = item.BILLING_NO ?? "";
-                    xmldata.exchangedDocument.name = doccode.DocumentDescription ?? "";
-                    xmldata.exchangedDocument.typeCode = doccode.DocumentCodeRd ?? "";
-                    xmldata.exchangedDocument.issueDateTime = item.BILLING_DATE ?? "";
-                    xmldata.exchangedDocument.createionDateTime = item.CREATE_DATE_TIME ?? "";
-
-                    profile = profileController.ProfileAddress(profileSeller, profiledetail.CompanyCode, item.SELLER_BRANCH);
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement = new ApplicableHeaderTradeAgreement();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty = new SellerTradeParty();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.name = item.SELLER_NAME ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id = item.SELLER_TIN ?? "";
-                    if((!Tool.CheckDataRule(item.BUYER_TAXID,"") && !Tool.CheckDataRule(item.BUYER_BRANCH, "")) && (item.BUYER_TAXID.Length == 13 && item.BUYER_BRANCH.Length == 5))
-                    {
-                        schemeID = "TXID";
-                    }
-                    else if ((!Tool.CheckDataRule(item.BUYER_TAXID, "")) && (item.BUYER_TAXID.Length == 13 && Tool.CheckDataRule(item.BUYER_BRANCH, "")))
-                    {
-                        schemeID = "NIDN";
-                    }
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID = schemeID ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeagencyid = "RD";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress = new PostalTradeAddress();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.postcodeCode = item.SELLER_PSTLZ ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.streetName = profile.Road ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.cityName = profile.District ?? "";//code
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.citySubDivisionName = profile.SubDistrict ?? "";//code
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID = item.SELLER_LAND1 ?? "";//schemeID="3166-1 alpha-2"
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countrySubDivisionID = profile.Province ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.buildingNumber = item.SELLER_BUILD_NO ?? "";
-
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty = new BuyerTradeParty();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.name = item.SELLER_NAME ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id = item.BUYER_TAXID ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress = new PostalTradeAddress();
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode = item.BUYER_PSTLZ ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.line1 = item.BUYER_ADDRESS1 ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID = item.BUYER_LAND1 ?? "";
-
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery = new ApplicableHeaderTradeDelivery();
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty = new ShipToTradeParty();
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress = new PostalTradeAddress();
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.postcodeCode = "";
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.lineThree = item.BUYER_CITY;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.streetName = item.BUYER_SUBDIV;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.cityName = item.BUYER_LAND1;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.citySubDivisionName = item.BUYER_LAND1;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countryID = item.BUYER_PROVINCE;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countrySubDivisionID = item.BUYER_PROVINCE;
-                    //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.buildingNumber = item.BUYER_BUILD_NO;
-
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement();
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = item.DOC_CURRENCY ?? "";//listID="ISO 4217 3A"
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax = new ApplicableTradeTax();
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.Where(x => x.TaxCodeErp == item.TAX_CODE).Select(x => x.TaxCodeRd).FirstOrDefault() ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedRate = item.TAX_RATE ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.basisAmount = item.SALES_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedAmount = item.TAX_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation = new SpecifiedTradeSettlementHeaderMonetarySummation();
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.lineTotalAmount = item.SALES_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.allowanceTotalAmount = item.ALLOWANCE_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxBasisTotalAmount = item.TAX_BASIS_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxTotalAmount = item.TAX_TOTAL_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.grandTotalAmount = item.GRAND_TOTAL_AMOUNT ?? "";
-                    supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.chargeTotalAmount = item.CHARGE_AMOUNT ?? "";
-
-                    supplyChainTradeTransaction.includedSupplyChainTradeLineItem = new IncludedSupplyChainTradeLineItem();
-                    for (int i = 0; i < item.Item.Count; i++)
-                    {
-                        includedSupplyChainTradeLineItem = new IncludedSupplyChainTradeLineItem();
-                        includedSupplyChainTradeLineItem.associatedDocumentLineDocument = new AssociatedDocumentLineDocument();
-                        includedSupplyChainTradeLineItem.associatedDocumentLineDocument.lineID = (i + 1).ToString();
-                        includedSupplyChainTradeLineItem.specifiedTradeProduct = new SpecifiedTradeProduct();
-                        includedSupplyChainTradeLineItem.specifiedTradeProduct.name = item.Item[i].PRODUCT_NAME ?? "";
-                        //includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote = new InformationNote();
-                        //includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote.subject = "";//
-                        includedSupplyChainTradeLineItem.specifiedLineTradeAgreement = new SpecifiedLineTradeAgreement();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice = new GrossPriceProductTradePrice();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice.chargeAmount = item.Item[i].CHARGE_AMOUNT ?? "";
-                        includedSupplyChainTradeLineItem.specifiedLineTradeDelivery = new SpecifiedLineTradeDelivery();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity = new BilledQuantity();//format
-                        includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.unitCode = item.Item[i].QUANTITY ?? "";//format
-                        includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.billedQuantity = item.Item[i].SALES_UNT ?? "";//format
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement = new SpecifiedLineTradeSettlement();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge = new List<SpecifiedTradeAllowanceCharge>();
-                        var specifiedTradeAllowanceCharge = new SpecifiedTradeAllowanceCharge();
-                        if (Convert.ToDecimal(item.ALLOWANCE_AMOUNT) > 0)
-                        {
-                            specifiedTradeAllowanceCharge.chargeIndicator = "True";
-                        }
-                        else
-                        {
-                            specifiedTradeAllowanceCharge.chargeIndicator = "False";
-                        }
-                        specifiedTradeAllowanceCharge.actualAmount = item.ALLOWANCE_AMOUNT ?? "";
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.Add(specifiedTradeAllowanceCharge);
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation = new SpecifiedTradeSettlementLineMonetarySummation();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.taxTotalAmount = item.TAX_AMOUNT ?? "";
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.NetLineTotalAmount = item.TAX_BASIS_AMOUNT ?? "";
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount = new NetIncludingTaxesLineTotalAmount();
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.currencyID = item.Item[i].CURRENCY ?? "";//format
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.netIncludingTaxesLineTotalAmount = item.Item[i].GRAND_TOTAL_AMOUNT ?? "";//format
-                        //supplyChainTradeTransaction.includedSupplyChainTradeLineItem.Add(includedSupplyChainTradeLineItem);
-                        supplyChainTradeTransaction.includedSupplyChainTradeLineItem = includedSupplyChainTradeLineItem;
-                    }
-
-                    xmldata.supplyChainTradeTransaction = supplyChainTradeTransaction;
-                    result.Add(xmldata);
+                    schemeID = "TXID";
                 }
+                else if ((!Tool.CheckDataRule(data.BUYER_TAXID, "")) && (data.BUYER_TAXID.Length == 13 && Tool.CheckDataRule(data.BUYER_BRANCH, "")))
+                {
+                    schemeID = "NIDN";
+                }
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID = schemeID ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeagencyid = "RD";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress = new PostalTradeAddress();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.postcodeCode = data.SELLER_PSTLZ ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.streetName = profile.Road ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.cityName = profile.District ?? "";//code
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.citySubDivisionName = profile.SubDistrict ?? "";//code
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID = data.SELLER_LAND1 ?? "";//schemeID="3166-1 alpha-2"
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countrySubDivisionID = profile.Province ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.buildingNumber = profile.Addressnumber ?? "";
+
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty = new BuyerTradeParty();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.name = data.SELLER_NAME ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id = data.BUYER_TAXID ?? "" + data.BUYER_BRANCH ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress = new PostalTradeAddress();
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode = data.BUYER_PSTLZ ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.line1 = data.BUYER_ADDRESS1 ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID = data.BUYER_LAND1 ?? "";
+
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery = new ApplicableHeaderTradeDelivery();
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty = new ShipToTradeParty();
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress = new PostalTradeAddress();
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.postcodeCode = "";
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.lineThree = item.BUYER_CITY;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.streetName = item.BUYER_SUBDIV;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.cityName = item.BUYER_LAND1;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.citySubDivisionName = item.BUYER_LAND1;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countryID = item.BUYER_PROVINCE;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countrySubDivisionID = item.BUYER_PROVINCE;
+                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.buildingNumber = item.BUYER_BUILD_NO;
+
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement();
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = data.DOC_CURRENCY ?? "";//listID="ISO 4217 3A"
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax = new ApplicableTradeTax();
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.Where(x => x.TaxCodeErp == data.TAX_CODE).Select(x => x.TaxCodeRd).FirstOrDefault() ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedRate = data.TAX_RATE ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.basisAmount = data.SALES_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedAmount = data.TAX_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation = new SpecifiedTradeSettlementHeaderMonetarySummation();
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.lineTotalAmount = data.SALES_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.allowanceTotalAmount = data.ALLOWANCE_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxBasisTotalAmount = data.TAX_BASIS_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxTotalAmount = data.TAX_TOTAL_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.grandTotalAmount = data.GRAND_TOTAL_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.chargeTotalAmount = data.CHARGE_AMOUNT ?? "";
+
+                supplyChainTradeTransaction.includedSupplyChainTradeLineItem = new List<IncludedSupplyChainTradeLineItem>();
+                for (int i = 0; i < data.Item.Count; i++)
+                {
+                    includedSupplyChainTradeLineItem = new IncludedSupplyChainTradeLineItem();
+                    includedSupplyChainTradeLineItem.associatedDocumentLineDocument = new AssociatedDocumentLineDocument();
+                    includedSupplyChainTradeLineItem.associatedDocumentLineDocument.lineID = (i + 1).ToString();
+                    includedSupplyChainTradeLineItem.specifiedTradeProduct = new SpecifiedTradeProduct();
+                    includedSupplyChainTradeLineItem.specifiedTradeProduct.name = data.Item[i].PRODUCT_NAME ?? "";
+                    includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote = new InformationNote();
+                    includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote.subject = data.Item[i].PO_NUMBER ?? "";//
+                    includedSupplyChainTradeLineItem.specifiedLineTradeAgreement = new SpecifiedLineTradeAgreement();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice = new GrossPriceProductTradePrice();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice.chargeAmount = data.Item[i].CHARGE_AMOUNT ?? "";
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery = new SpecifiedLineTradeDelivery();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity = new BilledQuantity();//format
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.unitCode = data.Item[i].QUANTITY ?? "";//format
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.billedQuantity = data.Item[i].SALES_UNT ?? "";//format
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement = new SpecifiedLineTradeSettlement();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge = new SpecifiedTradeAllowanceCharge();
+                    if (Convert.ToDecimal(data.ALLOWANCE_AMOUNT) > 0)
+                    {
+                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "True";
+                    }
+                    else
+                    {
+                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "False";
+                    }
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.actualAmount = data.ALLOWANCE_AMOUNT ?? "";
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation = new SpecifiedTradeSettlementLineMonetarySummation();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.taxTotalAmount = data.TAX_AMOUNT ?? "";
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.NetLineTotalAmount = data.TAX_BASIS_AMOUNT ?? "";
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount = new NetIncludingTaxesLineTotalAmount();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.currencyID = data.Item[i].CURRENCY ?? "";//format
+                    includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.netIncludingTaxesLineTotalAmount = data.Item[i].GRAND_TOTAL_AMOUNT ?? "";//format
+                    supplyChainTradeTransaction.includedSupplyChainTradeLineItem.Add(includedSupplyChainTradeLineItem);
+                    //supplyChainTradeTransaction.includedSupplyChainTradeLineItem = includedSupplyChainTradeLineItem;
+                }
+
+                xmldata.supplyChainTradeTransaction = supplyChainTradeTransaction;
+                result = xmldata;
             }
             catch (Exception ex)
             {
@@ -404,24 +462,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool GenXMLFromTemplate(CrossIndustryInvoice data, List<string> errormessage)
+        public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno)
         {
             bool result = false;
-            string errorText = "";
-            string pathoutbound = @"D:\gen\gen.xml";
-            bool issuccess = false;
+            pathoutbound = @"D:\gen\gen.xml";
             XDocument xml = new XDocument();
+            List<string> errormessage = new List<string>();
             try
             {
-                //XmlSerializer serialiser = new XmlSerializer(typeof(CrossIndustryInvoice));
-                //// Create the TextWriter for the serialiser to use
-                //TextWriter filestream = new StreamWriter(@"C:\Code_Dev\output.xml");
-
-                TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
-                TransactionDescription dataTran = new TransactionDescription();
-                List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
-                Task<Response> res;
-
                 switch (data.exchangedDocument.typeCode)
                 {
                     case "388":
@@ -430,57 +478,20 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     case "T04":
                         var taxinvoice = new Template_TaxInvoice();
                         xml = taxinvoice.XMLtemplate(data);
-                        result = GenXMLFile(xml, pathoutbound);
+                        result = GenXMLFile(xml, pathoutbound + "/" + filename);
                         break;
                     case "80":
                     case "81":
                         var debitcreditnote = new Template_DebitCreditNote();
                         xml = debitcreditnote.XMLtemplate(data);
-                        result = GenXMLFile(xml, pathoutbound);
+                        result = GenXMLFile(xml, pathoutbound + "/" + filename);
                         break;
                     case "T01":
                     default:
                         break;
                 }
+                UpdateDataTransaction(errormessage, billingno);
 
-                listdatatransactionDescription = transactionDescription.List().Result;
-                dataTran = listdatatransactionDescription.FirstOrDefault(x => x.BillingNumber.ToString() == data.exchangedDocument.id);
-                if (errormessage.Count == 0 && result == true)
-                {
-                    issuccess = true;
-                    dataTran.GenerateDateTime = DateTime.Now;
-                    dataTran.GenerateDetail = "XML was generated completely";
-                    dataTran.GenerateStatus = "Successful";
-                    dataTran.UpdateBy = "Batch";
-                    dataTran.UpdateDate = DateTime.Now;
-
-                    var json = JsonSerializer.Serialize(dataTran);
-                    res = transactionDescription.Update(json);
-                    if (res.Result.MESSAGE == "Updated Success.")
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    dataTran.GenerateDateTime = DateTime.Now;
-                    foreach (var error in errormessage)
-                    {
-                        errorText = errorText + error + "|";
-                    }
-                    errorText = errorText.Substring(0, errorText.Length - 1);
-                    dataTran.GenerateDetail = errorText;
-                    dataTran.GenerateStatus = "Failed";
-                    dataTran.UpdateBy = "Batch";
-                    dataTran.UpdateDate = DateTime.Now;
-
-                    var json = JsonSerializer.Serialize(dataTran);
-                    res = transactionDescription.Update(json);
-                    if (res.Result.MESSAGE == "Updated Success.")
-                    {
-                        //result = true;
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -515,24 +526,24 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             ReceiptSchematronValidate Receipt = new ReceiptSchematronValidate();
             try
             {
-                    switch (data.exchangedDocument.typeCode)
-                    {
-                        case "388":
-                        case "T02":
-                        case "T03":
-                        case "T04":
-                            errormessage = TaxInvoice.TaxInvoiceChackSchematron(data);
-                            break;
-                        case "80":
-                        case "81":
-                            errormessage = DebitCreditNote.DebitCreditNoteChackSchematron(data);
-                            break;
-                        case "T01":
-                            errormessage = Receipt.ReceiptChackSchematron(data);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (data.exchangedDocument.typeCode)
+                {
+                    case "388":
+                    case "T02":
+                    case "T03":
+                    case "T04":
+                        errormessage = TaxInvoice.TaxInvoiceChackSchematron(data);
+                        break;
+                    case "80":
+                    case "81":
+                        errormessage = DebitCreditNote.DebitCreditNoteChackSchematron(data);
+                        break;
+                    case "T01":
+                        errormessage = Receipt.ReceiptChackSchematron(data);
+                        break;
+                    default:
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -541,9 +552,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return errormessage;
         }
 
-        public bool InsertDataTransactionDescription(TextFileSchematic dataxml)
+        public bool InsertDataTransactionDescription(TextFileSchematic dataxml, string source)
         {
-            TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
             TransactionDescription data = new TransactionDescription();
             Task<Response> res;
             bool result = false;
@@ -551,15 +561,11 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 string errorText = "";
-                var listdatatransactionDescription = transactionDescription.List().Result;
-                data = listdatatransactionDescription.FirstOrDefault(x => x.BillingNumber.ToString() == dataxml.BILLING_NO);
+                listdatatransactionDescription = transactionDescription.GetBilling(Convert.ToInt32(dataxml.BILLING_NO)).Result;
+                data = listdatatransactionDescription.FirstOrDefault();
 
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
-                ProfileController profileController = new ProfileController();
-                DocumentCodeController documentCodeController = new DocumentCodeController();
-                List<DocumentCode> documentCode = documentCodeController.List().Result;
-                List<ProfileCompany> profileCompany = profileController.ProfileCompanyList().Result;
 
                 doccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == dataxml.FI_DOC_TYPE);
                 profiledetail = profileCompany.FirstOrDefault(x => x.TaxNumber == dataxml.SELLER_TIN);
@@ -599,7 +605,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.SellOrg = Convert.ToDouble(dataxml.SALES_ORG);
                 data.ShipTo = Convert.ToDouble(dataxml.Number_Ship_to);
                 data.SoldTo = Convert.ToDouble(dataxml.Number_Sold_to);
-                data.SourceName = "";//
+                data.SourceName = source;
                 data.TypeInput = "Batch";
                 data.UpdateBy = "Batch";
                 data.UpdateDate = DateTime.Now;
@@ -626,5 +632,234 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
+        public bool MoveTextFile(string pathinpput, string pathoutput)
+        {
+            bool result = false;
+            //pathinpput = @"c:\temp\MySample.txt";
+            //pathoutput = @"c:\temp2\MySample.txt";
+            try
+            {
+                if (!File.Exists(pathinpput))
+                {
+                    // This statement ensures that the file is created,  
+                    // but the handle is not kept.  
+                    using (FileStream fs = File.Create(pathinpput)) { }
+                }
+                // Ensure that the target does not exist.  
+                if (File.Exists(pathoutput))
+                    File.Delete(pathoutput);
+                // Move the file.  
+                File.Move(pathinpput, pathoutput);
+                Console.WriteLine("{0} was moved to {1}.", pathinpput, pathoutput);
+
+                // See if the original exists now.  
+                if (File.Exists(pathinpput))
+                {
+                    Console.WriteLine("The original file still exists, which is unexpected.");
+                }
+                else
+                {
+                    Console.WriteLine("The original file no longer exists, which is expected.");
+                }
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+            return result;
+        }
+
+        public bool GenTextFileFail(string filename, TextFileSchematic dataxml, string path)
+        {
+            bool result = false;
+            string filePath = path + "//" + filename;
+            string lineheader = "";
+            List<string> lineitem = new List<string>();
+            string line = "";
+            try
+            {
+                lineheader += dataxml.HEADER_FLAG + "\\|";
+                lineheader += dataxml.FI_DOC_TYPE + "\\|";
+                lineheader += dataxml.FISCAL_YEAR + "\\|";
+                lineheader += dataxml.IC_FLAG + "\\|";
+                lineheader += dataxml.SELLER_TIN + "\\|";
+                lineheader += dataxml.SELLER_BRANCH + "\\|";
+                lineheader += dataxml.BUYER_TYPE_CODE + "\\|";
+                lineheader += dataxml.BUYER_TAXID + "\\|";
+                lineheader += dataxml.BUYER_BRANCH + "\\|";
+                lineheader += dataxml.BUYER_NAME + "\\|";
+                lineheader += dataxml.BUYER_CODE + "\\|";
+                lineheader += dataxml.BUYER_PSTLZ + "\\|";
+                lineheader += dataxml.BUYER_LAND1 + "\\|";
+                lineheader += dataxml.SELLER_NAME + "\\|";
+                lineheader += dataxml.SELLER_BUKRS + "\\|";
+                lineheader += dataxml.SELLER_MAIL + "\\|";
+                lineheader += dataxml.SELLER_PSTLZ + "\\|";
+                lineheader += dataxml.SELLER_BUILD_NAME + "\\|";
+                lineheader += dataxml.SELLER_STREET + "\\|";
+                lineheader += dataxml.SELLER_CITY + "\\|";
+                lineheader += dataxml.SELLER_SUBDIV + "\\|";
+                lineheader += dataxml.SELLER_LAND1 + "\\|";
+                lineheader += dataxml.SELLER_PROVINCE + "\\|";
+                lineheader += dataxml.SELLER_BUILD_NO + "\\|";
+                lineheader += dataxml.BUYER_ADDRESS1 + "\\|";
+                lineheader += dataxml.BUYER_ADDRESS2 + "\\|";
+                lineheader += dataxml.BILLING_NO + "\\|";
+                lineheader += dataxml.FI_DOC + "\\|";
+                lineheader += dataxml.DOC_CURRENCY + "\\|";
+                lineheader += dataxml.SALES_AMOUNT + "\\|";
+                lineheader += dataxml.TAX_CODE + "\\|";
+                lineheader += dataxml.TAX_RATE + "\\|";
+                lineheader += dataxml.TAX_AMOUNT + "\\|";
+                lineheader += dataxml.CHARGE_AMOUNT + "\\|";
+                lineheader += dataxml.ALLOWANCE_AMOUNT + "\\|";
+                lineheader += dataxml.ORIGINAL_AMOUNT + "\\|";
+                lineheader += dataxml.DIFFERENCE_AMOUNT + "\\|";
+                lineheader += dataxml.TAX_BASIS_AMOUNT + "\\|";
+                lineheader += dataxml.TAX_TOTAL_AMOUNT + "\\|";
+                lineheader += dataxml.GRAND_TOTAL_AMOUNT + "\\|";
+                lineheader += dataxml.CREATE_DATE_TIME + "\\|";
+                lineheader += dataxml.REF_DOC + "\\|";
+                lineheader += dataxml.REF_DOC_DATE + "\\|";
+                lineheader += dataxml.REF_FI_DOCTYPE + "\\|";
+                lineheader += dataxml.ORDER_REASON + "\\|";
+                lineheader += dataxml.ORDER_REASON_CODE + "\\|";
+                lineheader += dataxml.BILLING_DATE + "\\|";
+                lineheader += dataxml.INSTANCE + "\\|";
+                lineheader += dataxml.BILLING_TYPE + "\\|";
+                lineheader += dataxml.SALES_ORG + "\\|";
+                lineheader += dataxml.PRINT_DATE_TIME + "\\|";
+                lineheader += dataxml.Number_Sold_to + "\\|";
+                lineheader += dataxml.Number_Ship_to + "\\|";
+                lineheader += dataxml.Number_Bill_to + "\\|";
+                lineheader += dataxml.Number_Payer + "\\|";
+                lineheader += dataxml.CORRECT_AMOUNT + "\\|";
+                lineheader += dataxml.pathfile;
+
+                foreach (var item in dataxml.Item)
+                {
+                    line += item.ITEM_FLAG + "\\|";
+                    line += item.FI_DOC_TYPE + "\\|";
+                    line += item.SELLER_TIN + "\\|";
+                    line += item.SELLER_BRANCH + "\\|";
+                    line += item.BILLING_NO + "\\|";
+                    line += item.ITEM_NO + "\\|";
+                    line += item.PRODUCT_NAME + "\\|";
+                    line += item.QUANTITY + "\\|";
+                    line += item.SALES_UNT + "\\|";
+                    line += item.UNIT_NAME + "\\|";
+                    line += item.CURRENCY + "\\|";
+                    line += item.UNIT_PRICT + "\\|";
+                    line += item.NETUNIT_PRICE + "\\|";
+                    line += item.TAX_AMOUNT + "\\|";
+                    line += item.CHARGE_AMOUNT + "\\|";
+                    line += item.ALLOWANCE_AMOUNT + "\\|";
+                    line += item.TAX_BASIS_AMOUNT + "\\|";
+                    line += item.TAX_TOTAL_AMOUNT + "\\|";
+                    line += item.GRAND_TOTAL_AMOUNT + "\\|";
+                    line += item.PO_NUMBER + "\\|";
+                    line += item.BILLING_DATE;
+                    lineitem.Add(line);
+                }
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    StreamWriter write = new StreamWriter(fs);
+                    write.BaseStream.Seek(0, SeekOrigin.End);
+                    write.WriteLine(lineheader);
+                    foreach (var item in lineitem)
+                    {
+                        write.WriteLine(Environment.NewLine);
+                        write.WriteLine(item);
+                    }
+                    write.Flush();
+                    write.Close();
+                    fs.Close();
+                    result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public void GetDataFromDataBase()
+        {
+            try
+            {
+                configXMLGenerator = configXMLGeneratorController.List().Result;
+                taxCode = taxCodeController.List().Result;
+                documentCode = documentCodeController.List().Result;
+                //erpDocument = erpDocumentController.List().Result;
+                //rdDocument = rdDocumentController.List().Result;
+                profileCompany = profileController.ProfileCompanyList().Result;
+                profileSeller = profileController.ProfileSellerList().Result;
+                productUnit = productUnitController.List().Result;
+                profileBranches = profileBranchController.List().Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool UpdateDataTransaction(List<string> errormessage,string billingNo)
+        {
+            bool result = false;
+            string errorText = "";
+            Task<Response> res;
+            TransactionDescription dataTran = new TransactionDescription();
+            try
+            {
+                listdatatransactionDescription = transactionDescription.GetBilling(Convert.ToInt32(billingNo)).Result;
+                dataTran = listdatatransactionDescription.FirstOrDefault();
+                if(dataTran != null)
+                {
+                    if (errormessage.Count == 0 && result == true)
+                    {
+                        dataTran.GenerateDateTime = DateTime.Now;
+                        dataTran.GenerateDetail = "XML was generated completely";
+                        dataTran.GenerateStatus = "Successful";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
+
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Update(json);
+                        if (res.Result.MESSAGE == "Updated Success.")
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        dataTran.GenerateDateTime = DateTime.Now;
+                        foreach (var error in errormessage)
+                        {
+                            errorText = errorText + error + "|";
+                        }
+                        errorText = errorText.Substring(0, errorText.Length - 1);
+                        dataTran.GenerateDetail = errorText;
+                        dataTran.GenerateStatus = "Failed";
+                        dataTran.UpdateBy = "Batch";
+                        dataTran.UpdateDate = DateTime.Now;
+
+                        var json = JsonSerializer.Serialize(dataTran);
+                        res = transactionDescription.Update(json);
+                        if (res.Result.MESSAGE == "Updated Success.")
+                        {
+                            result = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

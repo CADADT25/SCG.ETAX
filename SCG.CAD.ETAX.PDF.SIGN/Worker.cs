@@ -1,8 +1,11 @@
+using SCG.CAD.ETAX.PDF.SIGN.BussinessLayer;
+
 namespace SCG.CAD.ETAX.PDF.SIGN
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        PDFSign pDFSign = new PDFSign();
 
         public Worker(ILogger<Worker> logger)
         {
@@ -11,11 +14,12 @@ namespace SCG.CAD.ETAX.PDF.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
-            }
+            pDFSign.PdfSign();
+            //while (!stoppingToken.IsCancellationRequested)
+            //{
+            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    await Task.Delay(1000, stoppingToken);
+            //}
         }
     }
 }

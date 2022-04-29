@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
@@ -74,6 +75,23 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         break;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        public bool CheckSpecialChar(string data)
+        {
+            bool result = false;
+            try
+            {
+                //Console.WriteLine("i/p is " + str);
+                Regex rgx = new Regex("[^A-Za-z0-9ก-๙]");
+                //bool isNUmber = int.TryParse(data, out int n);
+                //bool hasSpecialChars = rgx.IsMatch(data.ToString()) || isNUmber;
+                bool hasSpecialChars = rgx.IsMatch(data.ToString());
             }
             catch (Exception ex)
             {

@@ -9,7 +9,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 {
     public class Worker : BackgroundService
     {
-        PDFSign pDFSign = new PDFSign();
         XMLGenerate xMLGenerate = new XMLGenerate();
         Template_TaxInvoice template = new Template_TaxInvoice();
         TaxCodeController taxCodeController = new TaxCodeController();

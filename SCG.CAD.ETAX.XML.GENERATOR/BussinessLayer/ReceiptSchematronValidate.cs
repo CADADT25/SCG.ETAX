@@ -291,10 +291,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 //{
                 //    errormessage.Add("RCT-InvoicerTradeParty-013 ต้องระบุ รหัสจังหวัด (CountrySubDivisionID) (CountrySubDivisionID must be present since CountryID is TH.)");
                 //}
-
-                if (dataXml.supplyChainTradeTransaction.includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity == null)
+                foreach(var list in dataXml.supplyChainTradeTransaction.includedSupplyChainTradeLineItem)
                 {
-                    errormessage.Add("RCT-GoodsDetail-013 ต้องระบุจำนวนสินค้าหรือบริการ  (BilledQuantity must be present since SpecifiedLineTradeDelivery is present.)");
+                    if (list.specifiedLineTradeDelivery.billedQuantity == null)
+                    {
+                        errormessage.Add("RCT-GoodsDetail-013 ต้องระบุจำนวนสินค้าหรือบริการ  (BilledQuantity must be present since SpecifiedLineTradeDelivery is present.)");
+                    }
                 }
             }
             catch (Exception ex)
