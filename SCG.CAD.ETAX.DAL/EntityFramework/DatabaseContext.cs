@@ -59,6 +59,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ConfigMftsIndexGenerationSettingOutput> configMftsIndexGenerationSettingOutput { get; set; }
         public DbSet<ProfileUserRole> profileUserRole { get; set; }
         public DbSet<ProfileUserGroup> profileUserGroup { get; set; }
+        public DbSet<ProfileFiDoc> profileFiDoc { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -141,7 +141,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 {
                     dataTran = new TransactionDescription();
 
-                    dataTran.BillingNumber = billno;
+                    dataTran.BillingNumber = Convert.ToString(billno);
                     dataTran.CreateBy = "Batch";
                     dataTran.CreateDate = DateTime.Now;
                     dataTran.TypeInput = "Batch";

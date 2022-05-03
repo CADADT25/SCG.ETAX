@@ -16,6 +16,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _Search()
+        {
+            return View();
+        }
+
         public IActionResult _Modal()
         {
             return View();

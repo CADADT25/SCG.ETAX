@@ -3,19 +3,39 @@
     Layout = null;
 }
 
+@await Html.PartialAsync("~/Views/transactionDescription/_Search.cshtml")
+
+
 @await Html.PartialAsync("~/Views/transactionDescription/_Content.cshtml")
 
 <script type="text/javascript">
 
      $(document).ready(function () {
 
+        $('#tranSearchStatus').select2();
+        $('#tranSearchIcOc').select2();
+        $('#tranSearchCompanyCode').select2();
+        $('#tranSearchOutputType').select2();
+        $('#tranSearchDocumentType').select2();
+        $('#tranSearchDateType').select2();
+
+        $("#tranSearchDateRang").flatpickr({
+            mode: "range"
+        });
+
+        fnDropdownTransactionSearchCompanyCode();
+        fnDropdownTransactionSearchDocumentType();
+        fnDropdownTransactionSearchDataSource();
+        fnDropdownTransactionSearchSellOrg();
+
         RenderTransaction();
 
     });
 
 
-
     function RenderTransaction(){
+
+        $('[data-toggle="tooltip"]').tooltip();
 
         var table = $("#tbTransactionMain").DataTable({
 
@@ -49,29 +69,82 @@
                     }
                 },
                 {
+                    data: "companyCode",
+                    width: "5%"
+                },
+                {
+                    data: "sellOrg",
+                    width: "5%"
+                },
+                {
+                    data: "customerId",
+                    width: "5%"
+                },
+                {
                     data: "billingNumber",
-                    width: "20%"
-                },
-                {
-                    data: "billingDate",
-                    width: "20%"
-                },
-                {
-                    data: "billingYear",
                     width: "10%"
                 },
                 {
+                    data: "generateStatus",
+                    width: "2%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "xmlSignStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "pdfSignStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "printStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "emailSendStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "xmlCompressStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "pdfIndexingStatus",
+                    width: "2%",
+                    render: function (data, type, row) {
+                        return (data == 'Successful') ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
                     data: "isactive",
-                    width: "10%",
+                    width: "5%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == 1) ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
                     }
                 },
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    defaultContent: '<i class="pointer fas fa-eye" data-toggle="tooltip" title="View data on record"/>',
                     orderable: false,
                     width: "2%"
                 }
@@ -86,6 +159,61 @@
         } ).draw();
 
     }
+
+
+
+    function fnDropdownTransactionSearchCompanyCode() {
+
+            $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.companyCode,
+                            text: data.companyCode
+                        }).html(data.companyCode).appendTo("#tranSearchCompanyCode");
+                });
+            })
+        }
+
+        function fnDropdownTransactionSearchDocumentType() {
+
+            $.getJSON("@Url.Action("DropDownList", "RdDocument")", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.rdDocumentCode,
+                            text: data.rdDocumentNameTh
+                        }).html(data.rdDocumentNameTh).appendTo("#tranSearchDocumentType");
+                });
+            })
+        }
+
+
+        function fnDropdownTransactionSearchDataSource() {
+
+            $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.dataSourceName,
+                            text: data.dataSourceName
+                        }).html(data.dataSourceName).appendTo("#tranSearchDataSource");
+                });
+            })
+        }
+
+        function fnDropdownTransactionSearchSellOrg() {
+
+            $.getJSON("@Url.Action("DropDownList", "ProfileSellOrg")", function (data) {
+                $.each(data, function (i, data) {
+                    $('<option>',
+                        {
+                            value: data.sellOrgCode,
+                            text: data.sellOrgCode
+                        }).html(data.sellOrgCode).appendTo("#tranSearchSellOrg");
+                });
+            })
+        }
 
 
 </script>

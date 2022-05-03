@@ -579,7 +579,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 var billingdate = Convert.ToDateTime(dataxml.BILLING_DATE);
                 string poNumber = "";
                 data.BillingDate = billingdate;
-                data.BillingNumber = Convert.ToDouble(dataxml.BILLING_NO);
+                data.BillingNumber = Convert.ToString(dataxml.BILLING_NO);
                 data.BillingYear = billingdate.Year;
                 data.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
                 data.CompanyCode = Convert.ToDouble(profiledetail.CompanyCode);

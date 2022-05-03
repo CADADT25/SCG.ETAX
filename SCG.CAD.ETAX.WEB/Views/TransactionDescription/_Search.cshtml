@@ -1,0 +1,108 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Search Transaction.</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label>Billing No.</label>
+                            @*<small class="text-muted">eg.<i>someone@example.com</i></small>*@
+                            <input type="text" class="form-control" placeholder="Billing number." />
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select status</label>
+                            <select class="select2 form-control" id="tranSearchStatus" multiple>
+                                <option value="" disabled hidden>--- Select your item ---</option>
+                                <option value="successful">Successful</option>
+                                <option value="processing">Processing</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select IC/O2C</label>
+                            <select class="select2 form-control" id="tranSearchIcOc" multiple>
+                                <option value="" disabled hidden>--- Select your item ---</option>
+                                <option value="ic">IC</option>
+                                <option value="o2c">O2C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label>Customer Code</label>
+                            <input type="text" class="form-control" placeholder="Customer Code." />
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Company Code</label>
+                            <select class="select2 form-control" id="tranSearchCompanyCode" multiple>
+                                <option value="" disabled hidden>--- Select your item ---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Output Type</label>
+                            <select class="select2 form-control" id="tranSearchOutputType" multiple>
+                                <option value="" disabled hidden>--- Select your item ---</option>
+                                <option value="print">Print</option>
+                                <option value="email">Email</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Document Type</label>
+                            <select class="select2 form-control" id="tranSearchDocumentType" multiple>
+                                    <option value="" disabled hidden>--- Select your item ---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Output Type</label>
+                            <select class="select2 form-control" id="tranSearchDateType">
+                                <option value="billingDate">Billing Date</option>
+                                <option value="createDate">Create Date</option>
+                                <option value="processingDate">Processing Date</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-group">
+                            <label><spa class="text-danger">* </spa>Between Date </label>
+                            <input type="text" id="tranSearchDateRang" class="form-control flatpickr-date-time" placeholder="YYYY-MM-DD HH:MM">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Data Source</label>
+                            <select class="select2 form-control" id="tranSearchDataSource">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Data Source</label>
+                            <select class="select2 form-control" id="tranSearchSellOrg">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnExportData" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-search"></i> Search transaction
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
