@@ -16,5 +16,6 @@ namespace SCG.CAD.ETAX.MODEL
         public string? INNER_EXCEPTION { get; set; }
         public string? CURRENT_METHOD { get; set; }
         public object? OUTPUT_DATA { get; set; }
+        public object? OUTPUT_ERROR { get; set; }
     }
 }

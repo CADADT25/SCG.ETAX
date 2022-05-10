@@ -99,6 +99,25 @@
             return await Task.FromResult(resp);
         }
 
+        public async Task<Response> UPDATE_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_LIST(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
         public async Task<Response> DELETE(TransactionDescription param)
         {
             Response resp = new Response();

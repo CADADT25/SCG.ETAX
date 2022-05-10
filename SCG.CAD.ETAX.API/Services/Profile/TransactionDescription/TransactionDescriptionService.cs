@@ -64,6 +64,7 @@
             }
             return resp;
         }
+
         public Response GET_BILLING(int billingNo)
         {
             Response resp = new Response();
@@ -196,6 +197,110 @@
                         resp.STATUS = false;
                         resp.MESSAGE = "Can't update because data not found.";
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            List<transactionSearchError> transactionSearchError = new List<transactionSearchError>();
+
+            try
+            {
+                using (_dbContext)
+                {
+                    if (param.Count > 0)
+                    {
+                        foreach (var item in param)
+                        {
+                            var update = _dbContext.transactionDescription.Where(x => x.TransactionNo == item.TransactionNo).FirstOrDefault();
+
+                            if (update != null)
+                            {
+                                update.BillingNumber = item.BillingNumber;
+                                update.BillingDate = item.BillingDate;
+                                update.BillingYear = item.BillingYear;
+                                update.ProcessingDate = item.ProcessingDate;
+                                update.CompanyCode = item.CompanyCode;
+                                update.CompanyName = item.CompanyName;
+                                update.CustomerId = item.CustomerId;
+                                update.CustomerName = item.CustomerName;
+                                update.SoldTo = item.SoldTo;
+                                update.ShipTo = item.ShipTo;
+                                update.BillTo = item.BillTo;
+                                update.Payer = item.Payer;
+                                update.SourceName = item.SourceName;
+                                update.Foc = item.Foc;
+                                update.Ic = item.Ic;
+                                update.PostingYear = item.PostingYear;
+                                update.FiDoc = item.FiDoc;
+                                update.ImageDocType = item.ImageDocType;
+                                update.DocType = item.DocType;
+                                update.SellOrg = item.SellOrg;
+                                update.PoNumber = item.PoNumber;
+                                update.TypeInput = item.TypeInput;
+                                update.GenerateStatus = item.GenerateStatus;
+                                update.GenerateDetail = item.GenerateDetail;
+                                update.GenerateDateTime = item.GenerateDateTime;
+                                update.XmlSignStatus = item.XmlSignStatus;
+                                update.XmlSignDetail = item.XmlSignDetail;
+                                update.XmlSignDateTime = item.XmlSignDateTime;
+                                update.PdfSignStatus = item.PdfSignStatus;
+                                update.PdfSignDetail = item.PdfSignDetail;
+                                update.PdfSignDateTime = item.PdfSignDateTime;
+                                update.PrintStatus = item.PrintStatus;
+                                update.PrintDetail = item.PrintDetail;
+                                update.PrintDateTime = item.PrintDateTime;
+                                update.EmailSendStatus = item.EmailSendStatus;
+                                update.EmailSendDetail = item.EmailSendDetail;
+                                update.EmailSendDateTime = item.EmailSendDateTime;
+                                update.XmlCompressStatus = item.XmlCompressStatus;
+                                update.XmlCompressDetail = item.XmlCompressDetail;
+                                update.XmlCompressDateTime = item.XmlCompressDateTime;
+                                update.PdfIndexingStatus = item.PdfIndexingStatus;
+                                update.PdfIndexingDetail = item.PdfIndexingDetail;
+                                update.PdfIndexingDateTime = item.PdfIndexingDateTime;
+                                update.PdfSignLocation = item.PdfSignLocation;
+                                update.XmlSignLocation = item.XmlSignLocation;
+                                update.ZipTransactionNo = item.ZipTransactionNo;
+                                update.DmsAttachmentFileName = item.DmsAttachmentFileName;
+                                update.DmsAttachmentFilePath = item.DmsAttachmentFilePath;
+                                update.OneTimeEmail = item.OneTimeEmail;
+
+                                update.UpdateBy = item.UpdateBy;
+                                update.UpdateDate = dtNow;
+                                update.Isactive = item.Isactive;
+
+                                _dbContext.SaveChanges();
+
+                                resp.STATUS = true;
+
+                                resp.MESSAGE = "Updated Success.";
+                            }
+                            else
+                            {
+                                transactionSearchError.Add({
+                                    tranSearchErrorBillingNo = item.BillingNumber;
+                                    transactionSearchError = "Can't update because data not found.";
+                                });
+                            }
+                        }
+                    }
+                }
+
+                if (transactionSearchError.Count > 0)
+                {
+                    resp.ERROR_STACK = Convert.ToString(transactionSearchError.Count());
+                    resp.OUTPUT_DATA = transactionSearchError;
                 }
             }
             catch (Exception ex)

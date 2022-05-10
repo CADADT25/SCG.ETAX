@@ -6,11 +6,11 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xl-4 col-md-6 col-12 mb-1">
+                    <div class="col-xl-4 col-md-6 col-12 mb-1" style="margin-bottom:0rem !important">
                         <div class="form-group">
                             <label>Billing No.</label>
                             @*<small class="text-muted">eg.<i>someone@example.com</i></small>*@
-                            <input type="text" class="form-control" placeholder="Billing number." />
+                            <input type="text" id="tranSearchBillingNo" class="form-control" placeholder="Billing number." />
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1">
@@ -37,7 +37,7 @@
                     <div class="col-xl-4 col-md-6 col-12 mb-1">
                         <div class="form-group">
                             <label>Customer Code</label>
-                            <input type="text" class="form-control" placeholder="Customer Code." />
+                            <input type="text" id="tranSearchCustomerCode" class="form-control" placeholder="Customer Code." />
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1">
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1">
                         <div class="form-group">
-                            <label for="helpInputTop">Select Output Type</label>
+                            <label for="helpInputTop">Select Date Type</label>
                             <select class="select2 form-control" id="tranSearchDateType">
                                 <option value="billingDate">Billing Date</option>
                                 <option value="createDate">Create Date</option>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1">
                         <div class="form-group">
-                            <label for="helpInputTop">Select Data Source</label>
+                            <label for="helpInputTop">Select Sell Org</label>
                             <select class="select2 form-control" id="tranSearchSellOrg">
                             </select>
                         </div>
@@ -99,7 +99,7 @@
                 </div>
             </div>
              <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnExportData" class="pointer btn btn-icon icon-left text-white btn-primary">
+                <a onclick="fnSearchTransaction();" class="pointer btn btn-icon icon-left text-white btn-primary">
                     <i class="fas fa-search"></i> Search transaction
                 </a>
             </div>

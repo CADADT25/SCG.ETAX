@@ -62,8 +62,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string transactionSearchJson)
         {
+            if (!string.IsNullOrEmpty(transactionSearchJson))
+            {
+                var transactionSearchModel = JsonConvert.DeserializeObject<transactionSearchModel>(transactionSearchJson);
+
+            }
+
             Response resp = new Response();
 
             List<TransactionDescription> tran = new List<TransactionDescription>();

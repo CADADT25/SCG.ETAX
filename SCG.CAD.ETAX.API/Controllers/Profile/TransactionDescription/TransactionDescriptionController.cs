@@ -61,6 +61,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpPost]
+        [Route("Update")]
+        public IActionResult UpdateList(List<TransactionDescription> param)
+        {
+            var result = repo.UPDATE_LIST(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
         [Route("Delete")]
         public IActionResult Delete(TransactionDescription param)
         {

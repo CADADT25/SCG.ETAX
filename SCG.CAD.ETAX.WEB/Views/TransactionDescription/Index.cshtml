@@ -18,6 +18,8 @@
         $('#tranSearchOutputType').select2();
         $('#tranSearchDocumentType').select2();
         $('#tranSearchDateType').select2();
+        $('#tranSearchDataSource').select2();
+        $('#tranSearchSellOrg').select2();
 
         $("#tranSearchDateRang").flatpickr({
             mode: "range"
@@ -28,20 +30,22 @@
         fnDropdownTransactionSearchDataSource();
         fnDropdownTransactionSearchSellOrg();
 
-        RenderTransaction();
+        RenderTransaction('');
 
     });
 
 
-    function RenderTransaction(){
+    function RenderTransaction(JsonString){
 
         $('[data-toggle="tooltip"]').tooltip();
 
         var table = $("#tbTransactionMain").DataTable({
 
+            "targets": 0,
             "scrollY": false,
             "processing": true,
-            "serverSide": false,
+            //"retrieve": true,
+            "serverSide": true,
             "filter": true,
             "orderMulti": true,
             "pageLength": 10,
@@ -49,12 +53,17 @@
             "ajax": {
                 url: "@Url.Action("List", "transactionDescription")",
                 type: "POST",
+                data: { transactionSearchJson : JsonString },
                 datatype: "json"
             },
 
 
             "columns": [
 
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
                 {
                     data: "transactionNo",
                     className: "text-center",
@@ -88,49 +97,56 @@
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == 'Successful') ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
@@ -138,7 +154,8 @@
                     width: "5%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-check" />' : '<i class="text-danger fas fa-ban"/>';
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
                 {
@@ -148,7 +165,11 @@
                     orderable: false,
                     width: "2%"
                 }
-            ]
+            ],
+            select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
         });
 
 
@@ -164,56 +185,96 @@
 
     function fnDropdownTransactionSearchCompanyCode() {
 
-            $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.companyCode,
-                            text: data.companyCode
-                        }).html(data.companyCode).appendTo("#tranSearchCompanyCode");
-                });
-            })
-        }
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#tranSearchCompanyCode");
+            });
+        })
+    }
 
-        function fnDropdownTransactionSearchDocumentType() {
+    function fnDropdownTransactionSearchDocumentType() {
 
-            $.getJSON("@Url.Action("DropDownList", "RdDocument")", function (data) {
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.rdDocumentCode,
-                            text: data.rdDocumentNameTh
-                        }).html(data.rdDocumentNameTh).appendTo("#tranSearchDocumentType");
-                });
-            })
-        }
+        $.getJSON("@Url.Action("DropDownList", "RdDocument")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.rdDocumentCode,
+                        text: data.rdDocumentNameTh
+                    }).html(data.rdDocumentNameTh).appendTo("#tranSearchDocumentType");
+            });
+        })
+    }
+
+    function fnDropdownTransactionSearchDataSource() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.dataSourceName,
+                        text: data.dataSourceName
+                    }).html(data.dataSourceName).appendTo("#tranSearchDataSource");
+            });
+        })
+    }
+
+    function fnDropdownTransactionSearchSellOrg() {
+
+        $.getJSON("@Url.Action("DropDownListAll", "ProfileSellOrg")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.sellOrgCode,
+                        text: data.sellOrgCode
+                    }).html(data.sellOrgCode).appendTo("#tranSearchSellOrg");
+            });
+        })
+    }
+
+    function fnSearchTransaction(){
+
+        var getBillingNo = $('#tranSearchBillingNo').val();
+        var getStatus = $('#tranSearchStatus').val();
+        var getIcO2c = $('#tranSearchIcOc').val();
+        var getCustomerCode = $('#tranSearchCustomerCode').val();
+        var getCompanyCode = $('#tranSearchCompanyCode').val();
+        var getOutputType = $('#tranSearchOutputType').val();
+        var getDocumentType = $('#tranSearchDocumentType').val();
+        var getDateType = $('#tranSearchDateType').val();
+        var getDateBetween = $('#tranSearchDateRang').val();
+        var getDataSource = $('#tranSearchDataSource').val();
+        var getSellOrg = $('#tranSearchSellOrg').val();
 
 
-        function fnDropdownTransactionSearchDataSource() {
+        var model = new Object();
 
-            $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.dataSourceName,
-                            text: data.dataSourceName
-                        }).html(data.dataSourceName).appendTo("#tranSearchDataSource");
-                });
-            })
-        }
+        model.tranSearchBillingNo = getBillingNo;
+        model.tranSearchStatus = getStatus;
+        model.tranSearchIcO2c = getIcO2c;
+        model.tranSearchCustomerCode = getCustomerCode;
+        model.tranSearchCompanyCode = getCompanyCode;
+        model.tranSearchOutputType = getOutputType;
+        model.tranSearchDocumentType = getDocumentType;
+        model.tranSearchDateType = getDateType;
+        model.tranSearchDateBetween = getDateBetween;
+        model.tranSearchDataSource = getDataSource
+        model.tranSearchSellOrg = getSellOrg;
 
-        function fnDropdownTransactionSearchSellOrg() {
+        var JsonString = JSON.stringify(model);
 
-            $.getJSON("@Url.Action("DropDownList", "ProfileSellOrg")", function (data) {
-                $.each(data, function (i, data) {
-                    $('<option>',
-                        {
-                            value: data.sellOrgCode,
-                            text: data.sellOrgCode
-                        }).html(data.sellOrgCode).appendTo("#tranSearchSellOrg");
-                });
-            })
-        }
+
+
+        var table = $('#tbTransactionMain').DataTable();
+
+        table.ajax.reload();
+
+        //RenderTransaction(JsonString);
+
+    }
 
 
 </script>

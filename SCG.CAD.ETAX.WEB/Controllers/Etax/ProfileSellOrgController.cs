@@ -230,5 +230,36 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(tran);
         }
 
+
+        public async Task<JsonResult> DropDownListAll()
+        {
+            Response resp = new Response();
+
+            List<ProfileSellOrg> tran = new List<ProfileSellOrg>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSellOrg/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileSellOrg>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x => x.Isactive == 1).ToList();
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
     }
 }
