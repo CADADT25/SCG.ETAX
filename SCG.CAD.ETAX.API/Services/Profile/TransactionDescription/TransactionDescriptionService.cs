@@ -212,7 +212,7 @@
         {
             Response resp = new Response();
 
-            List<transactionSearchError> transactionSearchError = new List<transactionSearchError>();
+            List<transactionSearchErrorModel> transactionSearchError = new List<transactionSearchErrorModel>();
 
             try
             {
@@ -288,9 +288,10 @@
                             }
                             else
                             {
-                                transactionSearchError.Add({
-                                    tranSearchErrorBillingNo = item.BillingNumber;
-                                    transactionSearchError = "Can't update because data not found.";
+                                transactionSearchError.Add(new transactionSearchErrorModel 
+                                { 
+                                    tranSearchErrorBillingNo = "123", 
+                                    tranSearchErrorDetail = "Can't update because data not found."
                                 });
                             }
                         }
