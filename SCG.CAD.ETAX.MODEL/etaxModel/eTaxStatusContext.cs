@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileFiDoc> ProfileFiDocs { get; set; } = null!;
+        public virtual DbSet<OutputSearchPrintingDowloadHistory> OutputSearchPrintingDowloadHistories { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,11 +29,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileFiDoc>(entity =>
+            modelBuilder.Entity<OutputSearchPrintingDowloadHistory>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.OutputSearchPrintingDowloadHistoryNo);
 
-                entity.ToTable("profileFiDoc");
+                entity.ToTable("OutputSearchPrintingDowloadHistory");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -45,13 +45,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
-                entity.Property(e => e.ProfileFiDocName)
-                    .HasMaxLength(500)
-                    .HasColumnName("profileFiDocName");
+                entity.Property(e => e.OutputSearchPrintingDowloadHistoryBy).HasMaxLength(100);
 
-                entity.Property(e => e.ProfileFiDocNo).HasColumnName("profileFiDocNo");
-
-                entity.Property(e => e.ProfileImageDocType).HasColumnName("profileImageDocType");
+                entity.Property(e => e.OutputSearchPrintingDowloadHistoryTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

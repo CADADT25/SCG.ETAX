@@ -1,9 +1,9 @@
 ﻿namespace SCG.CAD.ETAX.API.Repositories
 {
-    public class ConfigPdfSignRepository : IConfigPdfSignRepository
+    public class OutputSearchPrintingRepository : IOutputSearchPrintingRepository
     {
-        
-        ConfigPdfSignService service = new ConfigPdfSignService();
+
+        OutputSearchPrintingService service = new OutputSearchPrintingService();
 
         public async Task<Response> GET_DETAIL(int id)
         {
@@ -43,7 +43,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> INSERT(ConfigPdfSign param)
+        public async Task<Response> INSERT(OutputSearchPrinting param)
         {
             Response resp = new Response();
 
@@ -62,7 +62,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> UPDATE(ConfigPdfSign param)
+        public async Task<Response> UPDATE(OutputSearchPrinting param)
         {
             Response resp = new Response();
 
@@ -81,7 +81,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE(ConfigPdfSign param)
+        public async Task<Response> DELETE(OutputSearchPrinting param)
         {
             Response resp = new Response();
 

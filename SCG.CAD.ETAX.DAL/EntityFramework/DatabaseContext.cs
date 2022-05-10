@@ -60,6 +60,8 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ProfileUserRole> profileUserRole { get; set; }
         public DbSet<ProfileUserGroup> profileUserGroup { get; set; }
         public DbSet<ProfileFiDoc> profileFiDoc { get; set; }
+        public DbSet<OutputSearchPrinting> outputSearchPrinting { get; set; }
+        public DbSet<OutputSearchPrintingDowloadHistory> outputSearchPrintingDowloadHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
