@@ -15,20 +15,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             return View();
         }
 
+        public IActionResult _Search()
+        {
+            return View();
+        }
+
         public IActionResult _Modal()
         {
             return View();
         }
 
-        public IActionResult _Create()
-        {
-            return View();
-        }
-
-        public IActionResult _Update()
-        {
-            return View();
-        }
 
         public async Task<JsonResult> Detail(int id)
         {
@@ -81,39 +77,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
 
             return Json(new { data = tran });
-        }
-
-        public async Task<JsonResult> Insert(string jsonString)
-        {
-            Response res = new Response();
-
-            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-            var task = await Task.Run(() => ApiHelper.PostURI("api/OutputSearchPrinting/Insert", httpContent));
-
-            return Json(task);
-        }
-
-        public async Task<JsonResult> Update(string jsonString)
-        {
-            Response res = new Response();
-
-            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-            var task = await Task.Run(() => ApiHelper.PostURI("api/OutputSearchPrinting/Update", httpContent));
-
-            return Json(task);
-        }
-
-        public async Task<JsonResult> Delete(string jsonString)
-        {
-            Response res = new Response();
-
-            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-            var task = await Task.Run(() => ApiHelper.PostURI("api/OutputSearchPrinting/Delete", httpContent));
-
-            return Json(task);
         }
 
         public async Task<ActionResult> ExportToCsv()

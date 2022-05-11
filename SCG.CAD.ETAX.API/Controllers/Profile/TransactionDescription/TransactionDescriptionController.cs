@@ -35,7 +35,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpGet]
         [Route("GetBilling")]
-        public IActionResult GetBilling(int billingNo)
+        public IActionResult GetBilling(string billingNo)
         {
             var result = repo.GET_BILLING(billingNo).Result;
 

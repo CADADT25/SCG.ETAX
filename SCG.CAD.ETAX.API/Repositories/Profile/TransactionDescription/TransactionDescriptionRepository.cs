@@ -24,7 +24,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> GET_BILLING(int billingNo)
+        public async Task<Response> GET_BILLING(string billingNo)
         {
             Response resp = new Response();
 

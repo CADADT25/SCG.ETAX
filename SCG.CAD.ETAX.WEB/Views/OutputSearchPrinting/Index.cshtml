@@ -1,7 +1,271 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "OutputSearchPrinting Profile";
+    Layout = null;
 }
 
-<h1>Index</h1>
+
+@await Html.PartialAsync("~/Views/OutputSearchPrinting/_Search.cshtml")
+
+<div class="divider">
+
+</div>
+@await Html.PartialAsync("~/Views/OutputSearchPrinting/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#outputSearchPrintingCustomerCode').select2();
+
+        $("#outputSearchPrintingDate").flatpickr({
+            mode: "range"
+        });
+
+        //fnDropdownOutputSearchPrintingCompanyCode();
+
+        RenderOutputSearchPrinting();
+
+    });
+
+    
+    function fnDropdownOutputSearchPrintingCompanyCode() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#outputSearchPrintingCustomerCode");
+            });
+        })
+    }
+
+    function RenderOutputSearchPrinting(){
+
+        var table = $("#tbOutputSearchPrintingMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "OutputSearchPrinting")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "OutputSearchPrintingNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "OutputSearchPrintingNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "OutputSearchPrintingCompanyCode",
+                    width: "20%"
+                },
+                {
+                    data: "OutputSearchPrintingFileName",
+                    width: "20%"
+                },
+                {
+                    data: "OutputSearchPrintingFullPath",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        EditOutputSearchPrinting(table);
+        DeleteOutputSearchPrinting(table);
+    }
+
+
+    //function fnInsertCancelProfileEmailTemplate(){
+
+    //    $("#modalOutputSearchPrinting").modal('hide');
+    //}
+
+    //function fnUpdateCancelProfileEmailTemplate(){
+
+    //    $("#modalUpdateOutputSearchPrinting").modal('hide');
+    //}
+
+    //function callModalInsertOutputSearchPrinting(){
+
+    //     var setDataSource = $("#dataSourceState").text();
+
+    //    document.getElementById('txtInsertOutputSearchPrintingSource').value = setDataSource;
+
+    //    $("#modalOutputSearchPrinting").modal('show');
+    //}
+
+    // function fnInsertOutputSearchPrinting(){
+    //    if ($('#txtInsertOutputSearchPrintingErp').val() != '' && $('#txtInsertOutputSearchPrintingRd').val() != '') {
+    //        callOutputSearchPrintingInsertController();
+    //    }
+    //    else {
+    //        validateInsertOutputSearchPrinting();
+
+    //        fnToastrInputDataFail();
+    //    }
+    //}
+
+    //function fnUpdateOutputSearchPrinting(){
+    //    if ($('#txtUpdateOutputSearchPrintingErp').val() != '' && $('#txtUpdateOutputSearchPrintingRd').val() != '') {
+    //        callOutputSearchPrintingUpdateController();
+    //    }
+    //    else {
+    //        validateUpdateOutputSearchPrinting();
+
+    //        fnToastrInputDataFail();
+    //    }
+    //}
+
+    function EditOutputSearchPrinting(table){
+
+        $('#tbOutputSearchPrintingMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callOutputSearchPrintingGetDetailController(getPK);
+        });
+    }
+
+
+    function ExportOutputSearchPrinting(){
+
+        $.blockUI();
+
+        callOutputSearchPrintingExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callOutputSearchPrintingGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchPrinting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                //document.getElementById('txtUpdateOutputSearchPrintingNo').value = data.OutputSearchPrintingNo;
+                //document.getElementById('txtUpdateOutputSearchPrintingSource').value = data.ErpSource;
+                //document.getElementById('txtUpdateOutputSearchPrintingErp').value = data.OutputSearchPrintingErp;
+                //document.getElementById('txtUpdateOutputSearchPrintingRd').value = data.OutputSearchPrintingRd;
+                //document.getElementById('txtUpdatetOutputSearchPrintingDescription').value = data.OutputSearchPrintingDescription;
+
+                
+                //if(data.Isactive == 1){
+                //    document.getElementById("toggleUpdateOutputSearchPrintingIsActive").checked = true;
+                //}
+                //else{
+                //    document.getElementById("toggleUpdateOutputSearchPrintingIsActive").checked = false;
+                //}
+
+                $("#modalUpdateOutputSearchPrinting").modal('show');
+
+            }
+        });
+    }
+
+
+    function callOutputSearchPrintingExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "OutputSearchPrinting")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-OutputSearchPrinting.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    function callOutputSearchPrintingIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-OutputSearchPrinting-create").load("@Url.Action("Index", "OutputSearchPrinting")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>
+
+
+
+
+
 

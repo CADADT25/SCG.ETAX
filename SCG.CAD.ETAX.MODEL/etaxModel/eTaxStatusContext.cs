@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<OutputSearchPrintingDowloadHistory> OutputSearchPrintingDowloadHistories { get; set; } = null!;
+        public virtual DbSet<ConfigMftsCompressPrintSetting> ConfigMftsCompressPrintSettings { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,11 +29,37 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OutputSearchPrintingDowloadHistory>(entity =>
+            modelBuilder.Entity<ConfigMftsCompressPrintSetting>(entity =>
             {
-                entity.HasKey(e => e.OutputSearchPrintingDowloadHistoryNo);
+                entity.HasKey(e => e.ConfigMftsCompressPrintSettingNo);
 
-                entity.ToTable("OutputSearchPrintingDowloadHistory");
+                entity.ToTable("configMftsCompressPrintSetting");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingNo).HasColumnName("configMftsCompressPrintSettingNo");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingAnyTime)
+                    .HasMaxLength(1000)
+                    .HasColumnName("configMftsCompressPrintSettingAnyTime");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingCompanyCode)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressPrintSettingCompanyCode");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingDataSource)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressPrintSettingDataSource");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingInputPdf)
+                    .HasMaxLength(1000)
+                    .HasColumnName("configMftsCompressPrintSettingInputPdf");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingOneTime)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressPrintSettingOneTime");
+
+                entity.Property(e => e.ConfigMftsCompressPrintSettingOutputPdf)
+                    .HasMaxLength(1000)
+                    .HasColumnName("configMftsCompressPrintSettingOutputPdf");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -43,11 +69,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
-
-                entity.Property(e => e.OutputSearchPrintingDowloadHistoryBy).HasMaxLength(100);
-
-                entity.Property(e => e.OutputSearchPrintingDowloadHistoryTime).HasColumnType("datetime");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
