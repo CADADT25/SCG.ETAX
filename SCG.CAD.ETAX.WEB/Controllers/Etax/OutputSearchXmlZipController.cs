@@ -2,7 +2,7 @@
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
-    public class OutputSearchPrintingController : Controller
+    public class OutputSearchXmlZipController : Controller
     {
 
         public IActionResult Index()
@@ -28,9 +28,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         public async Task<JsonResult> Detail(int id)
         {
-            List<OutputSearchPrinting> tran = new List<OutputSearchPrinting>();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
 
-            var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchPrinting/GetDetail?id= " + id + " "));
+            var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZip/GetDetail?id= " + id + " "));
 
             Response resp = new Response();
 
@@ -39,7 +39,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             if (task.STATUS)
             {
 
-                tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+                tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
 
                 result = JsonConvert.SerializeObject(tran[0]);
 
@@ -55,15 +55,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<OutputSearchPrinting> tran = new List<OutputSearchPrinting>();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchPrinting/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZip/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -83,29 +83,29 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<OutputSearchPrinting> tran = new List<OutputSearchPrinting>();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchPrinting/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZip/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "OutputSearchPrintingNo," +
-                            "OutputSearchPrintingCompanyCode," +
-                            "OutputSearchPrintingFileName," +
-                            "OutputSearchPrintingFullPath," +
-                            "OutputSearchPrintingDowloadStatus," +
-                            "OutputSearchPrintingDowloadCount," +
-                            "OutputSearchPrintingDowloadLastTime," +
-                            "OutputSearchPrintingDowloadLastBy," +
+                            "OutputSearchXmlZipNo," +
+                            "OutputSearchXmlZipCompanyCode," +
+                            "OutputSearchXmlZipFileName," +
+                            "OutputSearchXmlZipFullPath," +
+                            "OutputSearchXmlZipDowloadStatus," +
+                            "OutputSearchXmlZipDowloadCount," +
+                            "OutputSearchXmlZipDowloadLastTime," +
+                            "OutputSearchXmlZipDowloadLastBy," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -117,14 +117,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.OutputSearchPrintingNo}," +
-                                $"{item.OutputSearchPrintingCompanyCode}," +
-                                $"{item.OutputSearchPrintingFileName}," +
-                                $"{item.OutputSearchPrintingFullPath}," +
-                                $"{item.OutputSearchPrintingDowloadStatus}," +
-                                $"{item.OutputSearchPrintingDowloadCount}," +
-                                $"{item.OutputSearchPrintingDowloadLastTime}," +
-                                $"{item.OutputSearchPrintingDowloadLastBy}," +
+                                $"{item.OutputSearchXmlZipNo}," +
+                                $"{item.OutputSearchXmlZipCompanyCode}," +
+                                $"{item.OutputSearchXmlZipFileName}," +
+                                $"{item.OutputSearchXmlZipFullPath}," +
+                                $"{item.OutputSearchXmlZipDowloadStatus}," +
+                                $"{item.OutputSearchXmlZipDowloadCount}," +
+                                $"{item.OutputSearchXmlZipDowloadLastTime}," +
+                                $"{item.OutputSearchXmlZipDowloadLastBy}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
@@ -149,10 +149,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 Console.WriteLine(ex.InnerException.ToString());
             }
 
-            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-OutputSearchPrinting.csv");
+            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-OutputSearchXmlZip.csv");
 
         }
-
 
     }
 }

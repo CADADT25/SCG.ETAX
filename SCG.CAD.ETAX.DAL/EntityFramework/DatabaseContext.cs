@@ -62,6 +62,8 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ProfileFiDoc> profileFiDoc { get; set; }
         public DbSet<OutputSearchPrinting> outputSearchPrinting { get; set; }
         public DbSet<OutputSearchPrintingDowloadHistory> outputSearchPrintingDowloadHistory { get; set; }
+        public DbSet<OutputSearchXmlZip> outputSearchXmlZip { get; set; }
+        public DbSet<OutputSearchXmlZipDowloadHistory> outputSearchXmlZipDowloadHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

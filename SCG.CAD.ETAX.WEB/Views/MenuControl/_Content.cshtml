@@ -32,7 +32,7 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
-
+        $("#li-OutputXmlSearch").removeClass("active");
 
 
         $.unblockUI();
@@ -64,6 +64,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -94,6 +96,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -133,7 +137,7 @@
         $("#ddlUpdateDocumentCodeErp").empty();
         $("#ddlUpdateDocumentCodeRd").empty();
         $("#li-OutputPrintingSearch").removeClass("active");
-
+        $("#li-OutputXmlSearch").removeClass("active");
 
         $.unblockUI();
     });
@@ -163,6 +167,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -193,6 +199,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -231,6 +239,9 @@
 
 
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
+
         $.unblockUI();
     });
 
@@ -260,6 +271,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -290,6 +303,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -321,6 +336,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -361,6 +378,8 @@
         $("#ddlUpdateProfileReasonIssueErpDocumentType").empty();
 
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -398,6 +417,8 @@
         $("#ddlUpdateProfileEmailTemplateEmailTypeNo").empty();
 
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -429,6 +450,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -460,6 +483,8 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -495,6 +520,8 @@
         $("#ddlInsertProfileCompanyCertificate").empty();
 
         $("#ddlUpdateProfileCompanyCertificate").empty();
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -537,7 +564,7 @@
         $("#ddlUpdateProfileSellerSubDistrict").empty();
         $("#ddlUpdateProfileSellerEmailTemplate").empty();
         $("#li-OutputPrintingSearch").removeClass("active");
-
+        $("#li-OutputXmlSearch").removeClass("active");
 
         $.unblockUI();
     });
@@ -569,7 +596,7 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
-
+        $("#li-OutputXmlSearch").removeClass("active");
 
         $.unblockUI();
     });
@@ -599,6 +626,8 @@
         $("#li-ManagementDocumentProfile").addClass("active");
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -629,6 +658,8 @@
         $("#li-ManagementCustomer").addClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
 
         $.unblockUI();
     });
@@ -659,7 +690,7 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").addClass("active");
         $("#li-OutputPrintingSearch").removeClass("active");
-
+        $("#li-OutputXmlSearch").removeClass("active");
 
         $.unblockUI();
     });
@@ -691,6 +722,42 @@
         $("#li-ManagementCustomer").removeClass("active");
         $("#li-btnCallPageTransactionDescription").removeClass("active");
         $("#li-OutputPrintingSearch").addClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+
+
+        $.unblockUI();
+    });
+
+
+
+    
+    $("#btn-OutputXmlSearch").click(function () {
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "OutputSearchXmlZip")");
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+        $("#li-btnCallPageProfileCompany").removeClass("active");
+        $("#li-btnCallPageProfileSeller").removeClass("active");
+        $("#li-ManagementCompanyProfile").removeClass("active");
+        $("#li-ManagementDocumentProfile").removeClass("active");
+        $("#li-ManagementCustomer").removeClass("active");
+        $("#li-btnCallPageTransactionDescription").removeClass("active");
+        $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").addClass("active");
 
         $.unblockUI();
     });
