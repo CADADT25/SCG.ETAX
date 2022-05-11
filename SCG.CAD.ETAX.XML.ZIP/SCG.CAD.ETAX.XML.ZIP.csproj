@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SCG.CAD.ETAX.XML.ZIP-5403A4EB-B0A0-45F9-8DB6-411C5C1C52B9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SCG.CAD.ETAX.API\SCG.CAD.ETAX.API.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BussinessLayer\" />
+    <Folder Include="Controller\" />
+  </ItemGroup>
+</Project>

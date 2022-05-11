@@ -47,6 +47,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 var allTextFile = ReadTextFile();
                 List<string> errormessage = new List<string>();
                 TextFileValidate textFileValidate = new TextFileValidate();
+                string nametextfilefail = "";
                 foreach (var textfile in allTextFile)
                 {
                     var filename = Path.GetFileName(textfile);
@@ -73,7 +74,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         {
                             Console.WriteLine("ValidateFileText Fail");
                             UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
-                            GenTextFileFail(filename, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "/Fail");
+                            nametextfilefail = filename.Replace(".txt","") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                            GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
                         }
                         else
                         {
@@ -91,21 +93,26 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                             {
                                 Console.WriteLine("ValidateSchematron Fail");
                                 UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
-                                GenTextFileFail(filename, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "/Fail");
+                                nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                                GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Start Gen XML File");
+                                string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
+                                var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO);
+
+                                Console.WriteLine("End Gen XML File");
                             }
 
-                            Console.WriteLine("Start Gen XML File");
-                            string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                            var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "/Success/", xmlfilename, classtextfile.BILLING_NO);
-
-                            Console.WriteLine("Move Text File");
-                            MoveTextFile(textfile, configXML.ConfigXmlGeneratorOutputPath + "/Success/" + filename);
-                            Console.WriteLine("End Gen XML File");
                         }
                         round += 1;
                     }
                     Console.WriteLine("End Read TextFile : " + textfile);
 
+                    Console.WriteLine("Start Move File");
+                    MoveFile(textfile, "", filename);
+                    Console.WriteLine("End Move File");
                 }
 
             }
@@ -140,13 +147,18 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             string[] fullpath = new string[0];
             string pathFolder = "";
             List<string> listpath;
+            string fileType = "*.txt";
+            //ConfigXmlGenerator config = new ConfigXmlGenerator();
+            //config.ConfigXmlGeneratorInputPath = @"D:\sign";
+            //config.ConfigXmlGeneratorOutputPath = @"D:\sign";
+            //configXMLGenerator = new List<ConfigXmlGenerator>();
+            //configXMLGenerator.Add(config);
+            configXMLGenerator = configXMLGenerator.Where(x => x.ConfigXmlGeneratorCompanyCode == "0090").ToList();
             try
             {
-                //pathFolder = @"C:\Code_Dev\sign";
                 foreach (var path in configXMLGenerator)
                 {
                     pathFolder = path.ConfigXmlGeneratorInputPath;
-                    string fileType = "*.txt";
                     fullpath = Directory.GetFiles(pathFolder, fileType);
                     listpath = fullpath.ToList();
                     result.AddRange(listpath);
@@ -264,7 +276,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         row.Number_Bill_to = dt.Rows[i][53].ToString();
                         row.Number_Payer = dt.Rows[i][54].ToString();
                         row.CORRECT_AMOUNT = dt.Rows[i][55].ToString();
-                        row.pathfile = dt.Rows[i][57].ToString();
+                        row.pathfile = dt.Rows[i][56].ToString();
                     }
                     else
                     {
@@ -465,11 +477,15 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno)
         {
             bool result = false;
-            pathoutbound = @"D:\gen\gen.xml";
+            //pathoutbound = @"D:\gen\gen.xml";
             XDocument xml = new XDocument();
             List<string> errormessage = new List<string>();
             try
             {
+                if (!Directory.Exists(pathoutbound))
+                {
+                    Directory.CreateDirectory(pathoutbound);
+                }
                 switch (data.exchangedDocument.typeCode)
                 {
                     case "388":
@@ -478,13 +494,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     case "T04":
                         var taxinvoice = new Template_TaxInvoice();
                         xml = taxinvoice.XMLtemplate(data);
-                        result = GenXMLFile(xml, pathoutbound + "/" + filename);
+                        result = GenXMLFile(xml, pathoutbound + filename);
                         break;
                     case "80":
                     case "81":
                         var debitcreditnote = new Template_DebitCreditNote();
                         xml = debitcreditnote.XMLtemplate(data);
-                        result = GenXMLFile(xml, pathoutbound + "/" + filename);
+                        result = GenXMLFile(xml, pathoutbound + filename);
                         break;
                     case "T01":
                     default:
@@ -561,7 +577,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 string errorText = "";
-                listdatatransactionDescription = transactionDescription.GetBilling(Convert.ToInt32(dataxml.BILLING_NO)).Result;
+                listdatatransactionDescription = transactionDescription.GetBilling(dataxml.BILLING_NO).Result;
                 data = listdatatransactionDescription.FirstOrDefault();
 
                 ProfileCompany profiledetail = new ProfileCompany();
@@ -632,28 +648,30 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool MoveTextFile(string pathinpput, string pathoutput)
+        public bool MoveFile(string pathinput, string pathoutput, string filename)
         {
             bool result = false;
             //pathinpput = @"c:\temp\MySample.txt";
-            //pathoutput = @"c:\temp2\MySample.txt";
+            pathoutput = @"D:\sign\backupfile\";
             try
             {
-                if (!File.Exists(pathinpput))
+                if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
                     // but the handle is not kept.  
-                    using (FileStream fs = File.Create(pathinpput)) { }
+                    using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (File.Exists(pathoutput))
-                    File.Delete(pathoutput);
+                if (!Directory.Exists(pathoutput))
+                {
+                    Directory.CreateDirectory(pathoutput);
+                }
                 // Move the file.  
-                File.Move(pathinpput, pathoutput);
-                Console.WriteLine("{0} was moved to {1}.", pathinpput, pathoutput);
+                File.Move(pathinput, pathoutput + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
 
                 // See if the original exists now.  
-                if (File.Exists(pathinpput))
+                if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
                 }
@@ -673,12 +691,17 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         public bool GenTextFileFail(string filename, TextFileSchematic dataxml, string path)
         {
             bool result = false;
-            string filePath = path + "//" + filename;
+            string filePath = path + filename;
             string lineheader = "";
             List<string> lineitem = new List<string>();
             string line = "";
             try
             {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 lineheader += dataxml.HEADER_FLAG + "\\|";
                 lineheader += dataxml.FI_DOC_TYPE + "\\|";
                 lineheader += dataxml.FISCAL_YEAR + "\\|";
@@ -734,8 +757,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 lineheader += dataxml.Number_Ship_to + "\\|";
                 lineheader += dataxml.Number_Bill_to + "\\|";
                 lineheader += dataxml.Number_Payer + "\\|";
-                lineheader += dataxml.CORRECT_AMOUNT + "\\|";
-                lineheader += dataxml.pathfile;
+                lineheader += dataxml.CORRECT_AMOUNT;
 
                 foreach (var item in dataxml.Item)
                 {
@@ -770,7 +792,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     write.WriteLine(lineheader);
                     foreach (var item in lineitem)
                     {
-                        write.WriteLine(Environment.NewLine);
+                        //write.WriteLine(Environment.NewLine);
                         write.WriteLine(item);
                     }
                     write.Flush();
@@ -814,11 +836,11 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             TransactionDescription dataTran = new TransactionDescription();
             try
             {
-                listdatatransactionDescription = transactionDescription.GetBilling(Convert.ToInt32(billingNo)).Result;
+                listdatatransactionDescription = transactionDescription.GetBilling(billingNo).Result;
                 dataTran = listdatatransactionDescription.FirstOrDefault();
                 if(dataTran != null)
                 {
-                    if (errormessage.Count == 0 && result == true)
+                    if (errormessage.Count == 0)
                     {
                         dataTran.GenerateDateTime = DateTime.Now;
                         dataTran.GenerateDetail = "XML was generated completely";

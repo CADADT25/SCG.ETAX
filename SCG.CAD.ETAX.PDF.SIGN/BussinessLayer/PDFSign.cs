@@ -23,6 +23,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             List<PDFSignModel> result = new List<PDFSignModel>();
             string[] fullpath = new string[0];
             string pathFolder = "";
+            string fileType = "*.pdf";
             List<string> listpath;
             PDFSignModel pdfSignModel = new PDFSignModel();
 
@@ -37,7 +38,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 foreach (var path in configPDFSign)
                 {
                     pathFolder = path.ConfigPdfsignInputPath;
-                    string fileType = "*.pdf";
                     fullpath = Directory.GetFiles(pathFolder, fileType);
                     listpath = fullpath.ToList();
                     foreach (var item in listpath)
@@ -61,11 +61,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
         public void PdfSign()
         {
-            string folderDest = @"D:/";
             string fileNameDest = "";
+            string fullpath = "";
             bool resultPDFSign = false;
-            double billno = 0;
+            string billno = "";
             int round = 0;
+            string pathoutbound = "";
+            string fileType = ".pdf";
             try
             {
                 Console.WriteLine("Start PDFSign");
@@ -81,17 +83,16 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     {
                         round += 1;
                         Console.WriteLine("Start round : " + round);
-                        if(src.FileName.IndexOf('-') > -1)
+                        if(src.FileName.IndexOf('_') > -1)
                         {
-                            billno = Convert.ToDouble(src.FileName.Substring(7, src.FileName.IndexOf('-') + 1));
+                            billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
                         }
                         else
                         {
-                            billno = Convert.ToDouble(src.FileName.Substring(7));
+                            billno = src.FileName.Substring(8);
                         }
                         Console.WriteLine("billno : " + billno);
 
-                        fileNameDest = Path.GetFileName(src.FileName).Replace(".pdf", "");
                         PdfReader reader = new PdfReader(src.FullPath);
 
                         Console.WriteLine("Send To Sign");
@@ -99,12 +100,28 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                         Console.WriteLine("Status Sign : " + resultPDFSign.ToString());
                         Console.WriteLine("Update Status in DataBase");
-                        UpdateStatusAfterSignPDF(resultPDFSign, billno);
+
+                        fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        pathoutbound = src.Outbound;
+                        if (resultPDFSign)
+                        {
+                            pathoutbound += "\\Success\\";
+                        }
+                        else
+                        {
+                            pathoutbound += "\\Fail\\";
+                        }
+                        fullpath = pathoutbound + fileNameDest + fileType;
+
+                        UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath);
 
                         Console.WriteLine("Start Export PDF file");
-                        fileNameDest = src.FileName + "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        ExportPDFAfterSign(resultPDFSign, reader, src.Outbound, fileNameDest);
+                        ExportPDFAfterSign(reader, pathoutbound, fullpath);
                         Console.WriteLine("End Export PDF file");
+                        reader.Close();
+                        Console.WriteLine("Start Move file");
+                        MoveFile(src.FullPath, src.Outbound, src.FileName + fileType);
+                        Console.WriteLine("End Move file");
 
                     }
                 }
@@ -120,7 +137,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             bool result = false;
             try
             {
-                result = true;
+                //result = true;
             }
             catch (Exception ex)
             {
@@ -129,14 +146,14 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
         
-        public bool UpdateStatusAfterSignPDF(bool status, double billno)
+        public bool UpdateStatusAfterSignPDF(bool status, string billno, string pathfile)
         {
             bool result = false;
             try
             {
 
                 Task<Response> res;
-                var dataTran = transactionDescription.GetBilling(Convert.ToInt32(billno)).Result.FirstOrDefault();
+                var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
                 if(dataTran == null)
                 {
                     dataTran = new TransactionDescription();
@@ -149,11 +166,12 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     dataTran.UpdateDate = DateTime.Now;
                     if (status)
                     {
-                        dataTran.XmlSignDateTime = DateTime.Now;
-                        dataTran.XmlSignDetail = "PDF was signed completely";
-                        dataTran.XmlSignStatus = "Successful";
+                        dataTran.PdfSignDateTime = DateTime.Now;
+                        dataTran.PdfSignDetail = "PDF was signed completely";
+                        dataTran.PdfSignStatus = "Successful";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
+                        dataTran.PdfSignLocation = pathfile;
 
                         var json = JsonSerializer.Serialize(dataTran);
                         res = transactionDescription.Insert(json);
@@ -164,9 +182,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     }
                     else
                     {
-                        dataTran.XmlSignDateTime = DateTime.Now;
-                        dataTran.XmlSignDetail = "PDF was signed Failed";
-                        dataTran.XmlSignStatus = "Failed";
+                        dataTran.PdfSignDateTime = DateTime.Now;
+                        dataTran.PdfSignDetail = "PDF was signed Failed";
+                        dataTran.PdfSignStatus = "Failed";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 
@@ -182,9 +200,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 {
                     if (status)
                     {
-                        dataTran.XmlSignDateTime = DateTime.Now;
-                        dataTran.XmlSignDetail = "XML was signed completely";
-                        dataTran.XmlSignStatus = "Successful";
+                        dataTran.PdfSignDateTime = DateTime.Now;
+                        dataTran.PdfSignDetail = "XML was signed completely";
+                        dataTran.PdfSignStatus = "Successful";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 
@@ -197,9 +215,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     }
                     else
                     {
-                        dataTran.XmlSignDateTime = DateTime.Now;
-                        dataTran.XmlSignDetail = "XML was signed Failed";
-                        dataTran.XmlSignStatus = "Failed";
+                        dataTran.PdfSignDateTime = DateTime.Now;
+                        dataTran.PdfSignDetail = "XML was signed Failed";
+                        dataTran.PdfSignStatus = "Failed";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 
@@ -219,21 +237,17 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public bool ExportPDFAfterSign(bool resultPDFSign, PdfReader reader, string pathoutbound, string filename)
+        public bool ExportPDFAfterSign(PdfReader reader, string pathoutbound, string fullpath)
         {
             bool result = false;
-            string fileType = ".pdf";
             try
             {
-                if (resultPDFSign)
+                if (!Directory.Exists(pathoutbound))
                 {
-                    pathoutbound += "/Success/";
+                    Directory.CreateDirectory(pathoutbound);
                 }
-                else
-                {
-                    pathoutbound += "/Fail/";
-                }
-                FileStream os = new FileStream(pathoutbound + filename + fileType, FileMode.Create);
+
+                FileStream os = new FileStream(fullpath, FileMode.Create);
                 PdfStamper stamper = PdfStamper.CreateSignature(reader, os, '\0');
 
                 result = true;
@@ -255,6 +269,46 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             {
                 throw ex;
             }
+        }
+
+        public bool MoveFile(string pathinput, string pathoutput, string filename)
+        {
+            bool result = false;
+            //pathinpput = @"c:\temp\MySample.txt";
+            pathoutput = @"D:\sign\backupfile\";
+            try
+            {
+                if (!File.Exists(pathinput))
+                {
+                    // This statement ensures that the file is created,  
+                    // but the handle is not kept.  
+                    using (FileStream fs = File.Create(pathinput)) { }
+                }
+                // Ensure that the target does not exist.  
+                if (!Directory.Exists(pathoutput))
+                {
+                    Directory.CreateDirectory(pathoutput);
+                }
+                // Move the file.  
+                File.Move(pathinput, pathoutput + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+
+                // See if the original exists now.  
+                if (File.Exists(pathinput))
+                {
+                    Console.WriteLine("The original file still exists, which is unexpected.");
+                }
+                else
+                {
+                    Console.WriteLine("The original file no longer exists, which is expected.");
+                }
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+            return result;
         }
     }
 }

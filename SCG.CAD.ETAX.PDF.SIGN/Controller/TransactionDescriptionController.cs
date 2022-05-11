@@ -90,7 +90,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.Controller
             //JsonResult Json = new JsonResult(task);
             return task;
         }
-        public async Task<List<TransactionDescription>> GetBilling(int billno)
+        public async Task<List<TransactionDescription>> GetBilling(string billno)
         {
             Response resp = new Response();
 
@@ -98,7 +98,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.Controller
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/GetBilling?billingNo= " + billno + " "));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/GetBilling?billingNo=" + billno));
 
                 if (task.STATUS)
                 {
