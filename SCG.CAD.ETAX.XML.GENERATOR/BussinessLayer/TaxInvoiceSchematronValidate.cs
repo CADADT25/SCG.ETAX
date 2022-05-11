@@ -47,7 +47,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 }
                 if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID, "TXID") && dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id.Length != 18)
                 {
-                    errormessage.Add("TIV-SellerTradeParty-005 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ขาย (schemeID) เป็น TXID ต้องมีจำนวนตัวเลขเท่ากับ 18 หลัก (เลขประจำตัวผู้เสียภาษีอากร 13หลัก และเลขสาขา 5 หลัก) (SellerTradeParty/SpecifiedTaxRegistration/ID must length equal to 18 since schemeID is TXID.");
+                    //errormessage.Add("TIV-SellerTradeParty-005 กรณีระบุประเภทเลขประจำตัวผู้เสียภาษีอากรของผู้ขาย (schemeID) เป็น TXID ต้องมีจำนวนตัวเลขเท่ากับ 18 หลัก (เลขประจำตัวผู้เสียภาษีอากร 13หลัก และเลขสาขา 5 หลัก) (SellerTradeParty/SpecifiedTaxRegistration/ID must length equal to 18 since schemeID is TXID.");
                 }
                 if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.id, "") &&
                     (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.specifiedTaxRegistration.schemeID, "TXID") &&

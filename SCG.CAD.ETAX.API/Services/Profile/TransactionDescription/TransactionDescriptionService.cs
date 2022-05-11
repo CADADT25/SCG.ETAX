@@ -64,7 +64,7 @@
             }
             return resp;
         }
-        public Response GET_BILLING(int billingNo)
+        public Response GET_BILLING(string billingNo)
         {
             Response resp = new Response();
 

@@ -49,10 +49,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         }
                         try
                         {
-                            if (checkprice == false && (Convert.ToDecimal(item.UNIT_PRICT) < 0 || Convert.ToDecimal(item.NETUNIT_PRICE) < 0 ||
-                                Convert.ToDecimal(item.TAX_AMOUNT) < 0 || Convert.ToDecimal(item.CHARGE_AMOUNT) < 0 ||
-                                Convert.ToDecimal(item.ALLOWANCE_AMOUNT) < 0 || Convert.ToDecimal(item.TAX_BASIS_AMOUNT) < 0 ||
-                                Convert.ToDecimal(item.TAX_TOTAL_AMOUNT) < 0 || Convert.ToDecimal(item.GRAND_TOTAL_AMOUNT) < 0))
+                            if (checkprice == false && 
+                                (Convert.ToDecimal(item.UNIT_PRICT) < 0 || 
+                                Convert.ToDecimal(item.NETUNIT_PRICE) < 0 ||
+                                Convert.ToDecimal(item.TAX_AMOUNT) < 0 || 
+                                Convert.ToDecimal(item.TAX_BASIS_AMOUNT) < 0 ||
+                                Convert.ToDecimal(item.TAX_TOTAL_AMOUNT) < 0 || 
+                                Convert.ToDecimal(item.GRAND_TOTAL_AMOUNT) < 0))
                             {
                                 checkprice = true;
                             }
@@ -74,7 +77,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 }
                 if(profileBranches.FirstOrDefault(x=> x.ProfileBranchCode == textfile.SELLER_BRANCH) == null)
                 {
-                    result.Add("Failed Branch " + textfile.SELLER_BRANCH + " ไม่ได้ mapping กับ e - Tax");
+                    //result.Add("Failed Branch " + textfile.SELLER_BRANCH + " ไม่ได้ mapping กับ e - Tax");
                 }
                 if (checksalesunit)
                 {
@@ -82,9 +85,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 }
                 try
                 {
-                    if (checkprice ||(Convert.ToDecimal(textfile.SALES_AMOUNT) < 0 || Convert.ToDecimal(textfile.TAX_AMOUNT) < 0 || Convert.ToDecimal(textfile.ALLOWANCE_AMOUNT) < 0 ||
-                        Convert.ToDecimal(textfile.CHARGE_AMOUNT) < 0 || Convert.ToDecimal(textfile.CORRECT_AMOUNT) < 0 || Convert.ToDecimal(textfile.DIFFERENCE_AMOUNT) < 0 ||
-                        Convert.ToDecimal(textfile.GRAND_TOTAL_AMOUNT) < 0 || Convert.ToDecimal(textfile.ORIGINAL_AMOUNT) < 0 || Convert.ToDecimal(textfile.TAX_BASIS_AMOUNT) < 0 ||
+                    if (checkprice ||(Convert.ToDecimal(textfile.SALES_AMOUNT) < 0 || 
+                        Convert.ToDecimal(textfile.TAX_AMOUNT) < 0 || 
+                        //Convert.ToDecimal(textfile.CORRECT_AMOUNT) < 0 || 
+                        //Convert.ToDecimal(textfile.DIFFERENCE_AMOUNT) < 0 ||
+                        Convert.ToDecimal(textfile.GRAND_TOTAL_AMOUNT) < 0 || 
+                        //Convert.ToDecimal(textfile.ORIGINAL_AMOUNT) < 0 || 
+                        Convert.ToDecimal(textfile.TAX_BASIS_AMOUNT) < 0 ||
                         Convert.ToDecimal(textfile.TAX_TOTAL_AMOUNT) < 0))
                     {
                         result.Add("Failed จำนวนเงินติดลบ");

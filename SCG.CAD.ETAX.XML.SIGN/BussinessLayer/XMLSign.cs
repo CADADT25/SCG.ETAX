@@ -20,12 +20,13 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
         public void XML_Sign()
         {
-            string folderDest = @"D:/";
+            string fullpath = "";
             string fileNameDest = "";
-            string fileType = ".xml";
             bool resultXMLSign = false;
-            int billno = 0;
+            string billno = "";
             int round = 0;
+            string fileType = ".xml";
+            string pathoutbound = "";
             try
             {
                 Console.WriteLine("Start XMLSign");
@@ -41,8 +42,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     {
                         round += 1;
                         Console.WriteLine("Start round : " + round);
-
-                        billno = Convert.ToInt32(src.FileName.Substring(7, src.FileName.IndexOf('-') + 1));
+                        billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
                         Console.WriteLine("billno : " + billno);
                         XmlDocument doc = new XmlDocument();
                         doc.Load(src.FullPath);
@@ -52,13 +52,28 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                         Console.WriteLine("Status Sign : " + resultXMLSign.ToString());
                         Console.WriteLine("Update Status in DataBase");
-                        UpdateStatusAfterSignXML(resultXMLSign, billno);
+
+                        fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        pathoutbound = src.Outbound;
+                        if (resultXMLSign)
+                        {
+                            pathoutbound += "\\Success\\";
+                        }
+                        else
+                        {
+                            pathoutbound += "\\Fail\\";
+                        }
+                        fullpath = pathoutbound + fileNameDest + fileType;
+
+                        UpdateStatusAfterSignXML(resultXMLSign, billno, fullpath);
 
                         Console.WriteLine("Start Export XML file");
-                        fileNameDest = src.FileName + "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        ExportXMLAfterSign(resultXMLSign, doc, src.Outbound, fileNameDest);
+                        ExportXMLAfterSign(doc, pathoutbound, fullpath);
                         Console.WriteLine("End Export XML file");
-
+                        
+                        Console.WriteLine("Start Move file");
+                        MoveFile(src.FullPath, src.Outbound, src.FileName + fileType);
+                        Console.WriteLine("End Move file");
                     }
                 }
                 Console.WriteLine("End XMLSign");
@@ -74,22 +89,28 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             List<XMLSignModel> result = new List<XMLSignModel>();
             string[] fullpath = new string[0];
             string pathFolder = "";
+            string fileType = "*.xml";
             List<string> listpath;
             XMLSignModel xMLSignModel = new XMLSignModel();
+
+            ConfigXmlSign config = new ConfigXmlSign();
+            config.ConfigXmlsignInputPath = @"D:\sign";
+            config.ConfigXmlsignOutputPath = @"D:\sign";
+            configXmlSign = new List<ConfigXmlSign>();
+            configXmlSign.Add(config);
             try
             {
                 //pathFolder = @"C:\Code_Dev\sign";
                 foreach (var path in configXmlSign)
                 {
                     pathFolder = path.ConfigXmlsignInputPath;
-                    string fileType = "*.xml";
                     fullpath = Directory.GetFiles(pathFolder, fileType);
                     listpath = fullpath.ToList();
                     foreach (var item in listpath)
                     {
                         xMLSignModel = new XMLSignModel();
                         xMLSignModel.FullPath = item;
-                        xMLSignModel.FileName = Path.GetFileName(item).Replace(".pdf", "");
+                        xMLSignModel.FileName = Path.GetFileName(item).Replace(".xml", "");
                         xMLSignModel.Outbound = path.ConfigXmlsignOutputPath;
                         xMLSignModel.Inbound = path.ConfigXmlsignInputPath;
                         result.Add(xMLSignModel);
@@ -118,7 +139,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool UpdateStatusAfterSignXML(bool status, int billno)
+        public bool UpdateStatusAfterSignXML(bool status, string billno, string pathfile)
         {
             bool result = false;
             string jsondata = "";
@@ -134,6 +155,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     dataTran.XmlSignStatus = "Successful";
                     dataTran.UpdateBy = "Batch";
                     dataTran.UpdateDate = DateTime.Now;
+                    dataTran.XmlSignLocation = pathfile;
 
                     var json = JsonSerializer.Serialize(dataTran);
                     res = transactionDescription.Update(json);
@@ -165,20 +187,16 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool ExportXMLAfterSign(bool resultXMLSign, XmlDocument doc, string pathoutbound, string filename)
+        public bool ExportXMLAfterSign(XmlDocument doc, string pathoutbound, string fullpath)
         {
             bool result = false;
             try
             {
-                if (resultXMLSign)
+                if (!Directory.Exists(pathoutbound))
                 {
-                    pathoutbound += "/Success/";
+                    Directory.CreateDirectory(pathoutbound);
                 }
-                else
-                {
-                    pathoutbound += "/Fail/";
-                }
-                TextWriter filestream = new StreamWriter(pathoutbound + filename);
+                TextWriter filestream = new StreamWriter(fullpath);
                 doc.Save(filestream);
                 result = true;
             }
@@ -200,5 +218,46 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 throw ex;
             }
         }
+
+        public bool MoveFile(string pathinput, string pathoutput, string filename)
+        {
+            bool result = false;
+            //pathinpput = @"c:\temp\MySample.txt";
+            pathoutput = @"D:\sign\backupfile\";
+            try
+            {
+                if (!File.Exists(pathinput))
+                {
+                    // This statement ensures that the file is created,  
+                    // but the handle is not kept.  
+                    using (FileStream fs = File.Create(pathinput)) { }
+                }
+                // Ensure that the target does not exist.  
+                if (!Directory.Exists(pathoutput))
+                {
+                    Directory.CreateDirectory(pathoutput);
+                }
+                // Move the file.  
+                File.Move(pathinput, pathoutput + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+
+                // See if the original exists now.  
+                if (File.Exists(pathinput))
+                {
+                    Console.WriteLine("The original file still exists, which is unexpected.");
+                }
+                else
+                {
+                    Console.WriteLine("The original file no longer exists, which is expected.");
+                }
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+            return result;
+        }
+
     }
 }
