@@ -11,6 +11,12 @@ namespace SCG.CAD.ETAX.XML.PRINT.ZIP.Models
         public string CompanyCode { get; set; }
         public string InputPath { get; set; }
         public string OutPath { get; set; }
-        public List<string> FilePath { get; set; }
+        public List<Filedetail> FileDetails { get; set; }
+    }
+    public class Filedetail
+    {
+        public string BillingNo { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
     }
 }
