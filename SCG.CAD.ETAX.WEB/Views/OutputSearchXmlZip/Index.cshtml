@@ -1,0 +1,231 @@
+﻿@{
+    ViewData["Title"] = "OutputSearchXmlZip Profile";
+    Layout = null;
+}
+
+
+@await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Search.cshtml")
+
+<div class="divider">
+
+</div>
+@await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Content.cshtml")
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#outputSearchXmlZipCustomerCode').select2();
+
+        $("#outputSearchXmlZipDate").flatpickr({
+            mode: "range"
+        });
+
+        //fnDropdownOutputSearchXmlZipCompanyCode();
+
+        RenderOutputSearchXmlZip();
+
+    });
+
+    
+    function fnDropdownOutputSearchXmlZipCompanyCode() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#outputSearchXmlZipCustomerCode");
+            });
+        })
+    }
+
+    function RenderOutputSearchXmlZip(){
+
+        var table = $("#tbOutputSearchXmlZipMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "OutputSearchXmlZip")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "OutputSearchXmlZipNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "OutputSearchXmlZipNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "OutputSearchXmlZipCompanyCode",
+                    width: "20%"
+                },
+                {
+                    data: "OutputSearchXmlZipFileName",
+                    width: "20%"
+                },
+                {
+                    data: "OutputSearchXmlZipFullPath",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+                //{
+                //    data: null,
+                //    className: "dt-center editor-delete text-center text-danger",
+                //    defaultContent: '<i class="pointer fas fa-trash"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+        EditOutputSearchXmlZip(table);
+        DeleteOutputSearchXmlZip(table);
+    }
+
+
+
+    function EditOutputSearchXmlZip(table){
+
+        $('#tbOutputSearchXmlZipMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callOutputSearchXmlZipGetDetailController(getPK);
+        });
+    }
+
+
+    function ExportOutputSearchXmlZip(){
+
+        $.blockUI();
+
+        callOutputSearchXmlZipExportController();
+
+        $.unblockUI();
+    }
+
+
+    // [Begin] Ajax call Controller
+
+    function callOutputSearchXmlZipGetDetailController(getPK){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                //document.getElementById('txtUpdateOutputSearchXmlZipNo').value = data.OutputSearchXmlZipNo;
+                //document.getElementById('txtUpdateOutputSearchXmlZipSource').value = data.ErpSource;
+                //document.getElementById('txtUpdateOutputSearchXmlZipErp').value = data.OutputSearchXmlZipErp;
+                //document.getElementById('txtUpdateOutputSearchXmlZipRd').value = data.OutputSearchXmlZipRd;
+                //document.getElementById('txtUpdatetOutputSearchXmlZipDescription').value = data.OutputSearchXmlZipDescription;
+
+                
+                //if(data.Isactive == 1){
+                //    document.getElementById("toggleUpdateOutputSearchXmlZipIsActive").checked = true;
+                //}
+                //else{
+                //    document.getElementById("toggleUpdateOutputSearchXmlZipIsActive").checked = false;
+                //}
+
+                $("#modalUpdateOutputSearchXmlZip").modal('show');
+
+            }
+        });
+    }
+
+
+    function callOutputSearchXmlZipExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "OutputSearchXmlZip")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-OutputSearchXmlZip.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+    // [end] Ajax call Controller
+
+
+
+
+    function callOutputSearchXmlZipIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#render-OutputSearchXmlZip-create").load("@Url.Action("Index", "OutputSearchXmlZip")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>
+
+
+
+
+
+

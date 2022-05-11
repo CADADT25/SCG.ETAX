@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OutputSearchPrintingController : Controller
+    public class OutputSearchXmlZipDowloadHistoryController : ControllerBase
     {
 
-        private readonly IOutputSearchPrintingRepository repo;
 
-        public OutputSearchPrintingController()
+        private readonly IOutputSearchXmlZipDowloadHistoryRepository repo;
+
+        public OutputSearchXmlZipDowloadHistoryController()
         {
-            repo = new OutputSearchPrintingRepository();
+            repo = new OutputSearchXmlZipDowloadHistoryRepository();
         }
 
 
@@ -35,7 +37,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public IActionResult Insert(OutputSearchPrinting param)
+        public IActionResult Insert(OutputSearchXmlZipDowloadHistory param)
         {
             var result = repo.INSERT(param).Result;
 
@@ -44,7 +46,7 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Update")]
-        public IActionResult Update(OutputSearchPrinting param)
+        public IActionResult Update(OutputSearchXmlZipDowloadHistory param)
         {
             var result = repo.UPDATE(param).Result;
 
@@ -53,12 +55,13 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(OutputSearchPrinting param)
+        public IActionResult Delete(OutputSearchXmlZipDowloadHistory param)
         {
             var result = repo.DELETE(param).Result;
 
             return Ok(result);
         }
-   
+
+
     }
 }
