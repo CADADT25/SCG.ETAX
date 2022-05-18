@@ -146,7 +146,6 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             {
                 //zipPath = @"D:\Example\result.zip";
                 zipPath = dataFile.OutPath;
-                zipName = dataFile.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
                 if (!Directory.Exists(zipPath))
                 {
                     Directory.CreateDirectory(zipPath);
