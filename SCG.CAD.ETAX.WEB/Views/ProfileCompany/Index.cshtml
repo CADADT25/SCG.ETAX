@@ -135,14 +135,14 @@
 
         $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+setCompanyCode+"", function (data) {
             $.each(data, function (i, data) {
-                
+
             });
         })
     }
 
     function fnUpdateDropdownProfileCompanyCertificate(companyCode) {
 
-        
+
         $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+companyCode+"", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
@@ -413,8 +413,8 @@
                     $("#render-ConfigMftsEmailSetting-create").load("@Url.Action("Index", "ConfigMftsEmailSetting")");
                     $("#render-ConfigMftsCompressXmlSetting-create").load("@Url.Action("Index", "ConfigMftsCompressXmlSetting")");
                     $("#render-ConfigMftsCompressPrintSetting-create").load("@Url.Action("Index", "ConfigMftsCompressPrintSetting")");
-                     
-                     
+
+
                     $("#render-configMftsIndexGenerationSettingInput-create").load("@Url.Action("Index", "configMftsIndexGenerationSettingInput")");
                     $("#render-configMftsIndexGenerationSettingOutput-create").load("@Url.Action("Index", "configMftsIndexGenerationSettingOutput")");
 

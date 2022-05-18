@@ -14,6 +14,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public int? OutputSearchXmlZipDowloadCount { get; set; }
         public DateTime? OutputSearchXmlZipDowloadLastTime { get; set; }
         public string? OutputSearchXmlZipDowloadLastBy { get; set; }
+        public string? OutputSearchXmlZipRequestCancelNo { get; set; }
         public string? CreateBy { get; set; }
         public DateTime? CreateDate { get; set; }
         public string? UpdateBy { get; set; }

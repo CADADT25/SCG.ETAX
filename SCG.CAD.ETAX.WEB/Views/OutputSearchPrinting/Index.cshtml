@@ -7,7 +7,6 @@
 @await Html.PartialAsync("~/Views/OutputSearchPrinting/_Search.cshtml")
 
 <div class="divider">
-
 </div>
 @await Html.PartialAsync("~/Views/OutputSearchPrinting/_Content.cshtml")
 
@@ -17,18 +16,21 @@
     $(document).ready(function () {
 
         $('#outputSearchPrintingCustomerCode').select2();
+        $('#outputSearchPrintingStatus').select2();
 
         $("#outputSearchPrintingDate").flatpickr({
             mode: "range"
         });
 
-        //fnDropdownOutputSearchPrintingCompanyCode();
+        fnDropdownOutputSearchPrintingCompanyCode();
 
-        RenderOutputSearchPrinting();
+        $("#tbOutputSearchPrintingMain").removeData();
+
+        RenderOutputSearchPrinting('');
 
     });
 
-    
+
     function fnDropdownOutputSearchPrintingCompanyCode() {
 
         $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
@@ -42,20 +44,43 @@
         })
     }
 
-    function RenderOutputSearchPrinting(){
+    function fnSearchOutputDataPrinting(){
+
+        $("#tbOutputSearchPrintingMain").remove();
+
+
+        var getCompanyCode = $('#outputSearchPrintingCustomerCode').val();
+        var getDate = $('#outputSearchPrintingDate').val();
+
+        var model = new Object();
+
+        model.outPutSearchCompanyCode = getCompanyCode;
+        model.outPutSearchDate = getDate;
+
+        var JsonString = JSON.stringify(model);
+
+                //alert(JsonString);
+
+        RenderOutputSearchPrinting(JsonString);
+    }
+
+    function RenderOutputSearchPrinting(JsonString){
 
         var table = $("#tbOutputSearchPrintingMain").DataTable({
 
-            "scrollY": false,
+            "scrollY": true,
+            "scrollX": true,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
+            "searching": true,
             "pageLength": 10,
 
             "ajax": {
                 url: "@Url.Action("List", "OutputSearchPrinting")",
                 type: "POST",
+                data: { SearchJson : JsonString },
                 datatype: "json"
             },
 
@@ -63,7 +88,7 @@
             "columns": [
 
                 {
-                    data: "OutputSearchPrintingNo",
+                    data: "outputSearchPrintingNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -72,45 +97,39 @@
                     //data: "OutputSearchPrintingNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
-                    data: "OutputSearchPrintingCompanyCode",
-                    width: "20%"
-                },
-                {
-                    data: "OutputSearchPrintingFileName",
-                    width: "20%"
-                },
-                {
-                    data: "OutputSearchPrintingFullPath",
+                    data: "outputSearchPrintingCompanyCode",
                     width: "10%"
                 },
                 {
-                    data: "isactive",
+                    data: "outputSearchPrintingFileName",
+                    width: "20%"
+                },
+                {
+                    data: "outputSearchPrintingFullPath",
                     width: "10%",
-                    className: "text-center",
-                    orderable: false,
                     render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                        return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('YYYY-MM-DD')},
+                    width: "10%"
+                },
+                {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    className: "dt-center editor-edit text-center text-warning",
+                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -120,51 +139,67 @@
             } );
         } ).draw();
 
+
+        $('#outputSearchPrintingCustomerCode').on( 'change', function () {
+            var valueCustomer = $('#outputSearchPrintingCustomerCode').val();
+
+            //alert(valueCustomer);
+
+            if(valueCustomer.includes('All')){
+                table.columns(2).search('').draw();
+            }else{
+                    table.column(2).search(this.value).draw();
+            }
+        } );
+
+        var minDate, maxDate;
+
+        $('#outputSearchPrintingDate').on( 'change', function () {
+            var valueDate = this.value;
+
+            if(valueDate.includes('to')){
+                const myArray = valueDate.split(" to ");
+
+
+                minDate = myArray[0];
+                maxDate = myArray[1];
+
+
+                var arr=[];
+
+                var getDaysArray = function(minDate, maxDate) {
+                    for(dt=new Date(minDate); dt<=new Date(maxDate); dt.setDate(dt.getDate()+1)){
+
+                        let d = dt;
+
+                        let month = (d.getMonth() + 1).toString().padStart(2, '0');
+                        let day = d.getDate().toString().padStart(2, '0');
+                        let year = d.getFullYear();
+
+                        let dtnew = year+"-"+month+"-"+day;
+                        //alert(dtnew)
+
+                        arr.push(dtnew);
+                    }
+                    return arr;
+                };
+
+                var daylist = getDaysArray(new Date(minDate),new Date(maxDate));
+                daylist.join("\n")
+
+                //alert(daylist);
+
+                table.columns(6).search(daylist).draw();
+            }
+
+        } );
+
+
+
         EditOutputSearchPrinting(table);
         DeleteOutputSearchPrinting(table);
     }
 
-
-    //function fnInsertCancelProfileEmailTemplate(){
-
-    //    $("#modalOutputSearchPrinting").modal('hide');
-    //}
-
-    //function fnUpdateCancelProfileEmailTemplate(){
-
-    //    $("#modalUpdateOutputSearchPrinting").modal('hide');
-    //}
-
-    //function callModalInsertOutputSearchPrinting(){
-
-    //     var setDataSource = $("#dataSourceState").text();
-
-    //    document.getElementById('txtInsertOutputSearchPrintingSource').value = setDataSource;
-
-    //    $("#modalOutputSearchPrinting").modal('show');
-    //}
-
-    // function fnInsertOutputSearchPrinting(){
-    //    if ($('#txtInsertOutputSearchPrintingErp').val() != '' && $('#txtInsertOutputSearchPrintingRd').val() != '') {
-    //        callOutputSearchPrintingInsertController();
-    //    }
-    //    else {
-    //        validateInsertOutputSearchPrinting();
-
-    //        fnToastrInputDataFail();
-    //    }
-    //}
-
-    //function fnUpdateOutputSearchPrinting(){
-    //    if ($('#txtUpdateOutputSearchPrintingErp').val() != '' && $('#txtUpdateOutputSearchPrintingRd').val() != '') {
-    //        callOutputSearchPrintingUpdateController();
-    //    }
-    //    else {
-    //        validateUpdateOutputSearchPrinting();
-
-    //        fnToastrInputDataFail();
-    //    }
-    //}
 
     function EditOutputSearchPrinting(table){
 
@@ -178,6 +213,11 @@
         });
     }
 
+
+    function fnTimelineCancelOutputSearchPrinting(){
+
+        $("#modalUpdateOutputSearchPrinting").modal('hide');
+    } 
 
     function ExportOutputSearchPrinting(){
 
@@ -200,20 +240,6 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-
-                //document.getElementById('txtUpdateOutputSearchPrintingNo').value = data.OutputSearchPrintingNo;
-                //document.getElementById('txtUpdateOutputSearchPrintingSource').value = data.ErpSource;
-                //document.getElementById('txtUpdateOutputSearchPrintingErp').value = data.OutputSearchPrintingErp;
-                //document.getElementById('txtUpdateOutputSearchPrintingRd').value = data.OutputSearchPrintingRd;
-                //document.getElementById('txtUpdatetOutputSearchPrintingDescription').value = data.OutputSearchPrintingDescription;
-
-                
-                //if(data.Isactive == 1){
-                //    document.getElementById("toggleUpdateOutputSearchPrintingIsActive").checked = true;
-                //}
-                //else{
-                //    document.getElementById("toggleUpdateOutputSearchPrintingIsActive").checked = false;
-                //}
 
                 $("#modalUpdateOutputSearchPrinting").modal('show');
 

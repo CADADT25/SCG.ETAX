@@ -7,7 +7,6 @@
 @await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Search.cshtml")
 
 <div class="divider">
-
 </div>
 @await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Content.cshtml")
 
@@ -16,19 +15,22 @@
 
     $(document).ready(function () {
 
-        $('#outputSearchXmlZipCustomerCode').select2();
+        $('#OutputSearchXmlZipCustomerCode').select2();
+        $('#OutputSearchXmlZipStatus').select2();
 
-        $("#outputSearchXmlZipDate").flatpickr({
+        $("#OutputSearchXmlZipDate").flatpickr({
             mode: "range"
         });
 
-        //fnDropdownOutputSearchXmlZipCompanyCode();
+        fnDropdownOutputSearchXmlZipCompanyCode();
 
-        RenderOutputSearchXmlZip();
+        $("#tbOutputSearchXmlZipMain").removeData();
+
+        RenderOutputSearchXmlZip('');
 
     });
 
-    
+
     function fnDropdownOutputSearchXmlZipCompanyCode() {
 
         $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
@@ -37,25 +39,48 @@
                     {
                         value: data.companyCode,
                         text: data.companyCode
-                    }).html(data.companyCode).appendTo("#outputSearchXmlZipCustomerCode");
+                    }).html(data.companyCode).appendTo("#OutputSearchXmlZipCustomerCode");
             });
         })
     }
 
-    function RenderOutputSearchXmlZip(){
+    function fnSearchOutputDataPrinting(){
+
+        $("#tbOutputSearchXmlZipMain").remove();
+
+
+        var getCompanyCode = $('#OutputSearchXmlZipCustomerCode').val();
+        var getDate = $('#OutputSearchXmlZipDate').val();
+
+        var model = new Object();
+
+        model.outPutSearchCompanyCode = getCompanyCode;
+        model.outPutSearchDate = getDate;
+
+        var JsonString = JSON.stringify(model);
+
+                //alert(JsonString);
+
+        RenderOutputSearchXmlZip(JsonString);
+    }
+
+    function RenderOutputSearchXmlZip(JsonString){
 
         var table = $("#tbOutputSearchXmlZipMain").DataTable({
 
-            "scrollY": false,
+            "scrollY": true,
+            "scrollX": true,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
+            "searching": true,
             "pageLength": 10,
 
             "ajax": {
                 url: "@Url.Action("List", "OutputSearchXmlZip")",
                 type: "POST",
+                data: { SearchJson : JsonString },
                 datatype: "json"
             },
 
@@ -63,7 +88,7 @@
             "columns": [
 
                 {
-                    data: "OutputSearchXmlZipNo",
+                    data: "outputSearchXmlZipNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -71,46 +96,40 @@
                 {
                     //data: "OutputSearchXmlZipNo",
                     className: "text-center",
+                    visible: false,
                     width: "5%",
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
-                    data: "OutputSearchXmlZipCompanyCode",
-                    width: "20%"
-                },
-                {
-                    data: "OutputSearchXmlZipFileName",
-                    width: "20%"
-                },
-                {
-                    data: "OutputSearchXmlZipFullPath",
+                    data: "outputSearchXmlZipCompanyCode",
                     width: "10%"
                 },
                 {
-                    data: "isactive",
+                    data: "outputSearchXmlZipFileName",
+                    width: "20%"
+                },
+                {
+                    data: "outputSearchXmlZipFullPath",
                     width: "10%",
-                    className: "text-center",
-                    orderable: false,
                     render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                        return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('YYYY-MM-DD')},
+                    width: "10%"
+                },
+                {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    className: "dt-center editor-edit text-center text-warning",
+                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -120,10 +139,66 @@
             } );
         } ).draw();
 
+
+        $('#OutputSearchXmlZipCustomerCode').on( 'change', function () {
+            var valueCustomer = $('#OutputSearchXmlZipCustomerCode').val();
+
+            //alert(valueCustomer);
+
+            if(valueCustomer.includes('All')){
+                table.columns(2).search('').draw();
+            }else{
+                    table.column(2).search(this.value).draw();
+            }
+        } );
+
+        var minDate, maxDate;
+
+        $('#OutputSearchXmlZipDate').on( 'change', function () {
+            var valueDate = this.value;
+
+            if(valueDate.includes('to')){
+                const myArray = valueDate.split(" to ");
+
+
+                minDate = myArray[0];
+                maxDate = myArray[1];
+
+
+                var arr=[];
+
+                var getDaysArray = function(minDate, maxDate) {
+                    for(dt=new Date(minDate); dt<=new Date(maxDate); dt.setDate(dt.getDate()+1)){
+
+                        let d = dt;
+
+                        let month = (d.getMonth() + 1).toString().padStart(2, '0');
+                        let day = d.getDate().toString().padStart(2, '0');
+                        let year = d.getFullYear();
+
+                        let dtnew = year+"-"+month+"-"+day;
+                        //alert(dtnew)
+
+                        arr.push(dtnew);
+                    }
+                    return arr;
+                };
+
+                var daylist = getDaysArray(new Date(minDate),new Date(maxDate));
+                daylist.join("\n")
+
+                //alert(daylist);
+
+                table.columns(6).search(daylist).draw();
+            }
+
+        } );
+
+
+
         EditOutputSearchXmlZip(table);
         DeleteOutputSearchXmlZip(table);
     }
-
 
 
     function EditOutputSearchXmlZip(table){
@@ -138,6 +213,11 @@
         });
     }
 
+
+    function fnTimelineCancelOutputSearchXmlZip(){
+
+        $("#modalUpdateOutputSearchXmlZip").modal('hide');
+    } 
 
     function ExportOutputSearchXmlZip(){
 
@@ -160,20 +240,6 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-
-                //document.getElementById('txtUpdateOutputSearchXmlZipNo').value = data.OutputSearchXmlZipNo;
-                //document.getElementById('txtUpdateOutputSearchXmlZipSource').value = data.ErpSource;
-                //document.getElementById('txtUpdateOutputSearchXmlZipErp').value = data.OutputSearchXmlZipErp;
-                //document.getElementById('txtUpdateOutputSearchXmlZipRd').value = data.OutputSearchXmlZipRd;
-                //document.getElementById('txtUpdatetOutputSearchXmlZipDescription').value = data.OutputSearchXmlZipDescription;
-
-                
-                //if(data.Isactive == 1){
-                //    document.getElementById("toggleUpdateOutputSearchXmlZipIsActive").checked = true;
-                //}
-                //else{
-                //    document.getElementById("toggleUpdateOutputSearchXmlZipIsActive").checked = false;
-                //}
 
                 $("#modalUpdateOutputSearchXmlZip").modal('show');
 
