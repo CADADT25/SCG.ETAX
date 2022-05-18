@@ -64,6 +64,8 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<OutputSearchPrintingDowloadHistory> outputSearchPrintingDowloadHistory { get; set; }
         public DbSet<OutputSearchXmlZip> outputSearchXmlZip { get; set; }
         public DbSet<OutputSearchXmlZipDowloadHistory> outputSearchXmlZipDowloadHistory { get; set; }
+        public DbSet<OutputSearchEmailSend> outputSearchEmailSend { get; set; }
+        public DbSet<OutputSearchEmailSendHistory> outputSearchEmailSendHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

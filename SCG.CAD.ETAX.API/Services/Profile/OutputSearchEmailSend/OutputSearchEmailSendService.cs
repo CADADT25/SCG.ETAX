@@ -1,6 +1,6 @@
 ﻿namespace SCG.CAD.ETAX.API.Services
 {
-    public class OutputSearchPrintingService
+    public class OutputSearchEmailSendService
     {
         readonly DatabaseContext _dbContext = new();
 
@@ -10,7 +10,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.outputSearchPrinting.ToList();
+                var getList = _dbContext.outputSearchEmailSend.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -41,7 +41,7 @@
 
             try
             {
-                var getList = _dbContext.outputSearchPrinting.Where(x => x.OutputSearchPrintingNo == id).ToList();
+                var getList = _dbContext.outputSearchEmailSend.Where(x => x.OutputSearchEmailSendNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -65,7 +65,7 @@
             return resp;
         }
 
-        public Response INSERT(OutputSearchPrinting param)
+        public Response INSERT(OutputSearchEmailSend param)
         {
             Response resp = new Response();
             try
@@ -75,7 +75,7 @@
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
-                    _dbContext.outputSearchPrinting.Add(param);
+                    _dbContext.outputSearchEmailSend.Add(param);
                     _dbContext.SaveChanges();
 
 
@@ -92,25 +92,29 @@
             return resp;
         }
 
-        public Response UPDATE(OutputSearchPrinting param)
+        public Response UPDATE(OutputSearchEmailSend param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.outputSearchPrinting.Where(x => x.OutputSearchPrintingNo == param.OutputSearchPrintingNo).FirstOrDefault();
+                    var update = _dbContext.outputSearchEmailSend.Where(x => x.OutputSearchEmailSendNo == param.OutputSearchEmailSendNo).FirstOrDefault();
 
                     if (update != null)
                     {
-                        update.OutputSearchPrintingCompanyCode = param.OutputSearchPrintingCompanyCode;
-                        update.OutputSearchPrintingFileName = param.OutputSearchPrintingFileName;
-                        update.OutputSearchPrintingFullPath = param.OutputSearchPrintingFullPath;
-                        update.OutputSearchPrintingDowloadStatus = param.OutputSearchPrintingDowloadStatus;
-                        update.OutputSearchPrintingDowloadCount = param.OutputSearchPrintingDowloadCount;
-                        update.OutputSearchPrintingDowloadLastTime = param.OutputSearchPrintingDowloadLastTime;
-                        update.OutputSearchPrintingDowloadLastBy = param.OutputSearchPrintingDowloadLastBy;
-                        
+                        update.OutputSearchEmailSendCompanyCode = param.OutputSearchEmailSendCompanyCode;
+                        update.OutputSearchEmailSendSubject= param.OutputSearchEmailSendSubject;
+                        update.OutputSearchEmailSendFrom= param.OutputSearchEmailSendFrom;
+                        update.OutputSearchEmailSendTo= param.OutputSearchEmailSendTo;
+                        update.OutputSearchEmailSendCc= param.OutputSearchEmailSendCc;
+                        update.OutputSearchEmailSendFileName= param.OutputSearchEmailSendFileName;
+                        update.OutputSearchEmailSendStatus= param.OutputSearchEmailSendStatus;
+                        update.OutputSearchEmailSendFirstTime= param.OutputSearchEmailSendFirstTime;
+                        update.OutputSearchEmailSendFirstBy= param.OutputSearchEmailSendFirstBy;
+                        update.OutputSearchEmailSendLastTime= param.OutputSearchEmailSendLastTime;
+                        update.OutputSearchEmailSendLastBy= param.OutputSearchEmailSendLastBy;
+
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -136,18 +140,18 @@
             return resp;
         }
 
-        public Response DELETE(OutputSearchPrinting param)
+        public Response DELETE(OutputSearchEmailSend param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.outputSearchPrinting.Find(param.OutputSearchPrintingNo);
+                    var delete = _dbContext.outputSearchEmailSend.Find(param.OutputSearchEmailSendNo);
 
                     if (delete != null)
                     {
-                        _dbContext.outputSearchPrinting.Remove(delete);
+                        _dbContext.outputSearchEmailSend.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;

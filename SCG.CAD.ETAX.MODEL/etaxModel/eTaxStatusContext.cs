@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<OutputSearchXmlZipDowloadHistory> OutputSearchXmlZipDowloadHistories { get; set; } = null!;
+        public virtual DbSet<OutputSearchEmailSendHistory> OutputSearchEmailSendHistories { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,11 +29,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OutputSearchXmlZipDowloadHistory>(entity =>
+            modelBuilder.Entity<OutputSearchEmailSendHistory>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.OutputSearchEmailSendHistoryNo);
 
-                entity.ToTable("OutputSearchXmlZipDowloadHistory");
+                entity.ToTable("OutputSearchEmailSendHistory");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -45,9 +45,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
-                entity.Property(e => e.OutputSearchXmlZipDowloadHistoryBy).HasMaxLength(100);
+                entity.Property(e => e.OutputSearchEmailSendHistoryBy).HasMaxLength(100);
 
-                entity.Property(e => e.OutputSearchXmlZipDowloadHistoryTime).HasColumnType("datetime");
+                entity.Property(e => e.OutputSearchEmailSendHistoryTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

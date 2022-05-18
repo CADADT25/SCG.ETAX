@@ -8,7 +8,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public class transactionSearchErrorModel
     {
-        public string tranSearchErrorBillingNo { get; set; }
-        public string tranSearchErrorDetail { get; set; }
+        public string? tranSearchErrorBillingNo { get; set; }
+        public string? tranSearchErrorDetail { get; set; }
     }
 }
