@@ -73,7 +73,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     listpath = fullpath.ToList();
 
                     fileModel = new FileModel();
-                    fileModel.InputPath = path.ConfigMftsCompressXmlSettingOutputFolder;
+                    //fileModel.InputPath = path.input;
                     fileModel.OutPath = path.ConfigMftsCompressXmlSettingOutputFolder;
                     fileModel.CompanyCode = path.ConfigMftsCompressXmlSettingCompanyCode;
                     fileModel.FileDetails = new List<Filedetail>();
