@@ -10,6 +10,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsCompressXmlSettingCompanyCode { get; set; }
         public string? ConfigMftsCompressXmlSettingSourceName { get; set; }
         public string? ConfigMftsCompressXmlSettingCompressType { get; set; }
+        public string? ConfigMftsCompressXmlSettingInputFolder { get; set; }
         public string? ConfigMftsCompressXmlSettingOutputFolder { get; set; }
         public string? ConfigMftsCompressXmlSettingHost { get; set; }
         public string? ConfigMftsCompressXmlSettingPort { get; set; }

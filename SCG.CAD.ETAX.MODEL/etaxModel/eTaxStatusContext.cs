@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigGlobal> ConfigGlobals { get; set; } = null!;
+        public virtual DbSet<ConfigMftsCompressXmlSetting> ConfigMftsCompressXmlSettings { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,29 +29,49 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigGlobal>(entity =>
+            modelBuilder.Entity<ConfigMftsCompressXmlSetting>(entity =>
             {
-                entity.HasKey(e => e.ConfigGlobalNo);
+                entity.HasKey(e => e.ConfigMftsCompressXmlSettingNo);
 
-                entity.ToTable("configGlobal");
+                entity.ToTable("configMftsCompressXmlSetting");
 
-                entity.Property(e => e.ConfigGlobalNo).HasColumnName("configGlobalNo");
+                entity.Property(e => e.ConfigMftsCompressXmlSettingNo).HasColumnName("configMftsCompressXmlSettingNo");
 
-                entity.Property(e => e.ConfigGlobalCategoryName)
-                    .HasMaxLength(300)
-                    .HasColumnName("configGlobalCategoryName");
-
-                entity.Property(e => e.ConfigGlobalDescription)
+                entity.Property(e => e.ConfigMftsCompressXmlSettingCompanyCode)
                     .HasMaxLength(100)
-                    .HasColumnName("configGlobalDescription");
+                    .HasColumnName("configMftsCompressXmlSettingCompanyCode");
 
-                entity.Property(e => e.ConfigGlobalName)
-                    .HasMaxLength(300)
-                    .HasColumnName("configGlobalName");
+                entity.Property(e => e.ConfigMftsCompressXmlSettingCompressType)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingCompressType");
 
-                entity.Property(e => e.ConfigGlobalValue)
+                entity.Property(e => e.ConfigMftsCompressXmlSettingHost)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingHost");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingInputFolder)
                     .HasMaxLength(300)
-                    .HasColumnName("configGlobalValue");
+                    .HasColumnName("configMftsCompressXmlSettingInputFolder");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingOutputFolder)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsCompressXmlSettingOutputFolder");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingPassword)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingPassword");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingPort)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingPort");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingSourceName)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingSourceName");
+
+                entity.Property(e => e.ConfigMftsCompressXmlSettingUsername)
+                    .HasMaxLength(100)
+                    .HasColumnName("configMftsCompressXmlSettingUsername");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -61,7 +81,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

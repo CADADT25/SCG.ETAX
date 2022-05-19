@@ -1,9 +1,11 @@
+using SCG.CAD.ETAX.XML.ZIP.BussinessLayer;
+
 namespace SCG.CAD.ETAX.XML.ZIP
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-
+        XmlZIP xMLZIP = new XmlZIP();
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -11,11 +13,12 @@ namespace SCG.CAD.ETAX.XML.ZIP
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
-            }
+            xMLZIP.Xml_ZIP();
+            //while (!stoppingToken.IsCancellationRequested)
+            //{
+            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    await Task.Delay(1000, stoppingToken);
+            //}
         }
     }
 }
