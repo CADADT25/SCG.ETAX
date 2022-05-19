@@ -13,7 +13,7 @@ namespace SCG.CAD.ETAX.Print.ZIP
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            printZIP.Printzip();
+            printZIP.ProcessPrintzip();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);

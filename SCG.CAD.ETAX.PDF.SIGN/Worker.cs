@@ -14,7 +14,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            pDFSign.PdfSign();
+            pDFSign.ProcessPdfSign();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);

@@ -17,12 +17,17 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         ConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new ConfigMftsCompressXmlSettingController();
         OutputSearchXmlZipController outputSearchXmlZipController = new OutputSearchXmlZipController();
         TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+
         List<ConfigMftsCompressXmlSetting> configXmlSetting = new List<ConfigMftsCompressXmlSetting>();
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
+        List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
+        string pathoutput;
 
         public void Xml_ZIP()
         {
             string zipName = "";
+            XmlFileModel xmlFileModel = new XmlFileModel();
             try
             {
                 Console.WriteLine("Start XmlZIP");
@@ -30,12 +35,17 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 Console.WriteLine("Start Read All XML");
                 var dataallCompany = ReadFile();
                 Console.WriteLine("End Read All XML");
+                pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLZIPFILE").ConfigGlobalValue;
                 foreach (var data in dataallCompany)
                 {
+                    Console.WriteLine("Start Separate DocumentType Company : " + data.CompanyCode);
+                    xmlFileModel = separateXmlFilebyDocumentType(data);
+                    Console.WriteLine("End Separate DocumentType Company : " + data.CompanyCode);
+
                     Console.WriteLine("Start Zip Company : " + data.CompanyCode);
                     zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
                     //var resultZipFile = Zipfile(data, zipName);
-                    var resultZipfileMax3mb = ZipfileMax3mb(data);
+                    var resultZipfileMax3mb = ZipfileMax3mb(xmlFileModel);
 
                 }
                 Console.WriteLine("End XmlZIP");
@@ -111,6 +121,8 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             try
             {
                 configXmlSetting = configMftsCompressXmlSettingController.List().Result;
+                configGlobal = configGlobalController.List().Result;
+                transactionDescription = transactionDescriptionController.List().Result;
             }
             catch (Exception ex)
             {
@@ -163,80 +175,91 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             return result;
         }
 
-        public bool ZipfileMax3mb(FileModel dataFile)
+        public bool ZipfileMax3mb(XmlFileModel dataFile)
         {
             bool result = false;
             string zipPath = "";
             string zipName = "";
             bool flagnewfile = true;
             FileInfo fi;
-            List<string> listbillno = new List<string>();
+            List<XmlFileDetail> listxmlfileupdate = new List<XmlFileDetail>();
+            XmlFileDetail datatxmlfileupdate = new XmlFileDetail();
             try
             {
-                //zipPath = @"D:\Example\result.zip";
-                zipPath = dataFile.OutPath;
-                if (!Directory.Exists(zipPath))
+                foreach(var doctype in dataFile.listByDocumentTypes)
                 {
-                    Directory.CreateDirectory(zipPath);
-                }
-
-                for(int i = 0; i < dataFile.FileDetails.Count; i++)
-                {
-
-                    if (flagnewfile)
+                    //zipPath = @"D:\Example\result.zip";
+                    zipPath = dataFile.OutPath + "\\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\" + doctype.DocumentType;
+                    if (!Directory.Exists(zipPath))
                     {
-                        zipName = dataFile.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
-                        flagnewfile = false;
+                        Directory.CreateDirectory(zipPath);
                     }
 
-                    using (FileStream zipFileToOpen = new FileStream(zipPath + "\\" + zipName, FileMode.OpenOrCreate))
+                    for (int i = 0; i < doctype.XmlFileDetails.Count; i++)
                     {
-                        using (ZipArchive archive = new ZipArchive(zipFileToOpen, ZipArchiveMode.Update))
+                        datatxmlfileupdate = new XmlFileDetail();
+                        if (flagnewfile)
                         {
-                            fi = new FileInfo(dataFile.FileDetails[i].FilePath);
-                            if (fi.Exists)
+                            zipName = dataFile.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            flagnewfile = false;
+                        }
+
+                        using (FileStream zipFileToOpen = new FileStream(zipPath + "\\" + zipName, FileMode.OpenOrCreate))
+                        {
+                            using (ZipArchive archive = new ZipArchive(zipFileToOpen, ZipArchiveMode.Update))
                             {
-                                Console.WriteLine("Zip Company : " + dataFile.CompanyCode + " | File Name : " + dataFile.FileDetails[i].FileName);
-                                archive.CreateEntryFromFile(dataFile.FileDetails[i].FilePath, dataFile.FileDetails[i].FileName);
-                                if ((CalculateMBbyByte(zipFileToOpen.Length)) > 3)
+                                fi = new FileInfo(doctype.XmlFileDetails[i].FullPath);
+                                if (fi.Exists)
                                 {
-                                    foreach (var item in archive.Entries)
+                                    Console.WriteLine("Zip Company : " + dataFile.CompanyCode + " | File Name : " + doctype.XmlFileDetails[i].FileName);
+                                    archive.CreateEntryFromFile(doctype.XmlFileDetails[i].FullPath, doctype.XmlFileDetails[i].FileName);
+                                    if ((CalculateMBbyByte(zipFileToOpen.Length)) > 3)
                                     {
-                                        if (item.Name.Equals(dataFile.FileDetails[i].FileName))
+                                        foreach (var item in archive.Entries)
                                         {
-                                            item.Delete();
-                                            flagnewfile = true;
-                                            i--;
-                                            break; //needed to break out of the loop
+                                            if (item.Name.Equals(doctype.XmlFileDetails[i].FileName))
+                                            {
+                                                item.Delete();
+                                                flagnewfile = true;
+                                                i = i- 1;
+                                                break; //needed to break out of the loop
+                                            }
                                         }
+                                        Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
+                                        GetListTransactionDescription();
+                                        UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
+                                        Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
+
+
+                                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName);
+                                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                                        listxmlfileupdate = new List<XmlFileDetail>();
                                     }
-                                    Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
-                                    GetListTransactionDescription();
-                                    UpdateStatusTransactionDescription(listbillno);
-                                    Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
-
-
-                                    Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                                    InsertTransactionXmlZIP(dataFile, zipName);
-                                    Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                                    listbillno = new List<string>();
+                                    if (!flagnewfile)
+                                    {
+                                        datatxmlfileupdate.FileName = doctype.XmlFileDetails[i].FileName;
+                                        datatxmlfileupdate.FullPath = doctype.XmlFileDetails[i].FullPath;
+                                        datatxmlfileupdate.BillingNo = doctype.XmlFileDetails[i].BillingNo;
+                                        listxmlfileupdate.Add(datatxmlfileupdate);
+                                    }
                                 }
-                                listbillno.Add(dataFile.FileDetails[i].BillingNo);
                             }
                         }
                     }
                 }
 
-                 if(listbillno.Count > 0)
+
+                 if(listxmlfileupdate.Count > 0)
                 {
                     Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
                     GetListTransactionDescription();
-                    UpdateStatusTransactionDescription(listbillno);
+                    UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
                     Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
 
 
                     Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                    InsertTransactionXmlZIP(dataFile, zipName);
+                    InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath , zipName);
                     Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
                 }
 
@@ -249,16 +272,18 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             return result;
         }
 
-        public bool InsertTransactionXmlZIP(FileModel dataFile, string zipName)
+        public bool InsertTransactionXmlZIP(string companycode, string outpath, string zipName)
         {
             bool result = false;
             try
             {
                 Task<Response> res;
-                OutputSearchPrinting insertData = new OutputSearchPrinting();
-                insertData.OutputSearchPrintingCompanyCode = dataFile.CompanyCode;
-                insertData.OutputSearchPrintingFileName = zipName;
-                insertData.OutputSearchPrintingFullPath = dataFile.OutPath + "\\" + zipName;
+                OutputSearchXmlZip insertData = new OutputSearchXmlZip();
+                insertData.OutputSearchXmlZipCompanyCode = companycode;
+                insertData.OutputSearchXmlZipFileName = zipName;
+                insertData.OutputSearchXmlZipFullPath = outpath + "\\" + zipName;
+                insertData.OutputSearchXmlZipDowloadCount = 0;
+                insertData.OutputSearchXmlZipDowloadStatus = 0;
                 insertData.CreateBy = "Batch";
                 insertData.CreateDate = DateTime.Now;
                 insertData.UpdateBy = "Batch";
@@ -279,7 +304,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             return result;
         }
 
-        public bool UpdateStatusTransactionDescription(List<string> listbillno)
+        public bool UpdateStatusTransactionDescription(List<XmlFileDetail> listxmlfileupdate, string comcode)
         {
             bool result = false;
             try
@@ -287,16 +312,20 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 Task<Response> res;
                 TransactionDescription updatetransaction = new TransactionDescription();
                 List<TransactionDescription> listupdatetransaction = new List<TransactionDescription>();
-                foreach (var billno in listbillno)
+                foreach (var xmldata in listxmlfileupdate)
                 {
-                    updatetransaction = transactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
+                    updatetransaction = transactionDescription.FirstOrDefault(x => x.BillingNumber == xmldata.BillingNo);
                     if (updatetransaction != null)
                     {
-                        Console.WriteLine("Update Status TransactionDescription BillingNo : " + billno);
+                        Console.WriteLine("Update Status TransactionDescription BillingNo : " + xmldata.BillingNo);
                         updatetransaction.XmlCompressStatus = "Successful";
                         updatetransaction.XmlCompressDetail = "XML was compressed file is completely";
                         updatetransaction.XmlCompressDateTime = DateTime.Now;
                         listupdatetransaction.Add(updatetransaction);
+
+                        Console.WriteLine("Start MoveFile Company : " + comcode);
+                        MoveFile(xmldata.FullPath, xmldata.FileName, updatetransaction.BillingDate ?? DateTime.Now);
+                        Console.WriteLine("End MoveFile Company : " + comcode);
                     }
                 }
                 if (listupdatetransaction.Count > 0)
@@ -326,6 +355,113 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
 
                 double MBs = temp / (1024 * 1024);
                 result = MBs;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool MoveFile(string pathinput, string filename, DateTime billingdate)
+        {
+            bool result = false;
+            //pathinpput = @"c:\temp\MySample.txt";
+            //string pathoutput = @"D:\sign\backupfile\";
+
+            try
+            {
+                pathoutput += "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
+                if (!File.Exists(pathinput))
+                {
+                    // This statement ensures that the file is created,  
+                    // but the handle is not kept.  
+                    using (FileStream fs = File.Create(pathinput)) { }
+                }
+                // Ensure that the target does not exist.  
+                if (!Directory.Exists(pathoutput))
+                {
+                    Directory.CreateDirectory(pathoutput);
+                }
+                // Move the file.  
+                File.Move(pathinput, pathoutput + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+
+                // See if the original exists now.  
+                if (File.Exists(pathinput))
+                {
+                    Console.WriteLine("The original file still exists, which is unexpected.");
+                }
+                else
+                {
+                    Console.WriteLine("The original file no longer exists, which is expected.");
+                }
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+            return result;
+        }
+        
+        public XmlFileModel separateXmlFilebyDocumentType(FileModel dataFile)
+        {
+            TransactionDescription datatransaction = new TransactionDescription();
+            XmlFileModel result = new XmlFileModel();
+            try
+            {
+                result.CompanyCode = dataFile.CompanyCode;
+                result.OutPath = dataFile.OutPath;
+                result.InputPath = dataFile.InputPath;
+                result.listByDocumentTypes = new List<ListByDocumentType>();
+
+                ListByDocumentType docTypeTaxInvoice = new ListByDocumentType();
+                ListByDocumentType docTypeDebitNote = new ListByDocumentType();
+                ListByDocumentType docTypeCreditNote = new ListByDocumentType();
+                docTypeTaxInvoice.DocumentType = "TaxInvoice";
+                docTypeDebitNote.DocumentType = "DebitNote";
+                docTypeCreditNote.DocumentType = "CreditNote";
+                XmlFileDetail datexmlfile = new XmlFileDetail();
+                foreach (var filedetail in dataFile.FileDetails)
+                {
+
+                    datatransaction = transactionDescription.FirstOrDefault(x => x.BillingNumber == filedetail.BillingNo);
+                    if(datatransaction != null)
+                    {
+                        datexmlfile = new XmlFileDetail();
+                        datexmlfile.FileName = filedetail.FileName;
+                        datexmlfile.BillingNo = filedetail.BillingNo;
+                        datexmlfile.FullPath = filedetail.FilePath;
+                        switch (datatransaction.DocType ?? "")
+                        {
+                            case "388":
+                            case "T02":
+                            case "T03":
+                            case "T04":
+                                //doctype = "TaxInvoice";
+                                docTypeTaxInvoice.XmlFileDetails.Add(datexmlfile);
+                                break;
+                            case "80":
+                                //doctype = "DebitNote";
+                                docTypeDebitNote.XmlFileDetails.Add(datexmlfile);
+                                break;
+                            case "81":
+                                //doctype = "CreditNote";
+                                docTypeCreditNote.XmlFileDetails.Add(datexmlfile);
+                                break;
+                            case "T01":
+                                //doctype = "Invoice";
+                                break;
+                            default:
+                                break;
+                        }
+                            
+                    }
+                }
+                result.listByDocumentTypes.Add(docTypeTaxInvoice);
+                result.listByDocumentTypes.Add(docTypeDebitNote);
+                result.listByDocumentTypes.Add(docTypeCreditNote);
             }
             catch (Exception ex)
             {

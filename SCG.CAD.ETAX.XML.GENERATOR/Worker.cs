@@ -30,7 +30,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
 
             // call business layer
-            xMLGenerate.ReadXMLFile();
+            xMLGenerate.ProcessGenXMLFile();
             //var layer1 = pDFSign.GetAllPDFFile();
 
             //var layer2 = layer1;

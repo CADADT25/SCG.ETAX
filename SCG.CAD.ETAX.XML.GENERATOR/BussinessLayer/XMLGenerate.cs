@@ -25,6 +25,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         ProfileBranchController profileBranchController = new ProfileBranchController();
         ProductUnitController productUnitController = new ProductUnitController();
         ProfileFiDocController profileFiDocController = new ProfileFiDocController();
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
 
 
         List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
@@ -38,8 +39,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<ProfileBranch> profileBranches = new List<ProfileBranch>();
         List<ProductUnit> productUnit = new List<ProductUnit>();
         List<ProfileFiDoc> profileFiDoc = new List<ProfileFiDoc>();
+        List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
+        string pathoutput;
 
-        public void ReadXMLFile()
+        public void ProcessGenXMLFile()
         {
             try
             {
@@ -59,9 +62,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     var cs = ConvertDTtoClass(dt);
                     Console.WriteLine("ConvertToClass success");
                     round = 1;
+                    pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPTEXTFILE").ConfigGlobalValue;
                     foreach (var classtextfile in cs)
                     {
-
                         var companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
                         var configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
                         Console.WriteLine("Start round : " + round);
@@ -102,40 +105,20 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                             {
                                 Console.WriteLine("Start Gen XML File");
                                 string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
-                                var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO);
+                                var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO, classtextfile.BILLING_DATE);
 
                                 Console.WriteLine("End Gen XML File");
                             }
-
                         }
                         round += 1;
                     }
                     Console.WriteLine("End Read TextFile : " + textfile);
 
                     Console.WriteLine("Start Move File");
-                    MoveFile(textfile, "", filename);
+                    MoveFile(textfile, filename);
                     Console.WriteLine("End Move File");
                 }
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public void XMLSchematronToList()
-        {
-            try
-            {
-                var path = @"C:\Code_Dev\SCG.CAD.ETAX\SCG.CAD.ETAX.XML.GENERATOR\XMLSchema\ETDA\data\standard\";
-                var fileXml = "TaxInvoice_Schematron_2p0.sch";
-                XmlReader rd = XmlReader.Create(path + fileXml);
-                XDocument doc = XDocument.Load(rd);
-
-                //XElement tempElement = doc.Descendants(XName.Get("schema", "sch")).FirstOrDefault();
-                //var maps = from item in doc.Root.Elements(XName.Get("schema", "sch"))
-                //           select (item);
             }
             catch (Exception ex)
             {
@@ -476,7 +459,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno)
+        public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno, string billingdate)
         {
             bool result = false;
             //pathoutbound = @"D:\gen\gen.xml";
@@ -484,6 +467,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             List<string> errormessage = new List<string>();
             try
             {
+                DateTime billdate = Convert.ToDateTime(billingdate);
+                pathoutbound += "\\" + billdate.ToString("YYYY") + "\\" + billdate.ToString("MM") + "\\";
                 if (!Directory.Exists(pathoutbound))
                 {
                     Directory.CreateDirectory(pathoutbound);
@@ -670,13 +655,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool MoveFile(string pathinput, string pathoutput, string filename)
+        public bool MoveFile(string pathinput , string filename)
         {
             bool result = false;
-            //pathinpput = @"c:\temp\MySample.txt";
-            pathoutput = @"D:\sign\backupfile\";
+            //string pathoutput = @"D:\sign\backupfile\";
             try
             {
+                pathoutput += "\\" + DateTime.Now.ToString("YYYY") + "\\" + DateTime.Now.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -844,6 +829,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 productUnit = productUnitController.List().Result;
                 profileBranches = profileBranchController.List().Result;
                 profileFiDoc = profileFiDocController.List().Result;
+                configGlobal = configGlobalController.List().Result;
             }
             catch (Exception ex)
             {
