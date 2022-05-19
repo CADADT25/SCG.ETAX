@@ -26,9 +26,7 @@
 
         fnDropdownOutputSearchEmailSendCompanyCode();
 
-        $("#tbOutputSearchEmailSendMain").removeData();
-
-        RenderOutputSearchEmailSend('');
+        RenderOutputSearchEmailSend();
 
     });
 
@@ -46,43 +44,21 @@
         })
     }
 
-    function fnSearchOutputDataPrinting(){
 
-        $("#tbOutputSearchEmailSendMain").remove();
+    function RenderOutputSearchEmailSend(){
 
+        var table = $("#tboutputSearchEmailSendMain").DataTable({
 
-        var getCompanyCode = $('#OutputSearchEmailSendCustomerCode').val();
-        var getDate = $('#OutputSearchEmailSendDate').val();
-
-        var model = new Object();
-
-        model.OutputSearchCompanyCode = getCompanyCode;
-        model.OutputSearchDate = getDate;
-
-        var JsonString = JSON.stringify(model);
-
-                //alert(JsonString);
-
-        RenderOutputSearchEmailSend(JsonString);
-    }
-
-    function RenderOutputSearchEmailSend(JsonString){
-
-        var table = $("#tbOutputSearchEmailSendMain").DataTable({
-
-            "scrollY": true,
-            "scrollX": true,
+            "scrollY": false,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
-            "searching": true,
             "pageLength": 10,
 
             "ajax": {
                 url: "@Url.Action("List", "OutputSearchEmailSend")",
                 type: "POST",
-                data: { SearchJson : JsonString },
                 datatype: "json"
             },
 
@@ -90,35 +66,38 @@
             "columns": [
 
                 {
-                    data: "OutputSearchEmailSendNo",
+                    data: "outputSearchEmailSendNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
                 },
                 {
-                    //data: "OutputSearchEmailSendNo",
+                    //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
-                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
-                    data: "OutputSearchEmailSendCompanyCode",
+                    data: "outputSearchEmailSendCompanyCode",
                     width: "10%"
                 },
                 {
-                    data: "OutputSearchEmailSendSubject",
-                    width: "20%"
-                },
-                {
-                    data: "OutputSearchEmailSendFileName",
+                    data: "outputSearchEmailSendSubject",
                     width: "10%"
                 },
                 {
-                    data: "OutputSearchEmailSendStatus",
+                    data: "outputSearchEmailSendFileName",
                     width: "10%"
+                },
+                {
+                    data: "outputSearchEmailSendStatus",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                    }
                 },
                 {
                     data: null,
@@ -137,62 +116,6 @@
         } ).draw();
 
 
-        $('#OutputSearchEmailSendCustomerCode').on( 'change', function () {
-            var valueCustomer = $('#OutputSearchEmailSendCustomerCode').val();
-
-            //alert(valueCustomer);
-
-            if(valueCustomer.includes('All')){
-                table.columns(2).search('').draw();
-            }else{
-                    table.column(2).search(this.value).draw();
-            }
-        } );
-
-        var minDate, maxDate;
-
-        $('#OutputSearchEmailSendDate').on( 'change', function () {
-            var valueDate = this.value;
-
-            if(valueDate.includes('to')){
-                const myArray = valueDate.split(" to ");
-
-
-                minDate = myArray[0];
-                maxDate = myArray[1];
-
-
-                var arr=[];
-
-                var getDaysArray = function(minDate, maxDate) {
-                    for(dt=new Date(minDate); dt<=new Date(maxDate); dt.setDate(dt.getDate()+1)){
-
-                        let d = dt;
-
-                        let month = (d.getMonth() + 1).toString().padStart(2, '0');
-                        let day = d.getDate().toString().padStart(2, '0');
-                        let year = d.getFullYear();
-
-                        let dtnew = year+"-"+month+"-"+day;
-                        //alert(dtnew)
-
-                        arr.push(dtnew);
-                    }
-                    return arr;
-                };
-
-                var daylist = getDaysArray(new Date(minDate),new Date(maxDate));
-                daylist.join("\n")
-
-                //alert(daylist);
-
-                table.columns(6).search(daylist).draw();
-            }
-
-        } );
-
-
-
         EditOutputSearchEmailSend(table);
         DeleteOutputSearchEmailSend(table);
     }
@@ -200,11 +123,13 @@
 
     function EditOutputSearchEmailSend(table){
 
-        $('#tbOutputSearchEmailSendMain').on('click', 'td.editor-edit', function () {
+
+        $('#tboutputSearchEmailSendMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
+
 
             callOutputSearchEmailSendGetDetailController(getPK);
         });
@@ -229,6 +154,7 @@
     // [Begin] Ajax call Controller
 
     function callOutputSearchEmailSendGetDetailController(getPK){
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "OutputSearchEmailSend")",

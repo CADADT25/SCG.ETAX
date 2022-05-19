@@ -598,7 +598,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.BillingNumber = Convert.ToString(dataxml.BILLING_NO);
                 data.BillingYear = billingdate.Year;
                 data.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
-                data.CompanyCode = Convert.ToDouble(profiledetail.CompanyCode);
+                data.CompanyCode = profiledetail.CompanyCode;
                 data.CompanyName = profiledetail.CompanyNameTh;
                 data.CreateBy = "Batch";
                 data.CreateDate = DateTime.Now;
@@ -618,7 +618,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 }
                 poNumber = poNumber.Substring(0, poNumber.Length - 1);
                 data.PoNumber = poNumber;
-                data.SellOrg = Convert.ToDouble(dataxml.SALES_ORG);
+                data.SellOrg = dataxml.SALES_ORG;
                 data.ShipTo = Convert.ToDouble(dataxml.Number_Ship_to);
                 data.SoldTo = Convert.ToDouble(dataxml.Number_Sold_to);
                 data.SourceName = source;
