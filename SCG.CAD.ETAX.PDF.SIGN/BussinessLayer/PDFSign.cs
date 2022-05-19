@@ -164,6 +164,12 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     dataTran.TypeInput = "Batch";
                     dataTran.UpdateBy = "Batch";
                     dataTran.UpdateDate = DateTime.Now;
+                    dataTran.GenerateStatus = "Waiting";
+                    dataTran.PdfIndexingStatus = "Waiting";
+                    dataTran.PrintStatus = "Waiting";
+                    dataTran.XmlCompressStatus = "Waiting";
+                    dataTran.XmlSignStatus = "Waiting";
+                    dataTran.EmailSendStatus = "Waiting";
                     if (status)
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;

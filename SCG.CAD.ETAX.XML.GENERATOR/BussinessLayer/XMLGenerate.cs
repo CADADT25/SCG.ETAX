@@ -639,6 +639,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.TypeInput = "Batch";
                 data.UpdateBy = "Batch";
                 data.UpdateDate = DateTime.Now;
+                data.EmailSendStatus = "Waiting";
+                data.PdfIndexingStatus = "Waiting";
+                data.PrintStatus = "Waiting";
+                data.XmlCompressStatus = "Waiting";
+                data.XmlSignStatus = "Waiting";
+                data.EmailSendStatus = "Waiting";
+                data.PdfSignStatus = "Waiting";
+
 
 
                 var json = JsonSerializer.Serialize(data);

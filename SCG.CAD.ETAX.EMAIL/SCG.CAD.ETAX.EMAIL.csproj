@@ -13,6 +13,5 @@
 
   <ItemGroup>
     <Folder Include="BussinessLayer\" />
-    <Folder Include="Controller\" />
   </ItemGroup>
 </Project>
