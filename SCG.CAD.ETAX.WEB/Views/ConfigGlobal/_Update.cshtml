@@ -1,0 +1,53 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12" hidden>
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>No</label>
+                <input type="text" id="txtUpdateConfigGlobalNo" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Category</label>
+                <input type="text" disabled id="ddlUpdateConfigGlobalCategory"  class="form-control">
+                @*<select class="select2 form-control" id="ddlUpdateConfigGlobalCategory">
+                    <option value="0" disabled selected>-- Select category --</option>
+                </select>*@
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Name</label>
+                <input type="text" disabled id="txtUpdateConfigGlobalName" onkeyup="validateUpdateConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Value</label>
+                <input type="text" id="txtUpdateConfigGlobalValue" onkeyup="validateUpdateConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="txtUpdateConfigGlobalDescription" onkeyup="validateUpdateConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigGlobal" checked />
+                    <label class="custom-control-label" for="toggleUpdateConfigGlobal">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+

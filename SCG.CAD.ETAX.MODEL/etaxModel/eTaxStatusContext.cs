@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<OutputSearchEmailSendHistory> OutputSearchEmailSendHistories { get; set; } = null!;
+        public virtual DbSet<ConfigGlobal> ConfigGlobals { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,11 +29,29 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OutputSearchEmailSendHistory>(entity =>
+            modelBuilder.Entity<ConfigGlobal>(entity =>
             {
-                entity.HasKey(e => e.OutputSearchEmailSendHistoryNo);
+                entity.HasKey(e => e.ConfigGlobalNo);
 
-                entity.ToTable("OutputSearchEmailSendHistory");
+                entity.ToTable("configGlobal");
+
+                entity.Property(e => e.ConfigGlobalNo).HasColumnName("configGlobalNo");
+
+                entity.Property(e => e.ConfigGlobalCategoryName)
+                    .HasMaxLength(300)
+                    .HasColumnName("configGlobalCategoryName");
+
+                entity.Property(e => e.ConfigGlobalDescription)
+                    .HasMaxLength(100)
+                    .HasColumnName("configGlobalDescription");
+
+                entity.Property(e => e.ConfigGlobalName)
+                    .HasMaxLength(300)
+                    .HasColumnName("configGlobalName");
+
+                entity.Property(e => e.ConfigGlobalValue)
+                    .HasMaxLength(300)
+                    .HasColumnName("configGlobalValue");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -44,10 +62,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnName("createDate");
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
-
-                entity.Property(e => e.OutputSearchEmailSendHistoryBy).HasMaxLength(100);
-
-                entity.Property(e => e.OutputSearchEmailSendHistoryTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
