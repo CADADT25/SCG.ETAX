@@ -57,23 +57,23 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             string billno = "";
             string filename = "";
 
-            ConfigMftsCompressXmlSetting config = new ConfigMftsCompressXmlSetting();
-            config.ConfigMftsCompressXmlSettingOutputFolder = @"C:\Code_Dev\XMLZip";
-            config.ConfigMftsCompressXmlSettingOutputFolder = @"C:\Code_Dev\XMLZip";
-            config.ConfigMftsCompressXmlSettingCompanyCode = "0030";
-            configXmlSetting = new List<ConfigMftsCompressXmlSetting>();
-            configXmlSetting.Add(config);
+            //ConfigMftsCompressXmlSetting config = new ConfigMftsCompressXmlSetting();
+            //config.ConfigMftsCompressXmlSettingOutputFolder = @"C:\Code_Dev\XMLZip";
+            //config.ConfigMftsCompressXmlSettingOutputFolder = @"C:\Code_Dev\XMLZip";
+            //config.ConfigMftsCompressXmlSettingCompanyCode = "0030";
+            //configXmlSetting = new List<ConfigMftsCompressXmlSetting>();
+            //configXmlSetting.Add(config);
             try
             {
                 //pathFolder = @"C:\Code_Dev\sign";
                 foreach (var path in configXmlSetting)
                 {
-                    pathFolder = path.ConfigMftsCompressXmlSettingOutputFolder;
+                    pathFolder = path.ConfigMftsCompressXmlSettingInputFolder;
                     fullpath = Directory.GetFiles(pathFolder, fileType);
                     listpath = fullpath.ToList();
 
                     fileModel = new FileModel();
-                    //fileModel.InputPath = path.input;
+                    fileModel.InputPath = path.ConfigMftsCompressXmlSettingInputFolder;
                     fileModel.OutPath = path.ConfigMftsCompressXmlSettingOutputFolder;
                     fileModel.CompanyCode = path.ConfigMftsCompressXmlSettingCompanyCode;
                     fileModel.FileDetails = new List<Filedetail>();
@@ -110,7 +110,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         {
             try
             {
-                //configXmlSetting = configMftsCompressXmlSettingController.List().Result;
+                configXmlSetting = configMftsCompressXmlSettingController.List().Result;
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         {
             try
             {
-                //transactionDescription = transactionDescriptionController.List().Result;
+                transactionDescription = transactionDescriptionController.List().Result;
             }
             catch (Exception ex)
             {
@@ -294,7 +294,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     {
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + billno);
                         updatetransaction.XmlCompressStatus = "Successful";
-                        updatetransaction.XmlCompressDetail = "PDF file's was prepared for printing completely";
+                        updatetransaction.XmlCompressDetail = "XML was compressed file is completely";
                         updatetransaction.XmlCompressDateTime = DateTime.Now;
                         listupdatetransaction.Add(updatetransaction);
                     }

@@ -2,27 +2,27 @@
 using SCG.CAD.ETAX.UTILITY;
 using Newtonsoft.Json;
 
-namespace SCG.CAD.ETAX.XML.GENERATOR
+namespace SCG.CAD.ETAX.XML.GENERATOR.Controller
 {
-    public class TaxCodeController
+    public class ProfileFiDocController
     {
-        public async Task<List<TaxCode>> List()
+        public async Task<List<ProfileFiDoc>> List()
         {
             Response resp = new Response();
 
-            List<TaxCode> tran = new List<TaxCode>();
+            List<ProfileFiDoc> tran = new List<ProfileFiDoc>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileFiDoc/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<TaxCode>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileFiDoc>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
-                    
+
                 }
             }
             catch (Exception ex)

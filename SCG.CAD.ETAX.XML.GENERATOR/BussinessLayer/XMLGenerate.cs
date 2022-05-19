@@ -24,6 +24,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
         ProfileBranchController profileBranchController = new ProfileBranchController();
         ProductUnitController productUnitController = new ProductUnitController();
+        ProfileFiDocController profileFiDocController = new ProfileFiDocController();
 
 
         List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
@@ -36,6 +37,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
         List<ProfileBranch> profileBranches = new List<ProfileBranch>();
         List<ProductUnit> productUnit = new List<ProductUnit>();
+        List<ProfileFiDoc> profileFiDoc = new List<ProfileFiDoc>();
 
         public void ReadXMLFile()
         {
@@ -414,7 +416,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = data.DOC_CURRENCY ?? "";//listID="ISO 4217 3A"
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax = new ApplicableTradeTax();
-                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.Where(x => x.TaxCodeErp == data.TAX_CODE).Select(x => x.TaxCodeRd).FirstOrDefault() ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.FirstOrDefault(x => x.TaxCodeErp == data.TAX_CODE).TaxCodeRd ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedRate = data.TAX_RATE ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.basisAmount = data.SALES_AMOUNT ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedAmount = data.TAX_AMOUNT ?? "";
@@ -582,10 +584,11 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
+                ProfileFiDoc profileFiDocument = new ProfileFiDoc();
 
                 doccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == dataxml.FI_DOC_TYPE);
                 profiledetail = profileCompany.FirstOrDefault(x => x.TaxNumber == dataxml.SELLER_TIN);
-
+                profileFiDocument = profileFiDoc.FirstOrDefault(x => x.ProfileFiDocName == dataxml.FI_DOC);
                 if (data == null)
                 {
                     insert = true;
@@ -598,20 +601,31 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.BillingNumber = Convert.ToString(dataxml.BILLING_NO);
                 data.BillingYear = billingdate.Year;
                 data.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
-                data.CompanyCode = Convert.ToDouble(profiledetail.CompanyCode);
-                data.CompanyName = profiledetail.CompanyNameTh;
+                if(profiledetail != null)
+                {
+                    data.CompanyCode = Convert.ToDouble(profiledetail.CompanyCode);
+                    data.CompanyName = profiledetail.CompanyNameTh;
+                }
                 data.CreateBy = "Batch";
                 data.CreateDate = DateTime.Now;
-                data.CustomerId = null;
-                data.CustomerName = null;
-                data.DocType = doccode.DocumentCodeRd;
+                data.CustomerId = Convert.ToDouble(dataxml.BUYER_CODE);
+                data.CustomerName = dataxml.BUYER_NAME;
+                if(doccode != null)
+                {
+                    data.DocType = doccode.DocumentCodeRd;
+                }
                 data.FiDoc = Convert.ToDouble(dataxml.FI_DOC);
+                if(profileFiDocument != null)
+                {
+                    data.ImageDocType = profileFiDocument.ProfileImageDocType;
+                }
                 data.Foc = (dataxml.FI_DOC_TYPE == "FOC") ? 1 : 0;
                 data.Ic = (string.IsNullOrEmpty(dataxml.IC_FLAG)) ? 0 : 1;
                 data.ImageDocType = null;// mapping
                 data.Isactive = 1;
                 data.Payer = Convert.ToDouble(dataxml.Number_Payer);
-
+                data.PostingYear = billingdate.Year.ToString();
+                data.ProcessingDate = DateTime.Now;
                 foreach (var item in dataxml.Item)
                 {
                     poNumber = poNumber + item.PO_NUMBER + ",";
@@ -821,6 +835,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 profileSeller = profileController.ProfileSellerList().Result;
                 productUnit = productUnitController.List().Result;
                 profileBranches = profileBranchController.List().Result;
+                profileFiDoc = profileFiDocController.List().Result;
             }
             catch (Exception ex)
             {
