@@ -10,6 +10,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? OutputSearchXmlZipCompanyCode { get; set; }
         public string? OutputSearchXmlZipFileName { get; set; }
         public string? OutputSearchXmlZipFullPath { get; set; }
+        public string? OutputSearchXmlZipDocType { get; set; }
         public int? OutputSearchXmlZipDowloadStatus { get; set; }
         public int? OutputSearchXmlZipDowloadCount { get; set; }
         public DateTime? OutputSearchXmlZipDowloadLastTime { get; set; }

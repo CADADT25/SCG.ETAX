@@ -11,9 +11,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime? BillingDate { get; set; }
         public double? BillingYear { get; set; }
         public DateTime? ProcessingDate { get; set; }
-        public double? CompanyCode { get; set; }
+        public string? CompanyCode { get; set; }
         public string? CompanyName { get; set; }
-        public double? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         public string? CustomerName { get; set; }
         public double? SoldTo { get; set; }
         public double? ShipTo { get; set; }
@@ -26,7 +26,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public double? FiDoc { get; set; }
         public string? ImageDocType { get; set; }
         public string? DocType { get; set; }
-        public double? SellOrg { get; set; }
+        public string? SellOrg { get; set; }
         public string? PoNumber { get; set; }
         public string? TypeInput { get; set; }
         public string? GenerateStatus { get; set; }

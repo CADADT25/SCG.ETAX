@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigMftsCompressXmlSetting> ConfigMftsCompressXmlSettings { get; set; } = null!;
+        public virtual DbSet<OutputSearchXmlZip> OutputSearchXmlZips { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,49 +29,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigMftsCompressXmlSetting>(entity =>
+            modelBuilder.Entity<OutputSearchXmlZip>(entity =>
             {
-                entity.HasKey(e => e.ConfigMftsCompressXmlSettingNo);
+                entity.HasKey(e => e.OutputSearchXmlZipNo);
 
-                entity.ToTable("configMftsCompressXmlSetting");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingNo).HasColumnName("configMftsCompressXmlSettingNo");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingCompanyCode)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingCompanyCode");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingCompressType)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingCompressType");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingHost)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingHost");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingInputFolder)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsCompressXmlSettingInputFolder");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingOutputFolder)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsCompressXmlSettingOutputFolder");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingPassword)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingPassword");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingPort)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingPort");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingSourceName)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingSourceName");
-
-                entity.Property(e => e.ConfigMftsCompressXmlSettingUsername)
-                    .HasMaxLength(100)
-                    .HasColumnName("configMftsCompressXmlSettingUsername");
+                entity.ToTable("OutputSearchXmlZip");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -81,9 +43,21 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive)
-                    .HasColumnName("isactive")
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.OutputSearchXmlZipCompanyCode).HasMaxLength(100);
+
+                entity.Property(e => e.OutputSearchXmlZipDocType).HasMaxLength(500);
+
+                entity.Property(e => e.OutputSearchXmlZipDowloadLastBy).HasMaxLength(100);
+
+                entity.Property(e => e.OutputSearchXmlZipDowloadLastTime).HasColumnType("datetime");
+
+                entity.Property(e => e.OutputSearchXmlZipFileName).HasMaxLength(100);
+
+                entity.Property(e => e.OutputSearchXmlZipFullPath).HasMaxLength(500);
+
+                entity.Property(e => e.OutputSearchXmlZipRequestCancelNo).HasMaxLength(100);
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

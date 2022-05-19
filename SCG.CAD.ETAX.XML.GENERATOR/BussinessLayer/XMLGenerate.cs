@@ -617,7 +617,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 }
                 poNumber = poNumber.Substring(0, poNumber.Length - 1);
                 data.PoNumber = poNumber;
-                data.SellOrg = Convert.ToDouble(dataxml.SALES_ORG);
+                data.SellOrg = dataxml.SALES_ORG;
                 data.ShipTo = Convert.ToDouble(dataxml.Number_Ship_to);
                 data.SoldTo = Convert.ToDouble(dataxml.Number_Sold_to);
                 data.SourceName = source;
