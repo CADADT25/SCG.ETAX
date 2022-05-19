@@ -21,6 +21,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _Create()
+        {
+            return View();
+        }
+
+        public IActionResult _Update()
+        {
+            return View();
+        }
+
 
 
         public async Task<JsonResult> Detail(int id)

@@ -6,45 +6,17 @@
 <script src="~/assets/validate/ProfileEmailTemplateValidate.js"></script>
 
 
-@* [Begin] Modal Create *@
 <div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileEmailTemplate" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelProfileEmailTemplate();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Type no.</label>
-                                    <select class="select2 form-control" id="ddlInsertProfileEmailTemplateEmailTypeNo"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Email body</label>
-                                    @*<input type="text" id="txtInsertProfileEmailTemplateEmailBody" onkeyup="validateInsertProfileEmailTemplate();" class="form-control">*@
-                                    <textarea id="txtInsertProfileEmailTemplateEmailBody" onkeyup="validateInsertProfileEmailTemplate();" name="editordata"></textarea>
-                                
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleInsertProfileEmailTemplate" checked type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleInsertProfileEmailTemplate-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProfileEmailTemplate/_Create.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileEmailTemplate();">Close</button>
@@ -54,54 +26,44 @@
     </div>
 </div>
 
-@* [End] Modal Create *@
-
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileEmailTemplate" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelProfileEmailTemplate();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group" hidden>
-                                    <label>No</label>
-                                    <input disabled type="text" id="txtUpdateProfileEmailTemplateNo" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Type no.</label>
-                                    <select class="select2 form-control" id="ddlUpdateProfileEmailTemplateEmailTypeNo"></select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Email body</label>
-                                    @*<input type="text" id="txtUpdateProfileEmailTemplateEmailBody" onkeyup="validateInsertProfileEmailTemplate();" class="form-control">*@
-                                    <textarea id="txtUpdateProfileEmailTemplateEmailBody" onkeyup="validateUpdateProfileEmailTemplate();"></textarea>
-
-                                
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleUpdateProfileEmailTemplate" type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleUpdateProfileEmailTemplate-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProfileEmailTemplate/_Update.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileEmailTemplate();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="fnUpdateProfileEmailTemplate();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalGetProfileEmailTemplate" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview email</h5>
+                <button type="button" class="close" onclick="fnClosePreviewEmailTemplate();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="previewData">
+
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnClosePreviewEmailTemplate();">Close</button>
             </div>
         </div>
     </div>

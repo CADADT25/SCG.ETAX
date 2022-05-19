@@ -17,6 +17,7 @@
 
         $('#OutputSearchXmlZipCustomerCode').select2();
         $('#OutputSearchXmlZipStatus').select2();
+        $('#OutputSearchXmlZipDocType').select2();
 
         $("#OutputSearchXmlZipDate").flatpickr({
             mode: "range",
@@ -24,6 +25,7 @@
         });
 
         fnDropdownOutputSearchXmlZipCompanyCode();
+        fnDropdownOutputSearchXmlZipDocType();
 
         $("#tbOutputSearchXmlZipMain").removeData();
 
@@ -41,6 +43,19 @@
                         value: data.companyCode,
                         text: data.companyCode
                     }).html(data.companyCode).appendTo("#OutputSearchXmlZipCustomerCode");
+            });
+        })
+    }
+
+    function fnDropdownOutputSearchXmlZipDocType() {
+
+        $.getJSON("@Url.Action("DropDownList", "RdDocument")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.rdDocumentCode,
+                        text: data.rdDocumentNameTh
+                    }).html(data.rdDocumentNameTh).appendTo("#OutputSearchXmlZipDocType");
             });
         })
     }
@@ -110,6 +125,13 @@
                 {
                     data: "outputSearchXmlZipFileName",
                     width: "20%"
+                },
+                {
+                    data: "outputSearchXmlZipDocType",
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return'<div class="badge badge-light-primary"> '+ data +' </div>';
+                    }
                 },
                 {
                     data: "outputSearchXmlZipFullPath",

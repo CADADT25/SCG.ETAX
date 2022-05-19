@@ -185,7 +185,7 @@
                 {
                     tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.Where(x => x.Isactive == 1).ToList();
+                    tran = tran.Where(x => x.Isactive == 1).OrderBy(x => x.RdDocumentNameTh).ToList();
                 }
                 else
                 {
