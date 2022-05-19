@@ -1,0 +1,328 @@
+﻿@{
+    ViewData["Title"] = " ConfigGlobalCategory ";
+    Layout = null;
+}
+
+@await Html.PartialAsync("~/Views/ConfigGlobalCategory/_Content.cshtml")
+
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderConfigGlobalCategory();
+
+    });
+
+
+    function RenderConfigGlobalCategory(){
+
+        var table = $("#tbConfigGlobalCategoryMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigGlobalCategory")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "configGlobalCategoryNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "configGlobalCategoryName",
+                    width: "10%"
+                },
+                {
+                    data: "configGlobalCategoryDescription",
+                    width: "10%"
+                },
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditConfigGlobalCategory(table);
+        DeleteConfigGlobalCategory(table);
+    }
+
+    function fnInsertCancelConfigGlobalCategory(){
+        
+        document.getElementById('txtInsertConfigGlobalCategoryName').value = '';
+        document.getElementById('txtInsertConfigGlobalCategoryDescription').value = '';
+
+        $("#modalCreateConfigGlobalCategory").modal('hide');
+    }
+
+    function fnUpdateCancelConfigGlobalCategory(){
+        
+        document.getElementById('txtUpdateConfigGlobalCategoryName').value = '';
+        document.getElementById('txtUpdateConfigGlobalCategoryDescription').value = '';
+
+        $("#modalUpdateConfigGlobalCategory").modal('hide');
+    }
+
+    function callModalInsertConfigGlobalCategory(){
+
+        document.getElementById('txtInsertConfigGlobalCategoryName').value = '';
+        document.getElementById('txtInsertConfigGlobalCategoryDescription').value = '';
+
+        $("#modalCreateConfigGlobalCategory").modal('show');
+    }
+
+    function fnInsertConfigGlobalCategory(){
+
+        if ($('#txtInsertConfigGlobalCategoryName').val() != '')
+        {
+            callConfigGlobalCategoryInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateInsertConfigGlobalCategory();
+        }
+
+    }
+
+    function fnUpdateConfigGlobalCategory(){
+
+        if ($('#txtUpdateConfigGlobalCategoryName').val() != '')
+        {
+            callConfigGlobalCategoryUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateUpdateConfigGlobalCategory();
+        }
+    }
+
+    function EditConfigGlobalCategory(table){
+
+        $('#tbConfigGlobalCategoryMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callConfigGlobalCategoryGetDetailController(getPK);
+
+        });
+    }
+
+    function ExportConfigGlobalCategory(){
+
+        $.blockUI();
+
+        callConfigGlobalCategoryExportController();
+
+        $.unblockUI();
+    }
+
+
+
+    // [Begin] Ajax call Controller
+
+    function callConfigGlobalCategoryGetDetailController(getPK){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigGlobalCategory")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateConfigGlobalCategoryNo').value = data.ConfigGlobalCategoryNo;
+                document.getElementById('txtUpdateConfigGlobalCategoryName').value = data.ConfigGlobalCategoryName;
+                document.getElementById('txtUpdateConfigGlobalCategoryDescription').value = data.ConfigGlobalCategoryDescription;
+
+
+                if(data.Isactive == 1){
+                    document.getElementById("toggleUpdateConfigGlobalCategory").checked = true;
+                }
+                else{
+                    document.getElementById("toggleUpdateConfigGlobalCategory").checked = false;
+                }
+
+                $("#modalUpdateConfigGlobalCategory").modal('show');
+            }
+        });
+    }
+
+    function callConfigGlobalCategoryInsertController(){
+
+        var IsActive = 1;
+
+        var IsActive = ($('#toggleInsertConfigGlobalCategory').prop('checked')) ? 1 : 0 ;
+
+        var model = new Object();
+
+        model.ConfigGlobalCategoryNo = $('#txtInsertConfigGlobalCategoryNo').val();
+        model.ConfigGlobalCategoryName = $('#txtInsertConfigGlobalCategoryName').val();
+        model.ConfigGlobalCategoryDescription = $('#txtInsertConfigGlobalCategoryDescription').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ConfigGlobalCategory")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalCreateConfigGlobalCategory").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callConfigGlobalCategoryIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+
+            }
+        });
+    }
+
+    function callConfigGlobalCategoryUpdateController(){
+
+        var IsActive = 1;
+
+        var IsActive = ($('#toggleUpdateConfigGlobalCategory').prop('checked')) ? 1 : 0 ;
+
+        var model = new Object();
+
+        model.ConfigGlobalCategoryNo = $('#txtUpdateConfigGlobalCategoryNo').val();
+        model.ConfigGlobalCategoryName = $('#txtUpdateConfigGlobalCategoryName').val();
+        model.ConfigGlobalCategoryDescription = $('#txtUpdateConfigGlobalCategoryDescription').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ConfigGlobalCategory")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalUpdateConfigGlobalCategory").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callConfigGlobalCategoryIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+
+    function callConfigGlobalCategoryExportController(){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ExportToCsv", "ConfigGlobalCategory")",
+            //data: { id : getPK },
+            contentType: 'application/json; charset=utf-8',
+            //dataType: "json",
+            success: function (response) {
+
+                var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
+
+                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+
+                a.href = downloadUrl;
+
+                a.download = "scg-etax-ConfigGlobalCategory.csv";
+
+                document.body.appendChild(a);
+
+                a.click();
+            }
+        });
+    }
+
+
+    function callConfigGlobalCategoryIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ConfigGlobalCategory")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+
+
+
+
+</script>

@@ -2,8 +2,9 @@
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
-    public class ProfileDataSourceController : Controller
+    public class ConfigGlobalController : Controller
     {
+
         public IActionResult Index()
         {
             return View();
@@ -29,9 +30,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _Search()
+        {
+            return View();
+        }
+
         public async Task<JsonResult> Detail(int id)
         {
-            List<ProfileDataSource> tran = new List<ProfileDataSource>();
+            List<ConfigGlobal> tran = new List<ConfigGlobal>();
 
             Response resp = new Response();
 
@@ -39,12 +45,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetDetail?id= " + id + " "));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetail?id= " + id + " "));
 
                 if (task.STATUS)
                 {
 
-                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
 
                     result = JsonConvert.SerializeObject(tran[0]);
 
@@ -67,15 +73,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProfileDataSource> tran = new List<ProfileDataSource>();
+            List<ConfigGlobal> tran = new List<ConfigGlobal>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -97,7 +103,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Insert", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigGlobal/Insert", httpContent));
 
             return Json(task);
         }
@@ -108,7 +114,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Update", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigGlobal/Update", httpContent));
 
             return Json(task);
         }
@@ -119,7 +125,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ProfileDataSource/Delete", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigGlobal/Delete", httpContent));
 
             return Json(task);
         }
@@ -128,24 +134,26 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProfileDataSource> tran = new List<ProfileDataSource>();
+            List<ConfigGlobal> tran = new List<ConfigGlobal>();
 
             var strBuilder = new StringBuilder();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
 
                     if (tran.Count() > 0)
                     {
                         strBuilder.AppendLine("" +
-                            "DataSourceNo," +
-                            "DataSourceName," +
-                            "DataSourceDescription," +
+                            "configGlobalNo," +
+                            "configGlobalCategoryNo," +
+                            "configGlobalName," +
+                            "configGlobalValue," +
+                            "configGlobalDescription," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
@@ -157,9 +165,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         foreach (var item in tran)
                         {
                             strBuilder.AppendLine($"" +
-                                $"{item.DataSourceNo}," +
-                                $"{item.DataSourceName}," +
-                                $"{item.DataSourceDescription}," +
+                                $"{item.ConfigGlobalNo}," +
+                                $"{item.ConfigGlobalCategoryName}," +
+                                $"{item.ConfigGlobalName}," +
+                                $"{item.ConfigGlobalValue}," +
+                                $"{item.ConfigGlobalDescription}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
@@ -184,7 +194,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 Console.WriteLine(ex.InnerException.ToString());
             }
 
-            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileDataSource.csv");
+            return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ConfigGlobal.csv");
 
         }
 
@@ -192,15 +202,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             Response resp = new Response();
 
-            List<ProfileDataSource> tran = new List<ProfileDataSource>();
+            List<ConfigGlobal> tran = new List<ConfigGlobal>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileDataSource/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileDataSource>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
 
                     tran = tran.Where(x => x.Isactive == 1).ToList();
                 }
@@ -216,6 +226,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(tran);
         }
+
 
     }
 }

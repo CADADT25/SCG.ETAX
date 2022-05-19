@@ -1,38 +1,39 @@
 ﻿@{
-    ViewData["Title"] = "OutputSearchXmlZip Profile";
+    ViewData["Title"] = "OutputSearchEmailSend Profile";
     Layout = null;
 }
 
 
-@await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Search.cshtml")
+@await Html.PartialAsync("~/Views/OutputSearchEmailSend/_Search.cshtml")
 
 <div class="divider">
 </div>
-@await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Content.cshtml")
+
+@await Html.PartialAsync("~/Views/OutputSearchEmailSend/_Content.cshtml")
 
 
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        $('#OutputSearchXmlZipCustomerCode').select2();
-        $('#OutputSearchXmlZipStatus').select2();
+        $('#OutputSearchEmailSendCustomerCode').select2();
+        $('#OutputSearchEmailSendStatus').select2();
 
-        $("#OutputSearchXmlZipDate").flatpickr({
+        $("#OutputSearchEmailSendDate").flatpickr({
             mode: "range",
             dateFormat: "d-m-Y"
         });
 
-        fnDropdownOutputSearchXmlZipCompanyCode();
+        fnDropdownOutputSearchEmailSendCompanyCode();
 
-        $("#tbOutputSearchXmlZipMain").removeData();
+        $("#tbOutputSearchEmailSendMain").removeData();
 
-        RenderOutputSearchXmlZip('');
+        RenderOutputSearchEmailSend('');
 
     });
 
 
-    function fnDropdownOutputSearchXmlZipCompanyCode() {
+    function fnDropdownOutputSearchEmailSendCompanyCode() {
 
         $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
             $.each(data, function (i, data) {
@@ -40,34 +41,34 @@
                     {
                         value: data.companyCode,
                         text: data.companyCode
-                    }).html(data.companyCode).appendTo("#OutputSearchXmlZipCustomerCode");
+                    }).html(data.companyCode).appendTo("#OutputSearchEmailSendCustomerCode");
             });
         })
     }
 
     function fnSearchOutputDataPrinting(){
 
-        $("#tbOutputSearchXmlZipMain").remove();
+        $("#tbOutputSearchEmailSendMain").remove();
 
 
-        var getCompanyCode = $('#OutputSearchXmlZipCustomerCode').val();
-        var getDate = $('#OutputSearchXmlZipDate').val();
+        var getCompanyCode = $('#OutputSearchEmailSendCustomerCode').val();
+        var getDate = $('#OutputSearchEmailSendDate').val();
 
         var model = new Object();
 
-        model.outPutSearchCompanyCode = getCompanyCode;
-        model.outPutSearchDate = getDate;
+        model.OutputSearchCompanyCode = getCompanyCode;
+        model.OutputSearchDate = getDate;
 
         var JsonString = JSON.stringify(model);
 
                 //alert(JsonString);
 
-        RenderOutputSearchXmlZip(JsonString);
+        RenderOutputSearchEmailSend(JsonString);
     }
 
-    function RenderOutputSearchXmlZip(JsonString){
+    function RenderOutputSearchEmailSend(JsonString){
 
-        var table = $("#tbOutputSearchXmlZipMain").DataTable({
+        var table = $("#tbOutputSearchEmailSendMain").DataTable({
 
             "scrollY": true,
             "scrollX": true,
@@ -79,7 +80,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "OutputSearchXmlZip")",
+                url: "@Url.Action("List", "OutputSearchEmailSend")",
                 type: "POST",
                 data: { SearchJson : JsonString },
                 datatype: "json"
@@ -89,39 +90,34 @@
             "columns": [
 
                 {
-                    data: "outputSearchXmlZipNo",
+                    data: "OutputSearchEmailSendNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
                 },
                 {
-                    //data: "OutputSearchXmlZipNo",
+                    //data: "OutputSearchEmailSendNo",
                     className: "text-center",
-                    visible: false,
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
-                    data: "outputSearchXmlZipCompanyCode",
+                    data: "OutputSearchEmailSendCompanyCode",
                     width: "10%"
                 },
                 {
-                    data: "outputSearchXmlZipFileName",
+                    data: "OutputSearchEmailSendSubject",
                     width: "20%"
                 },
                 {
-                    data: "outputSearchXmlZipFullPath",
-                    width: "10%",
-                    render: function (data, type, row) {
-                        return'<a class="btn btn-primary btn-sm"> Download </a>';
-                    }
+                    data: "OutputSearchEmailSendFileName",
+                    width: "10%"
                 },
                 {
-                    data: "createDate",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('YYYY-MM-DD')},
+                    data: "OutputSearchEmailSendStatus",
                     width: "10%"
                 },
                 {
@@ -141,8 +137,8 @@
         } ).draw();
 
 
-        $('#OutputSearchXmlZipCustomerCode').on( 'change', function () {
-            var valueCustomer = $('#OutputSearchXmlZipCustomerCode').val();
+        $('#OutputSearchEmailSendCustomerCode').on( 'change', function () {
+            var valueCustomer = $('#OutputSearchEmailSendCustomerCode').val();
 
             //alert(valueCustomer);
 
@@ -155,7 +151,7 @@
 
         var minDate, maxDate;
 
-        $('#OutputSearchXmlZipDate').on( 'change', function () {
+        $('#OutputSearchEmailSendDate').on( 'change', function () {
             var valueDate = this.value;
 
             if(valueDate.includes('to')){
@@ -197,34 +193,34 @@
 
 
 
-        EditOutputSearchXmlZip(table);
-        DeleteOutputSearchXmlZip(table);
+        EditOutputSearchEmailSend(table);
+        DeleteOutputSearchEmailSend(table);
     }
 
 
-    function EditOutputSearchXmlZip(table){
+    function EditOutputSearchEmailSend(table){
 
-        $('#tbOutputSearchXmlZipMain').on('click', 'td.editor-edit', function () {
+        $('#tbOutputSearchEmailSendMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callOutputSearchXmlZipGetDetailController(getPK);
+            callOutputSearchEmailSendGetDetailController(getPK);
         });
     }
 
 
-    function fnTimelineCancelOutputSearchXmlZip(){
+    function fnTimelineCancelOutputSearchEmailSend(){
 
-        $("#modalUpdateOutputSearchXmlZip").modal('hide');
+        $("#modalUpdateOutputSearchEmailSend").modal('hide');
     } 
 
-    function ExportOutputSearchXmlZip(){
+    function ExportOutputSearchEmailSend(){
 
         $.blockUI();
 
-        callOutputSearchXmlZipExportController();
+        callOutputSearchEmailSendExportController();
 
         $.unblockUI();
     }
@@ -232,27 +228,27 @@
 
     // [Begin] Ajax call Controller
 
-    function callOutputSearchXmlZipGetDetailController(getPK){
+    function callOutputSearchEmailSendGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            url: "@Url.Action("Detail", "OutputSearchEmailSend")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
 
-                $("#modalUpdateOutputSearchXmlZip").modal('show');
+                $("#modalUpdateOutputSearchEmailSend").modal('show');
 
             }
         });
     }
 
 
-    function callOutputSearchXmlZipExportController(){
+    function callOutputSearchEmailSendExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "OutputSearchXmlZip")",
+            url: "@Url.Action("ExportToCsv", "OutputSearchEmailSend")",
             //data: { id : getPK },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
@@ -266,7 +262,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-OutputSearchXmlZip.csv";
+                a.download = "scg-etax-OutputSearchEmailSend.csv";
 
                 document.body.appendChild(a);
 
@@ -280,10 +276,10 @@
 
 
 
-    function callOutputSearchXmlZipIndex() {
+    function callOutputSearchEmailSendIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#render-OutputSearchXmlZip-create").load("@Url.Action("Index", "OutputSearchXmlZip")");
+            $("#render-OutputSearchEmailSend-create").load("@Url.Action("Index", "OutputSearchEmailSend")");
             $.unblockUI();
         }, 500);
     }

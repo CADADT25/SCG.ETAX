@@ -1,0 +1,45 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Category</label>
+                 <select class="select2 form-control" id="ddlInsertConfigGlobalCategory">
+                     <option value="0" disabled selected>-- Select category --</option>
+                 </select>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Name</label>
+                <input type="text" id="txtInsertConfigGlobalName" onkeyup="validateInsertConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Value</label>
+                <input type="text" id="txtInsertConfigGlobalValue" onkeyup="validateInsertConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="txtInsertConfigGlobalDescription" onkeyup="validateInsertConfigGlobal();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigGlobal" checked />
+                    <label class="custom-control-label" for="toggleInsertConfigGlobal">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
