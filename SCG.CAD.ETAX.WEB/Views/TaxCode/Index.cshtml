@@ -9,13 +9,25 @@
 
      $(document).ready(function () {
 
-        RenderTaxCode();
+        var setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+        setTimeout(function(){
+            RenderTaxCode(setDataSourceStateUpdate);
+        }, 1200);
 
     });
 
 
 
-    function RenderTaxCode(){
+    function RenderTaxCode(setDataSourceStateUpdate){
+
+        if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+            setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+            if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+                setDataSourceStateUpdate = $("#dataSourceState").text();
+            }
+        }
 
         var table = $("#tbTaxCodeMain").DataTable({
 
@@ -29,6 +41,7 @@
             "ajax": {
                 url: "@Url.Action("List", "TaxCode")",
                 type: "POST",
+                data: { dataSource : setDataSourceStateUpdate },
                 datatype: "json"
             },
 
@@ -45,9 +58,14 @@
                     //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: "erpSource",
+                    width: "20%"
                 },
                 {
                     data: "taxCodeErp",
@@ -99,7 +117,7 @@
     }
 
 
-    
+
     function fnInsertCancelTaxCode(){
         $("#modalCreateTaxCode").modal('hide');
     }
@@ -109,10 +127,18 @@
         $("#modalUpdateTaxCode").modal('hide');
     }
 
-    
+
     function callModalInsertTaxCode(){
 
-         var setDataSource = $("#dataSourceState").text();
+        var setDataSource = $("#dataSourceStateUpdate").text();
+
+        if(setDataSource == null || setDataSource == ''){
+            setDataSource = $("#dataSourceStateUpdate").text();
+
+            if(setDataSource == null || setDataSource == ''){
+                setDataSource = $("#dataSourceState").text();
+            }   
+        }
 
         document.getElementById('txtInsertTaxCodeSource').value = setDataSource;
 

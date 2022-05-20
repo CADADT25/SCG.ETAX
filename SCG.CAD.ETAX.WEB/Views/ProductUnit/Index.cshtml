@@ -11,11 +11,23 @@
 
     $(document).ready(function () {
 
-        RenderProductUnit();
+        var setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+        setTimeout(function(){
+            RenderProductUnit(setDataSourceStateUpdate);
+        }, 1200);
 
     });
 
-    function RenderProductUnit(){
+    function RenderProductUnit(setDataSourceStateUpdate){
+
+        if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+            setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+            if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+                setDataSourceStateUpdate = $("#dataSourceState").text();
+            }
+        }
 
         var table = $("#tbProductUnitMain").DataTable({
 
@@ -29,6 +41,7 @@
             "ajax": {
                 url: "@Url.Action("List", "ProductUnit")",
                 type: "POST",
+                data: { dataSource : setDataSourceStateUpdate },
                 datatype: "json"
             },
 
@@ -45,9 +58,14 @@
                     //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: "erpSource",
+                    width: "20%"
                 },
                 {
                     data: "productUnitErp",
@@ -98,19 +116,37 @@
     }
 
 
-    function fnInsertCancelProfileEmailTemplate(){
+    function fnInsertCancelProductUnit(){
+
+        document.getElementById('txtInsertProductUnitSource').value = '';
+        document.getElementById('txtInsertProductUnitErp').value = '';
+        document.getElementById('txtInsertProductUnitRd').value = '';
+        document.getElementById('txtInsertProductUnitDescription').value = '';
 
         $("#modalProductUnit").modal('hide');
     }
 
-    function fnUpdateCancelProfileEmailTemplate(){
+    function fnUpdateCancelProductUnit(){
+
+        document.getElementById('txtUpdateProductUnitSource').value = '';
+        document.getElementById('txtUpdateProductUnitErp').value = '';
+        document.getElementById('txtUpdateProductUnitRd').value = '';
+        document.getElementById('txtUpdateProductUnitDescription').value = '';
 
         $("#modalUpdateProductUnit").modal('hide');
     }
 
     function callModalInsertProductUnit(){
 
-         var setDataSource = $("#dataSourceState").text();
+        var setDataSource = $("#dataSourceStateUpdate").text();
+
+        if(setDataSource == null || setDataSource == ''){
+            setDataSource = $("#dataSourceStateUpdate").text();
+
+            if(setDataSource == null || setDataSource == ''){
+                setDataSource = $("#dataSourceState").text();
+            }
+        }
 
         document.getElementById('txtInsertProductUnitSource').value = setDataSource;
 
@@ -207,7 +243,7 @@
                 document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;
                 document.getElementById('txtUpdatetProductUnitDescription').value = data.ProductUnitDescription;
 
-                
+
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProductUnitIsActive").checked = true;
                 }

@@ -54,11 +54,13 @@
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string dataSource)
         {
             Response resp = new Response();
 
             List<TaxCode> tran = new List<TaxCode>();
+
+            List<TaxCode> listTaxCode = new List<TaxCode>();
 
             try
             {
@@ -67,6 +69,14 @@
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<TaxCode>>(task.OUTPUT_DATA.ToString());
+
+                    var getDataSource = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
+
+                    listTaxCode = JsonConvert.DeserializeObject<List<TaxCode>>(getDataSource.OUTPUT_DATA.ToString());
+
+                    listTaxCode = listTaxCode.Where(x => x.ErpSource == dataSource).ToList();
+
+                    tran = listTaxCode;
                 }
                 else
                 {

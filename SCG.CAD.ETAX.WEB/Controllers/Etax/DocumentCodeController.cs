@@ -67,11 +67,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string dataSource)
         {
             Response resp = new Response();
 
             List<DocumentCode> tran = new List<DocumentCode>();
+
+            List<DocumentCode> listDocumentCode = new List<DocumentCode>();
 
             try
             {
@@ -80,6 +82,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<DocumentCode>>(task.OUTPUT_DATA.ToString());
+
+                    var getDataSource = await Task.Run(() => ApiHelper.GetURI("api/DocumentCode/GetListAll"));
+
+                    listDocumentCode = JsonConvert.DeserializeObject<List<DocumentCode>>(getDataSource.OUTPUT_DATA.ToString());
+
+                    listDocumentCode = listDocumentCode.Where(x => x.ErpSource == dataSource).ToList();
+
+                    tran = listDocumentCode;
                 }
                 else
                 {

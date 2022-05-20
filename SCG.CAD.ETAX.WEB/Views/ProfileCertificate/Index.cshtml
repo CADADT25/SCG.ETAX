@@ -22,13 +22,13 @@
 
         var setCompanyCode = $("#companyCodeState").text();
 
-         setTimeout(function(){
+        setTimeout(function(){
             RenderProfileCertificate(setCompanyCode);
         }, 1200);
 
         
 
-         $('#toggleUpdateProfileCertificate').change(function() {
+        $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
         });
 

@@ -66,11 +66,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(result);
         }
 
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string dataSource)
         {
             Response resp = new Response();
 
             List<ProfileReasonIssue> tran = new List<ProfileReasonIssue>();
+
+            List<ProfileReasonIssue> listReasonIssue = new List<ProfileReasonIssue>();
 
             try
             {
@@ -79,6 +81,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileReasonIssue>>(task.OUTPUT_DATA.ToString());
+
+                    var getDataSource = await Task.Run(() => ApiHelper.GetURI("api/ProfileReasonIssue/GetListAll"));
+
+                    listReasonIssue = JsonConvert.DeserializeObject<List<ProfileReasonIssue>>(getDataSource.OUTPUT_DATA.ToString());
+
+                    listReasonIssue = listReasonIssue.Where(x => x.ReasonIssueDataSource == dataSource).ToList();
+
+                    tran = listReasonIssue;
                 }
                 else
                 {

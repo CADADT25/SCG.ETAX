@@ -11,7 +11,13 @@
 
     $(document).ready(function () {
 
-        RenderProfileReasonIssue();
+        var setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+        setTimeout(function(){
+            RenderProfileReasonIssue(setDataSourceStateUpdate);
+        }, 1200);
+
+       
 
     });
 
@@ -30,7 +36,15 @@
     });
 
 
-    function RenderProfileReasonIssue(){
+    function RenderProfileReasonIssue(setDataSourceStateUpdate){
+
+        if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+            setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+            if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+                setDataSourceStateUpdate = $("#dataSourceState").text();
+            }
+        }
 
         var table = $("#tbProfileReasonIssueMain").DataTable({
 
@@ -44,6 +58,7 @@
             "ajax": {
                 url: "@Url.Action("List", "ProfileReasonIssue")",
                 type: "POST",
+                data: { dataSource : setDataSourceStateUpdate },
                 datatype: "json"
             },
 
@@ -58,6 +73,7 @@
                 {
                     //data: "productUnitNo",
                     className: "text-center",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
@@ -136,7 +152,15 @@
 
     function callModalInsertProfileReasonIssue(){
 
-        var setDataSource = $("#dataSourceState").text();
+        var setDataSource = $("#dataSourceStateUpdate").text();
+
+        if(setDataSource == null || setDataSource == ''){
+            setDataSource = $("#dataSourceStateUpdate").text();
+
+            if(setDataSource == null || setDataSource == ''){
+                setDataSource = $("#dataSourceState").text();
+            }   
+        }
 
         document.getElementById('txtInsertProfileReasonIssueDataSource').value = setDataSource;
 

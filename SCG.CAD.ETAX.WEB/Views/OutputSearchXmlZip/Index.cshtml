@@ -130,7 +130,10 @@
                 },
                 {
                     data: "outputSearchXmlZipFileName",
-                    width: "20%"
+                    width: "20%",
+                    render: function (data, type, row) {
+                        return' '+ data + ' <a onclick="fnCallFullFilePathXml(' + row['outputSearchXmlZipNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
+                    }
                 },
                 {
                     data: "outputSearchXmlZipDocType",
@@ -242,6 +245,35 @@
         });
     }
 
+
+    function fnCallFullFilePathXml(PK){
+        
+        $('#modalGetOutputSearchXmlFullPath').modal('show');
+
+        $('#fullPathXmlGetFillName').empty();
+        $('#fullPathXmlGetFillPath').empty();
+        $('#fullPathXmlGetDatetime').empty();
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            data: { id : PK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                $('#fullPathXmlGetFillName').append(data.OutputSearchXmlZipFileName);
+                $('#fullPathXmlGetFillPath').append(data.OutputSearchXmlZipFullPath);
+                $('#fullPathXmlGetDatetime').append(data.CreateDate);
+
+            }
+        });
+    }
+
+    function fnCancelGetOutputSearchXmlFullPath(){
+        $('#modalGetOutputSearchXmlFullPath').modal('hide');
+    }
 
     function fnTimelineCancelOutputSearchXmlZip(){
 
