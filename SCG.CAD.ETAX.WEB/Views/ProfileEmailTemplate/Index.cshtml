@@ -3,30 +3,22 @@
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
 
+<link rel="stylesheet" type="text/css" href="~/assets/summernote/summernote.min.css">
 
-<div class="section-body">
+<script src="~/assets/summernote/summernote.min.js"></script>
 
-    @await Html.PartialAsync("~/Views/ProfileEmailTemplate/_Content.cshtml")
-
-</div>
+@await Html.PartialAsync("~/Views/ProfileEmailTemplate/_Content.cshtml")
 
 
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        RenderProfileEmailTemplate();
-
-         $('#toggleUpdateProfileEmailTemplate').change(function() {
-            $('#toggleUpdateProfileEmailTemplate-event').html('Toggle: ' + $(this).prop('checked'))
-        });
-
         $('#txtInsertProfileEmailTemplateEmailBody').summernote();
         $('#txtUpdateProfileEmailTemplateEmailBody').summernote();
+
+        RenderProfileEmailTemplate();
 
     });
 
@@ -75,9 +67,9 @@
                     visible: false
                 },
                 {
-                    //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
@@ -87,8 +79,11 @@
                     width: "20%"
                 },
                 {
-                    data: "emailBody",
-                    width: "20%"
+                    data: "emailTemplateNo",
+                    width: "20%",
+                    render: function (data, type, row) {
+                        return'<i class="text-success fa fa-envelope"/> </i> <a onclick="fnGetPreviewEmailTemplate(' + data +');"> READ </a>';
+                    }
                 },
                 {
                     data: "isactive",
@@ -105,13 +100,6 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -126,6 +114,32 @@
         DeleteProfileEmailTemplate(table);
     }
 
+    function fnGetPreviewEmailTemplate(data){
+
+        $("#modalGetProfileEmailTemplate").modal('show');
+        $("#previewData").empty();
+
+        //$("#previewData").append("<b>Appended text</b> <br> <b>testt</b> aaaaa helooooo");
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileEmailTemplate")",
+            data: { id : data },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                $("#previewData").append(data.EmailBody);
+
+            }
+        });
+    }
+
+
+    function fnClosePreviewEmailTemplate(){
+        $("#modalGetProfileEmailTemplate").modal('hide');
+    }
 
     function fnDropdownProfileEmailTemplate() {
 
@@ -140,17 +154,17 @@
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.emailTypeNo,
-                        text: data.emailTypeNo
-                    }).html(data.emailTypeCode).appendTo("#ddlInsertProfileEmailTemplateEmailTypeNo");
+                        value: data.emailTypeCode,
+                        text: data.emailTypeCode
+                    }).html(data.emailTypeCode +' (' + data.emailTypeName + ')' ).appendTo("#ddlInsertProfileEmailTemplateEmailTypeNo");
             });
 
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.emailTypeNo,
-                        text: data.emailTypeNo
-                    }).html(data.emailTypeCode).appendTo("#ddlUpdateProfileEmailTemplateEmailTypeNo");
+                        value: data.emailTypeCode,
+                        text: data.emailTypeCode
+                    }).html(data.emailTypeCode +' (' + data.emailTypeName + ')' ).appendTo("#ddlUpdateProfileEmailTemplateEmailTypeNo");
             });
         })
 
@@ -163,7 +177,7 @@
             $("#ddlInsertProfileEmailTemplateEmailTypeNo").empty();
             document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
 
-            $("#modalCreateProfileEmailTemplate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalCreateProfileEmailTemplate").modal('hide');
     }
 
     function fnUpdateCancelProfileEmailTemplate(){
@@ -171,7 +185,7 @@
             $("#ddlUpdateProfileEmailTemplateEmailTypeNo").empty();
             document.getElementById('txtUpdateProfileEmailTemplateEmailBody').value = '';
 
-            $("#modalUpdateProfileEmailTemplate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalUpdateProfileEmailTemplate").modal('hide');
     }
 
     function callModalInsertProfileEmailTemplate(){
@@ -231,33 +245,6 @@
         });
     }
 
-    function DeleteProfileEmailTemplate(table){
-
-        $('#tbProfileEmailTemplateMain').on('click', 'td.editor-delete', function () {
-
-            var data = table.row($(this).closest('tr')).data();
-
-            var getPK = data[Object.keys(data)[0]];
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        callProfileEmailTemplateDeleteController(getPK);
-                        callProfileEmailTemplateIndex();
-                      }
-                    })
-        });
-    }
 
     function ExportProfileEmailTemplate(){
 
@@ -273,43 +260,27 @@
     // [Begin] Ajax call Controller
 
     function callProfileEmailTemplateGetDetailController(getPK){
+
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileEmailTemplate")",
             data: { id : getPK },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
                 document.getElementById('txtUpdateProfileEmailTemplateNo').value = data.EmailTemplateNo;
+
                 document.getElementById('ddlUpdateProfileEmailTemplateEmailTypeNo').value = data.EmailTypeNo;
 
-                 //$('#txtUpdateProfileEmailTemplateEmailBody').summernote();
-                 $('#txtUpdateProfileEmailTemplateEmailBody').summernote('code', data.EmailBody);
-
-                //document.getElementById('txtUpdateProfileEmailTemplateEmailBody').value = data.EmailBody;
-
-
-                var tempDataSource = data.EmailTypeNo;
-
-                var mySelectDataSource = document.getElementById('ddlUpdateProfileEmailTemplateEmailTypeNo');
-
-                for(var i, j = 0; i = mySelectDataSource.options[j]; j++) {
-
-                    if(i.value == tempDataSource) {
-                        mySelectDataSource.selectedIndex = j;
-                        break;
-                    }
-                }
-
-
+                $('#txtUpdateProfileEmailTemplateEmailBody').summernote('code', data.EmailBody);
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileEmailTemplate').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileEmailTemplate").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileEmailTemplate').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileEmailTemplate").checked = false;
                 }
 
                 $("#modalUpdateProfileEmailTemplate").modal('show');
@@ -320,14 +291,7 @@
 
     function callProfileEmailTemplateInsertController(){
 
-        var IsActive = 1;
-
-        if($('#toggleInsertProfileEmailTemplate').prop('checked')){
-            IsActive = 1;
-        }
-        else{
-            IsActive = 0;
-        }
+        var IsActive = ($('#toggleInsertProfileEmailTemplate').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
@@ -350,19 +314,20 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS == true){
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalCreateProfileEmailTemplate").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
-                   
 
-                    document.getElementById('ddlInsertProfileEmailTemplateEmailTypeNo').empty();
-                    document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
-
-                    $("#modalCreateProfileEmailTemplate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
+                    callProfileEmailTemplateIndex();
                 }
                 else{
-                    fnSweetAlert_Error();
+                    fnSweetAlert_Error(errorMessage);
                 }
 
             }
@@ -371,24 +336,13 @@
 
     function callProfileEmailTemplateUpdateController(){
 
-        var IsActive = 1;
-
-        var getToggle = $('#toggleUpdateProfileEmailTemplate-event').text();
-
-        if(getToggle.includes("true")){
-            IsActive = 1;
-        }
-        else
-        {
-            IsActive = 0;
-        }
+        var IsActive = ($('#toggleUpdateProfileEmailTemplate').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
         model.EmailTemplateNo = $('#txtUpdateProfileEmailTemplateNo').val();
         model.EmailTypeNo = $('#ddlUpdateProfileEmailTemplateEmailTypeNo').val();
         model.EmailBody = $('#txtUpdateProfileEmailTemplateEmailBody').val();
-
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -406,51 +360,23 @@
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalUpdateProfileEmailTemplate").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    $("#modalUpdateProfileEmailTemplate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
-                    document.getElementById('ddlUpdateProfileEmailTemplateEmailTypeNo').empty();
-                    document.getElementById('txtUpdateProfileEmailTemplateEmailBody').value = '';
-
-                    
-
+                    callProfileEmailTemplateIndex();
                 }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+
             }
-        });
-    }
-
-    function callProfileEmailTemplateDeleteController(getPK){
-
-        var model = new Object();
-
-
-        model.EmailTemplateNo = getPK;
-        model.EmailTypeNo = "";
-        model.EmailBody = "";
-
-        model.CreateBy = $("#leftSideEmail").text();
-        model.CreateDate = new Date();
-        model.UpdateBy = $("#leftSideEmail").text();
-        model.UpdateDate = new Date();
-        model.Isactive = 0;
-
-        var getJsonString = JSON.stringify(model);
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Delete", "ProfileEmailTemplate")",
-            data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
-            dataType: "text",
-            success: function () {
-
-                    fnSweetAlert_DeleteSuccess();
-
-
-                }
         });
     }
 

@@ -1,18 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "ProfileEmailType";
+    ViewData["Title"] = " ProfileEmailType ";
     Layout = null;
 }
 
-<div class="section-header">
-    <h1>@ViewData["Title"]</h1>
-</div>
+@await Html.PartialAsync("~/Views/ProfileEmailType/_Content.cshtml")
 
-
-<div class="section-body">
-
-    @await Html.PartialAsync("~/Views/ProfileEmailType/_Content.cshtml")
-
-</div>
 
 
 <script type="text/javascript">
@@ -21,11 +13,9 @@
 
         RenderProfileEmailType();
 
-         $('#toggleUpdateProfileEmailType').change(function() {
-            $('#toggleUpdateProfileEmailType-event').html('Toggle: ' + $(this).prop('checked'))
-        });
-
     });
+
+
 
 
     function RenderProfileEmailType(){
@@ -64,15 +54,16 @@
                 },
                 {
                     data: "emailTypeCode",
-                    width: "20%"
+                    width: "10%",
+                    visible: false
                 },
                 {
                     data: "emailTypeName",
-                    width: "20%"
+                    width: "10%"
                 },
                 {
                     data: "emailTypeDescription",
-                    width: "20%"
+                    width: "10%"
                 },
                 {
                     data: "isactive",
@@ -89,13 +80,6 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -110,52 +94,60 @@
         DeleteProfileEmailType(table);
     }
 
-
     function fnInsertCancelProfileEmailType(){
 
-            document.getElementById('txtInsertProfileEmailTypeCode').value = '';
-            document.getElementById('txtInsertProfileEmailTypeName').value = '';
-            document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
+        document.getElementById('txtInsertProfileEmailTypeCode').value = '';
+        document.getElementById('txtInsertProfileEmailTypeName').value = '';
+        document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
 
-            $("#modalCreateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+        $("#modalCreateProfileEmailType").modal('hide');
     }
 
     function fnUpdateCancelProfileEmailType(){
 
-            document.getElementById('txtUpdateProfileEmailTypeCode').value = '';
-            document.getElementById('txtUpdateProfileEmailTypeName').value = '';
-            document.getElementById('txtUpdateProfileEmailTypeDescription').value = '';
+        document.getElementById('txtUpdateProfileEmailTypeCode').value = '';
+        document.getElementById('txtUpdateProfileEmailTypeName').value = '';
+        document.getElementById('txtUpdateProfileEmailTypeDescription').value = '';
 
-            $("#modalUpdateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+
+        $("#modalUpdateProfileEmailType").modal('hide');
     }
 
     function callModalInsertProfileEmailType(){
 
-        $("#modalCreateProfileEmailType").modal('show');
+        document.getElementById('txtInsertProfileEmailTypeCode').value = '';
+        document.getElementById('txtInsertProfileEmailTypeName').value = '';
+        document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
 
+        $("#modalCreateProfileEmailType").modal('show');
     }
 
     function fnInsertProfileEmailType(){
 
-        if ( $('#txtInsertProfileEmailTypeCode').val() != '')
+        if ( $('#txtInsertProfileEmailTypeCode').val() != '' &&
+             $('#txtInsertProfileEmailTypeName').val() != '' )
         {
             callProfileEmailTypeInsertController();
         }
         else {
             fnToastrInputDataFail();
+            validateInsertProfileEmailType();
         }
-        callProfileEmailTypeIndex();
+
     }
 
     function fnUpdateProfileEmailType(){
 
-        if ($('#txtUpdateProfileEmailTypeCode').val() != '') {
+         if ( $('#txtUpdateProfileEmailTypeCode').val() != '' &&
+              $('#txtUpdateProfileEmailTypeName').val() != '' )
+
+        {
             callProfileEmailTypeUpdateController();
         }
         else {
             fnToastrInputDataFail();
+            validateUpdateProfileEmailType();
         }
-        callProfileEmailTypeIndex();
     }
 
     function EditProfileEmailType(table){
@@ -171,33 +163,6 @@
         });
     }
 
-    function DeleteProfileEmailType(table){
-
-        $('#tbProfileEmailTypeMain').on('click', 'td.editor-delete', function () {
-
-            var data = table.row($(this).closest('tr')).data();
-
-            var getPK = data[Object.keys(data)[0]];
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        callProfileEmailTypeDeleteController(getPK);
-                        callProfileEmailTypeIndex();
-                      }
-                    })
-        });
-    }
 
     function ExportProfileEmailType(){
 
@@ -209,47 +174,39 @@
     }
 
 
-
-    // [Begin] Ajax call Controller
-
     function callProfileEmailTypeGetDetailController(getPK){
+
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileEmailType")",
             data: { id : getPK },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
+
                 document.getElementById('txtUpdateProfileEmailTypeNo').value = data.EmailTypeNo;
                 document.getElementById('txtUpdateProfileEmailTypeCode').value = data.EmailTypeCode;
                 document.getElementById('txtUpdateProfileEmailTypeName').value = data.EmailTypeName;
                 document.getElementById('txtUpdateProfileEmailTypeDescription').value = data.EmailTypeDescription;
 
+
                 if(data.Isactive == 1){
-                    $('#toggleUpdateProfileEmailType').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateProfileEmailType").checked = true;
                 }
                 else{
-                    $('#toggleUpdateProfileEmailType').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateProfileEmailType").checked = false;
                 }
 
                 $("#modalUpdateProfileEmailType").modal('show');
-
             }
         });
     }
 
     function callProfileEmailTypeInsertController(){
 
-        var IsActive = 1;
-
-        if($('#toggleInsertProfileEmailType').prop('checked')){
-            IsActive = 1;
-        }
-        else{
-            IsActive = 0;
-        }
+        var IsActive = ($('#toggleInsertProfileEmailType').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
@@ -269,21 +226,23 @@
             type: "POST",
             url: "@Url.Action("Insert", "ProfileEmailType")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalCreateProfileEmailType").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    
-                    document.getElementById('txtInsertProfileEmailTypeCode').value = '';
-                    document.getElementById('txtInsertProfileEmailTypeName').value = '';
-                    document.getElementById('txtInsertProfileEmailTypeDescription').value = '';
-
-                    $("#modalCreateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
+                    callProfileEmailTypeIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
                 }
 
             }
@@ -294,15 +253,7 @@
 
         var IsActive = 1;
 
-        var getToggle = $('#toggleUpdateProfileEmailType-event').text();
-
-        if(getToggle.includes("true")){
-            IsActive = 1;
-        }
-        else
-        {
-            IsActive = 0;
-        }
+        var IsActive = ($('#toggleUpdateProfileEmailType').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
@@ -310,7 +261,6 @@
         model.EmailTypeCode = $('#txtUpdateProfileEmailTypeCode').val();
         model.EmailTypeName = $('#txtUpdateProfileEmailTypeName').val();
         model.EmailTypeDescription = $('#txtUpdateProfileEmailTypeDescription').val();
-
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -324,57 +274,29 @@
             type: "POST",
             url: "@Url.Action("Update", "ProfileEmailType")",
             data: { jsonString : getJsonString },
-            //contentType: 'application/json; charset=utf-8',
             dataType: "text",
             success: function (resp) {
 
-                if(resp.OUTPUT_STATUS = true){
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalUpdateProfileEmailType").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateProfileEmailTypeCode').value = '';
-                    document.getElementById('txtUpdateProfileEmailTypeName').value = '';
-                    document.getElementById('txtUpdateProfileEmailTypeDescription').value = '';
+                    callProfileEmailTypeIndex();
 
-                    $("#modalUpdateProfileEmailType").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
-
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
                 }
             }
         });
     }
 
-    function callProfileEmailTypeDeleteController(getPK){
-
-        var model = new Object();
-
-
-        model.EmailTypeNo = getPK;
-        model.EmailTypeCode = "";
-        model.EmailTypeName = "";
-        model.EmailTypeDescription = "";
-
-        model.CreateBy = $("#leftSideEmail").text();
-        model.CreateDate = new Date();
-        model.UpdateBy = $("#leftSideEmail").text();
-        model.UpdateDate = new Date();
-        model.Isactive = 0;
-
-        var getJsonString = JSON.stringify(model);
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Delete", "ProfileEmailType")",
-            data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
-            dataType: "text",
-            success: function () {
-
-                    fnSweetAlert_DeleteSuccess();
-
-
-                }
-        });
-    }
 
     function callProfileEmailTypeExportController(){
         $.ajax({
@@ -401,11 +323,6 @@
             }
         });
     }
-
-    // [end] Ajax call Controller
-
-
-
 
     function callProfileEmailTypeIndex() {
         setTimeout(function(){

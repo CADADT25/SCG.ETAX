@@ -157,7 +157,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "PdfSignDetail," + "PdfSignDateTime," + "PrintStatus," + "PrintDetail," + "PrintDateTime," +
                             "EmailSendStatus," + "EmailSendDetail," + "EmailSendDateTime," + "XmlCompressStatus," + "XmlCompressDetail," +
                             "XmlCompressDateTime," + "PdfIndexingStatus," + "PdfIndexingDetail," + "PdfIndexingDateTime," + "PdfSignLocation," +
-                            "XmlSignLocation," + "ZipTransactionNo," + "DmsAttachmentFileName," + "DmsAttachmentFilePath," +
+                            "XmlSignLocation," + "OutputXmlTransactionNo," + "OutputPdfTransactionNo," + "OutputMailTransactionNo," + "DmsAttachmentFileName," + "DmsAttachmentFilePath," +
                             "CreateBy," + "CreateDate," + "UpdateBy," + "UpdateDate," + "Isactive,"
                             );
 
@@ -175,7 +175,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.PdfSignDetail}," + $"{item.PdfSignDateTime}," + $"{item.PrintStatus}," + $"{item.PrintDetail}," + $"{item.PrintDateTime}," +
                                 $"{item.EmailSendStatus}," + $"{item.EmailSendDetail}," + $"{item.EmailSendDateTime}," + $"{item.XmlCompressStatus}," + $"{item.XmlCompressDetail}," +
                                 $"{item.XmlCompressDateTime}," + $"{item.PdfIndexingStatus}," + $"{item.PdfIndexingDetail}," + $"{item.PdfIndexingDateTime}," + $"{item.PdfSignLocation}," +
-                                $"{item.XmlSignLocation}," + $"{item.ZipTransactionNo}," + $"{item.DmsAttachmentFileName}," + $"{item.DmsAttachmentFilePath}," +
+                                $"{item.XmlSignLocation}," + $"{item.OutputXmlTransactionNo}," + $"{item.OutputPdfTransactionNo}," + $"{item.OutputMailTransactionNo}," + $"{item.DmsAttachmentFileName}," + $"{item.DmsAttachmentFilePath}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +

@@ -103,7 +103,7 @@
 
                     if (update != null)
                     {
-                        update.EmailTypeCode = param.EmailTypeCode;
+                        //update.EmailTypeCode = param.EmailTypeCode;
                         update.EmailTypeName = param.EmailTypeName;
                         update.EmailTypeDescription = param.EmailTypeDescription;
                         update.UpdateBy = param.UpdateBy;

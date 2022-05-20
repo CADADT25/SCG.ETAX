@@ -10,11 +10,23 @@
 
      $(document).ready(function () {
 
-        RenderDocumentCode();
+        var setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+        setTimeout(function(){
+            RenderDocumentCode(setDataSourceStateUpdate);
+        }, 1200);
 
     });
 
-    function RenderDocumentCode(){
+    function RenderDocumentCode(setDataSourceStateUpdate){
+
+        if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+            setDataSourceStateUpdate = $("#dataSourceStateUpdate").text();
+
+            if(setDataSourceStateUpdate == null || setDataSourceStateUpdate == ''){
+                setDataSourceStateUpdate = $("#dataSourceState").text();
+            }
+        }
 
         var table = $("#tbDocumentCodeMain").DataTable({
 
@@ -28,6 +40,7 @@
             "ajax": {
                 url: "@Url.Action("List", "DocumentCode")",
                 type: "POST",
+                data: { dataSource : setDataSourceStateUpdate },
                 datatype: "json"
             },
 
@@ -44,25 +57,26 @@
                     //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
                     data: "erpSource",
-                    width: "20%"
+                    width: "8%"
                 },
                 {
                     data: "documentCodeErp",
-                    width: "20%"
+                    width: "8%"
                 },
                 {
                     data: "documentCodeRd",
-                    width: "10%"
+                    width: "8%"
                 },
                 {
                     data: "documentDescription",
-                    width: "10%"
+                    width: "25%"
                 },
                 {
                     data: "isactive",
@@ -104,7 +118,15 @@
 
     function callModalInsertDocumentCode(){
 
-        var setDataSource = $("#dataSourceState").text();
+        var setDataSource = $("#dataSourceStateUpdate").text();
+
+        if(setDataSource == null || setDataSource == ''){
+            setDataSource = $("#dataSourceStateUpdate").text();
+
+            if(setDataSource == null || setDataSource == ''){
+                setDataSource = $("#dataSourceState").text();
+            }   
+        }
 
         document.getElementById('txtInsertDocumentCodeErpSource').value = setDataSource;
 

@@ -104,7 +104,7 @@
                     if (update != null)
                     {
 
-                        update.EmailTypeNo = param.EmailTemplateNo;
+                        update.EmailTypeNo = param.EmailTypeNo;
                         update.EmailBody = param.EmailBody;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

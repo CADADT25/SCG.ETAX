@@ -109,7 +109,10 @@
                 },
                 {
                     data: "outputSearchPrintingFileName",
-                    width: "20%"
+                    width: "20%",
+                    render: function (data, type, row) {
+                        return' '+ data + ' <a onclick="fnCallFullFilePathPrinting(' + row['outputSearchPrintingNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
+                    }
                 },
                 {
                     data: "outputSearchPrintingFullPath",
@@ -121,7 +124,7 @@
                 {
                     data: "createDate",
                     render: function(data, type, row, meta) {
-                            return moment(data).format('YYYY-MM-DD')},
+                            return moment(data).format('DD-MMMM-YYYY')},
                     width: "10%"
                 },
                 {
@@ -212,6 +215,36 @@
 
             callOutputSearchPrintingGetDetailController(getPK);
         });
+    }
+
+    function fnCallFullFilePathPrinting(PK){
+        
+        $('#modalGetOutputSearchPrintingFullPath').modal('show');
+
+        $('#fullPathPrintingGetFillName').empty();
+        $('#fullPathPrintingGetFillPath').empty();
+        $('#fullPathPrintingGetDatetime').empty();
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchPrinting")",
+            data: { id : PK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                $('#fullPathPrintingGetFillName').append(data.OutputSearchPrintingFileName);
+                $('#fullPathPrintingGetFillPath').append(data.OutputSearchPrintingFullPath);
+                $('#fullPathPrintingGetDatetime').append(data.CreateDate);
+
+            }
+        });
+
+    }
+
+    function fnCancelGetOutputSearchPrintingFullPath(){
+        $('#modalGetOutputSearchPrintingFullPath').modal('hide');
     }
 
 

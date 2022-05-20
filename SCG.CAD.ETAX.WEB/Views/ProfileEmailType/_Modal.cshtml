@@ -12,41 +12,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelProfileEmailType();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Code</label>
-                                    <input type="text" id="txtInsertProfileEmailTypeCode" onkeyup="validateInsertProfileEmailType();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" id="txtInsertProfileEmailTypeName" onkeyup="validateInsertProfileEmailType();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <input type="text" id="txtInsertProfileEmailTypeDescription" onkeyup="validateInsertProfileEmailType();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleInsertProfileEmailType" checked type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleInsertProfileEmailType-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProfileEmailType/_Create.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileEmailType();">Close</button>
@@ -64,47 +35,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update @ViewData["Title"]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelProfileEmailType();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group" hidden>
-                                    <label>No</label>
-                                    <input disabled type="text" id="txtUpdateProfileEmailTypeNo" class="form-control">
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label><spa class="text-danger">* </spa>Code</label>
-                                    <input type="text" id="txtUpdateProfileEmailTypeCode" onkeyup="validateUpdateProfileEmailType();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" id="txtUpdateProfileEmailTypeName" onkeyup="validateUpdateProfileEmailType();" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" id="txtUpdateProfileEmailTypeDescription" onkeyup="validateUpdateProfileEmailType();" class="form-control">
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="control-label">Toggle switch IsActive</div>
-                                    <input id="toggleUpdateProfileEmailType" type="checkbox" data-toggle="toggle">
-                                    <div hidden id="toggleUpdateProfileEmailType-event"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("~/Views/ProfileEmailType/_Update.cshtml")
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileEmailType();">Close</button>

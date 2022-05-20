@@ -1,0 +1,46 @@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12" hidden> 
+            <div class="form-group" >
+                <label>No</label>
+                <input disabled type="text" id="txtUpdateProfileEmailTypeNo" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa>Code</label>
+                <input type="text" disabled id="txtUpdateProfileEmailTypeCode" onkeyup="validateUpdateProfileEmailType();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="txtUpdateProfileEmailTypeName" onkeyup="validateUpdateProfileEmailType();" class="form-control">
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="txtUpdateProfileEmailTypeDescription" onkeyup="validateUpdateProfileEmailType();" class="form-control">
+            </div>
+        </div>
+
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleUpdateProfileEmailType" checked />
+                    <label class="custom-control-label" for="toggleUpdateProfileEmailType">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+

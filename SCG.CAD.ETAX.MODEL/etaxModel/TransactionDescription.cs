@@ -52,7 +52,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? PdfIndexingDateTime { get; set; }
         public string? PdfSignLocation { get; set; }
         public string? XmlSignLocation { get; set; }
-        public string? ZipTransactionNo { get; set; }
+        public string? OutputXmlTransactionNo { get; set; }
+        public string? OutputPdfTransactionNo { get; set; }
+        public string? OutputMailTransactionNo { get; set; }
         public string? DmsAttachmentFileName { get; set; }
         public string? DmsAttachmentFilePath { get; set; }
         public string? CreateBy { get; set; }

@@ -178,7 +178,9 @@
                         update.PdfIndexingDateTime = param.PdfIndexingDateTime;
                         update.PdfSignLocation = param.PdfSignLocation;
                         update.XmlSignLocation = param.XmlSignLocation;
-                        update.ZipTransactionNo = param.ZipTransactionNo;
+                        update.OutputXmlTransactionNo = param.OutputXmlTransactionNo;
+                        update.OutputPdfTransactionNo = param.OutputPdfTransactionNo;
+                        update.OutputMailTransactionNo = param.OutputMailTransactionNo;
                         update.DmsAttachmentFileName = param.DmsAttachmentFileName;
                         update.DmsAttachmentFilePath = param.DmsAttachmentFilePath;
                         update.OneTimeEmail = param.OneTimeEmail;
@@ -271,7 +273,9 @@
                                 update.PdfIndexingDateTime = item.PdfIndexingDateTime;
                                 update.PdfSignLocation = item.PdfSignLocation;
                                 update.XmlSignLocation = item.XmlSignLocation;
-                                update.ZipTransactionNo = item.ZipTransactionNo;
+                                update.OutputXmlTransactionNo = item.OutputXmlTransactionNo;
+                                update.OutputPdfTransactionNo = item.OutputPdfTransactionNo;
+                                update.OutputMailTransactionNo = item.OutputMailTransactionNo;
                                 update.DmsAttachmentFileName = item.DmsAttachmentFileName;
                                 update.DmsAttachmentFilePath = item.DmsAttachmentFilePath;
                                 update.OneTimeEmail = item.OneTimeEmail;
