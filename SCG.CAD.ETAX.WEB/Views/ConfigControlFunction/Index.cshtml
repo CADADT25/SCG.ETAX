@@ -1,0 +1,249 @@
+﻿@{
+    ViewData["Title"] = " ConfigControlMenu ";
+    Layout = null;
+}
+
+@await Html.PartialAsync("~/Views/ConfigControlMenu/_Content.cshtml")
+
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderConfigControlMenu();
+
+    });
+
+
+
+    function RenderConfigControlMenu(){
+
+        var table = $("#tbConfigControlMenuMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigControlMenu")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "ConfigControlMenuNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "ConfigControlMenuName",
+                    width: "50%"
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-eye"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditConfigControlMenu(table);
+        DeleteConfigControlMenu(table);
+    }
+
+    function fnInsertCancelConfigControlMenu(){
+
+        document.getElementById('txtInsertFunctionName').value = '';
+
+        $("#modalCreateConfigControlMenu").modal('hide');
+    }
+
+    function fnUpdateCancelConfigControlMenu(){
+
+        document.getElementById('txtUpdateFunctionName').value = '';
+        $("#modalUpdateConfigControlMenu").modal('hide');
+    }
+
+    function callModalInsertConfigControlMenu(){
+
+        document.getElementById('txtInsertFunctionName').value = '';
+        $("#modalCreateConfigControlMenu").modal('show');
+    }
+
+    function fnInsertConfigControlMenu(){
+
+        if ( $('#txtInsertFunctionName').val() != '' )
+        {
+            callConfigControlMenuInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateInsertConfigControlMenu();
+        }
+
+    }
+
+    function fnUpdateConfigControlMenu(){
+
+         if ( $('#txtUpdateFunctionName').val() != '')
+
+        {
+            callConfigControlMenuUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateUpdateConfigControlMenu();
+        }
+    }
+
+    function EditConfigControlMenu(table){
+
+        $('#tbConfigControlMenuMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            callConfigControlMenuGetDetailController(getPK);
+
+        });
+    }
+
+
+    function callConfigControlMenuGetDetailController(getPK){
+
+        document.getElementById('txtUpdateFunctionName').value = '';
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigControlMenu")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateFunctionNo').value = data.ConfigControlMenuNo;
+                document.getElementById('txtUpdateFunctionName').value = data.ConfigControlMenuName;
+
+                $("#modalUpdateConfigControlMenu").modal('show');
+            }
+        });
+    }
+
+    function callConfigControlMenuInsertController(){
+
+        var model = new Object();
+
+        model.ConfigControlMenuName = $('#txtInsertFunctionName').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ConfigControlMenu")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalCreateConfigControlMenu").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callConfigControlMenuIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+
+            }
+        });
+    }
+
+    function callConfigControlMenuUpdateController(){
+
+        var model = new Object();
+
+        model.ConfigControlMenuNo = $('#txtUpdateFunctionNo').val();
+        model.ConfigControlMenuName = $('#txtUpdateFunctionName').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = IsActive;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ConfigControlMenu")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalUpdateConfigControlMenu").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callConfigControlMenuIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callConfigControlMenuIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ConfigControlMenu")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>

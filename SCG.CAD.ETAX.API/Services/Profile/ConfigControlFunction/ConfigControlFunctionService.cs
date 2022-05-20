@@ -1,7 +1,8 @@
 ﻿namespace SCG.CAD.ETAX.API.Services
 {
-    public class OutputSearchEmailSendService
+    public class ConfigControlFunctionService
     {
+
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
@@ -10,7 +11,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.outputSearchEmailSend.ToList();
+                var getList = _dbContext.configControlFunction.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -22,14 +23,14 @@
                 else
                 {
                     resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
+                    resp.ERROR_MESSAGE = "Data not found";
                 }
 
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
+                resp.ERROR_MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
@@ -41,7 +42,7 @@
 
             try
             {
-                var getList = _dbContext.outputSearchEmailSend.Where(x => x.OutputSearchEmailSendNo == id).ToList();
+                var getList = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -52,71 +53,74 @@
                 else
                 {
                     resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
+                    resp.ERROR_MESSAGE = "Data not found";
                 }
 
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
+                resp.ERROR_MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public Response INSERT(OutputSearchEmailSend param)
+        public Response INSERT(ConfigControlFunction param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    param.CreateDate = dtNow;
-                    param.UpdateDate = dtNow;
+                    var getDuplicate = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionName == param.ConfigControlFunctionName).ToList();
 
-                    _dbContext.outputSearchEmailSend.Add(param);
-                    _dbContext.SaveChanges();
+                    if (getDuplicate.Count > 0)
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Can't insert because data is duplicate.";
+                    }
+                    else
+                    {
+
+                        param.ConfigControlFunctionName = param.ConfigControlFunctionName.ToUpper();
+
+                        param.CreateDate = dtNow;
+                        param.UpdateDate = dtNow;
+
+                        _dbContext.configControlFunction.Add(param);
+                        _dbContext.SaveChanges();
 
 
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Insert success.";
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Insert success.";
+                    }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Insert faild.";
+                resp.ERROR_MESSAGE = "Insert faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public Response UPDATE(OutputSearchEmailSend param)
+        public Response UPDATE(ConfigControlFunction param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.outputSearchEmailSend.Where(x => x.OutputSearchEmailSendNo == param.OutputSearchEmailSendNo).FirstOrDefault();
+                    var update = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionNo == param.ConfigControlFunctionNo).FirstOrDefault();
 
                     if (update != null)
                     {
-                        update.OutputSearchEmailSendCompanyCode = param.OutputSearchEmailSendCompanyCode;
-                        update.OutputSearchEmailSendSubject= param.OutputSearchEmailSendSubject;
-                        update.OutputSearchEmailSendFrom= param.OutputSearchEmailSendFrom;
-                        update.OutputSearchEmailSendTo= param.OutputSearchEmailSendTo;
-                        update.OutputSearchEmailSendCc= param.OutputSearchEmailSendCc;
-                        update.OutputSearchEmailSendFileName= param.OutputSearchEmailSendFileName;
-                        update.OutputSearchEmailSendStatus= param.OutputSearchEmailSendStatus;
-                       
-                        update.OutputSearchEmailSendLastTime= param.OutputSearchEmailSendLastTime;
-                        update.OutputSearchEmailSendLastBy= param.OutputSearchEmailSendLastBy;
+                        
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
-                        update.Isactive = param.Isactive;
 
                         _dbContext.SaveChanges();
 
@@ -126,31 +130,31 @@
                     else
                     {
                         resp.STATUS = false;
-                        resp.MESSAGE = "Can't update because data not found.";
+                        resp.ERROR_MESSAGE = "Can't update because data not found.";
                     }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Update faild.";
+                resp.ERROR_MESSAGE = "Update faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
         }
 
-        public Response DELETE(OutputSearchEmailSend param)
+        public Response DELETE(ConfigControlFunction param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.outputSearchEmailSend.Find(param.OutputSearchEmailSendNo);
+                    var delete = _dbContext.configControlFunction.Find(param.ConfigControlFunctionNo);
 
                     if (delete != null)
                     {
-                        _dbContext.outputSearchEmailSend.Remove(delete);
+                        _dbContext.configControlFunction.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;
@@ -159,14 +163,14 @@
                     else
                     {
                         resp.STATUS = false;
-                        resp.MESSAGE = "Can't delete because data not found.";
+                        resp.ERROR_MESSAGE = "Can't delete because data not found.";
                     }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Delete faild.";
+                resp.ERROR_MESSAGE = "Delete faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

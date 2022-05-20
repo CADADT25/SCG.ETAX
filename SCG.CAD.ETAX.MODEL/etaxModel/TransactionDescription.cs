@@ -43,7 +43,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime? PrintDateTime { get; set; }
         public string? EmailSendStatus { get; set; }
         public string? EmailSendDetail { get; set; }
-        public string? EmailSendDateTime { get; set; }
+        public DateTime? EmailSendDateTime { get; set; }
         public string? XmlCompressStatus { get; set; }
         public string? XmlCompressDetail { get; set; }
         public DateTime? XmlCompressDateTime { get; set; }
