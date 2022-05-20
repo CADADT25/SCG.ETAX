@@ -77,10 +77,11 @@
 
                     _dbContext.outputSearchEmailSend.Add(param);
                     _dbContext.SaveChanges();
-
+                    int identityNo = param.OutputSearchEmailSendNo;
 
                     resp.STATUS = true;
                     resp.MESSAGE = "Insert success.";
+                    resp.OUTPUT_DATA = identityNo;
                 }
             }
             catch (Exception ex)
@@ -104,15 +105,15 @@
                     if (update != null)
                     {
                         update.OutputSearchEmailSendCompanyCode = param.OutputSearchEmailSendCompanyCode;
-                        update.OutputSearchEmailSendSubject= param.OutputSearchEmailSendSubject;
-                        update.OutputSearchEmailSendFrom= param.OutputSearchEmailSendFrom;
-                        update.OutputSearchEmailSendTo= param.OutputSearchEmailSendTo;
-                        update.OutputSearchEmailSendCc= param.OutputSearchEmailSendCc;
-                        update.OutputSearchEmailSendFileName= param.OutputSearchEmailSendFileName;
-                        update.OutputSearchEmailSendStatus= param.OutputSearchEmailSendStatus;
-                       
-                        update.OutputSearchEmailSendLastTime= param.OutputSearchEmailSendLastTime;
-                        update.OutputSearchEmailSendLastBy= param.OutputSearchEmailSendLastBy;
+                        update.OutputSearchEmailSendSubject = param.OutputSearchEmailSendSubject;
+                        update.OutputSearchEmailSendFrom = param.OutputSearchEmailSendFrom;
+                        update.OutputSearchEmailSendTo = param.OutputSearchEmailSendTo;
+                        update.OutputSearchEmailSendCc = param.OutputSearchEmailSendCc;
+                        update.OutputSearchEmailSendFileName = param.OutputSearchEmailSendFileName;
+                        update.OutputSearchEmailSendStatus = param.OutputSearchEmailSendStatus;
+
+                        update.OutputSearchEmailSendLastTime = param.OutputSearchEmailSendLastTime;
+                        update.OutputSearchEmailSendLastBy = param.OutputSearchEmailSendLastBy;
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

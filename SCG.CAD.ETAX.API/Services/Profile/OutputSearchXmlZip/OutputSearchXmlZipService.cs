@@ -77,9 +77,11 @@
                     _dbContext.outputSearchXmlZip.Add(param);
                     _dbContext.SaveChanges();
 
+                    int identityNo = param.OutputSearchXmlZipNo;
 
                     resp.STATUS = true;
                     resp.MESSAGE = "Insert success.";
+                    resp.OUTPUT_DATA = identityNo;
                 }
             }
             catch (Exception ex)

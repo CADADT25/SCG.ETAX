@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = " ConfigControlFunction ";
+    ViewData["Title"] = " ConfigControlMenu ";
     Layout = null;
 }
 
-@await Html.PartialAsync("~/Views/ConfigControlFunction/_Content.cshtml")
+@await Html.PartialAsync("~/Views/ConfigControlMenu/_Content.cshtml")
 
 
 
@@ -11,15 +11,15 @@
 
      $(document).ready(function () {
 
-        RenderConfigControlFunction();
+        RenderConfigControlMenu();
 
     });
 
 
 
-    function RenderConfigControlFunction(){
+    function RenderConfigControlMenu(){
 
-        var table = $("#tbConfigControlFunctionMain").DataTable({
+        var table = $("#tbConfigControlMenuMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -29,7 +29,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "ConfigControlFunction")",
+                url: "@Url.Action("List", "ConfigControlMenu")",
                 type: "POST",
                 datatype: "json"
             },
@@ -38,7 +38,7 @@
             "columns": [
 
                 {
-                    data: "configControlFunctionNo",
+                    data: "configControlMenuNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -46,18 +46,23 @@
                 {
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
-                    data: "configControlFunctionName",
-                    width: "50%"
+                    data: "configControlMenuName",
+                    width: "30%"
+                },
+                {
+                    data: "configControlMenuValue",
+                    width: "30%"
                 },
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-eye"/>',
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
                     orderable: false,
                     width: "2%"
                 }
@@ -71,95 +76,104 @@
         } ).draw();
 
 
-        EditConfigControlFunction(table);
-        DeleteConfigControlFunction(table);
+        EditConfigControlMenu(table);
+        DeleteConfigControlMenu(table);
     }
 
-    function fnInsertCancelConfigControlFunction(){
+    function fnInsertCancelConfigControlMenu(){
 
-        document.getElementById('txtInsertFunctionName').value = '';
+        document.getElementById('txtInsertMenuName').value = '';
+        document.getElementById('txtInsertMenuValue').value = '';
 
-        $("#modalCreateConfigControlFunction").modal('hide');
+        $("#modalCreateConfigControlMenu").modal('hide');
     }
 
-    function fnUpdateCancelConfigControlFunction(){
+    function fnUpdateCancelConfigControlMenu(){
 
-        document.getElementById('txtUpdateFunctionName').value = '';
-        $("#modalUpdateConfigControlFunction").modal('hide');
+        document.getElementById('txtUpdateMenuNo').value = '';
+        document.getElementById('txtUpdateMenuName').value = '';
+        document.getElementById('txtUpdateMenuValue').value = '';
+
+
+        $("#modalUpdateConfigControlMenu").modal('hide');
     }
 
-    function callModalInsertConfigControlFunction(){
+    function callModalInsertConfigControlMenu(){
 
-        document.getElementById('txtInsertFunctionName').value = '';
-        $("#modalCreateConfigControlFunction").modal('show');
+        document.getElementById('txtInsertMenuName').value = '';
+        document.getElementById('txtInsertMenuValue').value = '';
+
+        $("#modalCreateConfigControlMenu").modal('show');
     }
 
-    function fnInsertConfigControlFunction(){
+    function fnInsertConfigControlMenu(){
 
-        if ( $('#txtInsertFunctionName').val() != '' )
+        if ( $('#txtInsertMenuName').val() != '' && $('#txtInsertMenuValue').val() != '' )
         {
-            callConfigControlFunctionInsertController();
+            callConfigControlMenuInsertController();
         }
         else {
             fnToastrInputDataFail();
-            validateInsertConfigControlFunction();
+            validateInsertConfigControlMenu();
         }
 
     }
 
-    function fnUpdateConfigControlFunction(){
+    function fnUpdateConfigControlMenu(){
 
-         if ( $('#txtUpdateFunctionName').val() != '')
-
+        if ( $('#txtUpdateMenuName').val() != '' && $('#txtUpdateMenuValue').val() != '' )
         {
-            callConfigControlFunctionUpdateController();
+            callConfigControlMenuUpdateController();
         }
         else {
             fnToastrInputDataFail();
-            validateUpdateConfigControlFunction();
+            validateUpdateConfigControlMenu();
         }
     }
 
-    function EditConfigControlFunction(table){
+    function EditConfigControlMenu(table){
 
-        $('#tbConfigControlFunctionMain').on('click', 'td.editor-edit', function () {
+        $('#tbConfigControlMenuMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callConfigControlFunctionGetDetailController(getPK);
+            callConfigControlMenuGetDetailController(getPK);
 
         });
     }
 
 
-    function callConfigControlFunctionGetDetailController(getPK){
+    function callConfigControlMenuGetDetailController(getPK){
 
-        document.getElementById('txtUpdateFunctionName').value = '';
+        document.getElementById('txtUpdateMenuName').value = '';
+        document.getElementById('txtUpdateMenuValue').value = '';
 
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "ConfigControlFunction")",
+            url: "@Url.Action("Detail", "ConfigControlMenu")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
 
-                document.getElementById('txtUpdateFunctionNo').value = data.ConfigControlFunctionNo;
-                document.getElementById('txtUpdateFunctionName').value = data.ConfigControlFunctionName;
+                document.getElementById('txtUpdateMenuNo').value = data.ConfigControlMenuNo;
+                document.getElementById('txtUpdateMenuName').value = data.ConfigControlMenuName;
+                document.getElementById('txtUpdateMenuValue').value = data.ConfigControlMenuValue;
 
-                $("#modalUpdateConfigControlFunction").modal('show');
+                $("#modalUpdateConfigControlMenu").modal('show');
             }
         });
     }
 
-    function callConfigControlFunctionInsertController(){
+    function callConfigControlMenuInsertController(){
 
         var model = new Object();
 
-        model.ConfigControlFunctionName = $('#txtInsertFunctionName').val();
+        model.ConfigControlMenuName = $('#txtInsertMenuName').val();
+        model.ConfigControlMenuValue = $('#txtInsertMenuValue').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -170,7 +184,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "ConfigControlFunction")",
+            url: "@Url.Action("Insert", "ConfigControlMenu")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -181,11 +195,11 @@
 
                 if(data.status == true){
 
-                    $("#modalCreateConfigControlFunction").modal('hide');
+                    $("#modalCreateConfigControlMenu").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    callConfigControlFunctionIndex();
+                    callConfigControlMenuIndex();
                 }
                 else{
                     fnSweetAlert_Error(errorMessage);
@@ -195,12 +209,13 @@
         });
     }
 
-    function callConfigControlFunctionUpdateController(){
+    function callConfigControlMenuUpdateController(){
 
         var model = new Object();
 
-        model.ConfigControlFunctionNo = $('#txtUpdateFunctionNo').val();
-        model.ConfigControlFunctionName = $('#txtUpdateFunctionName').val();
+        model.ConfigControlMenuNo = $('#txtUpdateMenuNo').val();
+        model.ConfigControlMenuName = $('#txtUpdateMenuName').val();
+        model.ConfigControlMenuValue = $('#txtUpdateMenuValue').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -212,7 +227,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "ConfigControlFunction")",
+            url: "@Url.Action("Update", "ConfigControlMenu")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -223,11 +238,11 @@
 
                 if(data.status == true){
 
-                    $("#modalUpdateConfigControlFunction").modal('hide');
+                    $("#modalUpdateConfigControlMenu").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    callConfigControlFunctionIndex();
+                    callConfigControlMenuIndex();
 
                 }
                 else{
@@ -237,10 +252,10 @@
         });
     }
 
-    function callConfigControlFunctionIndex() {
+    function callConfigControlMenuIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ConfigControlFunction")");
+            $("#contentPartial").load("@Url.Action("Index", "ConfigControlMenu")");
             $.unblockUI();
         }, 500);
     }
