@@ -255,10 +255,11 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             bool result = false;
             //pathinpput = @"c:\temp\MySample.txt";
             //string pathoutput = @"D:\sign\backupfile\";
+            string output = "";
 
             try
             {
-                pathoutput += "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
+                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -266,13 +267,13 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (!Directory.Exists(pathoutput))
+                if (!Directory.Exists(output))
                 {
-                    Directory.CreateDirectory(pathoutput);
+                    Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, pathoutput + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+                File.Move(pathinput, output + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))

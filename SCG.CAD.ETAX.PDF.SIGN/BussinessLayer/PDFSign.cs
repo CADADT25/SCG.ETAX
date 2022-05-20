@@ -84,7 +84,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                 if (allfile != null && allfile.Count > 0)
                 {
-                    string pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
+                    pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
                     foreach (var src in allfile)
                     {
                         round += 1;
@@ -116,7 +116,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         {
                             billingdate = dataTran.BillingDate ?? DateTime.Now;
                         }
-                        pathoutbound += "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM");
+                        pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
                         if (resultPDFSign)
                         {
                             pathoutbound += "\\Success\\";
@@ -151,7 +151,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             bool result = false;
             try
             {
-                //result = true;
+                result = true;
             }
             catch (Exception ex)
             {
@@ -206,6 +206,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         dataTran.PdfSignStatus = "Failed";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
+                        dataTran.PdfSignLocation = pathfile;
 
                         var json = JsonSerializer.Serialize(dataTran);
                         res = transactionDescription.Insert(json);
@@ -220,10 +221,11 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     if (status)
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
-                        dataTran.PdfSignDetail = "XML was signed completely";
+                        dataTran.PdfSignDetail = "PDF was signed completely";
                         dataTran.PdfSignStatus = "Successful";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
+                        dataTran.PdfSignLocation = pathfile;
 
                         var json = JsonSerializer.Serialize(dataTran);
                         res = transactionDescription.Update(json);
@@ -235,10 +237,11 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     else
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
-                        dataTran.PdfSignDetail = "XML was signed Failed";
+                        dataTran.PdfSignDetail = "PDF was signed Failed";
                         dataTran.PdfSignStatus = "Failed";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
+                        dataTran.PdfSignLocation = pathfile;
 
                         var json = JsonSerializer.Serialize(dataTran);
                         res = transactionDescription.Update(json);
@@ -296,9 +299,10 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             bool result = false;
             //pathinpput = @"c:\temp\MySample.txt";
             //pathoutput = @"D:\sign\backupfile\";
+            string output = "";
             try
             {
-                pathoutput += "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
+                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -306,13 +310,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (!Directory.Exists(pathoutput))
+                if (!Directory.Exists(output))
                 {
-                    Directory.CreateDirectory(pathoutput);
+                    Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, pathoutput + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+                File.Move(pathinput, output + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))

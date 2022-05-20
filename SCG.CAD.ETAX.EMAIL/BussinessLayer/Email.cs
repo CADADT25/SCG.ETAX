@@ -14,20 +14,28 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
     {
         ConfigMftsEmailSettingController configMftsEmailSettingController = new ConfigMftsEmailSettingController();
         OutputSearchXmlZipController outputSearchXmlZip = new OutputSearchXmlZipController();
+        TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
 
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
         List<OutputSearchXmlZip> outputSearchXmlZips = new List<OutputSearchXmlZip>();
+        List<TransactionDescription> transactionDescriptions = new List<TransactionDescription>();
 
         public void ProcessSendEmail()
         {
             try
             {
                 GetDataFromDataBase();
-                List<OutputSearchXmlZip> fileXmlZip = new List<OutputSearchXmlZip>();
+                List<TransactionDescription> dataPDFsend = new List<TransactionDescription>();
                 foreach (var config in configMftsEmailSettings)
                 {
-                    fileXmlZip = outputSearchXmlZips.Where(x => x.OutputSearchXmlZipCompanyCode == config.ConfigMftsEmailSettingCompanyCode && x.Isactive == 1).ToList();
-
+                    dataPDFsend = transactionDescriptions.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode 
+                                                                    && x.EmailSendStatus == "Waiting"
+                                                                    && !String.IsNullOrEmpty(x.PdfSignLocation)
+                                                                    && x.Isactive == 1).ToList();
+                    if(dataPDFsend != null && dataPDFsend.Count > 0)
+                    {
+                        SendEmailbyCompany(dataPDFsend, config);
+                    }
 
                 }
             }
@@ -43,6 +51,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             {
                 configMftsEmailSettings = configMftsEmailSettingController.List().Result;
                 outputSearchXmlZips = outputSearchXmlZip.List().Result;
+                transactionDescriptions = transactionDescriptionController.List().Result;
 
             }
             catch (Exception ex)
@@ -51,18 +60,28 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
         }
 
-        public bool SendEmailbyCompany(List<OutputSearchXmlZip> fileXmlZips, ConfigMftsEmailSetting config)
+        public void GetDataTransactionDescription()
+        {
+            transactionDescriptions = transactionDescriptionController.List().Result;
+        }
+
+        public bool SendEmailbyCompany(List<TransactionDescription> dataPDFsend, ConfigMftsEmailSetting config)
         {
             bool result = false;
             try
             {
-                var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
-                var fromEmailPassword = config.ConfigMftsEmailSettingPassword;
-                var smtpHost = config.ConfigMftsEmailSettingHost;
-                var smtpPort = config.ConfigMftsEmailSettingPort;
-                var toEmailAddress = config.ConfigMftsEmailSettingEmail;
+                //var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
+                //var fromEmailPassword = config.ConfigMftsEmailSettingPassword;
+                //var smtpHost = config.ConfigMftsEmailSettingHost;
+                //var smtpPort = config.ConfigMftsEmailSettingPort;
+                //var toEmailAddress = config.ConfigMftsEmailSettingEmail;
+                var fromEmailAddress = "etaxadm@scg.com";
+                var fromEmailPassword = "Thai2020";
+                var smtpHost = "outmail.scg.co.th";
+                var smtpPort = "25";
+                var toEmailAddress = "cadcadt25@scg.com";
 
-                string body = config.ConfigMftsEmailSettingEmailTemplate;
+                string body = "Test";//config.ConfigMftsEmailSettingEmailTemplate;
                 MailMessage message = new MailMessage();
 
                 //Setting From , To and CC
@@ -71,9 +90,9 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 message.Subject = "Thank You For Your Registration";
                 message.IsBodyHtml = true;
                 message.Body = body;
-                foreach (var file in fileXmlZips)
+                foreach (var file in dataPDFsend)
                 {
-                    message.Attachments.Add(new Attachment(file.OutputSearchXmlZipFullPath));
+                    message.Attachments.Add(new Attachment(file.PdfSignLocation));
                 }
                 //var client = new SmtpClient();
                 try
@@ -91,6 +110,23 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 {
                     result = false;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public double CalculateMBbyByte(double bytes)
+        {
+            double result = 0;
+            try
+            {
+                double temp = bytes % (1024 * 1024 * 1024);
+
+                double MBs = temp / (1024 * 1024);
+                result = MBs;
             }
             catch (Exception ex)
             {

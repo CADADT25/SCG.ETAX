@@ -186,8 +186,10 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             XmlFileDetail datatxmlfileupdate = new XmlFileDetail();
             try
             {
-                foreach(var doctype in dataFile.listByDocumentTypes)
+                foreach (var doctype in dataFile.listByDocumentTypes)
                 {
+                    flagnewfile = true;
+                    listxmlfileupdate = new List<XmlFileDetail>();
                     //zipPath = @"D:\Example\result.zip";
                     zipPath = dataFile.OutPath + "\\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\" + doctype.DocumentType;
                     if (!Directory.Exists(zipPath))
@@ -200,7 +202,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                         datatxmlfileupdate = new XmlFileDetail();
                         if (flagnewfile)
                         {
-                            zipName = dataFile.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            zipName = dataFile.CompanyCode + "_" + doctype.DocumentType.ToUpper() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
                             flagnewfile = false;
                         }
 
@@ -221,7 +223,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                                             {
                                                 item.Delete();
                                                 flagnewfile = true;
-                                                i = i- 1;
+                                                i = i - 1;
                                                 break; //needed to break out of the loop
                                             }
                                         }
@@ -232,7 +234,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
 
 
                                         Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName);
+                                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
                                         Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
                                         listxmlfileupdate = new List<XmlFileDetail>();
                                     }
@@ -247,21 +249,21 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                             }
                         }
                     }
+                    if (listxmlfileupdate.Count > 0)
+                    {
+                        Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
+                        GetListTransactionDescription();
+                        UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
+                        Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
+                        listxmlfileupdate = new List<XmlFileDetail>();
+                        flagnewfile = true;
+                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
+                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                    }
                 }
 
 
-                 if(listxmlfileupdate.Count > 0)
-                {
-                    Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
-                    GetListTransactionDescription();
-                    UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
-                    Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
-
-
-                    Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                    InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath , zipName);
-                    Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                }
 
                 result = true;
             }
@@ -272,7 +274,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             return result;
         }
 
-        public bool InsertTransactionXmlZIP(string companycode, string outpath, string zipName)
+        public bool InsertTransactionXmlZIP(string companycode, string outpath, string zipName, string doctype)
         {
             bool result = false;
             try
@@ -284,6 +286,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 insertData.OutputSearchXmlZipFullPath = outpath + "\\" + zipName;
                 insertData.OutputSearchXmlZipDowloadCount = 0;
                 insertData.OutputSearchXmlZipDowloadStatus = 0;
+                insertData.OutputSearchXmlZipDocType = doctype.ToUpper();
                 insertData.CreateBy = "Batch";
                 insertData.CreateDate = DateTime.Now;
                 insertData.UpdateBy = "Batch";
@@ -368,10 +371,10 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             bool result = false;
             //pathinpput = @"c:\temp\MySample.txt";
             //string pathoutput = @"D:\sign\backupfile\";
-
+            string output = "";
             try
             {
-                pathoutput += "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
+                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -379,13 +382,13 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (!Directory.Exists(pathoutput))
+                if (!Directory.Exists(output))
                 {
-                    Directory.CreateDirectory(pathoutput);
+                    Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, pathoutput + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+                File.Move(pathinput, output + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
@@ -404,7 +407,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             }
             return result;
         }
-        
+
         public XmlFileModel separateXmlFilebyDocumentType(FileModel dataFile)
         {
             TransactionDescription datatransaction = new TransactionDescription();
@@ -420,14 +423,17 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 ListByDocumentType docTypeDebitNote = new ListByDocumentType();
                 ListByDocumentType docTypeCreditNote = new ListByDocumentType();
                 docTypeTaxInvoice.DocumentType = "TaxInvoice";
+                docTypeTaxInvoice.XmlFileDetails = new List<XmlFileDetail>();
                 docTypeDebitNote.DocumentType = "DebitNote";
+                docTypeDebitNote.XmlFileDetails = new List<XmlFileDetail>();
                 docTypeCreditNote.DocumentType = "CreditNote";
+                docTypeCreditNote.XmlFileDetails = new List<XmlFileDetail>();
                 XmlFileDetail datexmlfile = new XmlFileDetail();
                 foreach (var filedetail in dataFile.FileDetails)
                 {
 
                     datatransaction = transactionDescription.FirstOrDefault(x => x.BillingNumber == filedetail.BillingNo);
-                    if(datatransaction != null)
+                    if (datatransaction != null)
                     {
                         datexmlfile = new XmlFileDetail();
                         datexmlfile.FileName = filedetail.FileName;
@@ -456,7 +462,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                             default:
                                 break;
                         }
-                            
+
                     }
                 }
                 result.listByDocumentTypes.Add(docTypeTaxInvoice);
