@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BussinessLayer\" />
-    <Folder Include="Controller\" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.API\SCG.CAD.ETAX.API.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.DAL\SCG.CAD.ETAX.DAL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
   </ItemGroup>
 </Project>

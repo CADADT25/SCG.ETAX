@@ -14,7 +14,7 @@ namespace SCG.CAD.ETAX.XML.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            xMLSign.XML_Sign();
+            xMLSign.ProcessXMLSign();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);

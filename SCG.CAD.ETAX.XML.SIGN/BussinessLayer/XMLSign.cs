@@ -16,9 +16,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
     public class XMLSign
     {
         ConfigXMLSignController configXMLSignController = new ConfigXMLSignController();
-        List<ConfigXmlSign> configXmlSign = new List<ConfigXmlSign>();
+        TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
 
-        public void XML_Sign()
+        List<ConfigXmlSign> configXmlSign = new List<ConfigXmlSign>();
+        List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
+        string pathoutput;
+
+        public void ProcessXMLSign()
         {
             string fullpath = "";
             string fileNameDest = "";
@@ -27,6 +32,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             int round = 0;
             string fileType = ".xml";
             string pathoutbound = "";
+            DateTime billingdate;
             try
             {
                 Console.WriteLine("Start XMLSign");
@@ -38,6 +44,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                 if (allfile != null && allfile.Count > 0)
                 {
+                    pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
                     foreach (var src in allfile)
                     {
                         round += 1;
@@ -55,6 +62,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                         fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                         pathoutbound = src.Outbound;
+
+                        var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
+                        billingdate = DateTime.Now;
+                        if (dataTran!= null)
+                        {
+                            billingdate = dataTran.BillingDate ?? DateTime.Now;
+                        }
+                        pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
                         if (resultXMLSign)
                         {
                             pathoutbound += "\\Success\\";
@@ -65,14 +80,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         }
                         fullpath = pathoutbound + fileNameDest + fileType;
 
-                        UpdateStatusAfterSignXML(resultXMLSign, billno, fullpath);
+                        UpdateStatusAfterSignXML(resultXMLSign, billno, fullpath, dataTran);
 
                         Console.WriteLine("Start Export XML file");
-                        ExportXMLAfterSign(doc, pathoutbound, fullpath);
+                        ExportXMLAfterSign( doc, pathoutbound, fullpath);
                         Console.WriteLine("End Export XML file");
                         
                         Console.WriteLine("Start Move file");
-                        MoveFile(src.FullPath, src.Outbound, src.FileName + fileType);
+                        MoveFile(src.FullPath, src.FileName + fileType, billingdate);
                         Console.WriteLine("End Move file");
                     }
                 }
@@ -139,15 +154,13 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool UpdateStatusAfterSignXML(bool status, string billno, string pathfile)
+        public bool UpdateStatusAfterSignXML(bool status, string billno, string pathfile, TransactionDescription dataTran)
         {
             bool result = false;
             string jsondata = "";
             try
             {
                 Task<Response> res;
-                TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
-                var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
                 if (status)
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
@@ -212,6 +225,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             try
             {
                 configXmlSign = configXMLSignController.List().Result;
+                configGlobal = configGlobalController.List().Result;
             }
             catch (Exception ex)
             {
@@ -219,13 +233,16 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
         }
 
-        public bool MoveFile(string pathinput, string pathoutput, string filename)
+        public bool MoveFile(string pathinput, string filename, DateTime billingdate)
         {
             bool result = false;
             //pathinpput = @"c:\temp\MySample.txt";
-            pathoutput = @"D:\sign\backupfile\";
+            //string pathoutput = @"D:\sign\backupfile\";
+            string output = "";
+
             try
             {
+                output = pathoutput + "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -233,13 +250,13 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (!Directory.Exists(pathoutput))
+                if (!Directory.Exists(output))
                 {
-                    Directory.CreateDirectory(pathoutput);
+                    Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, pathoutput + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+                File.Move(pathinput, output + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))

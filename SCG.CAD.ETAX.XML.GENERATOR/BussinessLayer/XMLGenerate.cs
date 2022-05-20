@@ -24,6 +24,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
         ProfileBranchController profileBranchController = new ProfileBranchController();
         ProductUnitController productUnitController = new ProductUnitController();
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
 
 
         List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
@@ -36,8 +37,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
         List<ProfileBranch> profileBranches = new List<ProfileBranch>();
         List<ProductUnit> productUnit = new List<ProductUnit>();
+        List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
+        string pathoutput;
 
-        public void ReadXMLFile()
+        public void ProcessGenXMLFile()
         {
             try
             {
@@ -47,93 +50,81 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 var allTextFile = ReadTextFile();
                 List<string> errormessage = new List<string>();
                 TextFileValidate textFileValidate = new TextFileValidate();
+                ConfigXmlGenerator configXML = new ConfigXmlGenerator();
+                ProfileCompany companydata = new ProfileCompany();
                 string nametextfilefail = "";
                 foreach (var textfile in allTextFile)
                 {
                     var filename = Path.GetFileName(textfile);
                     Console.WriteLine("Start Read TextFile : " + textfile);
                     var dt = ConvertToDataTable(textfile, row);
-                    Console.WriteLine("ConvertToDataTable success");
-                    var cs = ConvertDTtoClass(dt);
-                    Console.WriteLine("ConvertToClass success");
-                    round = 1;
-                    foreach (var classtextfile in cs)
+                    if (dt != null && dt.Rows.Count > 0)
                     {
-
-                        var companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
-                        var configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
-                        Console.WriteLine("Start round : " + round);
-
-                        Console.WriteLine("Start Insert Data TransactionDescription");
-                        InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
-                        Console.WriteLine("End Insert Data TransactionDescription");
-
-                        Console.WriteLine("Start ValidateFileText");
-                        errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
-                        if (errormessage.Count > 0)
+                        Console.WriteLine("ConvertToDataTable success");
+                        var cs = ConvertDTtoClass(dt);
+                        Console.WriteLine("ConvertToClass success");
+                        round = 1;
+                        pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPTEXTFILE").ConfigGlobalValue;
+                        foreach (var classtextfile in cs)
                         {
-                            Console.WriteLine("ValidateFileText Fail");
-                            UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
-                            nametextfilefail = filename.Replace(".txt","") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
-                            GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
-                        }
-                        else
-                        {
-                            Console.WriteLine("ValidateFileText Success");
-                            errormessage = new List<string>();
+                            companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
+                            if(companydata != null)
+                            {
+                                configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
+                            }
+                            Console.WriteLine("Start round : " + round);
 
-                            var dataxml = ConvertClasstoXMLFormat(classtextfile);
-                            Console.WriteLine("ConvertClasstoXMLFormat success");
+                            Console.WriteLine("Start Insert Data TransactionDescription");
+                            InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
+                            Console.WriteLine("End Insert Data TransactionDescription");
 
-                            Console.WriteLine("Start ValidateSchematron");
-                            errormessage.AddRange(ValidateSchematron(dataxml));
-                            Console.WriteLine("End ValidateSchematron");
-
+                            Console.WriteLine("Start ValidateFileText");
+                            errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
                             if (errormessage.Count > 0)
                             {
-                                Console.WriteLine("ValidateSchematron Fail");
+                                Console.WriteLine("ValidateFileText Fail");
                                 UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
                                 nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
-                                GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
+                                GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
                             }
                             else
                             {
-                                Console.WriteLine("Start Gen XML File");
-                                string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
-                                var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO);
+                                Console.WriteLine("ValidateFileText Success");
+                                errormessage = new List<string>();
 
-                                Console.WriteLine("End Gen XML File");
+                                var dataxml = ConvertClasstoXMLFormat(classtextfile);
+                                Console.WriteLine("ConvertClasstoXMLFormat success");
+
+                                Console.WriteLine("Start ValidateSchematron");
+                                errormessage.AddRange(ValidateSchematron(dataxml));
+                                Console.WriteLine("End ValidateSchematron");
+
+                                if (errormessage.Count > 0)
+                                {
+                                    Console.WriteLine("ValidateSchematron Fail");
+                                    UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                                    nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                                    GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Start Gen XML File");
+                                    string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
+                                    var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO, classtextfile.BILLING_DATE);
+
+                                    Console.WriteLine("End Gen XML File");
+                                }
                             }
-
+                            round += 1;
                         }
-                        round += 1;
                     }
                     Console.WriteLine("End Read TextFile : " + textfile);
 
                     Console.WriteLine("Start Move File");
-                    MoveFile(textfile, "", filename);
+                    MoveFile(textfile, filename);
                     Console.WriteLine("End Move File");
                 }
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public void XMLSchematronToList()
-        {
-            try
-            {
-                var path = @"C:\Code_Dev\SCG.CAD.ETAX\SCG.CAD.ETAX.XML.GENERATOR\XMLSchema\ETDA\data\standard\";
-                var fileXml = "TaxInvoice_Schematron_2p0.sch";
-                XmlReader rd = XmlReader.Create(path + fileXml);
-                XDocument doc = XDocument.Load(rd);
-
-                //XElement tempElement = doc.Descendants(XName.Get("schema", "sch")).FirstOrDefault();
-                //var maps = from item in doc.Root.Elements(XName.Get("schema", "sch"))
-                //           select (item);
             }
             catch (Exception ex)
             {
@@ -163,7 +154,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     listpath = fullpath.ToList();
                     result.AddRange(listpath);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -414,7 +405,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = data.DOC_CURRENCY ?? "";//listID="ISO 4217 3A"
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax = new ApplicableTradeTax();
-                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.Where(x => x.TaxCodeErp == data.TAX_CODE).Select(x => x.TaxCodeRd).FirstOrDefault() ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.FirstOrDefault(x => x.TaxCodeErp == data.TAX_CODE).TaxCodeRd ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedRate = data.TAX_RATE ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.basisAmount = data.SALES_AMOUNT ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedAmount = data.TAX_AMOUNT ?? "";
@@ -474,7 +465,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno)
+        public bool GenXMLFromTemplate(CrossIndustryInvoice data, string pathoutbound, string filename, string billingno, string billingdate)
         {
             bool result = false;
             //pathoutbound = @"D:\gen\gen.xml";
@@ -482,6 +473,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             List<string> errormessage = new List<string>();
             try
             {
+                DateTime billdate = Convert.ToDateTime(billingdate);
+                pathoutbound += "\\" + billdate.ToString("yyyy") + "\\" + billdate.ToString("MM") + "\\";
                 if (!Directory.Exists(pathoutbound))
                 {
                     Directory.CreateDirectory(pathoutbound);
@@ -574,6 +567,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             Task<Response> res;
             bool result = false;
             bool insert = false;
+            double ic = 0;
+            string imageDocType = "";
+            string doctype = "";
             try
             {
                 string errorText = "";
@@ -585,7 +581,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 doccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == dataxml.FI_DOC_TYPE);
                 profiledetail = profileCompany.FirstOrDefault(x => x.TaxNumber == dataxml.SELLER_TIN);
-
                 if (data == null)
                 {
                     insert = true;
@@ -598,20 +593,83 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.BillingNumber = Convert.ToString(dataxml.BILLING_NO);
                 data.BillingYear = billingdate.Year;
                 data.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
-                data.CompanyCode = profiledetail.CompanyCode;
-                data.CompanyName = profiledetail.CompanyNameTh;
+                if (profiledetail != null)
+                {
+                    data.CompanyCode = profiledetail.CompanyCode;
+                    data.CompanyName = profiledetail.CompanyNameTh;
+                }
                 data.CreateBy = "Batch";
                 data.CreateDate = DateTime.Now;
-                data.CustomerId = null;
-                data.CustomerName = null;
-                data.DocType = doccode.DocumentCodeRd;
+                data.CustomerId = dataxml.BUYER_CODE;
+                data.CustomerName = dataxml.BUYER_NAME;
+                if (doccode != null)
+                {
+                    doctype = doccode.DocumentCodeRd;
+                    data.DocType = doccode.DocumentCodeRd;
+                }
                 data.FiDoc = Convert.ToDouble(dataxml.FI_DOC);
                 data.Foc = (dataxml.FI_DOC_TYPE == "FOC") ? 1 : 0;
-                data.Ic = (string.IsNullOrEmpty(dataxml.IC_FLAG)) ? 0 : 1;
-                data.ImageDocType = null;// mapping
+                if (!string.IsNullOrEmpty(dataxml.IC_FLAG))
+                {
+                    ic = 1;
+                    switch (doctype.ToUpper())
+                    {
+                        case "380":
+                        case "T02":
+                        case "T03":
+                        case "T04":
+                        case "T05":
+                        case "T06":
+                            imageDocType = "ZFI1060,ZFI1061";
+                            break;
+                        case "388":
+                            imageDocType = "ZFI1060,ZFI1061";
+                            break;
+                        case "80":
+                            imageDocType = "ZFI1040,ZFI1041";
+                            break;
+                        case "81":
+                            imageDocType = "ZFI1050,ZFI1051";
+                            break;
+                        case "T01":
+                        case "T07":
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (doctype.ToUpper())
+                    {
+                        case "380":
+                        case "T02":
+                        case "T03":
+                        case "T04":
+                        case "T05":
+                        case "T06":
+                            imageDocType = "ZFI1061";
+                            break;
+                        case "388":
+                            imageDocType = "ZFI1061";
+                            break;
+                        case "80":
+                            imageDocType = "ZFI1041";
+                            break;
+                        case "81":
+                            imageDocType = "ZFI1051";
+                            break;
+                        case "T01":
+                        case "T07":
+                        default:
+                            break;
+                    }
+                }
+                data.Ic = ic;
+                data.ImageDocType = imageDocType;// mapping
                 data.Isactive = 1;
                 data.Payer = Convert.ToDouble(dataxml.Number_Payer);
-
+                data.PostingYear = billingdate.Year.ToString();
+                data.ProcessingDate = DateTime.Now;
                 foreach (var item in dataxml.Item)
                 {
                     poNumber = poNumber + item.PO_NUMBER + ",";
@@ -625,6 +683,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.TypeInput = "Batch";
                 data.UpdateBy = "Batch";
                 data.UpdateDate = DateTime.Now;
+                data.EmailSendStatus = "Waiting";
+                data.PdfIndexingStatus = "Waiting";
+                data.PrintStatus = "Waiting";
+                data.XmlCompressStatus = "Waiting";
+                data.XmlSignStatus = "Waiting";
+                data.EmailSendStatus = "Waiting";
+                data.PdfSignStatus = "Waiting";
+
 
 
                 var json = JsonSerializer.Serialize(data);
@@ -648,13 +714,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return result;
         }
 
-        public bool MoveFile(string pathinput, string pathoutput, string filename)
+        public bool MoveFile(string pathinput, string filename)
         {
             bool result = false;
-            //pathinpput = @"c:\temp\MySample.txt";
-            pathoutput = @"D:\sign\backupfile\";
+            //string pathoutput = @"D:\sign\backupfile\";
+            string output = "";
             try
             {
+                output = pathoutput + "\\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
@@ -662,13 +729,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
-                if (!Directory.Exists(pathoutput))
+                if (!Directory.Exists(output))
                 {
-                    Directory.CreateDirectory(pathoutput);
+                    Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, pathoutput + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, pathoutput);
+                File.Move(pathinput, output + filename);
+                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
@@ -821,6 +888,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 profileSeller = profileController.ProfileSellerList().Result;
                 productUnit = productUnitController.List().Result;
                 profileBranches = profileBranchController.List().Result;
+                configGlobal = configGlobalController.List().Result;
             }
             catch (Exception ex)
             {
@@ -828,7 +896,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
         }
 
-        public bool UpdateDataTransaction(List<string> errormessage,string billingNo)
+        public bool UpdateDataTransaction(List<string> errormessage, string billingNo)
         {
             bool result = false;
             string errorText = "";
@@ -838,7 +906,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             {
                 listdatatransactionDescription = transactionDescription.GetBilling(billingNo).Result;
                 dataTran = listdatatransactionDescription.FirstOrDefault();
-                if(dataTran != null)
+                if (dataTran != null)
                 {
                     if (errormessage.Count == 0)
                     {
