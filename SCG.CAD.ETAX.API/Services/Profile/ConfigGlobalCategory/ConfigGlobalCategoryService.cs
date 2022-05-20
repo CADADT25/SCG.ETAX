@@ -77,7 +77,7 @@
                     if (getDuplicate.Count > 0)
                     {
                         resp.STATUS = false;
-                        resp.MESSAGE = "Can't insert because category name duplicate.";
+                        resp.ERROR_MESSAGE = "Can't insert because category name duplicate.";
                     }
                     else
                     {
