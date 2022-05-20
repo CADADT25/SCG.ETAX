@@ -86,7 +86,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnName("docType");
 
                 entity.Property(e => e.EmailSendDateTime)
-                    .HasMaxLength(255)
+                    .HasColumnType("datetime")
                     .HasColumnName("emailSendDateTime");
 
                 entity.Property(e => e.EmailSendDetail)

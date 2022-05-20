@@ -10,7 +10,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.configGlobal.ToList();
+                var getList = _dbContext.configGlobal.OrderBy(x => x.ConfigGlobalCategoryName).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -22,14 +22,14 @@
                 else
                 {
                     resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
+                    resp.ERROR_MESSAGE = "Data not found";
                 }
 
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
+                resp.ERROR_MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
@@ -52,14 +52,14 @@
                 else
                 {
                     resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
+                    resp.ERROR_MESSAGE = "Data not found";
                 }
 
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Get data fail.";
+                resp.ERROR_MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
@@ -72,21 +72,35 @@
             {
                 using (_dbContext)
                 {
-                    param.CreateDate = dtNow;
-                    param.UpdateDate = dtNow;
+                    var getDuplicate = _dbContext.configGlobal.Where(x => x.ConfigGlobalName == param.ConfigGlobalName && x.ConfigGlobalCategoryName == param.ConfigGlobalCategoryName).ToList();
 
-                    _dbContext.configGlobal.Add(param);
-                    _dbContext.SaveChanges();
+                    if (getDuplicate.Count > 0)
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Can't insert because data is duplicate.";
+                    }
+                    else
+                    {
+
+                        param.ConfigGlobalCategoryName = param.ConfigGlobalCategoryName.ToUpper();
+                        param.ConfigGlobalName = param.ConfigGlobalName.ToUpper();
+
+                        param.CreateDate = dtNow;
+                        param.UpdateDate = dtNow;
+
+                        _dbContext.configGlobal.Add(param);
+                        _dbContext.SaveChanges();
 
 
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Insert success.";
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Insert success.";
+                    }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Insert faild.";
+                resp.ERROR_MESSAGE = "Insert faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
@@ -120,14 +134,14 @@
                     else
                     {
                         resp.STATUS = false;
-                        resp.MESSAGE = "Can't update because data not found.";
+                        resp.ERROR_MESSAGE = "Can't update because data not found.";
                     }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Update faild.";
+                resp.ERROR_MESSAGE = "Update faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
@@ -153,14 +167,14 @@
                     else
                     {
                         resp.STATUS = false;
-                        resp.MESSAGE = "Can't delete because data not found.";
+                        resp.ERROR_MESSAGE = "Can't delete because data not found.";
                     }
                 }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.MESSAGE = "Delete faild.";
+                resp.ERROR_MESSAGE = "Delete faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

@@ -31,7 +31,7 @@
         });
 
         fnDropdownOutputSearchXmlZipCompanyCode();
-        fnDropdownOutputSearchXmlZipDocType();
+        //fnDropdownOutputSearchXmlZipDocType();
 
         $("#tbOutputSearchXmlZipMain").removeData();
 
@@ -132,7 +132,7 @@
                     data: "outputSearchXmlZipFileName",
                     width: "20%",
                     render: function (data, type, row) {
-                        return' '+ data + ' <a onclick="fnCallFullFilePathXml(' + row['outputSearchXmlZipNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
+                        return' '+ data.substr( 0, 30 ) + '...' + ' <a onclick="fnCallFullFilePathXml(' + row['outputSearchXmlZipNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
                     }
                 },
                 {
@@ -148,6 +148,11 @@
                     render: function (data, type, row) {
                         return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
+                },
+                {
+                    data: "outputSearchXmlZipDowloadStatus",
+                    width: "10%",
+                    visible: false
                 },
                 {
                     data: "createDate",
@@ -175,12 +180,30 @@
         $('#OutputSearchXmlZipCustomerCode').on( 'change', function () {
             var valueCustomer = $('#OutputSearchXmlZipCustomerCode').val();
 
-            //alert(valueCustomer);
-
             if(valueCustomer.includes('All')){
                 table.columns(2).search('').draw();
             }else{
                     table.column(2).search(this.value).draw();
+            }
+        } );
+
+        $('#OutputSearchXmlZipDocType').on( 'change', function () {
+            var valueDocType = $('#OutputSearchXmlZipDocType').val();
+
+            if(valueDocType.includes('All')){
+                table.columns(4).search('').draw();
+            }else{
+                    table.column(4).search(this.value).draw();
+            }
+        } );
+
+        $('#OutputSearchXmlZipStatus').on( 'change', function () {
+            var valueDownloadStatus = $('#OutputSearchXmlZipStatus').val();
+
+            if(valueDownloadStatus.includes('All')){
+                table.columns(6).search('').draw();
+            }else{
+                    table.column(6).search(valueDownloadStatus).draw();
             }
         } );
 
@@ -209,7 +232,6 @@
                         let year = d.getFullYear();
 
                         let dtnew = year+"-"+month+"-"+day;
-                        //alert(dtnew)
 
                         arr.push(dtnew);
                     }
@@ -218,8 +240,6 @@
 
                 var daylist = getDaysArray(new Date(minDate),new Date(maxDate));
                 daylist.join("\n")
-
-                //alert(daylist);
 
                 table.columns(6).search(daylist).draw();
             }

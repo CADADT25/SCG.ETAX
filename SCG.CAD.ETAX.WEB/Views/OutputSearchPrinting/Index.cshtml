@@ -111,7 +111,7 @@
                     data: "outputSearchPrintingFileName",
                     width: "20%",
                     render: function (data, type, row) {
-                        return' '+ data + ' <a onclick="fnCallFullFilePathPrinting(' + row['outputSearchPrintingNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
+                        return' '+ data.substr( 0, 30 ) + '...' + ' <a onclick="fnCallFullFilePathPrinting(' + row['outputSearchPrintingNo'] +');"> <i class="fas fa-folder-open"> </i> </a>';
                     }
                 },
                 {
@@ -120,6 +120,11 @@
                     render: function (data, type, row) {
                         return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
+                },
+                {
+                    data: "outputSearchPrintingDowloadStatus",
+                    width: "10%",
+                    visible: false
                 },
                 {
                     data: "createDate",
@@ -153,6 +158,16 @@
                 table.columns(2).search('').draw();
             }else{
                     table.column(2).search(this.value).draw();
+            }
+        } );
+
+        $('#outputSearchPrintingStatus').on( 'change', function () {
+            var valueDownloadStatus = $('#outputSearchPrintingStatus').val();
+
+            if(valueDownloadStatus.includes('All')){
+                table.columns(5).search('').draw();
+            }else{
+                    table.column(5).search(valueDownloadStatus).draw();
             }
         } );
 

@@ -85,39 +85,34 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">File location</h5>
                 <button type="button" class="close" onclick="fnCancelGetOutputSearchPrintingFullPath();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">File location</h4>
-                            </div>
-                            <div class="card-body">
-                                <ul class="timeline">
+                <div class="card">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <ul class="timeline">
+                            <li class="timeline-item">
+                                <span class="timeline-point timeline-point-success">
+                                    <i class="fas fa-folder-open text-success"></i>
+                                </span>
+                                <div class="timeline-event">
+                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                                        <h6 class="mb-50" id="fullPathPrintingGetFillName"></h6>
+                                        <span class="timeline-event-time" id="fullPathPrintingGetDatetime"></span>
+                                    </div>
+                                    <p id="fullPathPrintingGetFillPath"></p>
+                                    <hr />
+                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                                    </div>
 
-                                    <li class="timeline-item">
-                                        <span class="timeline-point timeline-point-success">
-                                            <i class="fas fa-folder-open text-success"></i>
-                                        </span>
-                                        <div class="timeline-event">
-                                            <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
-                                                <h6 class="mb-50" id="fullPathPrintingGetFillName"></h6>
-                                                <span class="timeline-event-time" id="fullPathPrintingGetDatetime"></span>
-                                            </div>
-                                            <p id="fullPathPrintingGetFillPath"></p>
-                                            <hr />
-                                            <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

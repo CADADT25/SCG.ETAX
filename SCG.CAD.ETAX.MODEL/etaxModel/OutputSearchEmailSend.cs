@@ -14,8 +14,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? OutputSearchEmailSendCc { get; set; }
         public string? OutputSearchEmailSendFileName { get; set; }
         public int? OutputSearchEmailSendStatus { get; set; }
-        public DateTime? OutputSearchEmailSendFirstTime { get; set; }
-        public string? OutputSearchEmailSendFirstBy { get; set; }
         public DateTime? OutputSearchEmailSendLastTime { get; set; }
         public string? OutputSearchEmailSendLastBy { get; set; }
         public string? CreateBy { get; set; }

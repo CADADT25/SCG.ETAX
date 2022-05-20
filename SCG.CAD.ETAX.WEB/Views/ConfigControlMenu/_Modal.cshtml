@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+}
+
+<script src="~/assets/validate/ConfigControlFunctionValidate.js"></script>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateConfigControlFunction" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create</h5>
+                <button type="button" class="close" onclick="fnInsertCancelConfigControlFunction();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                @await Html.PartialAsync("~/Views/ConfigControlFunction/_Create.cshtml")
+
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelConfigControlFunction();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertConfigControlFunction();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigControlFunction" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigControlFunction();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                @await Html.PartialAsync("~/Views/ConfigControlFunction/_Update.cshtml")
+
+
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigControlFunction();">Close</button>
+                @*<button type="button" class="btn btn-primary" onclick="fnUpdateConfigControlFunction();">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>

@@ -89,7 +89,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
 
-            return Json(new { data = tran });
+            return Json(new { data = tran.OrderBy(x => x.ConfigGlobalCategoryName) });
         }
 
         public async Task<JsonResult> Insert(string jsonString)

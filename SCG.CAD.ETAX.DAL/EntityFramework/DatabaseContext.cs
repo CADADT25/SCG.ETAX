@@ -68,6 +68,8 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<OutputSearchEmailSendHistory> outputSearchEmailSendHistory { get; set; }
         public DbSet<ConfigGlobal> configGlobal { get; set; }
         public DbSet<ConfigGlobalCategory> configGlobalCategory { get; set; }
+        public DbSet<ConfigControlFunction> configControlFunction { get; set; }
+        public DbSet<ConfigControlMenu> configControlMenu { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

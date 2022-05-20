@@ -107,8 +107,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "OutputSearchEmailSendCC," +
                             "OutputSearchEmailSendFileName," +
                             "OutputSearchEmailSendStatus," +
-                            "OutputSearchEmailSendFirstTime," +
-                            "OutputSearchEmailSendFirstBy," +
                             "OutputSearchEmailSendLastTime," +
                             "OutputSearchEmailSendLastBy," +
                             "CreateBy," +
@@ -129,8 +127,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.OutputSearchEmailSendTo}," +
                                 $"{item.OutputSearchEmailSendFileName}," +
                                 $"{item.OutputSearchEmailSendStatus}," +
-                                $"{item.OutputSearchEmailSendFirstTime}," +
-                                $"{item.OutputSearchEmailSendFirstBy}," +
                                 $"{item.OutputSearchEmailSendLastTime}," +
                                 $"{item.OutputSearchEmailSendLastBy}," +
                                 $"{item.CreateBy}," +
