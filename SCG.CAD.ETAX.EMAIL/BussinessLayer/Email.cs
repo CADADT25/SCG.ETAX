@@ -265,7 +265,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + pdfdata.BillingNo);
                         updatetransaction.EmailSendStatus = "Successful";
                         updatetransaction.EmailSendDetail = "Batch email was sent to customer code " + customercode + " is completely";
-                        updatetransaction.EmailSendDateTime = DateTime.Now.ToString();
+                        updatetransaction.EmailSendDateTime = DateTime.Now;
                         updatetransaction.OutputMailTransactionNo = transctionno;
                         listupdatetransaction.Add(updatetransaction);
 
@@ -292,35 +292,45 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
-        public bool InsertOutputSearchEmailSend(ConfigMftsEmailSetting config, List<PDFFileDetailModel> pDFFileDetails, )
+        public bool InsertOutputSearchEmailSend(ConfigMftsEmailSetting config, List<PDFFileDetailModel> pDFFileDetails, List<ProfileCustomer> profileemailCustomer)
         {
             bool result = false;
+            string filename = "";
+            string sendto = "";
+            string sendcc = "";
             try
             {
                 Task<Response> res;
                 OutputSearchEmailSend dataInsert = new OutputSearchEmailSend();
-                /*
-                 
-                  dataInsert.OutputSearchEmailSendCompanyCode
-                  dataInsert.OutputSearchEmailSendSubject
-                  dataInsert.OutputSearchEmailSendFrom
-                  dataInsert.OutputSearchEmailSendTo
-                  dataInsert.OutputSearchEmailSendCC
-                  dataInsert.OutputSearchEmailSendFileName
-                  dataInsert.OutputSearchEmailSendStatus
-                  dataInsert.OutputSearchEmailSendFirstTime
-                  dataInsert.OutputSearchEmailSendFirstBy
-                  dataInsert.OutputSearchEmailSendLastTime
-                  dataInsert.OutputSearchEmailSendLastBy
-                  dataInsert.createBy
-                  dataInsert.createDate
-                  dataInsert.updateBy
-                  dataInsert.updateDate
-                  dataInsert.isactive
+                foreach (var item in pDFFileDetails)
+                {
+                    filename += Path.GetFileName(item.FullPath) + ", ";
+                }
+                foreach (var item in profileemailCustomer)
+                {
+                    sendto += Path.GetFileName(item.CustomerEmail) + ", ";
+                    sendcc += Path.GetFileName(item.CustomerCcemail) + ", ";
+                }
+                filename = filename.Substring(0, filename.Length - 2);
+                sendto = sendto.Substring(0, sendto.Length - 2);
+                sendcc = sendcc.Substring(0, sendcc.Length - 2);
 
-                 */
+                dataInsert.OutputSearchEmailSendCompanyCode = config.ConfigMftsEmailSettingCompanyCode;
+                dataInsert.OutputSearchEmailSendSubject = "";
+                dataInsert.OutputSearchEmailSendFrom = config.ConfigMftsEmailSettingEmail;
+                dataInsert.OutputSearchEmailSendTo = sendto;
+                dataInsert.OutputSearchEmailSendCc = sendcc;
+                dataInsert.OutputSearchEmailSendFileName = filename;
+                dataInsert.OutputSearchEmailSendStatus = 1;
+                dataInsert.CreateBy = config.ConfigMftsEmailSettingEmail;
+                dataInsert.CreateDate = DateTime.Now;
+                dataInsert.UpdateBy = config.ConfigMftsEmailSettingEmail;
+                dataInsert.UpdateDate = DateTime.Now;
+                dataInsert.Isactive = 1;
 
-                var json = JsonSerializer.Serialize(listupdatetransaction);
+
+
+                var json = JsonSerializer.Serialize(dataInsert);
                 res = transactionDescriptionController.UpdateList(json);
                 if (res.Result.MESSAGE == "Insert Success.")
                 {
@@ -409,7 +419,87 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 var smtpPort = "25";
                 var toEmailAddress = "cadadt25@scg.com";
 
-                string body = "Test";//config.ConfigMftsEmailSettingEmailTemplate;
+                string body = "<p><span style='font-size: 11.998px; letter-spacing: 0.14px;'>[LOGO]</span></p><p>";
+                body += "</p><p></p><p></p><br><p></p><table class='MsoNormalTable' border='0' cellspacing='0' cellpadding='0' width='80%' style='width:80.0%;mso-cellspacing:0in;mso-yfti-tbllook:1184;mso-padding-alt:";
+                body += "0in 0in 0in 0in'><tbody><tr>";
+                body += " <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += " <p><b><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เรียน</span></b><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
+                body += " mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>บ.พี.ซี.ไอ.คอนกรีตอุตสาหกรรม จก<font color='#000000' style='background-color: rgb(255, 255, 0);'>. (</font></span><font color='#000000' style='background-color: rgb(255, 255, 0);'><u>0003001832)112123</u></font><o:p></o:p></p>";
+                body += " </td>";
+                body += "</tr>";
+                body += "<tr>";
+                body += " <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += " <p><b><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เรื่อง</span></b><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
+                body += " mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>ขอนำส่ง ใบกำกับภาษีอิเล็กทรอนิกส์ /";
+                body += " ใบลดหนี้ / ใบเพิ่มหนี้ ของวันที่</span>22-03-2020<o:p></o:p></p>";
+                body += " </td>";
+                body += "</tr>";
+                body += "<tr>";
+                body += " <td style = 'padding:.75pt .75pt .75pt .75pt'></td>";
+                body += "</tr>";
+                body += "<tr>";
+                body += " <td style= 'padding:.75pt .75pt .75pt .75pt'>";
+                body += " <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>บริษัท เอสซีจี";
+                body += " ซิเมนต์-ผลิตภัณฑ์ก่อสร้าง จำกัด ขอนำส่ง</span><span lang = 'TH' style='font-family:";
+                body += " &quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:";
+                body += " &quot;Times New Roman&quot;'> </span><o:p></o:p></p>";
+                body += " </td>";
+                body += "</tr>";
+                body += "<tr style = 'mso-yfti-irow:4;height:24.75pt'>";
+                body += " <td style='padding:.75pt .75pt .75pt .75pt;height:24.75pt'>";
+                body += " <table class='MsoNormalTable' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100.0%;mso-cellspacing:0in;mso-yfti-tbllook:1184;mso-padding-alt:";
+                body += "  0in 0in 0in 0in'>";
+                body += "  <tbody><tr>";
+                body += "   <td width = '10%' style='width:10.0%;padding:.75pt .75pt .75pt .75pt'></td>";
+                body += "   <td width = '20%' style='width:20.0%;padding:.75pt .75pt .75pt .75pt'>";
+                body += "   <p class='MsoNormal'><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>ใบแจ้งหนี้/ใบกำกับภาษี</span><o:p></o:p></p>";
+                body += "   </td>";
+                body += "   <td width = '5%' style='width:5.0%;padding:.75pt .75pt .75pt .75pt'>";
+                body += "   <p class='MsoNormal'><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>เลขที่:</span><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
+                body += "   mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><o:p></o:p></p>";
+                body += "   </td>";
+                body += "   <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += "   <p class='MsoNormal'>3402504158 <o:p></o:p></p>";
+                body += "   </td>";
+                body += "  </tr>";
+                body += " </tbody></table>";
+                body += " </td>";
+                body += "</tr>";
+                body += "<tr>";
+                body += " <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += " <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>ตามเอกสารที่แนบมาด้วยใน</span> e-mail";
+                body += "      <span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'> ฉบับนี้</span><o:p></o:p></p>";
+                body += " <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>กรณีต้องการสอบถามข้อมูลเพิ่มเติม";
+                body += "   โปรดติดต่อทีมขายของท่าน หรือ</span> e-mail : <a href = 'mailto:etax-cbmadm@scg.com'> etax-cbmadm@scg.com</a><o:p></o:p></p>";
+                body += " </td>";
+                body += "</tr>";
+                body += "<tr style = 'mso-yfti-irow:6;mso-yfti-lastrow:yes;height:24.75pt'>";
+                body += " <td style='padding:.75pt .75pt .75pt .75pt;height:24.75pt'>";
+                body += " <table class='MsoNormalTable' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100.0%;mso-cellspacing:0in;mso-yfti-tbllook:1184;mso-padding-alt:";
+                body += "  0in 0in 0in 0in'>";
+                body += "  <tbody><tr>";
+                body += "   <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += "   <p class='MsoNormal'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; บริษัท&nbsp;&nbsp;<span style = 'font-size: 1rem; letter-spacing: 0.01rem;'>[COMPANY-NAME] </span></p><p class='MsoNormal'><span style = 'font-size: 1rem; letter-spacing: 0.01rem;'>[FILE-NAME] &nbsp; &nbsp; เลขที่ :&nbsp;</span>[BILLING-NUMBER]</p><p class='MsoNormal'><span style = 'font-size: 1rem; letter-spacing: 0.01rem;'><br></span></p>";
+                body += "/td>";
+                body += "/tr>";
+                body += "/tr>";
+                body += "<td style='padding:.75pt .75pt .75pt .75pt'>";
+                body += "   <p><b><span lang = 'TH' style='font-family:&quot;Angsana New&quot;,serif'>ขอแสดงความนับถือ</span></b><o:p></o:p></p>";
+                body += "   </td>";
+                body += "  </tr>";
+                body += "  <tr>";
+                body += "   <td style = 'padding:.75pt .75pt .75pt .75pt'>";
+                body += "   [COMPANY-NAME] <br>";
+                body += "   </td>";
+                body += "  </tr>";
+                body += " </tbody></table>";
+                body += " <p><o:p>&nbsp;</o:p></p>";
+                body += " <p><span style = 'color:blue'> *</span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;";
+                body += " color:blue'>กรุณาอย่าตอบกลับ </span><span style='color:blue'>e-mail </span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;color:blue'>ฉบับนี้ / </span><span style='color:blue'>Please do not reply to this e-mail*&nbsp;<o:p></o:p></span><span style='letter-spacing: 0.14px; background-color: rgb(255, 255, 255);'>[COMPANY-NAME][DATE]</span></p>";
+                body += " <p>&nbsp;<o:p></o:p></p>";
+                body += " </td>";
+                body += "</tr>";
+                body += "/tbody><tbody></tbody></table>";//config.ConfigMftsEmailSettingEmailTemplate;
                 MailMessage message = new MailMessage();
 
                 //Setting From , To and CC
