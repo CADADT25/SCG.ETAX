@@ -23,7 +23,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
-
+        string outputsearchprintingno;
         public void ProcessPrintzip()
         {
             string zipName = "";
@@ -193,11 +193,12 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                 insertData.UpdateBy = "Batch";
                 insertData.UpdateDate = DateTime.Now;
                 insertData.Isactive = 1;
-                
+
                 var json = JsonSerializer.Serialize(insertData);
                 res = outputSearchPrintingController.Insert(json);
                 if (res.Result.MESSAGE == "Insert success.")
                 {
+                    outputsearchprintingno = res.Result.OUTPUT_DATA.ToString();
                     result = true;
                 }
             }
@@ -216,12 +217,13 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                 Task<Response> res;
                 TransactionDescription updatetransaction = new TransactionDescription();
                 List<TransactionDescription> listupdatetransaction = new List<TransactionDescription>();
-                foreach(var filedata in dataFile.FileDetails)
+                foreach (var filedata in dataFile.FileDetails)
                 {
                     updatetransaction = transactionDescription.FirstOrDefault(x => x.BillingNumber == filedata.BillingNo);
-                    if(updatetransaction != null)
+                    if (updatetransaction != null)
                     {
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + filedata.BillingNo);
+                        updatetransaction.OutputPdfTransactionNo = outputsearchprintingno;
                         updatetransaction.PrintStatus = "Successful";
                         updatetransaction.PrintDetail = "PDF file's was prepared for printing completely";
                         updatetransaction.PrintDateTime = DateTime.Now;
@@ -232,7 +234,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         Console.WriteLine("End MoveFile Company : " + dataFile.CompanyCode);
                     }
                 }
-                if(listupdatetransaction.Count > 0)
+                if (listupdatetransaction.Count > 0)
                 {
                     var json = JsonSerializer.Serialize(listupdatetransaction);
                     res = transactionDescriptionController.UpdateList(json);
