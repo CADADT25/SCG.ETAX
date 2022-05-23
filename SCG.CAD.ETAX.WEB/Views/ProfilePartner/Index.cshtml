@@ -841,7 +841,7 @@
     function callProfilePartnerIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfilePartner")");
+            $("#contentPartial").load("@Url.Action("Index", "ManagementCustomerProfile")");
             $.unblockUI();
         }, 500);
     }
