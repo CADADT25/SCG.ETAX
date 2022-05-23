@@ -127,11 +127,11 @@
         if(document.getElementById("toggleInsertProfileCustomerEmail").checked){
 
             $('#grpInsertEmail').removeClass('hidden');
-        
+
         }else{
 
             $('#grpInsertEmail').addClass('hidden');
-        
+
         }
 
         if(document.getElementById("toggleInsertProfileCustomerEmail").checked){
@@ -170,11 +170,11 @@
         if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
 
             $('#grpUpdateEmail').removeClass('hidden');
-        
+
         }else{
 
             $('#grpUpdateEmail').addClass('hidden');
-        
+
         }
 
         if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
@@ -228,7 +228,6 @@
                     visible: false
                 },
                 {
-                    //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
                     render: function (data, type, row, meta) {
@@ -270,13 +269,6 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -335,8 +327,8 @@
     function fnUpdateProfileCustomer(){
 
          if ( $('#txtUpdateCustomerId').val() != '' ||
-              $('#txtUpdateCompanyCode').val() != '' )
-             
+              $('#ddlUpdateCompanyCode').val() != '' )
+
         {
             callProfileCustomerUpdateController();
         }
@@ -421,10 +413,9 @@
 
                 document.getElementById('txtUpdateCustomerProfileNo').value = data.CustomerProfileNo;
                 document.getElementById('txtUpdateCustomerId').value = data.CustomerId;
-                //document.getElementById('txtUpdateCompanyCode').value = data.CompanyCode;
 
-                $('#ddlUpdateCompanyCode').val(data.CompanyCode);
-                $('#ddlUpdateCompanyCode').trigger('change');
+                $('#ddlUpdateCompanyCode').empty().append($("<option/>").val(""+data.CompanyCode+"").text(""+data.CompanyCode+""))
+                .val(""+data.CompanyCode+"").trigger("change");
 
                 document.getElementById('txtUpdateNumberOfCopies').value = data.NumberOfCopies;
 
@@ -455,7 +446,7 @@
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
                     $('#grpUpdateEmailTemplate').removeClass('hidden');
-                    
+
 
                 }else if(getOutputType == '3'){
                     document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
@@ -539,11 +530,12 @@
                 document.getElementById('txtUpdateCustomerEmail').value = data.CustomerEmail;
                 document.getElementById('txtUpdateCustomerCCEmail').value = data.CustomerCcemail;
 
-                $('#ddlUpdateEmailType').val(data.EmailType);
-                $('#ddlUpdateEmailType').trigger('change');
+                $('#ddlUpdateEmailType').empty().append($("<option/>").val(""+data.EmailType+"").text(""+data.EmailType+""))
+                .val(""+data.EmailType+"").trigger("change");
 
-                $('#ddlUpdateEmailTemplate').val(data.EmailTemplate);
-                $('#ddlUpdateEmailTemplate').trigger('change');
+                $('#ddlUpdateEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
+                .val(""+data.EmailTemplateNo+"").trigger("change");
+
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfileCustomer").checked = true;
@@ -673,7 +665,7 @@
 
         model.CustomerProfileNo = $('#txtUpdateCustomerProfileNo').val();
         model.CustomerId = $('#txtUpdateCustomerId').val();
-        model.CompanyCode = $('#txtUpdateCompanyCode').val();
+        model.CompanyCode = $('#ddlUpdateCompanyCode').val();
         model.OutputType = OutPutType;
         model.NumberOfCopies = $('#txtUpdateNumberOfCopies').val();
         model.CustomerEmail = $('#txtUpdateCustomerEmail').val();
