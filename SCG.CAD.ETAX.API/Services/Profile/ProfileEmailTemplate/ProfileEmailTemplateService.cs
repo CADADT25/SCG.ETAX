@@ -105,6 +105,7 @@
                     {
 
                         update.EmailTypeNo = param.EmailTypeNo;
+                        update.EmailSubject = param.EmailSubject;
                         update.EmailBody = param.EmailBody;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

@@ -8,6 +8,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         [Key]
         public int EmailTemplateNo { get; set; }
         public int EmailTypeNo { get; set; }
+        public string? EmailSubject { get; set; }
         public string EmailBody { get; set; } = null!;
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
