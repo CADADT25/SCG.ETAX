@@ -11,5 +11,9 @@ namespace SCG.CAD.ETAX.EMAIL.Model
         public string FullPath { get; set; }
         public string BillingNo { get; set; }
         public DateTime BillingDate { get; set; }
+        public string RenameFileName { get; set; }
+        public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public string Doctype { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
+        string outputxmltransactionno;
 
         public void Xml_ZIP()
         {
@@ -202,7 +203,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                         datatxmlfileupdate = new XmlFileDetail();
                         if (flagnewfile)
                         {
-                            zipName = dataFile.CompanyCode + "_" + doctype.DocumentType.ToUpper() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            zipName = dataFile.CompanyCode + "_" + doctype.DocumentType.ToUpper() + "_" + DateTime.Now.ToString("yyyyMM") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
                             flagnewfile = false;
                         }
 
@@ -227,15 +228,16 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                                                 break; //needed to break out of the loop
                                             }
                                         }
+
+                                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
+                                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+
                                         Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
                                         GetListTransactionDescription();
                                         UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
                                         Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
 
-
-                                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
-                                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
                                         listxmlfileupdate = new List<XmlFileDetail>();
                                     }
                                     if (!flagnewfile)
@@ -251,15 +253,16 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     }
                     if (listxmlfileupdate.Count > 0)
                     {
+                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
+                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
+
                         Console.WriteLine("Start Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
                         GetListTransactionDescription();
                         UpdateStatusTransactionDescription(listxmlfileupdate, dataFile.CompanyCode);
                         Console.WriteLine("End Update Status TransactionDescription Company : " + dataFile.CompanyCode + " | ZipFilename : " + zipName);
                         listxmlfileupdate = new List<XmlFileDetail>();
                         flagnewfile = true;
-                        Console.WriteLine("Start Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
-                        InsertTransactionXmlZIP(dataFile.CompanyCode, zipPath, zipName, doctype.DocumentType);
-                        Console.WriteLine("End Insert Data OutputSearchXmlZip Company : " + dataFile.CompanyCode + " | ZipName : " + zipName);
                     }
                 }
 
@@ -297,7 +300,8 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 res = outputSearchXmlZipController.Insert(json);
                 if (res.Result.MESSAGE == "Insert success.")
                 {
-                    result = true;
+                    outputxmltransactionno = res.Result.OUTPUT_DATA.ToString();
+                       result = true;
                 }
             }
             catch (Exception ex)
@@ -321,6 +325,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     if (updatetransaction != null)
                     {
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + xmldata.BillingNo);
+                        updatetransaction.OutputXmlTransactionNo = outputxmltransactionno;
                         updatetransaction.XmlCompressStatus = "Successful";
                         updatetransaction.XmlCompressDetail = "XML was compressed file is completely";
                         updatetransaction.XmlCompressDateTime = DateTime.Now;

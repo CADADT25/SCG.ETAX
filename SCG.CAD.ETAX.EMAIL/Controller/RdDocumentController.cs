@@ -3,23 +3,24 @@ using SCG.CAD.ETAX.UTILITY;
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 
+
 namespace SCG.CAD.ETAX.EMAIL.Controller
 {
-    public class OutputSearchXmlZipController
+    public class RdDocumentController
     {
-        public async Task<List<OutputSearchXmlZip>> List()
+        public async Task<List<RdDocument>> List()
         {
             Response resp = new Response();
 
-            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+            List<RdDocument> tran = new List<RdDocument>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZip/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {

@@ -16,33 +16,36 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
     public class Email
     {
         ConfigMftsEmailSettingController configMftsEmailSettingController = new ConfigMftsEmailSettingController();
-        OutputSearchXmlZipController outputSearchXmlZip = new OutputSearchXmlZipController();
         TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
         ProfileCustomerController profileCustomerController = new ProfileCustomerController();
         ProfileEmailTemplateController profileEmailTemplateController = new ProfileEmailTemplateController();
         OutputSearchEmailSendController outputSearchEmailSendController = new OutputSearchEmailSendController();
+        ProfileCompanyController profileCompanyController = new ProfileCompanyController();
+        RdDocumentController rdDocumentController = new RdDocumentController();
 
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
-        List<OutputSearchXmlZip> outputSearchXmlZips = new List<OutputSearchXmlZip>();
         List<TransactionDescription> transactionDescriptions = new List<TransactionDescription>();
         List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
         List<ProfileCustomer> profileCustomers = new List<ProfileCustomer>();
         List<ProfileEmailTemplate> profileEmailTemplates = new List<ProfileEmailTemplate>();
-        List<OutputSearchEmailSend> outputSearchEmailSends = new List<OutputSearchEmailSend>();
+        List<ProfileCompany> profileCompanies = new List<ProfileCompany>();
+        List<RdDocument> rdDocuments = new List<RdDocument>();
         ConfigGlobal configGlobal = new ConfigGlobal();
 
         int maxsize = 2;
         string pathoutput;
-        string transctionno;
+        string outputsearchemailsendno = "";
 
         public void ProcessSendEmail()
         {
             try
             {
+                Console.WriteLine("Start SendEmail");
                 GetDataFromDataBase();
                 GetConfig();
                 LoopbyCompany();
+                Console.WriteLine("End SendEmail");
             }
             catch (Exception ex)
             {
@@ -55,11 +58,12 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             try
             {
                 configMftsEmailSettings = configMftsEmailSettingController.List().Result;
-                outputSearchXmlZips = outputSearchXmlZip.List().Result;
                 transactionDescriptions = transactionDescriptionController.List().Result;
                 configGlobals = configGlobalController.List().Result;
                 profileCustomers = profileCustomerController.List().Result;
                 profileEmailTemplates = profileEmailTemplateController.List().Result;
+                profileCompanies = profileCompanyController.List().Result;
+                rdDocuments = rdDocumentController.List().Result;
 
             }
             catch (Exception ex)
@@ -73,17 +77,6 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             transactionDescriptions = transactionDescriptionController.List().Result;
         }
 
-        public void GetDataOutputSearchEmailSend()
-        {
-            try
-            {
-                outputSearchEmailSends = outputSearchEmailSendController.List().Result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         public void GetConfig()
         {
             try
@@ -109,83 +102,102 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 double sumfilesize;
                 double filesize;
                 string customerid = "";
+                string emailto = "";
+                string emailcc = "";
+                string subjectemail = "";
 
                 List<TransactionDescription> dataPDFsend = new List<TransactionDescription>();
                 List<PDFFileDetailModel> filePDFsend = new List<PDFFileDetailModel>();
                 PDFFileDetailModel pDFFileDetails = new PDFFileDetailModel();
                 List<ProfileCustomer> profileemailCustomer = new List<ProfileCustomer>();
+                ProfileEmailTemplate profileEmailTemplate = new ProfileEmailTemplate();
+                ProfileCompany profileCompany = new ProfileCompany();
                 foreach (var config in configMftsEmailSettings)
                 {
-                    customerid = "";
-                    dataPDFsend = transactionDescriptions.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode
-                                                                 && x.EmailSendStatus == "Waiting"
-                                                                 && !String.IsNullOrEmpty(x.PdfSignLocation)
-                                                                 && x.Isactive == 1).ToList();
-                    profileemailCustomer = profileCustomers.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode && x.StatusEmail == 1).ToList();
-                    if (dataPDFsend != null && profileemailCustomer != null && dataPDFsend.Count > 0 && profileemailCustomer.Count > 0)
-                    {
-                        foreach (var data in profileemailCustomer)
-                        {
-                            customerid += data.CustomerId + ", ";
-                        }
-                        customerid = customerid.Substring(0, customerid.Length - 2);
+                    Console.WriteLine("Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
 
-                        sumfilesize = 0;
-                        filePDFsend = new List<PDFFileDetailModel>();
-                        foreach (var item in dataPDFsend)
+                    customerid = "";
+                    profileemailCustomer = profileCustomers.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode && x.StatusEmail == 1).ToList();
+                    if (profileemailCustomer != null && profileemailCustomer.Count > 0)
+                    {
+                        profileCompany = profileCompanies.FirstOrDefault(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode) ?? new ProfileCompany();
+                        foreach (var customer in profileemailCustomer)
                         {
-                            pDFFileDetails = new PDFFileDetailModel();
-                            using (FileStream zipFileToOpen = new FileStream(item.PdfSignLocation, FileMode.Open))
+                            dataPDFsend = transactionDescriptions.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode
+                                                             && x.CustomerId == customer.CustomerId
+                                                             && x.EmailSendStatus == "Waiting"
+                                                             && !String.IsNullOrEmpty(x.PdfSignLocation)
+                                                             && x.Isactive == 1).ToList();
+                            if(dataPDFsend != null && dataPDFsend.Count > 0)
                             {
-                                filesize = CalculateMBbyByte(zipFileToOpen.Length);
-                                sumfilesize += filesize;
-                                if (sumfilesize > maxsize)
+                                profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x=> x.EmailTemplateNo.ToString() == customer.EmailTemplateNo) ?? new ProfileEmailTemplate();
+                                //GetEmail(profileemailCustomer, out emailto, out emailcc, out customerid);
+                                subjectemail = profileEmailTemplate.EmailSubject.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);
+                                sumfilesize = 0;
+                                filePDFsend = new List<PDFFileDetailModel>();
+                                foreach (var item in dataPDFsend)
                                 {
-                                    //SendEmailbyCompany(filePDFsend, config, profileemailCustomer);
-                                    //GetDataOutputSearchEmailSend();
-                                    InsertOutputSearchEmailSend(config, filePDFsend, profileemailCustomer, "");
-                                    transctionno = outputSearchEmailSends.FirstOrDefault().OutputSearchEmailSendNo.ToString() ?? string.Empty;
-                                    UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
-                                    sumfilesize = filesize;
-                                    filePDFsend = new List<PDFFileDetailModel>();
-                                    pDFFileDetails.BillingNo = item.BillingNumber;
-                                    pDFFileDetails.FullPath = item.PdfSignLocation;
-                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                    filePDFsend.Add(pDFFileDetails);
+                                    pDFFileDetails = new PDFFileDetailModel();
+                                    using (FileStream zipFileToOpen = new FileStream(item.PdfSignLocation, FileMode.Open))
+                                    {
+                                        filesize = CalculateMBbyByte(zipFileToOpen.Length);
+                                        sumfilesize += filesize;
+                                        if (sumfilesize > maxsize)
+                                        {
+                                            //SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
+                                            //InsertOutputSearchEmailSend(config, filePDFsend, emailto, emailcc, "");
+                                            InsertOutputSearchEmailSend(config, filePDFsend, customer, subjectemail);
+                                            UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
+                                            sumfilesize = filesize;
+                                            filePDFsend = new List<PDFFileDetailModel>();
+                                            pDFFileDetails.BillingNo = item.BillingNumber;
+                                            pDFFileDetails.FullPath = item.PdfSignLocation;
+                                            pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                            pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                            pDFFileDetails.CustomerId = item.CustomerId;
+                                            pDFFileDetails.CustomerName = item.CustomerName;
+                                            pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
+                                            filePDFsend.Add(pDFFileDetails);
+                                        }
+                                        else if (sumfilesize == maxsize)
+                                        {
+                                            pDFFileDetails.BillingNo = item.BillingNumber;
+                                            pDFFileDetails.FullPath = item.PdfSignLocation;
+                                            pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                            pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                            filePDFsend.Add(pDFFileDetails);
+                                            //SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
+                                            //InsertOutputSearchEmailSend(config, filePDFsend, emailto, emailcc, "");
+                                            InsertOutputSearchEmailSend(config, filePDFsend, customer, subjectemail);
+                                            UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
+                                            sumfilesize = 0;
+                                            filePDFsend = new List<PDFFileDetailModel>();
+                                        }
+                                        else
+                                        {
+                                            pDFFileDetails.BillingNo = item.BillingNumber;
+                                            pDFFileDetails.FullPath = item.PdfSignLocation;
+                                            pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                            pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                            filePDFsend.Add(pDFFileDetails);
+                                        }
+                                    }
                                 }
-                                else if (sumfilesize == maxsize)
+                                if (filePDFsend.Count > 0)
                                 {
-                                    pDFFileDetails.BillingNo = item.BillingNumber;
-                                    pDFFileDetails.FullPath = item.PdfSignLocation;
-                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                    filePDFsend.Add(pDFFileDetails);
-                                    //SendEmailbyCompany(filePDFsend, config, profileemailCustomer);
-                                    //GetDataOutputSearchEmailSend();
-                                    InsertOutputSearchEmailSend(config, filePDFsend, profileemailCustomer, "");
+                                    //SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
+                                    //InsertOutputSearchEmailSend(config, filePDFsend, emailto, emailcc, "");
+                                    InsertOutputSearchEmailSend(config, filePDFsend, customer, subjectemail);
                                     UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
                                     sumfilesize = 0;
                                     filePDFsend = new List<PDFFileDetailModel>();
                                 }
-                                else
-                                {
-                                    pDFFileDetails.BillingNo = item.BillingNumber;
-                                    pDFFileDetails.FullPath = item.PdfSignLocation;
-                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                    filePDFsend.Add(pDFFileDetails);
-                                }
                             }
                         }
-                        if (filePDFsend.Count > 0)
-                        {
-                            //SendEmailbyCompany(filePDFsend, config, profileemailCustomer);
-                            //GetDataOutputSearchEmailSend();
-                            InsertOutputSearchEmailSend(config, filePDFsend, profileemailCustomer, "");
-                            UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
-                            sumfilesize = 0;
-                            filePDFsend = new List<PDFFileDetailModel>();
-                        }
                     }
+                    
 
+                    Console.WriteLine("End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                 }
             }
             catch (Exception ex)
@@ -195,12 +207,19 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
-        public bool SendEmailbyCompany(List<PDFFileDetailModel> filePDFsend, ConfigMftsEmailSetting config, List<ProfileCustomer> profileemailCustomer)
+        public bool SendEmailbyCompany(List<PDFFileDetailModel> filePDFsend, ConfigMftsEmailSetting config, ProfileCustomer profileemailCustomer, string subjectemail, ProfileCompany profileCompany)
         {
             bool result = false;
+            var document = "";
+            string customerid = "";
+            string customername = "";
             try
             {
-                var templateemail = profileEmailTemplates.FirstOrDefault(x => x.EmailTemplateNo == 7);
+                var customer = filePDFsend.OrderByDescending(x => x.BillingDate).FirstOrDefault();
+                customerid = customer.CustomerId;
+                customername = customer.CustomerName;
+
+                var templateemail = profileEmailTemplates.FirstOrDefault(x => x.EmailTemplateNo.ToString() == profileemailCustomer.EmailTemplateNo);
                 if (templateemail != null)
                 {
                     //var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
@@ -214,29 +233,85 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     var smtpPort = "25";
                     var toEmailAddress = "cadcadt25@scg.com";
 
-                    string body = "Test";//config.ConfigMftsEmailSettingEmailTemplate;
+                    string body = templateemail.EmailBody;
+                    body = body.Replace("[CUSTOMER-COMPANY-NAME]", customerid);
+                    body = body.Replace("[CUSTOMER-COMPANY-CODE])", customername);
+                    body = body.Replace("[DATE]", DateTime.Now.ToString("dd-MM-yyyy"));
+                    body = body.Replace("[COMPANY-NAME]", "");
+
+                    foreach(var item in filePDFsend)
+                    {
+                        document += "<tr>";
+                        document += "<td width='10%' style='width:10.0%;padding:.75pt .75pt .75pt .75pt'></td>";
+                        document += "<td width='20%' style='width:20.0%;padding:.75pt .75pt .75pt .75pt'>";
+                        document += "<p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>" + item.Doctype + "</span><o:p></o:p></p>";
+                        document += "</td>";
+                        document += "<td width='5%' style='width:5.0%;padding:.75pt .75pt .75pt .75pt'>";
+                        document += "<p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เลขที่:</span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
+                        document += "mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><o:p></o:p></p>";
+                        document += "</td>";
+                        document += "<td style='padding:.75pt .75pt .75pt .75pt'>";
+                        document += "<p class='MsoNormal'>" + item.BillingNo + "<o:p></o:p></p>";
+                        document += "</td>";
+                        document += "</tr>";
+                    }
+
+                    /*
+                     [FILE-NAME]
+                     <tr>
+                        <td width='10%' style='width:10.0%;padding:.75pt .75pt .75pt .75pt'></td>
+                        <td width='20%' style='width:20.0%;padding:.75pt .75pt .75pt .75pt'>
+                        <p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>[FILE-NAME]</span><o:p></o:p></p>
+                        </td>
+                        <td width='5%' style='width:5.0%;padding:.75pt .75pt .75pt .75pt'>
+                        <p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เลขที่:</span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;
+                        mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><o:p></o:p></p>
+                        </td>
+                        <td style='padding:.75pt .75pt .75pt .75pt'>
+                        <p class='MsoNormal'>[BILLING-NUMBER]<o:p></o:p></p>
+                        </td>
+                       </tr>
+                     */
                     MailMessage message = new MailMessage();
+
 
                     //Setting From , To and CC
                     message.From = new MailAddress(fromEmailAddress);
-                    message.To.Add(new MailAddress(toEmailAddress));
-                    message.Subject = "Thank You For Your Registration";
+                    if (!string.IsNullOrEmpty(profileemailCustomer.CustomerEmail))
+                    {
+                        message.To.Add(new MailAddress(toEmailAddress));
+                    }
+                    if (!string.IsNullOrEmpty(profileemailCustomer.CustomerCcemail))
+                    {
+                        message.CC.Add(new MailAddress(toEmailAddress));
+                    }
+                    message.Subject = subjectemail;
                     message.IsBodyHtml = true;
                     message.Body = body;
                     foreach (var file in filePDFsend)
                     {
-                        message.Attachments.Add(new Attachment(file.FullPath));
+                        message.Attachments.Add(new Attachment(file.FullPath)
+                        {
+                            Name = file.RenameFileName
+                        });
                     }
                     //var client = new SmtpClient();
                     try
                     {
                         using (var client = new SmtpClient())
                         {
-                            client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
-                            client.Host = smtpHost;
-                            client.EnableSsl = true;
-                            client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
-                            client.Send(message);
+                            //client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
+                            //client.Host = smtpHost;
+                            //client.EnableSsl = true;
+                            //client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
+                            //client.Send(message);
+                            //if (client.DeliveryMethod == SmtpDeliveryMethod.SpecifiedPickupDirectory && client.PickupDirectoryLocation.StartsWith("~"))
+                            //{
+                                string root = AppDomain.CurrentDomain.BaseDirectory;
+                                string pickupRoot = client.PickupDirectoryLocation.Replace("~/", root);
+                                pickupRoot = pickupRoot.Replace("/", @"\");
+                                client.PickupDirectoryLocation = pickupRoot;
+                            //}
                         }
                     }
                     catch (Exception ex)
@@ -269,7 +344,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                         updatetransaction.EmailSendStatus = "Successful";
                         updatetransaction.EmailSendDetail = "Batch email was sent to customer code " + customercode + " is completely";
                         updatetransaction.EmailSendDateTime = DateTime.Now;
-                        updatetransaction.OutputMailTransactionNo = transctionno;
+                        updatetransaction.OutputMailTransactionNo = outputsearchemailsendno;
                         listupdatetransaction.Add(updatetransaction);
 
                         Console.WriteLine("Start MoveFile Company : " + comcode);
@@ -295,46 +370,25 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
-        public bool InsertOutputSearchEmailSend(ConfigMftsEmailSetting config, List<PDFFileDetailModel> pDFFileDetails, List<ProfileCustomer> profileemailCustomer, string subject)
+        public bool InsertOutputSearchEmailSend(ConfigMftsEmailSetting config, List<PDFFileDetailModel> pDFFileDetails, ProfileCustomer customer, string subjectemail)
         {
             bool result = false;
             string filename = "";
-            string sendto = "";
-            string sendcc = "";
             try
             {
                 Task<Response> res;
                 OutputSearchEmailSend dataInsert = new OutputSearchEmailSend();
                 foreach (var item in pDFFileDetails)
                 {
-                    filename += Path.GetFileName(item.FullPath) + ", ";
-                }
-                foreach (var item in profileemailCustomer)
-                {
-                    if(item.CustomerEmail != null)
-                    {
-                        sendto += item.CustomerEmail + ", ";
-                    }
-                    if (item.CustomerCcemail != null)
-                    {
-                        sendcc += item.CustomerCcemail + ", ";
-                    }
+                    filename += Path.GetFileName(item.RenameFileName) + ", ";
                 }
                 filename = filename.Substring(0, filename.Length - 2);
-                if(sendto.Length > 0)
-                {
-                    sendto = sendto.Substring(0, sendto.Length - 2);
-                }
-                if (sendcc.Length > 0)
-                {
-                    sendcc = sendcc.Substring(0, sendcc.Length - 2);
-                }
 
                 dataInsert.OutputSearchEmailSendCompanyCode = config.ConfigMftsEmailSettingCompanyCode;
-                dataInsert.OutputSearchEmailSendSubject = subject;
+                dataInsert.OutputSearchEmailSendSubject = subjectemail;
                 dataInsert.OutputSearchEmailSendFrom = config.ConfigMftsEmailSettingEmail;
-                dataInsert.OutputSearchEmailSendTo = sendto;
-                dataInsert.OutputSearchEmailSendCc = sendcc;
+                dataInsert.OutputSearchEmailSendTo = customer.CustomerEmail;
+                dataInsert.OutputSearchEmailSendCc = customer.CustomerCcemail;
                 dataInsert.OutputSearchEmailSendFileName = filename;
                 dataInsert.OutputSearchEmailSendStatus = 1;
                 dataInsert.OutputSearchEmailSendLastBy = config.ConfigMftsEmailSettingEmail;
@@ -349,8 +403,9 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 
                 var json = JsonSerializer.Serialize(dataInsert);
                 res = outputSearchEmailSendController.Insert(json);
-                if (res.Result.MESSAGE == "Insert Success.")
+                if (res.Result.MESSAGE == "Insert success.")
                 {
+                    outputsearchemailsendno = res.Result.OUTPUT_DATA.ToString();
                     result = true;
                 }
             }
@@ -420,10 +475,103 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
+        public void GetEmail(List<ProfileCustomer> profileemailCustomer, out string emailto, out string emailcc, out string customerid)
+        {
+            emailto = "";
+            emailcc = "";
+            customerid = "";
+            try
+            {
+                foreach (var data in profileemailCustomer)
+                {
+                }
+                customerid = customerid.Substring(0, customerid.Length - 2);
+
+                foreach (var item in profileemailCustomer)
+                {
+                    if (!string.IsNullOrEmpty(item.CustomerEmail))
+                    {
+                        emailto += item.CustomerEmail + "; ";
+                    }
+                    if (!string.IsNullOrEmpty(item.CustomerCcemail))
+                    {
+                        emailcc += item.CustomerCcemail + "; ";
+                    }
+                    if (!string.IsNullOrEmpty(item.CustomerId))
+                    {
+                        customerid += item.CustomerId + ", ";
+                    }
+                }
+
+                if (emailto.Length > 0)
+                {
+                    emailto = emailto.Substring(0, emailto.Length - 2);
+                }
+                if (emailcc.Length > 0)
+                {
+                    emailcc = emailcc.Substring(0, emailcc.Length - 2);
+                }
+                if (customerid.Length > 0)
+                {
+                    customerid = customerid.Substring(0, customerid.Length - 2);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public string GetDocType(string doccode)
+        {
+            string result = "";
+            try
+            {
+                var rdcode = rdDocuments.FirstOrDefault(x => x.RdDocumentCode == doccode);
+                if (rdcode != null)
+                {
+                    result = rdcode.RdDocumentNameTh ?? "";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return result;
+        }
+
+        public string RenameFileName(string comcode, string filepath)
+        {
+            string filename = "";
+            string billno = "";
+            try
+            {
+                billno = Path.GetFileName(filepath).Replace(".pdf", "");
+                if (billno.IndexOf('_') > -1)
+                {
+                    billno = billno.Substring(8, (billno.IndexOf('_')) - 8);
+                }
+                else
+                {
+                    billno = billno.Substring(8);
+                }
+                filename = comcode + "_" + DateTime.Now.ToString("yyyy") + "_" + billno + ".pdf";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return filename;
+        }
+
         public void TestSendEmail()
         {
             try
             {
+                List<string> filePDFsend = new List<string>();
+                filePDFsend.Add(@"F:\003020204000001696.pdf");
+                filePDFsend.Add(@"F:\003020204000001697.pdf");
                 Console.WriteLine("Start Test SendEmail");
                 //var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
                 //var fromEmailPassword = config.ConfigMftsEmailSettingPassword;
@@ -435,14 +583,14 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 var smtpHost = "outmail.scg.co.th";
                 var smtpPort = "25";
                 var toEmailAddress = "cadadt25@scg.com";
-
+                string billno = "";
                 string body = "";
                 body += "<p><span style='font-size: 11.998px; letter-spacing: 0.14px;'>[LOGO]</span></p><p>";
                 body += "</p><p></p><p></p><br><p></p><table class='MsoNormalTable' border='0' cellspacing='0' cellpadding='0' width='80%' style='width:80.0%;mso-cellspacing:0in;mso-yfti-tbllook:1184;mso-padding-alt:";
                 body += "0in 0in 0in 0in'><tbody><tr>";
                 body += "<td style='padding:.75pt .75pt .75pt .75pt'>";
                 body += "<p><b><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เรียน</span></b><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
-                body += "mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>บ.พี.ซี.ไอ.คอนกรีตอุตสาหกรรม จก<font color='#000000' style='background-color: rgb(255, 255, 0);'>. (</font></span><font color='#000000' style='background-color: rgb(255, 255, 0);'><u>[COMPANY-CODE]</u></font><o:p></o:p></p>";
+                body += "mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>[CUSTOMER-COMPANY-NAME]</span><u>([CUSTOMER-COMPANY-CODE])</u><o:p></o:p></p>";
                 body += "</td>";
                 body += "</tr>";
                 body += "<tr>";
@@ -457,7 +605,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 body += "</tr>";
                 body += "<tr>";
                 body += "<td style='padding:.75pt .75pt .75pt .75pt'>";
-                body += "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>[COMPANY-NAME]</span><span lang='TH' style='font-family:";
+                body += "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>[COMPANY-NAME] ขอนำส่ง</span><span lang='TH' style='font-family:";
                 body += "&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:";
                 body += "&quot;Times New Roman&quot;'> </span><o:p></o:p></p>";
                 body += "</td>";
@@ -525,21 +673,37 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 message.Subject = "นำส่ง [FILE-NAME] [COMPANY-NAME]";
                 message.IsBodyHtml = true;
                 message.Body = body;
-                //foreach (var file in filePDFsend)
-                //{
-                //    message.Attachments.Add(new Attachment(file));
-                //}
+                foreach (var file in filePDFsend)
+                {
+                    billno = Path.GetFileName(file).Replace(".pdf", "");
+                    if (billno.IndexOf('_') > -1)
+                    {
+                        billno = billno.Substring(8, (billno.IndexOf('_')) - 8);
+                    }
+                    else
+                    {
+                        billno = billno.Substring(8);
+                    }
+                    message.Attachments.Add(new Attachment(file)
+                    {
+                        Name = "0090" + "_" + DateTime.Now.ToString("yyyy") + "_" + billno + ".pdf"
+                    });
+                }
                 //var client = new SmtpClient();
                 try
                 {
                     using (var client = new SmtpClient())
                     {
-                        client.Host = smtpHost;
-                        client.EnableSsl = false;
-                        client.UseDefaultCredentials = false;
-                        client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
-                        client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
-                        client.Send(message);
+                        //client.Host = smtpHost;
+                        //client.EnableSsl = false;
+                        //client.UseDefaultCredentials = false;
+                        //client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
+                        //client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
+                        //client.Send(message);
+                        string root = AppDomain.CurrentDomain.BaseDirectory;
+                        string pickupRoot = client.PickupDirectoryLocation.Replace("~/", root);
+                        pickupRoot = pickupRoot.Replace("/", @"\");
+                        client.PickupDirectoryLocation = pickupRoot;
                     }
                 }
                 catch (Exception ex)
