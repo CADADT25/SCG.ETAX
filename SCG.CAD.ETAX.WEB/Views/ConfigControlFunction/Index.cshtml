@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = " ConfigControlMenu ";
+    ViewData["Title"] = " ConfigControlFunction ";
     Layout = null;
 }
 
-@await Html.PartialAsync("~/Views/ConfigControlMenu/_Content.cshtml")
+@await Html.PartialAsync("~/Views/ConfigControlFunction/_Content.cshtml")
 
 
 
@@ -11,15 +11,15 @@
 
      $(document).ready(function () {
 
-        RenderConfigControlMenu();
+        RenderConfigControlFunction();
 
     });
 
 
 
-    function RenderConfigControlMenu(){
+    function RenderConfigControlFunction(){
 
-        var table = $("#tbConfigControlMenuMain").DataTable({
+        var table = $("#tbConfigControlFunctionMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -29,7 +29,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "ConfigControlMenu")",
+                url: "@Url.Action("List", "ConfigControlFunction")",
                 type: "POST",
                 datatype: "json"
             },
@@ -38,7 +38,7 @@
             "columns": [
 
                 {
-                    data: "ConfigControlMenuNo",
+                    data: "configControlFunctionNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -51,7 +51,7 @@
                     }
                 },
                 {
-                    data: "ConfigControlMenuName",
+                    data: "configControlFunctionName",
                     width: "50%"
                 },
                 {
@@ -71,95 +71,95 @@
         } ).draw();
 
 
-        EditConfigControlMenu(table);
-        DeleteConfigControlMenu(table);
+        EditConfigControlFunction(table);
+        DeleteConfigControlFunction(table);
     }
 
-    function fnInsertCancelConfigControlMenu(){
+    function fnInsertCancelConfigControlFunction(){
 
         document.getElementById('txtInsertFunctionName').value = '';
 
-        $("#modalCreateConfigControlMenu").modal('hide');
+        $("#modalCreateConfigControlFunction").modal('hide');
     }
 
-    function fnUpdateCancelConfigControlMenu(){
+    function fnUpdateCancelConfigControlFunction(){
 
         document.getElementById('txtUpdateFunctionName').value = '';
-        $("#modalUpdateConfigControlMenu").modal('hide');
+        $("#modalUpdateConfigControlFunction").modal('hide');
     }
 
-    function callModalInsertConfigControlMenu(){
+    function callModalInsertConfigControlFunction(){
 
         document.getElementById('txtInsertFunctionName').value = '';
-        $("#modalCreateConfigControlMenu").modal('show');
+        $("#modalCreateConfigControlFunction").modal('show');
     }
 
-    function fnInsertConfigControlMenu(){
+    function fnInsertConfigControlFunction(){
 
         if ( $('#txtInsertFunctionName').val() != '' )
         {
-            callConfigControlMenuInsertController();
+            callConfigControlFunctionInsertController();
         }
         else {
             fnToastrInputDataFail();
-            validateInsertConfigControlMenu();
+            validateInsertConfigControlFunction();
         }
 
     }
 
-    function fnUpdateConfigControlMenu(){
+    function fnUpdateConfigControlFunction(){
 
          if ( $('#txtUpdateFunctionName').val() != '')
 
         {
-            callConfigControlMenuUpdateController();
+            callConfigControlFunctionUpdateController();
         }
         else {
             fnToastrInputDataFail();
-            validateUpdateConfigControlMenu();
+            validateUpdateConfigControlFunction();
         }
     }
 
-    function EditConfigControlMenu(table){
+    function EditConfigControlFunction(table){
 
-        $('#tbConfigControlMenuMain').on('click', 'td.editor-edit', function () {
+        $('#tbConfigControlFunctionMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            callConfigControlMenuGetDetailController(getPK);
+            callConfigControlFunctionGetDetailController(getPK);
 
         });
     }
 
 
-    function callConfigControlMenuGetDetailController(getPK){
+    function callConfigControlFunctionGetDetailController(getPK){
 
         document.getElementById('txtUpdateFunctionName').value = '';
 
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "ConfigControlMenu")",
+            url: "@Url.Action("Detail", "ConfigControlFunction")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
 
-                document.getElementById('txtUpdateFunctionNo').value = data.ConfigControlMenuNo;
-                document.getElementById('txtUpdateFunctionName').value = data.ConfigControlMenuName;
+                document.getElementById('txtUpdateFunctionNo').value = data.ConfigControlFunctionNo;
+                document.getElementById('txtUpdateFunctionName').value = data.ConfigControlFunctionName;
 
-                $("#modalUpdateConfigControlMenu").modal('show');
+                $("#modalUpdateConfigControlFunction").modal('show');
             }
         });
     }
 
-    function callConfigControlMenuInsertController(){
+    function callConfigControlFunctionInsertController(){
 
         var model = new Object();
 
-        model.ConfigControlMenuName = $('#txtInsertFunctionName').val();
+        model.ConfigControlFunctionName = $('#txtInsertFunctionName').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -170,7 +170,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "ConfigControlMenu")",
+            url: "@Url.Action("Insert", "ConfigControlFunction")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -181,11 +181,11 @@
 
                 if(data.status == true){
 
-                    $("#modalCreateConfigControlMenu").modal('hide');
+                    $("#modalCreateConfigControlFunction").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    callConfigControlMenuIndex();
+                    callConfigControlFunctionIndex();
                 }
                 else{
                     fnSweetAlert_Error(errorMessage);
@@ -195,12 +195,12 @@
         });
     }
 
-    function callConfigControlMenuUpdateController(){
+    function callConfigControlFunctionUpdateController(){
 
         var model = new Object();
 
-        model.ConfigControlMenuNo = $('#txtUpdateFunctionNo').val();
-        model.ConfigControlMenuName = $('#txtUpdateFunctionName').val();
+        model.ConfigControlFunctionNo = $('#txtUpdateFunctionNo').val();
+        model.ConfigControlFunctionName = $('#txtUpdateFunctionName').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -212,7 +212,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "ConfigControlMenu")",
+            url: "@Url.Action("Update", "ConfigControlFunction")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -223,11 +223,11 @@
 
                 if(data.status == true){
 
-                    $("#modalUpdateConfigControlMenu").modal('hide');
+                    $("#modalUpdateConfigControlFunction").modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 
-                    callConfigControlMenuIndex();
+                    callConfigControlFunctionIndex();
 
                 }
                 else{
@@ -237,10 +237,10 @@
         });
     }
 
-    function callConfigControlMenuIndex() {
+    function callConfigControlFunctionIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ConfigControlMenu")");
+            $("#contentPartial").load("@Url.Action("Index", "ConfigControlFunction")");
             $.unblockUI();
         }, 500);
     }

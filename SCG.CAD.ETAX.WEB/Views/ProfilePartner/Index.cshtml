@@ -51,7 +51,7 @@
                     {
                         value: data.companyCode,
                         text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
+                    }).html(data.companyCode).appendTo("#ddlUpdateProfilePartnerCompanyCode");
             });
         })
     }
@@ -72,6 +72,16 @@
                     }).html(data.companyCode).appendTo("#ddlInsertProfilePartnerSaleOrg");
             });
         })
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileSellOrg")?companyCode="+companyCode+"", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#ddlUpdateProfilePartnerSaleOrg");
+            });
+        })
     }
 
     function fnDropdownProfilePartnerEmailType() {
@@ -81,7 +91,7 @@
             value: 0,
         }).html("--- Select Email Type ---").appendTo("#ddlInsertProfilePartnerEmailType");
 
-        $.getJSON("@Url.Action("GetEmailType", "ProfilePartner")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailType")", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
                     {
@@ -91,18 +101,47 @@
             });
         })
 
-        $.getJSON("@Url.Action("GetEmailType", "ProfilePartner")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailType")", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
                     {
                         value: data.emailTypeNo,
                         text: data.emailTypeName
-                    }).html(data.emailTypeName).appendTo("#ddlInsertProfilePartnerEmailType");
+                    }).html(data.emailTypeName).appendTo("#ddlUpdateProfilePartnerEmailType");
             });
         })
     }
 
-    function onChangeDdlInsertPartnerSaleOrg(){
+
+    function fnDropdownProfilePartnerEmailTemplate() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Email Template ---").appendTo("#ddlInsertProfilePartnerEmailTemplate");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlInsertProfilePartnerEmailTemplate");
+            });
+        })
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlUpdateProfilePartnerEmailTemplate");
+            });
+        })
+    }
+
+    function onChangeDdlUpdatePartnerSaleOrg(){
 
         $('#ddlInsertProfilePartnerSaleOrg').empty();
 
@@ -141,6 +180,7 @@
             $('#grpInsertPartnerSingedPdf').removeClass('hidden');
             $('#grpInsertPartnerSingedXml').removeClass('hidden');
             $('#grpInsertPartnerEmailType').removeClass('hidden');
+            $('#grpInsertPartnerEmailTemplate').removeClass('hidden');
 
         }else{
 
@@ -149,6 +189,7 @@
             $('#grpInsertPartnerSingedPdf').addClass('hidden');
             $('#grpInsertPartnerSingedXml').addClass('hidden');
             $('#grpInsertPartnerEmailType').addClass('hidden');
+            $('#grpInsertPartnerEmailTemplate').addClass('hidden');
 
         }
     }
@@ -156,9 +197,9 @@
     function onChangeUpdateProfilePartnerPrint(){
 
         if(document.getElementById("toggleUpdateProfilePartnerPrint").checked){
-            $('#grpUpdateNumberOfCopies').removeClass('hidden');
+            $('#grpUpdatePartnerNumberOfCopies').removeClass('hidden');
         }else{
-            $('#grpUpdateNumberOfCopies').addClass('hidden');
+            $('#grpUpdatePartnerNumberOfCopies').addClass('hidden');
         }
     }
 
@@ -167,31 +208,33 @@
 
         if(document.getElementById("toggleUpdateProfilePartnerEmail").checked){
 
-            $('#grpUpdateEmail').removeClass('hidden');
+            $('#grpUpdatePartnerEmail').removeClass('hidden');
 
         }else{
 
-            $('#grpUpdateEmail').addClass('hidden');
+            $('#grpUpdatePartnerEmail').addClass('hidden');
 
         }
 
         if(document.getElementById("toggleUpdateProfilePartnerEmail").checked){
 
-            $('#grpUpdateEmail').removeClass('hidden');
-            $('#grpUpdateCcEmail').removeClass('hidden');
-            $('#grpUpdateFileAttach').removeClass('hidden');
-            $('#grpUpdateSingedPdf').removeClass('hidden');
-            $('#grpUpdateSingedXml').removeClass('hidden');
-            $('#grpUpdateEmailType').removeClass('hidden');
+            $('#grpUpdatePartnerEmail').removeClass('hidden');
+            $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+            $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+            $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+            $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+            $('#grpUpdatePartnerEmailType').removeClass('hidden');
+            $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
 
         }else{
 
-            $('#grpUpdateEmail').addClass('hidden');
-            $('#grpUpdateCcEmail').addClass('hidden');
-            $('#grpUpdateFileAttach').addClass('hidden');
-            $('#grpUpdateSingedPdf').addClass('hidden');
-            $('#grpUpdateSingedXml').addClass('hidden');
-            $('#grpUpdateEmailType').addClass('hidden');
+            $('#grpUpdatePartnerEmail').addClass('hidden');
+            $('#grpUpdatePartnerCcEmail').addClass('hidden');
+            $('#grpUpdatePartnerFileAttach').addClass('hidden');
+            $('#grpUpdatePartnerSingedPdf').addClass('hidden');
+            $('#grpUpdatePartnerSingedXml').addClass('hidden');
+            $('#grpUpdatePartnerEmailType').addClass('hidden');
+            $('#grpUpdatePartnerEmailTemplate').addClass('hidden');
 
         }
     }
@@ -291,6 +334,7 @@
         $("#ddlInsertProfilePartnerCompanyCode").empty();
         $("#ddlInsertProfilePartnerSaleOrg").empty();
         $("#ddlInsertProfilePartnerEmailType").empty();
+        $("#ddlInsertProfilePartnerEmailTemplate").empty();
         $("#modalCreateProfilePartner").modal('hide');
     }
 
@@ -299,15 +343,18 @@
         $("#ddlUpdateProfilePartnerCompanyCode").empty();
         $("#ddlUpdateProfilePartnerSaleOrg").empty();
         $("#ddlUpdateProfilePartnerEmailType").empty();
+        $("#ddlUpdateProfilePartnerEmailTemplate").empty();
         $("#modalUpdateProfilePartner").modal('hide');
     }
 
     function callModalInsertProfilePartner(){
 
-        $("#ddlInsertEmailType").empty();
-        $("#ddlInsertCompanyCode").empty();
+        $("#ddlInsertProfilePartnerEmailType").empty();
+        $("#ddlInsertProfilePartnerEmailTemplate").empty();
+        $("#ddlInsertProfilePartnerCompanyCode").empty();
 
         fnDropdownProfilePartnerEmailType();
+        fnDropdownProfilePartnerEmailTemplate();
         fnDropdownProfilePartnerCompanyCode();
         $("#modalCreateProfilePartner").modal('show');
     }
@@ -353,33 +400,7 @@
         });
     }
 
-    function DeleteProfilePartner(table){
 
-        $('#tbProfilePartnerMain').on('click', 'td.editor-delete', function () {
-
-            var data = table.row($(this).closest('tr')).data();
-
-            var getPK = data[Object.keys(data)[0]];
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        callProfilePartnerDeleteController(getPK);
-                        callProfilePartnerIndex();
-                      }
-                    })
-        });
-    }
 
     function ExportProfilePartner(){
 
@@ -396,11 +417,13 @@
 
     function callProfilePartnerGetDetailController(getPK){
 
-        $("#ddlUpdateProfilePartnerCompanyCode").empty();
-        $("#ddlUpdateProfilePartnerSaleOrg").empty();
-        $("#ddlUpdateProfilePartnerEmailType").empty();
+        //$("#ddlUpdateProfilePartnerCompanyCode").empty();
+        //$("#ddlUpdateProfilePartnerSaleOrg").empty();
+        //$("#ddlUpdateProfilePartnerEmailType").empty();
+        //$("#ddlUpdateProfilePartnerEmailTemplate").empty();
 
         fnDropdownProfilePartnerEmailType();
+        fnDropdownProfilePartnerEmailTemplate();
         fnDropdownProfilePartnerCompanyCode();
 
         $.ajax({
@@ -413,13 +436,24 @@
                 data = $.parseJSON(result)
 
                 document.getElementById('txtUpdateProfilePartnerNo').value = data.PartnerProfileNo;
-                document.getElementById('txtUpdateProfilePartnerCustomerId').value = data.CustomerProfileNo;
+                document.getElementById('txtUpdateProfilePartnerCustomerId').value = data.CustomerId;
 
-                $('#ddlUpdateProfilePartnerCompanyCode').val(data.CompanyCode);
-                $('#ddlUpdateProfilePartnerCompanyCode').trigger('change');
+                
+                $('#ddlUpdateProfilePartnerCompanyCode').empty() 
+                .append($("<option/>")
+                    .val(""+data.CompanyCode+"")
+                    .text(""+data.CompanyCode+""))
+                .val(""+data.CompanyCode+"")
+                .trigger("change");
 
-                $('#ddlUpdateProfilePartnerSaleOrg').val(data.SellOrg);
-                $('#ddlUpdateProfilePartnerSaleOrg').trigger('change');
+
+                $('#ddlUpdateProfilePartnerSaleOrg').empty() 
+                .append($("<option/>")
+                    .val(""+data.SellOrg+"")
+                    .text(""+data.SellOrg+""))
+                .val(""+data.SellOrg+"")
+                .trigger("change");
+
 
                 document.getElementById('txtUpdateProfilePartnerSoldTo').value = data.SoldToCode;
                 document.getElementById('txtUpdateProfilePartnerShipTo').value = data.ShipToCode;
@@ -432,7 +466,7 @@
                 if(getOutputType == '1'){
 
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = true;
-                    $('#grpUpdatePartnerNumberOfCopies').removeClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').removeClass('hidden');
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = false;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = false;
@@ -440,93 +474,102 @@
 
                 }else if(getOutputType == '2'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = false;
-                    $('#grpUpdatePartnerNumberOfCopies').addClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').addClass('hidden');
 
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = false;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
 
 
                 }else if(getOutputType == '3'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = false;
-                    $('#grpUpdatePartnerNumberOfCopies').addClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').addClass('hidden');
 
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = false;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = true;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
 
                 }else if(getOutputType == '4'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = false;
-                    $('#grpUpdatePartnerNumberOfCopies').addClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').addClass('hidden');
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = true;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
+
                 }else if(getOutputType == '5'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = true;
-                    $('#grpUpdatePartnerNumberOfCopies').removeClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').removeClass('hidden');
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = false;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
+
                 }else if(getOutputType == '6'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = true;
-                    $('#grpUpdatePartnerNumberOfCopies').removeClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').removeClass('hidden');
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = false;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = true;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
+
                 }else if(getOutputType == '7'){
                     document.getElementById("toggleUpdateProfilePartnerPrint").checked = true;
-                    $('#grpUpdatePartnerNumberOfCopies').removeClass('hidden');
+                    $('#grpUpdatePartnerPartnerNumberOfCopies').removeClass('hidden');
 
                     document.getElementById("toggleUpdateProfilePartnerEmail").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedPdf").checked = true;
                     document.getElementById("toggleUpdateProfilePartnerFileSignedXml").checked = true;
 
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerCcEmail').removeClass('hidden');
+                    $('#grpUpdatePartnerFileAttach').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedPdf').removeClass('hidden');
+                    $('#grpUpdatePartnerSingedXml').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailType').removeClass('hidden');
+                    $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
                 }
 
                 document.getElementById('txtUpdateProfilePartnerCustomerEmail').value = data.CustomerEmail;
@@ -534,6 +577,13 @@
 
                 $('#ddlUpdateProfilePartnerEmailType').val(data.EmailType);
                 $('#ddlUpdateProfilePartnerEmailType').trigger('change');
+
+
+                $('#ddlUpdateProfilePartnerEmailTemplate').find(':selected').data(data.EmailTemplateNo);
+
+
+                //$('#ddlUpdateProfilePartnerEmailTemplate').val(data.EmailTemplateNo);
+                //$('#ddlUpdateProfilePartnerEmailTemplate').trigger('change');
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfilePartner").checked = true;
@@ -597,6 +647,7 @@
         model.PartnerOutputType = OutPutType;
         model.NumberOfCopies = $('#txtInsertNumberOfCopies').val();
         model.PartnerEmailType = $('#ddlInsertProfilePartnerEmailType').val();
+        model.PartnerEmailTemplateNo = $('#ddlInsertProfilePartnerEmailTemplate').val();
 
         model.StatusPrint = StatusPrint;
         model.StatusEmail = StatusEmail;
@@ -638,7 +689,7 @@
 
     function callProfilePartnerUpdateController(){
 
-        
+
         var IsActive = 1;
         var OutPutType = 1;
         var StatusPrint = 1;
@@ -688,6 +739,7 @@
         model.PartnerOutputType = OutPutType;
         model.NumberOfCopies = $('#txtUpdateNumberOfCopies').val();
         model.PartnerEmailType = $('#ddlUpdateProfilePartnerEmailType').val();
+        model.PartnerEmailTemplateNo = $('#ddlUpdateProfilePartnerEmailTemplate').val();
 
         model.StatusPrint = StatusPrint;
         model.StatusEmail = StatusEmail;

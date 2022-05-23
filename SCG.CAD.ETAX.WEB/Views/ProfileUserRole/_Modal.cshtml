@@ -2,51 +2,51 @@
     Layout = null;
 }
 
-<script src="~/assets/validate/ProfileCustomerValidate.js"></script>
+<script src="~/assets/validate/ProfileUserRoleValidate.js"></script>
 
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileCustomer" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileUserRole" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Customer Profile</h5>
-                <button type="button" class="close" onclick="fnInsertCancelProfileCustomer();" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelProfileUserRole();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
-                @await Html.PartialAsync("~/Views/ProfileCustomer/_Create.cshtml")
+                @await Html.PartialAsync("~/Views/ProfileUserRole/_Create.cshtml")
 
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileCustomer();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="fnInsertProfileCustomer();">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="fnInsertCancelProfileUserRole();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnInsertProfileUserRole();">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileCustomer" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileUserRole" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update Customer Profile</h5>
-                <button type="button" class="close" onclick="fnUpdateCancelProfileCustomer();" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelProfileUserRole();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
 
-                @await Html.PartialAsync("~/Views/ProfileCustomer/_Update.cshtml")
+                @await Html.PartialAsync("~/Views/ProfileUserRole/_Update.cshtml")
 
 
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileCustomer();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileCustomer();">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileUserRole();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileUserRole();">Save changes</button>
             </div>
         </div>
     </div>

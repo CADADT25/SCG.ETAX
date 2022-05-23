@@ -104,8 +104,7 @@
 
                     if (update != null)
                     {
-                        update.ProfileUserRoleNameTh = param.ProfileUserRoleNameTh;
-                        update.ProfileUserRoleNameEn = param.ProfileUserRoleNameEn;
+                        update.ProfileUserRoleName = param.ProfileUserRoleName;
                         update.ProfileUserRoleDescription = param.ProfileUserRoleDescription;
                         update.ProfileUserRoleMunu = param.ProfileUserRoleMunu;
                         update.ProfileUserRoleFunction = param.ProfileUserRoleFunction;

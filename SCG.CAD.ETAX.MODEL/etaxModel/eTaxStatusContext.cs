@@ -51,6 +51,10 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasMaxLength(1000)
                     .HasColumnName("emailSubject");
 
+                entity.Property(e => e.EmailTemplateName)
+                    .HasMaxLength(1000)
+                    .HasColumnName("emailTemplateName");
+
                 entity.Property(e => e.EmailTypeNo).HasColumnName("emailTypeNo");
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");

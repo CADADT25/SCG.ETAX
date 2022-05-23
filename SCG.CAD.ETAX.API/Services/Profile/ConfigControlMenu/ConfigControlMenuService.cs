@@ -117,6 +117,8 @@
 
                     if (update != null)
                     {
+                        update.ConfigControlMenuName = param.ConfigControlMenuName;
+                        update.ConfigControlMenuValue = param.ConfigControlMenuValue;
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

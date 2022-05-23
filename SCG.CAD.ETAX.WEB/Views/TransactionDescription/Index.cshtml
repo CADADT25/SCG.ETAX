@@ -30,18 +30,18 @@
         fnDropdownTransactionSearchDataSource();
         fnDropdownTransactionSearchSellOrg();
 
-        RenderTransaction('');
+        RenderTransaction();
 
     });
 
 
-    function RenderTransaction(JsonString){
+    function RenderTransaction(){
 
         $('[data-toggle="tooltip"]').tooltip();
 
         var table = $("#tbTransactionMain").DataTable({
 
-            "targets": 0,
+            //"targets": 0,
             "scrollY": false,
             "processing": true,
             //"retrieve": true,
@@ -53,7 +53,6 @@
             "ajax": {
                 url: "@Url.Action("List", "transactionDescription")",
                 type: "POST",
-                data: { transactionSearchJson : JsonString },
                 datatype: "json"
             },
 

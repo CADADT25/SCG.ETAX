@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = " ProfileCustomer ";
+    ViewData["Title"] = " ProfileUserRole ";
     Layout = null;
 }
 
-@await Html.PartialAsync("~/Views/ProfileCustomer/_Content.cshtml")
+@await Html.PartialAsync("~/Views/ProfileUserRole/_Content.cshtml")
 
 
 
@@ -11,167 +11,15 @@
 
      $(document).ready(function () {
 
-        RenderProfileCustomer();
+        RenderProfileUserRole();
 
     });
 
-    $(window).on('load', function() {
-
-        $('#modalCreateProfileCustomer').select2({
-            dropdownParent: $('#modalCreateProfileCustomer')
-        });
 
 
-        $('#modalUpdateProfileCustomer').select2({
-            dropdownParent: $('#modalUpdateProfileCustomer')
-        });
+    function RenderProfileUserRole(){
 
-    });
-
-    function fnDropdownProfileCustomerCompanyCode() {
-
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Company Code ---").appendTo("#ddlInsertCompanyCode");
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
-            });
-        })
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
-            });
-        })
-    }
-
-    function fnDropdownProfileCustomerEmailType() {
-
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Email Type ---").appendTo("#ddlInsertEmailType");
-
-        $.getJSON("@Url.Action("GetEmailType", "ProfileCustomer")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.emailTypeNo,
-                        text: data.emailTypeName
-                    }).html(data.emailTypeName).appendTo("#ddlInsertEmailType");
-            });
-        })
-
-        $.getJSON("@Url.Action("GetEmailType", "ProfileCustomer")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.emailTypeNo,
-                        text: data.emailTypeName
-                    }).html(data.emailTypeName).appendTo("#ddlUpdateEmailType");
-            });
-        })
-    }
-
-
-    function onChangeInsertProfileCustomerPrint(){
-
-        if(document.getElementById("toggleInsertProfileCustomerPrint").checked){
-            $('#grpInsertNumberOfCopies').removeClass('hidden');
-        }else{
-            $('#grpInsertNumberOfCopies').addClass('hidden');
-        }
-    }
-
-    function onChangeInsertProfileCustomerEmail(){
-
-        if(document.getElementById("toggleInsertProfileCustomerEmail").checked){
-
-            $('#grpInsertEmail').removeClass('hidden');
-        
-        }else{
-
-            $('#grpInsertEmail').addClass('hidden');
-        
-        }
-
-        if(document.getElementById("toggleInsertProfileCustomerEmail").checked){
-
-            $('#grpInsertCcEmail').removeClass('hidden');
-            $('#grpInsertFileAttach').removeClass('hidden');
-            $('#grpInsertSingedPdf').removeClass('hidden');
-            $('#grpInsertSingedXml').removeClass('hidden');
-            $('#grpInsertEmailType').removeClass('hidden');
-
-        }else{
-
-            $('#grpInsertCcEmail').addClass('hidden');
-            $('#grpInsertFileAttach').addClass('hidden');
-            $('#grpInsertSingedPdf').addClass('hidden');
-            $('#grpInsertSingedXml').addClass('hidden');
-            $('#grpInsertEmailType').addClass('hidden');
-
-        }
-    }
-
-    function onChangeUpdateProfileCustomerPrint(){
-
-        if(document.getElementById("toggleUpdateProfileCustomerPrint").checked){
-            $('#grpUpdateNumberOfCopies').removeClass('hidden');
-        }else{
-            $('#grpUpdateNumberOfCopies').addClass('hidden');
-        }
-    }
-
-
-    function onChangeUpdateProfileCustomerEmail(){
-
-        if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
-
-            $('#grpUpdateEmail').removeClass('hidden');
-        
-        }else{
-
-            $('#grpUpdateEmail').addClass('hidden');
-        
-        }
-
-        if(document.getElementById("toggleUpdateProfileCustomerEmail").checked){
-
-            $('#grpUpdateEmail').removeClass('hidden');
-            $('#grpUpdateCcEmail').removeClass('hidden');
-            $('#grpUpdateFileAttach').removeClass('hidden');
-            $('#grpUpdateSingedPdf').removeClass('hidden');
-            $('#grpUpdateSingedXml').removeClass('hidden');
-            $('#grpUpdateEmailType').removeClass('hidden');
-
-        }else{
-
-            $('#grpUpdateEmail').addClass('hidden');
-            $('#grpUpdateCcEmail').addClass('hidden');
-            $('#grpUpdateFileAttach').addClass('hidden');
-            $('#grpUpdateSingedPdf').addClass('hidden');
-            $('#grpUpdateSingedXml').addClass('hidden');
-            $('#grpUpdateEmailType').addClass('hidden');
-
-        }
-    }
-
-
-    function RenderProfileCustomer(){
-
-        var table = $("#tbProfileCustomerMain").DataTable({
+        var table = $("#tbProfileUserRoleMain").DataTable({
 
             "scrollY": false,
             "processing": true, // for show progress bar
@@ -181,7 +29,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "ProfileCustomer")",
+                url: "@Url.Action("List", "ProfileUserRole")",
                 type: "POST",
                 datatype: "json"
             },
@@ -190,7 +38,7 @@
             "columns": [
 
                 {
-                    data: "customerProfileNo",
+                    data: "profileUserRoleNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -204,24 +52,12 @@
                     }
                 },
                 {
-                    data: "customerId",
+                    data: "profileUserRoleName",
                     width: "10%"
                 },
                 {
-                    data: "companyCode",
-                    width: "10%"
-                },
-                {
-                    data: "outputType",
-                    width: "10%"
-                },
-                {
-                    data: "numberOfCopies",
-                    width: "10%"
-                },
-                {
-                    data: "emailType",
-                    width: "10%"
+                    data: "profileUserRoleDescription",
+                    width: "30%"
                 },
                 {
                     data: "isactive",
@@ -238,14 +74,8 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
+            
         });
 
         table.on( 'order.dt search.dt', function () {
@@ -255,307 +85,195 @@
         } ).draw();
 
 
-        EditProfileCustomer(table);
-        DeleteProfileCustomer(table);
+        EditProfileUserRole(table);
+        DeleteProfileUserRole(table);
     }
 
-    function fnInsertCancelProfileCustomer(){
-        $("#ddlInsertEmailType").empty();
-        $("#ddlInsertCompanyCode").empty();
-        $("#modalCreateProfileCustomer").modal('hide');
+    function RenderProfileUserRoleMenuConfiguraion(){
+
+        var table = $("#tbUserRoleConfigControlMenu").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 50,
+
+            "ajax": {
+                url: "@Url.Action("List", "ConfigControlMenu")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "configControlMenuNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    //data: "productUnitNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "configControlMenuName",
+                    width: "40%"
+                },
+                {
+                    className: "text-center",
+                    data: "configControlMenuValue",
+                    width: "10%"
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                {
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                }
+
+            ]
+        });
     }
 
-    function fnUpdateCancelProfileCustomer(){
+    function fnInsertCancelProfileUserRole(){
 
-        $("#ddlUpdateEmailType").empty();
-        $("#ddlUpdateCompanyCode").empty();
-        $("#modalUpdateProfileCustomer").modal('hide');
+        document.getElementById('txtInsertUserRoleName').value = '';
+        document.getElementById('txtInsertUserRoleDescription').value = '';
+
+        $("#modalCreateProfileUserRole").modal('hide');
     }
 
-    function callModalInsertProfileCustomer(){
+    function fnUpdateCancelProfileUserRole(){
 
-        $("#ddlInsertEmailType").empty();
-        $("#ddlInsertCompanyCode").empty();
+        document.getElementById('txtUpdateUserRoleName').value = '';
+        document.getElementById('txtUpdateUserRoleDescription').value = '';
 
-        fnDropdownProfileCustomerEmailType();
-        fnDropdownProfileCustomerCompanyCode();
-        $("#modalCreateProfileCustomer").modal('show');
+        $("#modalUpdateProfileUserRole").modal('hide');
     }
 
-    function fnInsertProfileCustomer(){
+    function callModalInsertProfileUserRole(){
 
-        if ( $('#txtInsertCustomerId').val() != '' ||
-             $('#ddlInsertCompanyCode').val() != '0' )
+        RenderProfileUserRoleMenuConfiguraion();
+
+        document.getElementById('txtInsertUserRoleName').value = '';
+        document.getElementById('txtInsertUserRoleDescription').value = '';
+
+        $("#modalCreateProfileUserRole").modal('show');
+        
+    }
+
+    function fnInsertProfileUserRole(){
+
+        if ( $('#txtInsertUserRoleName').val() != '' )
         {
-            callProfileCustomerInsertController();
+            callProfileUserRoleInsertController();
         }
         else {
             fnToastrInputDataFail();
-            validateInsertProfileCustomer();
+            validateInsertProfileUserRole();
         }
 
     }
 
-    function fnUpdateProfileCustomer(){
+    function fnUpdateProfileUserRole(){
 
-         if ( $('#txtUpdateCustomerId').val() != '' ||
-              $('#txtUpdateCompanyCode').val() != '' )
+         if ( $('#txtUpdateUserRoleName').val() != '' )
              
         {
-            callProfileCustomerUpdateController();
+            callProfileUserRoleUpdateController();
         }
         else {
             fnToastrInputDataFail();
-            validateUpdateProfileCustomer();
+            validateUpdateProfileUserRole();
         }
     }
 
-    function EditProfileCustomer(table){
+    function EditProfileUserRole(table){
 
-        $('#tbProfileCustomerMain').on('click', 'td.editor-edit', function () {
-
-            var data = table.row($(this).closest('tr')).data();
-
-            var getPK = data[Object.keys(data)[0]];
-
-            callProfileCustomerGetDetailController(getPK);
-
-        });
-    }
-
-    function DeleteProfileCustomer(table){
-
-        $('#tbProfileCustomerMain').on('click', 'td.editor-delete', function () {
+        $('#tbProfileUserRoleMain').on('click', 'td.editor-edit', function () {
 
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        callProfileCustomerDeleteController(getPK);
-                        callProfileCustomerIndex();
-                      }
-                    })
+            callProfileUserRoleGetDetailController(getPK);
+
         });
     }
 
-    function ExportProfileCustomer(){
+    function ExportProfileUserRole(){
 
         $.blockUI();
 
-        callProfileCustomerExportController();
+        callProfileUserRoleExportController();
 
         $.unblockUI();
     }
 
 
-
-    // [Begin] Ajax call Controller
-
-    function callProfileCustomerGetDetailController(getPK){
-
-        $("#ddlUpdateEmailType").empty();
-        $("#ddlUpdateCompanyCode").empty();
-
-        fnDropdownProfileCustomerEmailType();
-        fnDropdownProfileCustomerCompanyCode();
+    function callProfileUserRoleGetDetailController(getPK){
 
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "ProfileCustomer")",
+            url: "@Url.Action("Detail", "ProfileUserRole")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
 
                 data = $.parseJSON(result)
 
-                document.getElementById('txtUpdateCustomerProfileNo').value = data.CustomerProfileNo;
-                document.getElementById('txtUpdateCustomerId').value = data.CustomerId;
-                //document.getElementById('txtUpdateCompanyCode').value = data.CompanyCode;
-
-                $('#ddlUpdateCompanyCode').val(data.CompanyCode);
-                $('#ddlUpdateCompanyCode').trigger('change');
-
-                document.getElementById('txtUpdateNumberOfCopies').value = data.NumberOfCopies;
-
-                var getOutputType = data.OutputType;
-
-                if(getOutputType == '1'){
-
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
-                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = false;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
-
-                }else if(getOutputType == '2'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
-                    $('#grpUpdateNumberOfCopies').addClass('hidden');
-
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-                    
-
-                }else if(getOutputType == '3'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
-                    $('#grpUpdateNumberOfCopies').addClass('hidden');
-
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-
-                }else if(getOutputType == '4'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
-                    $('#grpUpdateNumberOfCopies').addClass('hidden');
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-                }else if(getOutputType == '5'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
-                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = false;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-                }else if(getOutputType == '6'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
-                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = false;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-                }else if(getOutputType == '7'){
-                    document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
-                    $('#grpUpdateNumberOfCopies').removeClass('hidden');
-
-                    document.getElementById("toggleUpdateProfileCustomerEmail").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedPdf").checked = true;
-                    document.getElementById("toggleUpdateProfileCustomerFileSignedXml").checked = true;
-
-                    $('#grpUpdateEmail').removeClass('hidden');
-                    $('#grpUpdateCcEmail').removeClass('hidden');
-                    $('#grpUpdateFileAttach').removeClass('hidden');
-                    $('#grpUpdateSingedPdf').removeClass('hidden');
-                    $('#grpUpdateSingedXml').removeClass('hidden');
-                    $('#grpUpdateEmailType').removeClass('hidden');
-                }
-
-                document.getElementById('txtUpdateCustomerEmail').value = data.CustomerEmail;
-                document.getElementById('txtUpdateCustomerCCEmail').value = data.CustomerCcemail;
-
-                $('#ddlUpdateEmailType').val(data.EmailType);
-                $('#ddlUpdateEmailType').trigger('change');
+                document.getElementById('txtUpdateUserRoleNo').value = data.ProfileUserRoleNo;
+                document.getElementById('txtUpdateUserRoleName').value = data.ProfileUserRoleName;
+                document.getElementById('txtUpdateUserRoleDescription').value = data.ProfileUserRoleDescription;
 
                 if(data.Isactive == 1){
-                    document.getElementById("toggleUpdateProfileCustomer").checked = true;
+                    document.getElementById("toggleUpdateProfileUserRole").checked = true;
                 }
                 else{
-                    document.getElementById("toggleUpdateProfileCustomer").checked = false;
+                    document.getElementById("toggleUpdateProfileUserRole").checked = false;
                 }
 
-                $("#modalUpdateProfileCustomer").modal('show');
+                $("#modalUpdateProfileUserRole").modal('show');
             }
         });
     }
 
-    function callProfileCustomerInsertController(){
+    function callProfileUserRoleInsertController(){
 
-        var IsActive = 1;
-        var OutPutType = 1;
-        var StatusPrint = 1;
-        var StatusEmail = 1;
-        var StatusSignPdf = 1;
-        var StatusSignxml = 1;
-
-        var IsActive = ($('#toggleInsertProfileCustomer').prop('checked')) ? 1 : 0 ;
-        var StatusPrint = ($('#toggleInsertProfileCustomerPrint').prop('checked')) ? 1 : 0 ;
-        var StatusEmail = ($('#toggleInsertProfileCustomerEmail').prop('checked')) ? 1 : 0 ;
-        var StatusSignPdf = ($('#toggleInsertProfileCustomerFileSignedPdf').prop('checked')) ? 1 : 0 ;
-        var StatusSignxml = ($('#toggleInsertProfileCustomerFileSignedXml').prop('checked')) ? 1 : 0 ;
-
-        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
-            OutPutType = 1;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
-            OutPutType = 2;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
-            OutPutType = 3;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
-            OutPutType = 4;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
-            OutPutType = 5;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
-            OutPutType = 6;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
-            OutPutType = 7;
-        }
-
+        var IsActive = ($('#toggleInsertProfileUserRole').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
-        model.CustomerId = $('#txtInsertCustomerId').val();
-        model.CompanyCode = $('#ddlInsertCompanyCode').val();
-        model.OutputType = OutPutType;
-        model.NumberOfCopies = $('#txtInsertNumberOfCopies').val();
-        model.CustomerEmail = $('#txtInsertCustomerEmail').val();
-        model.CustomerCcemail = $('#txtInsertCustomerCCEmail').val();
-        model.EmailType = $('#ddlInsertEmailType').val();
+        model.ProfileUserRoleName = $('#txtInsertUserRoleName').val();
+        model.ProfileUserRoleDescription = $('#txtInsertUserRoleDescription').val();
 
-        model.StatusPrint = StatusPrint;
-        model.StatusEmail = StatusEmail;
-        model.StatusSignPdf = StatusSignPdf;
-        model.StatusSignXml = StatusSignxml;
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -567,7 +285,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Insert", "ProfileCustomer")",
+            url: "@Url.Action("Insert", "ProfileUserRole")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -578,9 +296,11 @@
 
                 if(data.status == true){
 
+                    $("#modalCreateProfileUserRole").modal('hide');
+
                     fnSweetAlert_SaveSuccess();
 
-                    callProfileCustomerIndex();
+                    callProfileUserRoleIndex();
                 }
                 else{
                     fnSweetAlert_Error(errorMessage);
@@ -590,52 +310,15 @@
         });
     }
 
-    function callProfileCustomerUpdateController(){
+    function callProfileUserRoleUpdateController(){        
 
-        var IsActive = 1;
-        var OutPutType = 1;
-        var StatusPrint = 1;
-        var StatusEmail = 1;
-        var StatusSignPdf = 1;
-        var StatusSignxml = 1;
-
-        var IsActive = ($('#toggleUpdateProfileCustomer').prop('checked')) ? 1 : 0 ;
-        var StatusPrint = ($('#toggleUpdateProfileCustomerPrint').prop('checked')) ? 1 : 0 ;
-        var StatusEmail = ($('#toggleUpdateProfileCustomerEmail').prop('checked')) ? 1 : 0 ;
-        var StatusSignPdf = ($('#toggleUpdateProfileCustomerFileSignedPdf').prop('checked')) ? 1 : 0 ;
-        var StatusSignxml = ($('#toggleUpdateProfileCustomerFileSignedXml').prop('checked')) ? 1 : 0 ;
-
-        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
-            OutPutType = 1;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
-            OutPutType = 2;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
-            OutPutType = 3;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
-            OutPutType = 4;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
-            OutPutType = 5;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
-            OutPutType = 6;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
-            OutPutType = 7;
-        }
+        var IsActive = ($('#toggleUpdateProfileUserRole').prop('checked')) ? 1 : 0 ;
 
         var model = new Object();
 
-        model.CustomerProfileNo = $('#txtUpdateCustomerProfileNo').val();
-        model.CustomerId = $('#txtUpdateCustomerId').val();
-        model.CompanyCode = $('#txtUpdateCompanyCode').val();
-        model.OutputType = OutPutType;
-        model.NumberOfCopies = $('#txtUpdateNumberOfCopies').val();
-        model.CustomerEmail = $('#txtUpdateCustomerEmail').val();
-        model.CustomerCcemail = $('#txtUpdateCustomerCCEmail').val();
-        model.EmailType = $('#ddlUpdateEmailType').val();
-
-        model.StatusPrint = StatusPrint;
-        model.StatusEmail = StatusEmail;
-        model.StatusSignPdf = StatusSignPdf;
-        model.StatusSignXml = StatusSignxml;
+        model.ProfileUserRoleNo = $('#txtUpdateUserRoleNo').val();
+        model.ProfileUserRoleName = $('#txtUpdateUserRoleName').val();
+        model.ProfileUserRoleDescription = $('#txtUpdateUserRoleDescription').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -647,7 +330,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("Update", "ProfileCustomer")",
+            url: "@Url.Action("Update", "ProfileUserRole")",
             data: { jsonString : getJsonString },
             dataType: "text",
             success: function (resp) {
@@ -658,9 +341,11 @@
 
                 if(data.status == true){
 
+                    $("#modalUpdateProfileUserRole").modal('hide');
+
                     fnSweetAlert_SaveSuccess();
 
-                    callProfileCustomerIndex();
+                    callProfileUserRoleIndex();
 
                 }
                 else{
@@ -670,41 +355,12 @@
         });
     }
 
-    function callProfileCustomerDeleteController(getPK){
 
-        var model = new Object();
-
-
-        model.SellOrgNo = getPK;
-        model.SellOrgCode = "";
-        model.SellOrgDescripttion = "";
-        model.CreateBy = $("#leftSideEmail").text();
-        model.CreateDate = new Date();
-        model.UpdateBy = $("#leftSideEmail").text();
-        model.UpdateDate = new Date();
-        model.Isactive = 0;
-
-        var getJsonString = JSON.stringify(model);
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Delete", "ProfileCustomer")",
-            data: { jsonString : getJsonString },
-            //contentType: "application/json; charset=utf-8",
-            dataType: "text",
-            success: function () {
-                    fnSweetAlert_DeleteSuccess();
-                }
-        });
-    }
-
-    function callProfileCustomerExportController(){
+    function callProfileUserRoleExportController(){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ExportToCsv", "ProfileCustomer")",
-            //data: { id : getPK },
+            url: "@Url.Action("ExportToCsv", "ProfileUserRole")",
             contentType: 'application/json; charset=utf-8',
-            //dataType: "json",
             success: function (response) {
 
                 var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
@@ -715,7 +371,7 @@
 
                 a.href = downloadUrl;
 
-                a.download = "scg-etax-ProfileCustomer.csv";
+                a.download = "scg-etax-ProfileUserRole.csv";
 
                 document.body.appendChild(a);
 
@@ -724,15 +380,11 @@
         });
     }
 
-    // [end] Ajax call Controller
 
-
-
-
-    function callProfileCustomerIndex() {
+    function callProfileUserRoleIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileCustomer")");
+            $("#contentPartial").load("@Url.Action("Index", "ProfileUserRole")");
             $.unblockUI();
         }, 500);
     }

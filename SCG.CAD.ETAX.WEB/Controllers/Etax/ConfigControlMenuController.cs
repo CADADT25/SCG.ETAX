@@ -125,5 +125,41 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<ConfigControlMenu> tran = new List<ConfigControlMenu>();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigControlMenu/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
+
+                    if (tran.Count > 0)
+                    {
+                        tran = tran.ToList();
+                    }
+                }
+
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
     }
 }

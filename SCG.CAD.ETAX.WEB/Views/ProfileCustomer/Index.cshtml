@@ -63,7 +63,7 @@
             value: 0,
         }).html("--- Select Email Type ---").appendTo("#ddlInsertEmailType");
 
-        $.getJSON("@Url.Action("GetEmailType", "ProfileCustomer")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailType")", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
                     {
@@ -80,6 +80,34 @@
                         value: data.emailTypeNo,
                         text: data.emailTypeName
                     }).html(data.emailTypeName).appendTo("#ddlUpdateEmailType");
+            });
+        })
+    }
+
+    function fnDropdownProfileCustomerEmailTemplate() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Email Template ---").appendTo("#ddlInsertEmailTemplate");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlInsertEmailTemplate");
+            });
+        })
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlUpdateEmailTemplate");
             });
         })
     }
@@ -113,6 +141,7 @@
             $('#grpInsertSingedPdf').removeClass('hidden');
             $('#grpInsertSingedXml').removeClass('hidden');
             $('#grpInsertEmailType').removeClass('hidden');
+            $('#grpInsertEmailTemplate').removeClass('hidden');
 
         }else{
 
@@ -121,6 +150,7 @@
             $('#grpInsertSingedPdf').addClass('hidden');
             $('#grpInsertSingedXml').addClass('hidden');
             $('#grpInsertEmailType').addClass('hidden');
+            $('#grpInsertEmailTemplate').addClass('hidden');
 
         }
     }
@@ -155,6 +185,7 @@
             $('#grpUpdateSingedPdf').removeClass('hidden');
             $('#grpUpdateSingedXml').removeClass('hidden');
             $('#grpUpdateEmailType').removeClass('hidden');
+            $('#grpUpdateEmailTemplate').removeClass('hidden');
 
         }else{
 
@@ -164,6 +195,7 @@
             $('#grpUpdateSingedPdf').addClass('hidden');
             $('#grpUpdateSingedXml').addClass('hidden');
             $('#grpUpdateEmailType').addClass('hidden');
+            $('#grpUpdateEmailTemplate').addClass('hidden');
 
         }
     }
@@ -261,6 +293,7 @@
 
     function fnInsertCancelProfileCustomer(){
         $("#ddlInsertEmailType").empty();
+        $("#ddlInsertEmailTemplate").empty();
         $("#ddlInsertCompanyCode").empty();
         $("#modalCreateProfileCustomer").modal('hide');
     }
@@ -268,6 +301,7 @@
     function fnUpdateCancelProfileCustomer(){
 
         $("#ddlUpdateEmailType").empty();
+        $("#ddlUpdateEmailTemplate").empty();
         $("#ddlUpdateCompanyCode").empty();
         $("#modalUpdateProfileCustomer").modal('hide');
     }
@@ -275,9 +309,11 @@
     function callModalInsertProfileCustomer(){
 
         $("#ddlInsertEmailType").empty();
+        $("#ddlInsertEmailTemplate").empty();
         $("#ddlInsertCompanyCode").empty();
 
         fnDropdownProfileCustomerEmailType();
+        fnDropdownProfileCustomerEmailTemplate();
         fnDropdownProfileCustomerCompanyCode();
         $("#modalCreateProfileCustomer").modal('show');
     }
@@ -367,9 +403,11 @@
     function callProfileCustomerGetDetailController(getPK){
 
         $("#ddlUpdateEmailType").empty();
+        $("#ddlUpdateEmailTemplate").empty();
         $("#ddlUpdateCompanyCode").empty();
 
         fnDropdownProfileCustomerEmailType();
+        fnDropdownProfileCustomerEmailTemplate();
         fnDropdownProfileCustomerCompanyCode();
 
         $.ajax({
@@ -416,6 +454,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
                     
 
                 }else if(getOutputType == '3'){
@@ -433,6 +472,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
 
                 }else if(getOutputType == '4'){
                     document.getElementById("toggleUpdateProfileCustomerPrint").checked = false;
@@ -448,6 +488,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
                 }else if(getOutputType == '5'){
                     document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
                     $('#grpUpdateNumberOfCopies').removeClass('hidden');
@@ -462,6 +503,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
                 }else if(getOutputType == '6'){
                     document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
                     $('#grpUpdateNumberOfCopies').removeClass('hidden');
@@ -476,6 +518,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
                 }else if(getOutputType == '7'){
                     document.getElementById("toggleUpdateProfileCustomerPrint").checked = true;
                     $('#grpUpdateNumberOfCopies').removeClass('hidden');
@@ -490,6 +533,7 @@
                     $('#grpUpdateSingedPdf').removeClass('hidden');
                     $('#grpUpdateSingedXml').removeClass('hidden');
                     $('#grpUpdateEmailType').removeClass('hidden');
+                    $('#grpUpdateEmailTemplate').removeClass('hidden');
                 }
 
                 document.getElementById('txtUpdateCustomerEmail').value = data.CustomerEmail;
@@ -497,6 +541,9 @@
 
                 $('#ddlUpdateEmailType').val(data.EmailType);
                 $('#ddlUpdateEmailType').trigger('change');
+
+                $('#ddlUpdateEmailTemplate').val(data.EmailTemplate);
+                $('#ddlUpdateEmailTemplate').trigger('change');
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfileCustomer").checked = true;
@@ -551,6 +598,7 @@
         model.CustomerEmail = $('#txtInsertCustomerEmail').val();
         model.CustomerCcemail = $('#txtInsertCustomerCCEmail').val();
         model.EmailType = $('#ddlInsertEmailType').val();
+        model.EmailTemplate = $('#ddlInsertEmailTemplate').val();
 
         model.StatusPrint = StatusPrint;
         model.StatusEmail = StatusEmail;
@@ -631,6 +679,7 @@
         model.CustomerEmail = $('#txtUpdateCustomerEmail').val();
         model.CustomerCcemail = $('#txtUpdateCustomerCCEmail').val();
         model.EmailType = $('#ddlUpdateEmailType').val();
+        model.EmailTemplate = $('#ddlUpdateEmailTemplate').val();
 
         model.StatusPrint = StatusPrint;
         model.StatusEmail = StatusEmail;

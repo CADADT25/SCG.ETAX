@@ -189,6 +189,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<ProfileEmailTemplate> tran = new List<ProfileEmailTemplate>();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailTemplate/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailTemplate>>(task.OUTPUT_DATA.ToString());
+
+                    if (tran.Count > 0)
+                    {
+                        tran = tran.Where(x => x.Isactive == 1).OrderBy(x => x.EmailTemplateName).ToList();
+                    }
+                }
+
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
 
     }
 }
