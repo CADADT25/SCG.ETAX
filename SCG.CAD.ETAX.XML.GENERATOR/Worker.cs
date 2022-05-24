@@ -13,6 +13,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
         Template_TaxInvoice template = new Template_TaxInvoice();
         TaxCodeController taxCodeController = new TaxCodeController();
         List<TaxCode> tran = new List<TaxCode>();
+        IHostApplicationLifetime _lifetime;
 
 
         private readonly ILogger<Worker> _logger;
@@ -31,6 +32,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
             // call business layer
             xMLGenerate.ProcessGenXMLFile();
+            _lifetime.StopApplication();
             //var layer1 = pDFSign.GetAllPDFFile();
 
             //var layer2 = layer1;

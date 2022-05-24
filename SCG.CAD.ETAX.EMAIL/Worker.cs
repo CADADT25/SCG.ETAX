@@ -4,8 +4,10 @@ namespace SCG.CAD.ETAX.EMAIL
 {
     public class Worker : BackgroundService
     {
+        IHostApplicationLifetime _lifetime;
         private readonly ILogger<Worker> _logger;
         Email email = new Email();
+        TestEmail testemail = new TestEmail();
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -13,8 +15,10 @@ namespace SCG.CAD.ETAX.EMAIL
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //email.ProcessSendEmail();
-            email.TestSendEmail();
+            email.ProcessSendEmail();
+            //testemail.TestSendEmail();
+            //testemail.ToEmlStream();
+            //_lifetime.StopApplication();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
