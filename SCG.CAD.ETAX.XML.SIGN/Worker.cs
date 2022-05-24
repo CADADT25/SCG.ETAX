@@ -6,6 +6,7 @@ namespace SCG.CAD.ETAX.XML.SIGN
     {
         private readonly ILogger<Worker> _logger;
         XMLSign xMLSign = new XMLSign();
+        IHostApplicationLifetime _lifetime;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -15,6 +16,7 @@ namespace SCG.CAD.ETAX.XML.SIGN
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             xMLSign.ProcessXMLSign();
+            _lifetime.StopApplication();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
