@@ -1,4 +1,26 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿<form class="form form-vertical">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><span class="text-danger">* </span>Name</label>
+                <input type="text" id="txtInsertProfileUserGroupName" onkeyup="validateInsertProfileUserGroup();" class="form-control text-uppercase">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="txtInsertProfileUserGroupDescription" onkeyup="validateInsertProfileUserGroup();" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label><span class="text-danger">* </span>Role</label>
+                <select class="select2 form-control" id="txtInsertProfileUserGroupRoleId" multiple></select>
+            </div>
+        </div>
+    </div>
+</form>
+

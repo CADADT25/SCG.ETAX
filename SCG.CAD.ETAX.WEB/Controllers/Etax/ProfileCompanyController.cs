@@ -83,6 +83,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.OrderBy(x => x.CompanyCode).ToList();
                 }
                 else
                 {

@@ -11,6 +11,18 @@
 
     $(document).ready(function () {
 
+        $("#txtConfigMftsEmailSettingOneTime").flatpickr({
+            enableTime: true,
+            dateFormat: "d-m-Y H:i",
+        });
+
+
+         $("#txtConfigMftsEmailSettingAnyTime").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+        });
+
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
@@ -27,7 +39,35 @@
 
     });
 
-     
+
+    function fnDropdownProfilePartnerEmailTemplate() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Email Template ---").appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+            });
+        })
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.emailTemplateNo,
+                        text: data.emailTemplateName
+                    }).html(data.emailTemplateName).appendTo("#ddlUpdateConfigMftsEmailSettingEmailTemplate");
+            });
+        })
+    }
+
 
     function onChangeConfigEmailSmtp(){
         $('#toggleInsertConfigEmailSmtp').prop('checked', true)
@@ -58,6 +98,8 @@
 
         // ====================
     }
+
+
 
     function RenderConfigMftsEmailSetting(setCompanyCode){
 
@@ -100,15 +142,25 @@
                 },
                 {
                     data: "configMftsEmailSettingCompanyCode",
-                    width: "20%"
+                    width: "5%"
                 },
                 {
                     data: "configMftsEmailSettingEmail",
-                    width: "10%"
+                    width: "20%"
                 },
                 {
-                    data: "configMftsEmailSettingEmailTemplate",
-                    width: "20%"
+                    data: "configMftsEmailSettingNo",
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return'<a onclick="callModalInsertConfigMftsEmailSettingOneTime(' + data +')" class="btn btn-primary btn-sm"> One time </a>';
+                    }
+                },
+                {
+                    data: "configMftsEmailSettingNo",
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return'<a onclick="callModalInsertConfigMftsEmailSettingAnyTime(' + data +')" class="btn btn-primary btn-sm"> Any Time </a>';
+                    }
                 },
                 {
                     data: "isactive",
@@ -152,6 +204,8 @@
 
     function callModalInsertConfigMftsEmailSetting(){
 
+        fnDropdownProfilePartnerEmailTemplate();
+
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
         if(setCompanyCode == null || setCompanyCode == ''){
@@ -159,7 +213,7 @@
 
             if(setCompanyCode == null || setCompanyCode == ''){
                 setCompanyCode = $("#companyCodeState").text();
-            }   
+            }
         }
 
         document.getElementById('txtInsertConfigMftsEmailSettingCompanyCode').value = setCompanyCode;
@@ -190,6 +244,94 @@
         }
     }
 
+    function callModalInsertConfigMftsEmailSettingOneTime(getPK){
+
+        $('#appendMftsEmailOneTime').empty();
+
+        $('#txtUpdateConfigMftsEmailSettingOneTimeNo').val(getPK);
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsEmailSetting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                const myArray = data.ConfigMftsEmailSettingOneTime.split("|");
+
+                var i = 0;
+
+                for (i = 0; i < myArray.length; i++) {
+                        $('#appendMftsEmailOneTime').append(
+                            "<div class='transaction-item'>"+
+                            "<div class='media''>"+
+                                "<div class='rounded'>"+
+                                    "<div class='avatar-content'>"+
+                                        "<i class='fas fa-clock font-medium-3'></i>"+
+                                    "</div>"+
+                                "</div>"+
+                                "<div class='media-body pl-1'>"+
+                                    "<h6 class='transaction-title'>"+myArray[i]+"</h6>"+
+                                "</div>"+
+                            "</div>"+
+                            "<div class='font-weight-bolder text-danger btn btn-danger btn-sm'><a onclick='callDeleteConfigMftsEmailOneTime("+ getPK + ","+[i]+")'> Delete </a></div></div>");
+                        }
+            }
+        });
+
+        $("#modalUpdateConfigMftsEmailSettingOneTime").modal('show');
+    }
+
+    function callModalInsertConfigMftsEmailSettingAnyTime(getPK){
+
+        $('#appendMftsEmailAnyTime').empty();
+
+        $('#txtUpdateConfigMftsEmailSettingAnyTimeNo').val(getPK);
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsEmailSetting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                const myArray = data.ConfigMftsEmailSettingAnyTime.split("|");
+
+                var i = 0;
+
+                for (i = 0; i < myArray.length; i++) {
+                        $('#appendMftsEmailAnyTime').append(
+                            "<div class='transaction-item'>"+
+                            "<div class='media''>"+
+                                "<div class='rounded'>"+
+                                    "<div class='avatar-content'>"+
+                                        "<i class='fas fa-clock font-medium-3'></i>"+
+                                    "</div>"+
+                                "</div>"+
+                                "<div class='media-body pl-1'>"+
+                                    "<h6 class='transaction-title'>"+myArray[i]+"</h6>"+
+                                "</div>"+
+                            "</div>"+
+                            "<div class='font-weight-bolder text-danger btn btn-danger btn-sm'><a onclick='callDeleteConfigMftsEmailAnyTime("+ getPK + ","+[i]+")'> Delete </a></div></div>");
+                        }
+            }
+        });
+
+        $("#modalUpdateConfigMftsEmailSettingAnyTime").modal('show');
+    }
+
+    function fnUpdateCancelConfigMftsEmailSettingOneTime(){
+        $("#modalUpdateConfigMftsEmailSettingOneTime").modal('hide');
+    }
+
+    function fnUpdateCancelConfigMftsEmailSettingAnyTime(){
+        $("#modalUpdateConfigMftsEmailSettingAnyTime").modal('hide');
+    }
+
     function EditConfigMftsEmailSetting(table){
 
         $('#tbConfigMftsEmailSettingMain').on('click', 'td.editor-edit', function () {
@@ -202,33 +344,7 @@
         });
     }
 
-    function DeleteConfigMftsEmailSetting(table){
-
-        $('#tbConfigMftsEmailSettingMain').on('click', 'td.editor-delete', function () {
-
-            var data = table.row($(this).closest('tr')).data();
-
-            var getPK = data[Object.keys(data)[0]];
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        callConfigMftsEmailSettingDeleteController(getPK);
-                        callConfigMftsEmailSettingIndex();
-                      }
-                    })
-        });
-    }
+    
 
     function ExportConfigMftsEmailSetting(){
 
@@ -239,10 +355,10 @@
         $.unblockUI();
     }
 
-
-    // [Begin] Ajax call Controller
-
     function callConfigMftsEmailSettingGetDetailController(getPK){
+
+        fnDropdownProfilePartnerEmailTemplate();
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ConfigMftsEmailSetting")",
@@ -252,21 +368,24 @@
 
                 data = $.parseJSON(result)
 
-                document.getElementById('txtUpdateConfigMftsEmailSettingNo').value = data.configMftsEmailSettingNo;
+                document.getElementById('txtUpdateConfigMftsEmailSettingNo').value = data.ConfigMftsEmailSettingNo;
 
-                document.getElementById('txtUpdateConfigMftsEmailSettingCompanyCode').value = data.configMftsEmailSettingCompanyCode;
-                document.getElementById('txtUpdateConfigMftsEmailSettingEmail').value = data.configMftsEmailSettingEmail;
+                document.getElementById('txtUpdateConfigMftsEmailSettingCompanyCode').value = data.ConfigMftsEmailSettingCompanyCode;
+                document.getElementById('txtUpdateConfigMftsEmailSettingEmail').value = data.ConfigMftsEmailSettingEmail;
 
-                document.getElementById('txtUpdateConfigMftsEmailSettingHost').value = data.configMftsEmailSettingHost;
-                document.getElementById('txtUpdateConfigMftsEmailSettingPort').value = data.configMftsEmailSettingPort;
-                document.getElementById('txtUpdateConfigMftsEmailSettingUsername').value = data.configMftsEmailSettingUsername;
-                document.getElementById('txtUpdateConfigMftsEmailSettingPassword').value = data.configMftsEmailSettingPassword;
+                document.getElementById('txtUpdateConfigMftsEmailSettingHost').value = data.ConfigMftsEmailSettingHost;
+                document.getElementById('txtUpdateConfigMftsEmailSettingPort').value = data.ConfigMftsEmailSettingPort;
+                document.getElementById('txtUpdateConfigMftsEmailSettingUsername').value = data.ConfigMftsEmailSettingUsername;
+                document.getElementById('txtUpdateConfigMftsEmailSettingPassword').value = data.ConfigMftsEmailSettingPassword;
 
-                document.getElementById('txtUpdateConfigMftsEmailSettingApiKey').value = data.configMftsEmailSettingApiKey;
+                document.getElementById('txtUpdateConfigMftsEmailSettingApiKey').value = data.ConfigMftsEmailSettingApiKey;
 
 
+                //$('#ddlUpdateConfigMftsEmailSettingEmailTemplate').empty().append($("<option/>").val(""+data.ConfigMftsEmailSettingEmailTemplate+"").text(""+data.ConfigMftsEmailSettingEmailTemplate+""))
+                //.val(""+data.ConfigMftsEmailSettingEmailTemplate+"").trigger("change");
 
-                if(data.configMftsEmailSettingOperation == 'SMTP'){
+
+                if(data.ConfigMftsEmailSettingOperation == 'SMTP'){
                     document.getElementById("toggleUpdateConfigEmailSmtp").checked = true;
                 }
                 else{
@@ -421,7 +540,7 @@
                 if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
-                    
+
                     document.getElementById('txtInsertConfigMftsEmailSettingCompanyCode').value = '';
                     document.getElementById('txtInsertConfigMftsEmailSettingEmail').value = '';
                     document.getElementById('ddlInsertConfigMftsEmailSettingEmailTemplate').value = '';
@@ -440,6 +559,141 @@
                     fnSweetAlert_Error(errorMessage);
                 }
             }
+        });
+    }
+
+    function callConfigMftsEmailSettingUpdateOneTime(setPK){
+
+        var model = new Object();
+
+        model.ConfigMftsEmailSettingNo = $('#txtUpdateConfigMftsEmailSettingOneTimeNo').val();
+        model.ConfigMftsEmailSettingOneTime = $('#txtConfigMftsEmailSettingOneTime').val();
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateOneTime", "ConfigMftsEmailSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsEmailSettingOneTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+    function callConfigMftsEmailSettingUpdateAnyTime(setPK){
+
+        var model = new Object();
+
+        model.ConfigMftsEmailSettingNo = $('#txtUpdateConfigMftsEmailSettingAnyTimeNo').val();
+        model.ConfigMftsEmailSettingAnyTime = $('#txtConfigMftsEmailSettingAnyTime').val();
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateAnyTime", "ConfigMftsEmailSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsEmailSettingAnyTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+
+    function callDeleteConfigMftsEmailOneTime(setPK,Postion){
+
+        var model = new Object();
+
+        model.pk = setPK;
+        model.position = Postion;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteOneTime", "ConfigMftsEmailSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsEmailSettingOneTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+
+    function DeleteConfigMftsEmailSetting(table){
+
+        $('#tbConfigMftsEmailSettingMain').on('click', 'td.editor-delete', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+                }).then(function (result) {
+                    if (result) {
+                        callConfigMftsEmailSettingDeleteController(getPK);
+                        callConfigMftsEmailSettingIndex();
+                      }
+                    })
         });
     }
 

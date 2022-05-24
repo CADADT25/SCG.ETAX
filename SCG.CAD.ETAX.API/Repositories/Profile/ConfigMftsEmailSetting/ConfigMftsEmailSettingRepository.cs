@@ -101,5 +101,82 @@
         }
 
 
+        public async Task<Response> UPDATE_ONETIME(ConfigMftsEmailSetting param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_ONETIME(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
+        public async Task<Response> UPDATE_ANYTIME(ConfigMftsEmailSetting param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_ANYTIME(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
+
+        public async Task<Response> DELETE_ONETIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE_ONETIME(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
+        public async Task<Response> DELETE_ANYTIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DELETE_ANYTIME(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
     }
 }

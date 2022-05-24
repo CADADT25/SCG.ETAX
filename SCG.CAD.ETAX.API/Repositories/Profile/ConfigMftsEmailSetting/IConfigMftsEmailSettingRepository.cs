@@ -7,5 +7,9 @@
         Task<Response> INSERT(ConfigMftsEmailSetting param);
         Task<Response> UPDATE(ConfigMftsEmailSetting param);
         Task<Response> DELETE(ConfigMftsEmailSetting param);
+        Task<Response> UPDATE_ONETIME(ConfigMftsEmailSetting param);
+        Task<Response> UPDATE_ANYTIME(ConfigMftsEmailSetting param);
+        Task<Response> DELETE_ONETIME(DeleteOnetime param);
+        Task<Response> DELETE_ANYTIME(DeleteOnetime param);
     }
 }

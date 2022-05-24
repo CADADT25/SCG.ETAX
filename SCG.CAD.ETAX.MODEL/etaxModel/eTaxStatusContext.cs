@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileEmailTemplate> ProfileEmailTemplates { get; set; } = null!;
+        public virtual DbSet<ConfigMftsEmailSetting> ConfigMftsEmailSettings { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,13 +29,61 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileEmailTemplate>(entity =>
+            modelBuilder.Entity<ConfigMftsEmailSetting>(entity =>
             {
-                entity.HasKey(e => e.EmailTemplateNo);
+                entity.HasKey(e => e.ConfigMftsEmailSettingNo);
 
-                entity.ToTable("profileEmailTemplate");
+                entity.ToTable("configMftsEmailSetting");
 
-                entity.Property(e => e.EmailTemplateNo).HasColumnName("emailTemplateNo");
+                entity.Property(e => e.ConfigMftsEmailSettingNo).HasColumnName("configMftsEmailSettingNo");
+
+                entity.Property(e => e.ConfigMftsEmailSettingAnyTime)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingAnyTime");
+
+                entity.Property(e => e.ConfigMftsEmailSettingApiKey)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingApiKey");
+
+                entity.Property(e => e.ConfigMftsEmailSettingCompanyCode)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingCompanyCode");
+
+                entity.Property(e => e.ConfigMftsEmailSettingEmail)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingEmail");
+
+                entity.Property(e => e.ConfigMftsEmailSettingEmailTemplate)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingEmailTemplate");
+
+                entity.Property(e => e.ConfigMftsEmailSettingHost)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingHost");
+
+                entity.Property(e => e.ConfigMftsEmailSettingOneTime)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingOneTime");
+
+                entity.Property(e => e.ConfigMftsEmailSettingOperation)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingOperation");
+
+                entity.Property(e => e.ConfigMftsEmailSettingPassword)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingPassword");
+
+                entity.Property(e => e.ConfigMftsEmailSettingPort)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingPort");
+
+                entity.Property(e => e.ConfigMftsEmailSettingProtocol)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingProtocol");
+
+                entity.Property(e => e.ConfigMftsEmailSettingUsername)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsEmailSettingUsername");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -45,19 +93,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.EmailBody).HasColumnName("emailBody");
-
-                entity.Property(e => e.EmailSubject)
-                    .HasMaxLength(1000)
-                    .HasColumnName("emailSubject");
-
-                entity.Property(e => e.EmailTemplateName)
-                    .HasMaxLength(1000)
-                    .HasColumnName("emailTemplateName");
-
-                entity.Property(e => e.EmailTypeNo).HasColumnName("emailTypeNo");
-
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)

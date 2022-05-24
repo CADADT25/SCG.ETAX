@@ -74,15 +74,27 @@
             {
                 using (_dbContext)
                 {
-                    param.CreateDate = dtNow;
-                    param.UpdateDate = dtNow;
 
-                    _dbContext.profileUserGroup.Add(param);
-                    _dbContext.SaveChanges();
+                    var getDuplicate = _dbContext.profileUserGroup.Where(x => x.ProfileUserGroupName == param.ProfileUserGroupName).ToList();
+
+                    if (getDuplicate.Count > 0)
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Can't insert because data is duplicate.";
+                    }
+                    else
+                    {
+
+                        param.CreateDate = dtNow;
+                        param.UpdateDate = dtNow;
+
+                        _dbContext.profileUserGroup.Add(param);
+                        _dbContext.SaveChanges();
 
 
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Insert success.";
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Insert success.";
+                    }
                 }
             }
             catch (Exception ex)
@@ -105,8 +117,7 @@
 
                     if (update != null)
                     {
-                        update.ProfileUserGroupNameTh = param.ProfileUserGroupNameTh;
-                        update.ProfileUserGroupNameEn = param.ProfileUserGroupNameEn;
+                        update.ProfileUserGroupName = param.ProfileUserGroupName;
                         update.ProfileUserGroupDescription = param.ProfileUserGroupDescription;
                         update.ProfileUserRoleId = param.ProfileUserRoleId;
                         update.UpdateBy = param.UpdateBy;

@@ -117,5 +117,36 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+        public async Task<JsonResult> DropDownList()
+        {
+            Response resp = new Response();
+
+            List<ProfileUserRole> tran = new List<ProfileUserRole>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileUserRole/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileUserRole>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x => x.Isactive == 1).OrderBy(x => x.ProfileUserRoleName).ToList();
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(tran);
+        }
+
+
     }
 }

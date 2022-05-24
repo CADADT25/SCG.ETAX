@@ -245,10 +245,10 @@
         var table = $("#tbProfilePartnerMain").DataTable({
 
             "scrollY": false,
-            "processing": true, // for show progress bar
-            "serverSide": false, // for process server side
-            "filter": true, // this is for disable filter (search box)
-            "orderMulti": true, // for disable multiple column at once
+            "processing": true, 
+            "serverSide": false, 
+            "filter": true, 
+            "orderMulti": true, 
             "pageLength": 10,
 
             "ajax": {
@@ -267,7 +267,6 @@
                     visible: false
                 },
                 {
-                    //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
                     render: function (data, type, row, meta) {
@@ -309,13 +308,6 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -412,20 +404,13 @@
     }
 
 
-
-    // [Begin] Ajax call Controller
-
     function callProfilePartnerGetDetailController(getPK){
-
-        //$("#ddlUpdateProfilePartnerCompanyCode").empty();
-        //$("#ddlUpdateProfilePartnerSaleOrg").empty();
-        //$("#ddlUpdateProfilePartnerEmailType").empty();
-        //$("#ddlUpdateProfilePartnerEmailTemplate").empty();
 
         fnDropdownProfilePartnerEmailType();
         fnDropdownProfilePartnerEmailTemplate();
         fnDropdownProfilePartnerCompanyCode();
-
+        
+            
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfilePartner")",
@@ -572,18 +557,17 @@
                     $('#grpUpdatePartnerEmailTemplate').removeClass('hidden');
                 }
 
-                document.getElementById('txtUpdateProfilePartnerCustomerEmail').value = data.CustomerEmail;
-                document.getElementById('txtUpdateProfilePartnerCustomerCCEmail').value = data.CustomerCcemail;
-
-                $('#ddlUpdateProfilePartnerEmailType').val(data.EmailType);
-                $('#ddlUpdateProfilePartnerEmailType').trigger('change');
+                document.getElementById('txtUpdateProfilePartnerCustomerEmail').value = data.SoldToEmail;
+                document.getElementById('txtUpdateProfilePartnerCustomerCCEmail').value = data.SoldToCcemail;
 
 
-                $('#ddlUpdateProfilePartnerEmailTemplate').find(':selected').data(data.EmailTemplateNo);
+                $('#ddlUpdateProfilePartnerEmailType').empty().append($("<option/>").val(""+data.PartnerEmailType+"").text(""+data.PartnerEmailType+""))
+                .val(""+data.PartnerEmailType+"").trigger("change");
+
+                $('#ddlUpdateProfilePartnerEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
+                .val(""+data.EmailTemplateNo+"").trigger("change");
 
 
-                //$('#ddlUpdateProfilePartnerEmailTemplate').val(data.EmailTemplateNo);
-                //$('#ddlUpdateProfilePartnerEmailTemplate').trigger('change');
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfilePartner").checked = true;
@@ -595,16 +579,12 @@
                 $("#modalUpdateProfilePartner").modal('show');
             }
         });
+
     }
 
     function callProfilePartnerInsertController(){
 
-        var IsActive = 1;
         var OutPutType = 1;
-        var StatusPrint = 1;
-        var StatusEmail = 1;
-        var StatusSignPdf = 1;
-        var StatusSignxml = 1;
 
         var IsActive = ($('#toggleInsertProfilePartner').prop('checked')) ? 1 : 0 ;
         var StatusPrint = ($('#toggleInsertProfilePartnerPrint').prop('checked')) ? 1 : 0 ;
@@ -612,19 +592,20 @@
         var StatusSignPdf = ($('#toggleInsertProfilePartnerFileSignedPdf').prop('checked')) ? 1 : 0 ;
         var StatusSignxml = ($('#toggleInsertProfilePartnerFileSignedXml').prop('checked')) ? 1 : 0 ;
 
-        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
+
+        if( (StatusPrint == 1) && (StatusEmail == 0) && (StatusSignPdf == 0) && (StatusSignxml == 0)){
             OutPutType = 1;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 0)){
             OutPutType = 2;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 0) && (StatusSignxml == 1)){
             OutPutType = 3;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 1)){
             OutPutType = 4;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 0)){
             OutPutType = 5;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 0) && (StatusSignxml == 1)){
             OutPutType = 6;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 1)){
             OutPutType = 7;
         }
 
@@ -675,9 +656,14 @@
 
                 if(data.status == true){
 
+                    $('#modalCreateProfilePartner').modal('hide');
+
                     fnSweetAlert_SaveSuccess();
 
                     callProfilePartnerIndex();
+
+                    $("#Partner-tab").addClass("active");
+                    $("#Customer-tab").removeClass("active");
                 }
                 else{
                     fnSweetAlert_Error(errorMessage);
@@ -690,12 +676,8 @@
     function callProfilePartnerUpdateController(){
 
 
-        var IsActive = 1;
         var OutPutType = 1;
-        var StatusPrint = 1;
-        var StatusEmail = 1;
-        var StatusSignPdf = 1;
-        var StatusSignxml = 1;
+
 
         var IsActive = ($('#toggleUpdateProfilePartner').prop('checked')) ? 1 : 0 ;
         var StatusPrint = ($('#toggleUpdateProfilePartnerPrint').prop('checked')) ? 1 : 0 ;
@@ -703,19 +685,19 @@
         var StatusSignPdf = ($('#toggleUpdateProfilePartnerFileSignedPdf').prop('checked')) ? 1 : 0 ;
         var StatusSignxml = ($('#toggleUpdateProfilePartnerFileSignedXml').prop('checked')) ? 1 : 0 ;
 
-        if(StatusPrint == 1 && StatusEmail == 0 && StatusSignPdf == 0 && StatusSignxml == 0){
+        if( (StatusPrint == 1) && (StatusEmail == 0) && (StatusSignPdf == 0) && (StatusSignxml == 0)){
             OutPutType = 1;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 0)){
             OutPutType = 2;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 0) && (StatusSignxml == 1)){
             OutPutType = 3;
-        }else if(StatusPrint == 0 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+        }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 1)){
             OutPutType = 4;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 0){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 0)){
             OutPutType = 5;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 0 && StatusSignxml == 1){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 0) && (StatusSignxml == 1)){
             OutPutType = 6;
-        }else if(StatusPrint == 1 && StatusEmail == 1 && StatusSignPdf == 1 && StatusSignxml == 1){
+        }else if((StatusPrint == 1) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 1)){
             OutPutType = 7;
         }
 
@@ -767,9 +749,14 @@
 
                 if(data.status == true){
 
+                    $('#modalUpdateProfilePartner').modal('hide');
+
                     fnSweetAlert_SaveSuccess();
 
                     callProfilePartnerIndex();
+
+                    $("#Partner-tab").addClass("active");
+                    $("#Customer-tab").removeClass("active");
 
                 }
                 else{
@@ -844,6 +831,8 @@
             $("#contentPartial").load("@Url.Action("Index", "ManagementCustomerProfile")");
             $.unblockUI();
         }, 500);
+
+        
     }
 
 

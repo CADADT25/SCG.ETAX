@@ -65,6 +65,7 @@ namespace SCG.CAD.ETAX.UTILITY
                     else
                     {
                         var getException = result.Content.ReadAsStringAsync();
+                        response.ERROR_MESSAGE = getException.ToString();
                     }
                 }
             }
