@@ -31,6 +31,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             {
                 Console.WriteLine("Start PrintZip");
                 GetDataFromDataBase();
+                GetListTransactionDescription();
                 Console.WriteLine("Start Read All PDF");
                 var dataallCompany = ReadFile();
                 Console.WriteLine("End Read All PDF");
@@ -61,6 +62,45 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
         }
         public List<FileModel> ReadFile()
+        {
+            List<FileModel> result = new List<FileModel>();
+            string fileType = "*.pdf";
+            FileModel fileModel = new FileModel();
+            Filedetail Filedetail = new Filedetail();
+            List<TransactionDescription> datatransaction = new List<TransactionDescription>();
+            try
+            {
+                //pathFolder = @"C:\Code_Dev\sign";
+                foreach (var path in configPrintSetting)
+                {
+                    fileModel = new FileModel();
+                    fileModel.InputPath = path.ConfigMftsCompressPrintSettingInputPdf;
+                    fileModel.OutPath = path.ConfigMftsCompressPrintSettingOutputPdf;
+                    fileModel.CompanyCode = path.ConfigMftsCompressPrintSettingCompanyCode;
+                    fileModel.FileDetails = new List<Filedetail>();
+                    datatransaction = transactionDescription.Where(x=> x.PdfSignStatus == "Successful" &&
+                                                                    x.CompanyCode == path.ConfigMftsCompressPrintSettingCompanyCode &&
+                                                                    x.Isactive == 1).ToList();
+                    foreach (var file in datatransaction)
+                    {
+                        Filedetail = new Filedetail();
+                        Filedetail.FilePath = file.PdfSignLocation;
+                        Filedetail.FileName = Path.GetFileName(file.PdfSignLocation);
+                        Filedetail.BillingNo = file.BillingNumber;
+                        fileModel.FileDetails.Add(Filedetail);
+                    }
+                    result.Add(fileModel);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public List<FileModel> ReadFile_Old()
         {
             List<FileModel> result = new List<FileModel>();
             string[] fullpath = new string[0];

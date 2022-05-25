@@ -6,7 +6,6 @@ namespace SCG.CAD.ETAX.XML.ZIP
     {
         private readonly ILogger<Worker> _logger;
         XmlZIP xMLZIP = new XmlZIP();
-        IHostApplicationLifetime _lifetime;
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -15,7 +14,6 @@ namespace SCG.CAD.ETAX.XML.ZIP
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             xMLZIP.Xml_ZIP();
-            _lifetime.StopApplication();
             //while (!stoppingToken.IsCancellationRequested)
             //{
             //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);

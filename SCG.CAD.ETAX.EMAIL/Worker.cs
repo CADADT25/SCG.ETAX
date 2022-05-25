@@ -4,7 +4,6 @@ namespace SCG.CAD.ETAX.EMAIL
 {
     public class Worker : BackgroundService
     {
-        IHostApplicationLifetime _lifetime;
         private readonly ILogger<Worker> _logger;
         Email email = new Email();
         TestEmail testemail = new TestEmail();

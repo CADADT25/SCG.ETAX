@@ -25,30 +25,33 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         public List<PDFSignModel> ReadPdfFile()
         {
             List<PDFSignModel> result = new List<PDFSignModel>();
-            string[] fullpath = new string[0];
             string pathFolder = "";
             string fileType = "*.pdf";
-            List<string> listpath;
+            List<FileInfo> listpath;
             PDFSignModel pdfSignModel = new PDFSignModel();
+            DirectoryInfo directoryInfo;
 
-            ConfigPdfSign config = new ConfigPdfSign();
-            config.ConfigPdfsignInputPath = @"D:\sign";
-            config.ConfigPdfsignOutputPath = @"D:\sign";
-            configPDFSign = new List<ConfigPdfSign>();
-            configPDFSign.Add(config);
+            //ConfigPdfSign config = new ConfigPdfSign();
+            //config.ConfigPdfsignInputPath = @"D:\sign";
+            //config.ConfigPdfsignOutputPath = @"D:\sign";
+            //configPDFSign = new List<ConfigPdfSign>();
+            //configPDFSign.Add(config);
             try
             {
                 //pathFolder = @"C:\Code_Dev\sign";
                 foreach (var path in configPDFSign)
                 {
                     pathFolder = path.ConfigPdfsignInputPath;
-                    fullpath = Directory.GetFiles(pathFolder, fileType);
-                    listpath = fullpath.ToList();
+
+                    directoryInfo = new DirectoryInfo(pathFolder);
+                    listpath = directoryInfo.GetFiles(fileType)
+                     .OrderBy(f => f.LastWriteTime).ToList();
+
                     foreach (var item in listpath)
                     {
                         pdfSignModel = new PDFSignModel();
-                        pdfSignModel.FullPath = item;
-                        pdfSignModel.FileName = Path.GetFileName(item).Replace(".pdf","");
+                        pdfSignModel.FullPath = item.FullName;
+                        pdfSignModel.FileName = Path.GetFileName(item.FullName).Replace(".pdf","");
                         pdfSignModel.Outbound = path.ConfigPdfsignOutputPath;
                         pdfSignModel.Inbound = path.ConfigPdfsignInputPath;
                         result.Add(pdfSignModel);
