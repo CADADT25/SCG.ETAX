@@ -120,41 +120,9 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 FileInfo fileemail;
                 foreach (var config in configMftsEmailSettings)
                 {
-                    Console.WriteLine("Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
-
-                    if (config.ConfigMftsEmailSettingOneTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime) &&
-                        Convert.ToDateTime(config.ConfigMftsEmailSettingOneTime) <= DateTime.Now)
+                    if (CheckRunningTime(config))
                     {
-                        isactive = true;
-                    }
-                    if (config.ConfigMftsEmailSettingAnyTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime))
-                    {
-                        //anytime = config.ConfigMftsEmailSettingAnyTime.Split("|");
-                        //foreach (var time in anytime)
-                        //{
-                        //    if(!string.IsNullOrWhiteSpace(time))
-                        //    {
-                        //        if (Convert.ToDateTime(time).ToString("yyyyMMdd") == DateTime.Now.ToString("yyyyMMdd") &&
-                        //            Convert.ToDateTime(time).ToString("HH:mm") == DateTime.Now.ToString("HH:mm"))
-                        //        {
-                        //            isactive = true;
-                        //        }
-                        //    }
-                        //}
-                        if(config.ConfigMftsEmailSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                        {
-                            isactive = true;
-                        }
-                    }
-                    else
-                    {
-                        isactive = true;
-                    }
-
-                    if (isactive)
-                    {
+                        Console.WriteLine("Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                         customerid = "";
                         profileemailCustomer = profileCustomers.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode && x.StatusEmail == 1).ToList();
                         if (profileemailCustomer != null && profileemailCustomer.Count > 0)
@@ -248,6 +216,38 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                         }
                     }
                     Console.WriteLine("End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+        public bool CheckRunningTime(ConfigMftsEmailSetting config)
+        {
+            bool result = false;
+            try
+            {
+                if (config.ConfigMftsEmailSettingOneTime != null &&
+                        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime) &&
+                        Convert.ToDateTime(config.ConfigMftsEmailSettingOneTime) <= DateTime.Now)
+                {
+                    result = true;
+                }
+                if (config.ConfigMftsEmailSettingAnyTime != null &&
+                    !String.IsNullOrEmpty(config.ConfigMftsEmailSettingAnyTime))
+                {
+                    if (config.ConfigMftsEmailSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    result = true;
                 }
             }
             catch (Exception ex)

@@ -31,33 +31,62 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             PDFSignModel pdfSignModel = new PDFSignModel();
             DirectoryInfo directoryInfo;
 
-            //ConfigPdfSign config = new ConfigPdfSign();
-            //config.ConfigPdfsignInputPath = @"D:\sign";
-            //config.ConfigPdfsignOutputPath = @"D:\sign";
-            //configPDFSign = new List<ConfigPdfSign>();
-            //configPDFSign.Add(config);
             try
             {
-                //pathFolder = @"C:\Code_Dev\sign";
-                foreach (var path in configPDFSign)
+                foreach (var config in configPDFSign)
                 {
-                    pathFolder = path.ConfigPdfsignInputPath;
-
-                    directoryInfo = new DirectoryInfo(pathFolder);
-                    listpath = directoryInfo.GetFiles(fileType)
-                     .OrderBy(f => f.LastWriteTime).ToList();
-
-                    foreach (var item in listpath)
+                    if (CheckRunningTime(config))
                     {
-                        pdfSignModel = new PDFSignModel();
-                        pdfSignModel.FullPath = item.FullName;
-                        pdfSignModel.FileName = Path.GetFileName(item.FullName).Replace(".pdf","");
-                        pdfSignModel.Outbound = path.ConfigPdfsignOutputPath;
-                        pdfSignModel.Inbound = path.ConfigPdfsignInputPath;
-                        result.Add(pdfSignModel);
+                        pathFolder = config.ConfigPdfsignInputPath;
+
+                        directoryInfo = new DirectoryInfo(pathFolder);
+                        listpath = directoryInfo.GetFiles(fileType)
+                         .OrderBy(f => f.LastWriteTime).ToList();
+
+                        foreach (var item in listpath)
+                        {
+                            pdfSignModel = new PDFSignModel();
+                            pdfSignModel.FullPath = item.FullName;
+                            pdfSignModel.FileName = Path.GetFileName(item.FullName).Replace(".pdf", "");
+                            pdfSignModel.Outbound = config.ConfigPdfsignOutputPath;
+                            pdfSignModel.Inbound = config.ConfigPdfsignInputPath;
+                            result.Add(pdfSignModel);
+                        }
                     }
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+
+        public bool CheckRunningTime(ConfigPdfSign config)
+        {
+            bool result = false;
+            try
+            {
+                if (config.ConfigPdfsignOneTime != null &&
+                        !String.IsNullOrEmpty(config.ConfigPdfsignOneTime) &&
+                        Convert.ToDateTime(config.ConfigPdfsignOneTime) <= DateTime.Now)
+                {
+                    result = true;
+                }
+                if (config.ConfigPdfsignAnyTime != null &&
+                    !String.IsNullOrEmpty(config.ConfigPdfsignAnyTime))
+                {
+                    if (config.ConfigPdfsignAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {

@@ -71,27 +71,61 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             try
             {
                 //pathFolder = @"C:\Code_Dev\sign";
-                foreach (var path in configPrintSetting)
+                foreach (var config in configPrintSetting)
                 {
-                    fileModel = new FileModel();
-                    fileModel.InputPath = path.ConfigMftsCompressPrintSettingInputPdf;
-                    fileModel.OutPath = path.ConfigMftsCompressPrintSettingOutputPdf;
-                    fileModel.CompanyCode = path.ConfigMftsCompressPrintSettingCompanyCode;
-                    fileModel.FileDetails = new List<Filedetail>();
-                    datatransaction = transactionDescription.Where(x=> x.PdfSignStatus == "Successful" &&
-                                                                    x.CompanyCode == path.ConfigMftsCompressPrintSettingCompanyCode &&
-                                                                    x.Isactive == 1).ToList();
-                    foreach (var file in datatransaction)
+                    if (CheckRunningTime(config))
                     {
-                        Filedetail = new Filedetail();
-                        Filedetail.FilePath = file.PdfSignLocation;
-                        Filedetail.FileName = Path.GetFileName(file.PdfSignLocation);
-                        Filedetail.BillingNo = file.BillingNumber;
-                        fileModel.FileDetails.Add(Filedetail);
+                        fileModel = new FileModel();
+                        fileModel.InputPath = config.ConfigMftsCompressPrintSettingInputPdf;
+                        fileModel.OutPath = config.ConfigMftsCompressPrintSettingOutputPdf;
+                        fileModel.CompanyCode = config.ConfigMftsCompressPrintSettingCompanyCode;
+                        fileModel.FileDetails = new List<Filedetail>();
+                        datatransaction = transactionDescription.Where(x => x.PdfSignStatus == "Successful" &&
+                                                                        x.CompanyCode == config.ConfigMftsCompressPrintSettingCompanyCode &&
+                                                                        x.Isactive == 1).ToList();
+                        foreach (var file in datatransaction)
+                        {
+                            Filedetail = new Filedetail();
+                            Filedetail.FilePath = file.PdfSignLocation;
+                            Filedetail.FileName = Path.GetFileName(file.PdfSignLocation);
+                            Filedetail.BillingNo = file.BillingNumber;
+                            fileModel.FileDetails.Add(Filedetail);
+                        }
+                        result.Add(fileModel);
                     }
-                    result.Add(fileModel);
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool CheckRunningTime(ConfigMftsCompressPrintSetting config)
+        {
+            bool result = false;
+            try
+            {
+                if (config.ConfigMftsCompressPrintSettingOneTime != null &&
+                        !String.IsNullOrEmpty(config.ConfigMftsCompressPrintSettingOneTime) &&
+                        Convert.ToDateTime(config.ConfigMftsCompressPrintSettingOneTime) <= DateTime.Now)
+                {
+                    result = true;
+                }
+                if (config.ConfigMftsCompressPrintSettingAnyTime != null &&
+                    !String.IsNullOrEmpty(config.ConfigMftsCompressPrintSettingAnyTime))
+                {
+                    if (config.ConfigMftsCompressPrintSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {
