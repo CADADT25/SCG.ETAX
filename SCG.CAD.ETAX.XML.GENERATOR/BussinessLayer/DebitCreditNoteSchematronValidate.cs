@@ -45,9 +45,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 //    errormessage.Add("DCN-Document-008 เลขประจำตัวผู้เสียภาษีอากรของผู้ออกเอกสารแทน ต้องไม่เท่ากับเลขประจำตัวผู้เสียภาษีอากรของผู้ขาย (InvoicerTradeParty/SpecifiedTaxRegistration/ID must not equal to SellerTradeParty/SpecifiedTaxRegistration/ID)");
                 //}
 
-                if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode, "388|T02|T03|T04|80|81"))
+                if(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument != null)
                 {
-                    errormessage.Add("DCN-AdditionalReferencedDocument-001 ต้องระบุรหัสเอกสารอ้างอิง (AdditionalReferencedDocument) ที่มีค่าเป็น 80 หรือ 81 หรือ  388 หรือ T02 หรือ T03 หรือ T04  อย่างน้อย 1 เอกสาร (AdditionalReferencedDocument must be equal to 80 or 81 or 388 or T02 or T03 or T04 since PurposeCode is present.)");
+                    if (!Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode, "388|T02|T03|T04|80|81"))
+                    {
+                        errormessage.Add("DCN-AdditionalReferencedDocument-001 ต้องระบุรหัสเอกสารอ้างอิง (AdditionalReferencedDocument) ที่มีค่าเป็น 80 หรือ 81 หรือ  388 หรือ T02 หรือ T03 หรือ T04  อย่างน้อย 1 เอกสาร (AdditionalReferencedDocument must be equal to 80 or 81 or 388 or T02 or T03 or T04 since PurposeCode is present.)");
+                    }
                 }
 
                 if (Tool.CheckDataRule(dataXml.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.name, ""))

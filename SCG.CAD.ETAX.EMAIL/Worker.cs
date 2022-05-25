@@ -18,17 +18,17 @@ namespace SCG.CAD.ETAX.EMAIL
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (CheckRunningTime())
+            while (!stoppingToken.IsCancellationRequested)
             {
-                email.ProcessSendEmail();
-                //testemail.TestSendEmail();
-                //testemail.ToEmlStream();
-                //_lifetime.StopApplication();
-                //while (!stoppingToken.IsCancellationRequested)
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    await Task.Delay(1000, stoppingToken);
-                //}
+                if (CheckRunningTime())
+                {
+                    email.ProcessSendEmail();
+                    //testemail.TestSendEmail();
+                    //testemail.ToEmlStream();
+                    //_lifetime.StopApplication();
+                }
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                await Task.Delay(1000 * 60, stoppingToken);
             }
         }
 

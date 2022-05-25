@@ -15,15 +15,15 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? CompanyName { get; set; }
         public string? CustomerId { get; set; }
         public string? CustomerName { get; set; }
-        public double? SoldTo { get; set; }
-        public double? ShipTo { get; set; }
-        public double? BillTo { get; set; }
-        public double? Payer { get; set; }
+        public string? SoldTo { get; set; }
+        public string? ShipTo { get; set; }
+        public string? BillTo { get; set; }
+        public string? Payer { get; set; }
         public string? SourceName { get; set; }
         public double? Foc { get; set; }
         public double? Ic { get; set; }
         public string? PostingYear { get; set; }
-        public double? FiDoc { get; set; }
+        public string? FiDoc { get; set; }
         public string? ImageDocType { get; set; }
         public string? DocType { get; set; }
         public string? SellOrg { get; set; }

@@ -76,6 +76,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
                         result = true;
                     }
                 }
+                result = true;
             }
             catch (Exception ex)
             {
