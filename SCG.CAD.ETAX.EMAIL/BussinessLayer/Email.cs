@@ -225,7 +225,6 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
-
         public bool CheckRunningTime(ConfigMftsEmailSetting config)
         {
             bool result = false;
