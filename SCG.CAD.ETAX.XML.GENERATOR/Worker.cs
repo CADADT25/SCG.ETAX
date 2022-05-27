@@ -29,7 +29,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
         {
             if (CheckRunningTime())
             {
-                // call business layer
+                //// call business layer
                 xMLGenerate.ProcessGenXMLFile();
                 //var layer1 = pDFSign.GetAllPDFFile();
 
