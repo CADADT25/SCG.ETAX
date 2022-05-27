@@ -16,6 +16,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigPdfsignOutputType { get; set; }
         public string? ConfigPdfsignOutputSource { get; set; }
         public string? ConfigPdfsignOutputPath { get; set; }
+        public string? ConfigPdfsignOneTime { get; set; }
+        public string? ConfigPdfsignAnyTime { get; set; }
         public string? ConfigPdfsignFtpHost { get; set; }
         public string? ConfigPdfsignFtpPort { get; set; }
         public string? ConfigPdfsignFtpUserName { get; set; }

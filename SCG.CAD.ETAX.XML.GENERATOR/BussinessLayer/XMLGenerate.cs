@@ -139,20 +139,17 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             string pathFolder = "";
             List<string> listpath;
             string fileType = "*.txt";
-            //ConfigXmlGenerator config = new ConfigXmlGenerator();
-            //config.ConfigXmlGeneratorInputPath = @"D:\sign";
-            //config.ConfigXmlGeneratorOutputPath = @"D:\sign";
-            //configXMLGenerator = new List<ConfigXmlGenerator>();
-            //configXMLGenerator.Add(config);
-            configXMLGenerator = configXMLGenerator.Where(x => x.ConfigXmlGeneratorCompanyCode == "0090").ToList();
             try
             {
                 foreach (var path in configXMLGenerator)
                 {
-                    pathFolder = path.ConfigXmlGeneratorInputPath;
-                    fullpath = Directory.GetFiles(pathFolder, fileType);
-                    listpath = fullpath.ToList();
-                    result.AddRange(listpath);
+                    if (Directory.Exists(path.ConfigXmlGeneratorInputPath))
+                    {
+                        pathFolder = path.ConfigXmlGeneratorInputPath;
+                        fullpath = Directory.GetFiles(pathFolder, fileType);
+                        listpath = fullpath.ToList();
+                        result.AddRange(listpath);
+                    }
                 }
 
             }
@@ -570,6 +567,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             double ic = 0;
             string imageDocType = "";
             string doctype = "";
+            DateTime billingdate = DateTime.Now;
+            string poNumber = "";
             try
             {
                 string errorText = "";
@@ -587,12 +586,21 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     data = new TransactionDescription();
                 }
 
-                var billingdate = Convert.ToDateTime(dataxml.BILLING_DATE);
-                string poNumber = "";
-                data.BillingDate = billingdate;
-                data.BillingNumber = Convert.ToString(dataxml.BILLING_NO);
-                data.BillingYear = billingdate.Year;
-                data.BillTo = Convert.ToDouble(dataxml.Number_Bill_to);
+                if (!String.IsNullOrEmpty(dataxml.BILLING_DATE))
+                {
+                    billingdate = Convert.ToDateTime(dataxml.BILLING_DATE);
+                    data.BillingDate = billingdate;
+                    data.BillingYear = billingdate.Year;
+                }
+                if (!String.IsNullOrEmpty(dataxml.BILLING_NO))
+                {
+                    data.BillingNumber = dataxml.BILLING_NO.ToString();
+                }
+                if (!String.IsNullOrEmpty(dataxml.Number_Bill_to))
+                {
+                    data.BillTo = dataxml.Number_Bill_to.ToString();
+                }
+
                 if (profiledetail != null)
                 {
                     data.CompanyCode = profiledetail.CompanyCode;
@@ -607,9 +615,13 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     doctype = doccode.DocumentCodeRd;
                     data.DocType = doccode.DocumentCodeRd;
                 }
-                data.FiDoc = Convert.ToDouble(dataxml.FI_DOC);
+
+                if (!String.IsNullOrEmpty(dataxml.FI_DOC))
+                {
+                    data.FiDoc = dataxml.FI_DOC.ToString();
+                }
                 data.Foc = (dataxml.FI_DOC_TYPE == "FOC") ? 1 : 0;
-                if (!string.IsNullOrEmpty(dataxml.IC_FLAG))
+                if (!string.IsNullOrEmpty(doctype))
                 {
                     ic = 1;
                     switch (doctype.ToUpper())
@@ -667,7 +679,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.Ic = ic;
                 data.ImageDocType = imageDocType;// mapping
                 data.Isactive = 1;
-                data.Payer = Convert.ToDouble(dataxml.Number_Payer);
+                if (!String.IsNullOrEmpty(dataxml.Number_Payer))
+                {
+                    data.Payer = dataxml.Number_Payer.ToString();
+                }
                 data.PostingYear = billingdate.Year.ToString();
                 data.ProcessingDate = DateTime.Now;
                 foreach (var item in dataxml.Item)
@@ -677,8 +692,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 poNumber = poNumber.Substring(0, poNumber.Length - 1);
                 data.PoNumber = poNumber;
                 data.SellOrg = dataxml.SALES_ORG;
-                data.ShipTo = Convert.ToDouble(dataxml.Number_Ship_to);
-                data.SoldTo = Convert.ToDouble(dataxml.Number_Sold_to);
+                if (!String.IsNullOrEmpty(dataxml.Number_Ship_to))
+                {
+                    data.ShipTo = dataxml.Number_Ship_to.ToString();
+                }
+                if (!String.IsNullOrEmpty(dataxml.Number_Sold_to))
+                {
+                    data.SoldTo = dataxml.Number_Sold_to.ToString();
+                }
                 data.SourceName = source;
                 data.TypeInput = "Batch";
                 data.UpdateBy = "Batch";
@@ -734,7 +755,15 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     Directory.CreateDirectory(output);
                 }
                 // Move the file.  
-                File.Move(pathinput, output + filename);
+                if (!File.Exists(output + filename))
+                {
+                    File.Move(pathinput, output + filename);
+                }
+                else
+                {
+                    File.Delete(output + filename);
+                    File.Move(pathinput, output + filename);
+                }
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
 
                 // See if the original exists now.  

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
+using SCG.CAD.ETAX.XML.GENERATOR.Controller;
 using SCG.CAD.ETAX.XML.GENERATOR.Models;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR
@@ -13,7 +14,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
         Template_TaxInvoice template = new Template_TaxInvoice();
         TaxCodeController taxCodeController = new TaxCodeController();
         List<TaxCode> tran = new List<TaxCode>();
-        IHostApplicationLifetime _lifetime;
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
 
 
         private readonly ILogger<Worker> _logger;
@@ -25,50 +27,62 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //CrossIndustryInvoice data = new CrossIndustryInvoice();
-            //var xml = template.XMLtemplate(data);
-            //tran = taxCodeController.List().Result;
+            if (CheckRunningTime())
+            {
+                // call business layer
+                xMLGenerate.ProcessGenXMLFile();
+                //var layer1 = pDFSign.GetAllPDFFile();
 
+                //var layer2 = layer1;
 
-            // call business layer
-            xMLGenerate.ProcessGenXMLFile();
-            _lifetime.StopApplication();
-            //var layer1 = pDFSign.GetAllPDFFile();
+                //while (!stoppingToken.IsCancellationRequested)
+                //{
+                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                //    await Task.Delay(1000, stoppingToken);
+                //}
+            }
+        }
 
-            //var layer2 = layer1;
+        public void GetGlobalConfig()
+        {
+            try
+            {
+                configGlobals = configGlobalController.List().Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-
-            //Response resp = new Response();
-
-            //List<TaxCode> tran = new List<TaxCode>();
-
-            //try
-            //{
-            //    var task = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
-
-            //    if (task.STATUS)
-            //    {
-            //        tran = JsonConvert.DeserializeObject<List<TaxCode>>(task.OUTPUT_DATA.ToString());
-
-            //        foreach (var item in tran)
-            //        {
-            //            _logger.LogInformation("Worker {item} running at: {time}", item.TaxCodeRd.ToString() , DateTimeOffset.Now);
-            //            await Task.Delay(1000, stoppingToken);
-            //        }
-            //    }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.InnerException);
-            //}
-
-
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    await Task.Delay(1000, stoppingToken);
-            //}
+        public bool CheckRunningTime()
+        {
+            bool result = false;
+            try
+            {
+                GetGlobalConfig();
+                var config = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == "RUNNINGTIMEXMLGENERATOR");
+                if (config != null)
+                {
+                    if (config.ConfigGlobalValue != null && !String.IsNullOrEmpty(config.ConfigGlobalValue))
+                    {
+                        if (config.ConfigGlobalValue.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        result = true;
+                    }
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
     }
 }

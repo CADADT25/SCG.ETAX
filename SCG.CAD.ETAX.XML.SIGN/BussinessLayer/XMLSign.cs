@@ -102,36 +102,72 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         public List<XMLSignModel> ReadXmlFile()
         {
             List<XMLSignModel> result = new List<XMLSignModel>();
-            string[] fullpath = new string[0];
             string pathFolder = "";
             string fileType = "*.xml";
-            List<string> listpath;
+            List<FileInfo> listpath;
             XMLSignModel xMLSignModel = new XMLSignModel();
-
-            ConfigXmlSign config = new ConfigXmlSign();
-            config.ConfigXmlsignInputPath = @"D:\sign";
-            config.ConfigXmlsignOutputPath = @"D:\sign";
-            configXmlSign = new List<ConfigXmlSign>();
-            configXmlSign.Add(config);
+            DirectoryInfo directoryInfo;
+            //ConfigXmlSign config = new ConfigXmlSign();
+            //config.ConfigXmlsignInputPath = @"D:\sign";
+            //config.ConfigXmlsignOutputPath = @"D:\sign";
+            //configXmlSign = new List<ConfigXmlSign>();
+            //configXmlSign.Add(config);
             try
             {
                 //pathFolder = @"C:\Code_Dev\sign";
-                foreach (var path in configXmlSign)
+                foreach (var config in configXmlSign)
                 {
-                    pathFolder = path.ConfigXmlsignInputPath;
-                    fullpath = Directory.GetFiles(pathFolder, fileType);
-                    listpath = fullpath.ToList();
-                    foreach (var item in listpath)
+                    if (CheckRunningTime(config))
                     {
-                        xMLSignModel = new XMLSignModel();
-                        xMLSignModel.FullPath = item;
-                        xMLSignModel.FileName = Path.GetFileName(item).Replace(".xml", "");
-                        xMLSignModel.Outbound = path.ConfigXmlsignOutputPath;
-                        xMLSignModel.Inbound = path.ConfigXmlsignInputPath;
-                        result.Add(xMLSignModel);
+                        pathFolder = config.ConfigXmlsignInputPath;
+
+                        directoryInfo = new DirectoryInfo(pathFolder);
+                        listpath = directoryInfo.GetFiles(fileType)
+                         .OrderBy(f => f.LastWriteTime).ToList();
+
+                        foreach (var item in listpath)
+                        {
+                            xMLSignModel = new XMLSignModel();
+                            xMLSignModel.FullPath = item.FullName;
+                            xMLSignModel.FileName = Path.GetFileName(item.FullName).Replace(".xml", "");
+                            xMLSignModel.Outbound = config.ConfigXmlsignOutputPath;
+                            xMLSignModel.Inbound = config.ConfigXmlsignInputPath;
+                            result.Add(xMLSignModel);
+                        }
                     }
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool CheckRunningTime(ConfigXmlSign config)
+        {
+            bool result = false;
+            try
+            {
+                if (config.ConfigXmlsignOneTime != null &&
+                        !String.IsNullOrEmpty(config.ConfigXmlsignOneTime) &&
+                        Convert.ToDateTime(config.ConfigXmlsignOneTime) <= DateTime.Now)
+                {
+                    result = true;
+                }
+                if (config.ConfigXmlsignAnyTime != null &&
+                    !String.IsNullOrEmpty(config.ConfigXmlsignAnyTime))
+                {
+                    if (config.ConfigXmlsignAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {
