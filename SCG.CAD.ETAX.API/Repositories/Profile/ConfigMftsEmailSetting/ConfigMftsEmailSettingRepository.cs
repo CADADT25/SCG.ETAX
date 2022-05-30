@@ -139,7 +139,6 @@
             return await Task.FromResult(resp);
         }
 
-
         public async Task<Response> DELETE_ONETIME(DeleteOnetime param)
         {
             Response resp = new Response();
@@ -159,7 +158,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> DELETE_ANYTIME(DeleteOnetime param)
+        public async Task<Response> DELETE_ANYTIME(DeleteAnytime param)
         {
             Response resp = new Response();
 
@@ -177,6 +176,28 @@
 
             return await Task.FromResult(resp);
         }
+
+        public async Task<Response> UPDATE_NEXTTIME(ConfigNextTime param)
+
+
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_NEXTTIME(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
 
     }
 }

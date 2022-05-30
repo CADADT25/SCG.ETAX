@@ -10,4 +10,10 @@
         public int pk { get; set; }
         public int position { get; set; }
     }
+
+    public class DeleteAnytime
+    {
+        public int pk { get; set; }
+        public int position { get; set; }
+    }
 }

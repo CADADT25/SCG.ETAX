@@ -12,6 +12,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsCompressXmlSettingCompressType { get; set; }
         public string? ConfigMftsCompressXmlSettingOneTime { get; set; }
         public string? ConfigMftsCompressXmlSettingAnyTime { get; set; }
+        public DateTime? ConfigMftsCompressXmlSettingNextTime { get; set; }
         public string? ConfigMftsCompressXmlSettingInputFolder { get; set; }
         public string? ConfigMftsCompressXmlSettingOutputFolder { get; set; }
         public string? ConfigMftsCompressXmlSettingHost { get; set; }

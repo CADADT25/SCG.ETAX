@@ -18,6 +18,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsEmailSettingPassword { get; set; }
         public string? ConfigMftsEmailSettingOneTime { get; set; }
         public string? ConfigMftsEmailSettingAnyTime { get; set; }
+        public DateTime? ConfigMftsEmailSettingNextTime { get; set; }
         public string? ConfigMftsEmailSettingApiKey { get; set; }
         public string? CreateBy { get; set; }
         public DateTime? CreateDate { get; set; }

@@ -100,6 +100,37 @@
     }
 
 
+     function onChangeConfigEmailSmtpUpdate(){
+        $('#toggleUpdateConfigEmailSmtp').prop('checked', true)
+        $('#toggleUpdateConfigEmailApi').prop('checked', false)
+
+
+        $('#txtUpdateConfigMftsEmailSettingHost').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingPort').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingUsername').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingPassword').prop('disabled', false)
+
+
+        $('#txtUpdateConfigMftsEmailSettingApiKey').prop('disabled', true)
+        $('#txtUpdateConfigMftsEmailSettingApiKey').val('');
+    }
+
+    function onChangeConfigEmailApiUpdate(){
+
+        $('#toggleUpdateConfigEmailSmtp').prop('checked', false)
+        $('#toggleUpdateConfigEmailApi').prop('checked', true)
+
+        $('#txtUpdateConfigMftsEmailSettingHost').prop('disabled', true)
+        $('#txtUpdateConfigMftsEmailSettingPort').prop('disabled', true)
+        $('#txtUpdateConfigMftsEmailSettingUsername').prop('disabled', true)
+        $('#txtUpdateConfigMftsEmailSettingPassword').prop('disabled', true)
+
+        $('#txtUpdateConfigMftsEmailSettingApiKey').prop('disabled', false)
+
+        // ====================
+    }
+
+
 
     function RenderConfigMftsEmailSetting(setCompanyCode){
 
@@ -656,6 +687,43 @@
                 if(data.status == true){
 
                     $('#modalUpdateConfigMftsEmailSettingOneTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+
+
+    function callDeleteConfigMftsEmailAnyTime(setPK,Postion){
+
+        var model = new Object();
+
+        model.pk = setPK;
+        model.position = Postion;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteAnyTime", "ConfigMftsEmailSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsEmailSettingAnyTime').modal('hide');
 
                     fnSweetAlert_SaveSuccess();
 

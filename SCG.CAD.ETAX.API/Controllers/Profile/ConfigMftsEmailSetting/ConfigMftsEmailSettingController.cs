@@ -89,11 +89,22 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("DeleteAnyTime")]
-        public IActionResult DeleteAnyTime(DeleteOnetime param)
+        public IActionResult DeleteAnyTime(DeleteAnytime param)
         {
             var result = repo.DELETE_ANYTIME(param).Result;
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("UpdateNextTime")]
+        public IActionResult UpdateNextTime(ConfigNextTime param)
+        {
+            var result = repo.UPDATE_NEXTTIME(param).Result;
+
+            return Ok(result);
+        }
+
+
     }
 }

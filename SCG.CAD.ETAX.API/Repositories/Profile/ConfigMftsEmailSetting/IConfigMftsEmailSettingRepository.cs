@@ -10,6 +10,8 @@
         Task<Response> UPDATE_ONETIME(ConfigMftsEmailSetting param);
         Task<Response> UPDATE_ANYTIME(ConfigMftsEmailSetting param);
         Task<Response> DELETE_ONETIME(DeleteOnetime param);
-        Task<Response> DELETE_ANYTIME(DeleteOnetime param);
+        Task<Response> DELETE_ANYTIME(DeleteAnytime param);
+        Task<Response> UPDATE_NEXTTIME(ConfigNextTime param);
+
     }
 }
