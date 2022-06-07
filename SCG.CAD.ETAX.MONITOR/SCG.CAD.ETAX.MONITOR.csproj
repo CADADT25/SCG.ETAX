@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controller\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SCG.CAD.ETAX.API\SCG.CAD.ETAX.API.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.DAL\SCG.CAD.ETAX.DAL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
+    <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Monitor_XMLGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Monitor_PRINTZip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Monitor_EMAIL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Monitor_XMLZip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Monitor_XMLSign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

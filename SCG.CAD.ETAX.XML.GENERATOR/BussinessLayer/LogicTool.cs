@@ -10,20 +10,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
     public class LogicTool
     {
-        public bool CheckXMLTag(string tagname)
-        {
-            bool result = false;
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
         public bool CheckDataType(string data, TypeData datatype)
         {
             bool result = false;

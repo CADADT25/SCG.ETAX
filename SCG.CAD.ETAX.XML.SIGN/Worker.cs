@@ -1,6 +1,5 @@
-using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.XML.SIGN.BussinessLayer;
-using SCG.CAD.ETAX.XML.SIGN.Controller;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.XML.SIGN
 {
@@ -8,8 +7,7 @@ namespace SCG.CAD.ETAX.XML.SIGN
     {
         private readonly ILogger<Worker> _logger;
         XMLSign xMLSign = new XMLSign();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
-        List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         public Worker(ILogger<Worker> logger)
         {
@@ -18,7 +16,7 @@ namespace SCG.CAD.ETAX.XML.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (CheckRunningTime())
+            if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLSIGN"))
             {
                 xMLSign.ProcessXMLSign();
                 //while (!stoppingToken.IsCancellationRequested)
@@ -27,47 +25,6 @@ namespace SCG.CAD.ETAX.XML.SIGN
                 //    await Task.Delay(1000, stoppingToken);
                 //}
             }
-        }
-
-        public void GetGlobalConfig()
-        {
-            try
-            {
-                configGlobals = configGlobalController.List().Result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public bool CheckRunningTime()
-        {
-            bool result = false;
-            try
-            {
-                GetGlobalConfig();
-                var config = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == "RUNNINGTIMEXMLSIGN");
-                if (config != null)
-                {
-                    if (config.ConfigGlobalValue != null && !String.IsNullOrEmpty(config.ConfigGlobalValue))
-                    {
-                        if (config.ConfigGlobalValue.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                        {
-                            result = true;
-                        }
-                    }
-                    else
-                    {
-                        result = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
         }
     }
 }

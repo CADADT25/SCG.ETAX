@@ -1,15 +1,11 @@
-﻿using SCG.CAD.ETAX.EMAIL.Controller;
-using SCG.CAD.ETAX.EMAIL.Model;
+﻿using SCG.CAD.ETAX.EMAIL.Model;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MODEL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
+using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 {
@@ -23,6 +19,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
         OutputSearchEmailSendController outputSearchEmailSendController = new OutputSearchEmailSendController();
         ProfileCompanyController profileCompanyController = new ProfileCompanyController();
         RdDocumentController rdDocumentController = new RdDocumentController();
+        LogHelper log = new LogHelper();
 
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
         List<TransactionDescription> transactionDescriptions = new List<TransactionDescription>();
@@ -37,20 +34,24 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
         string pathoutputpdfsendemail;
         string pathoutputcontentemail;
         string outputsearchemailsendno = "";
+        string pathlog = @"C:\log\";
+        string namepathlog = "PATHLOGFILE_EMAIL";
 
         public void ProcessSendEmail()
         {
             try
             {
                 Console.WriteLine("Start SendEmail");
+                log.InsertLog(pathlog, "Start SendEmail");
                 GetDataFromDataBase();
                 GetConfig();
                 LoopbyCompany();
                 Console.WriteLine("End SendEmail");
+                log.InsertLog(pathlog, "End SendEmail");
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -69,7 +70,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -89,10 +90,11 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 }
                 pathoutputpdfsendemail = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFSENDEMAIL").ConfigGlobalValue;
                 pathoutputcontentemail = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPEMAILCONTENT").ConfigGlobalValue;
+                pathlog = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -123,6 +125,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     if (CheckRunningTime(config))
                     {
                         Console.WriteLine("Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
+                        log.InsertLog(pathlog, "Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                         customerid = "";
                         profileemailCustomer = profileCustomers.Where(x => x.CompanyCode == config.ConfigMftsEmailSettingCompanyCode && x.StatusEmail == 1).ToList();
                         if (profileemailCustomer != null && profileemailCustomer.Count > 0)
@@ -216,11 +219,12 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                         }
                     }
                     Console.WriteLine("End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
+                    log.InsertLog(pathlog, "End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -251,7 +255,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -384,12 +388,13 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     catch (Exception ex)
                     {
                         result = false;
+                        log.InsertLog(pathlog, "Exception : " + ex.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -408,6 +413,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     if (updatetransaction != null)
                     {
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + pdfdata.BillingNo);
+                        log.InsertLog(pathlog, "Update Status TransactionDescription BillingNo : " + pdfdata.BillingNo);
                         updatetransaction.EmailSendStatus = "Successful";
                         updatetransaction.EmailSendDetail = "Batch email was sent to customer code " + customercode + " is completely";
                         updatetransaction.EmailSendDateTime = DateTime.Now;
@@ -415,8 +421,10 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                         listupdatetransaction.Add(updatetransaction);
 
                         Console.WriteLine("Start MoveFile Company : " + comcode);
+                        log.InsertLog(pathlog, "Start MoveFile Company : " + comcode);
                         //MoveFile(pdfdata.FullPath, pathoutputpdfsendemail, Path.GetFileName(pdfdata.FullPath), updatetransaction.BillingDate ?? DateTime.Now);
                         Console.WriteLine("End MoveFile Company : " + comcode);
+                        log.InsertLog(pathlog, "End MoveFile Company : " + comcode);
                     }
                 }
                 if (listupdatetransaction.Count > 0)
@@ -432,7 +440,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -472,7 +480,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -489,7 +497,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -515,21 +523,25 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
+                log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
+                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
                 }
                 else
                 {
                     Console.WriteLine("The original file no longer exists, which is expected.");
+                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
                 }
                 result = true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
+                log.InsertLog(pathlog, "Exception : " + e.ToString());
             }
             return result;
         }
@@ -577,7 +589,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -594,8 +606,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -619,14 +630,14 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return filename;
         }
 
         public FileInfo ReadEMLFile()
         {
-            FileInfo result;
+            FileInfo result = new FileInfo(null);
             string[] fullpath = new string[0];
             string pathFolder = "";
             string fileType = "*.eml";
@@ -646,7 +657,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }

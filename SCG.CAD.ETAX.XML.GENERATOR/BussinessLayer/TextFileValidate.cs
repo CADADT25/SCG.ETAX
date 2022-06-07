@@ -1,12 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.XML.GENERATOR.Controller;
 using SCG.CAD.ETAX.XML.GENERATOR.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
