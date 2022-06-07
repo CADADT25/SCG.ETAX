@@ -1,6 +1,5 @@
 using SCG.CAD.ETAX.EMAIL.BussinessLayer;
-using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.EMAIL
 {
@@ -9,8 +8,7 @@ namespace SCG.CAD.ETAX.EMAIL
         private readonly ILogger<Worker> _logger;
         Email email = new Email();
         TestEmail testemail = new TestEmail();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
-        List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -20,7 +18,7 @@ namespace SCG.CAD.ETAX.EMAIL
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (CheckRunningTime())
+                if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMESENDEMAIL"))
                 {
                     email.ProcessSendEmail();
                     //testemail.TestSendEmail();
@@ -30,47 +28,6 @@ namespace SCG.CAD.ETAX.EMAIL
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000 * 60, stoppingToken);
             }
-        }
-
-        public void GetGlobalConfig()
-        {
-            try
-            {
-                configGlobals = configGlobalController.List().Result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public bool CheckRunningTime()
-        {
-            bool result = false;
-            try
-            {
-                GetGlobalConfig();
-                var config = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == "RUNNINGTIMESENDEMAIL");
-                if (config != null)
-                {
-                    if (config.ConfigGlobalValue != null && !String.IsNullOrEmpty(config.ConfigGlobalValue))
-                    {
-                        if (config.ConfigGlobalValue.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                        {
-                            result = true;
-                        }
-                    }
-                    else
-                    {
-                        result = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
         }
     }
 }

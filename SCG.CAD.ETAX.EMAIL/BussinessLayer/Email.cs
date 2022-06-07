@@ -1,13 +1,8 @@
 ﻿using SCG.CAD.ETAX.EMAIL.Model;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MODEL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY;

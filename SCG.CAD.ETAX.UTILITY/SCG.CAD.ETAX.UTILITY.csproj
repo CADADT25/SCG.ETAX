@@ -33,8 +33,4 @@
     <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="LogicTool\" />
-  </ItemGroup>
-
 </Project>
