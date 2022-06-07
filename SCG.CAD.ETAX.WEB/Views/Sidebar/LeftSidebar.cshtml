@@ -116,8 +116,8 @@
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">User Management</span></a>
                 <ul class="menu-content">
 
-                    <li class="nav-item" id="li-">
-                        <a class="d-flex align-items-center" id="btn-">
+                    <li class="nav-item" id="li-ProfileUserManagement">
+                        <a class="d-flex align-items-center" id="btn-ProfileUserManagement">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">User Profile</span>
                         </a>
@@ -270,7 +270,7 @@
             </li>
 
             <li class="nav-item" id="li-">
-                <a class="d-flex btn btn-danger" id="btn-" href="@Url.Action("Index", "AuthSinIn")">
+                <a class="d-flex btn btn-danger" id="btn-" href="@Url.Action("Index", "Home", new {Username = "" , CurrentLogin = false , LogOut = 1} )">
                     <i data-feather="log-out"></i>
                     <span class="menu-title text-truncate">Sign Out</span>
                 </a>
@@ -283,6 +283,11 @@
 
 <script>
 
+    $(document).ready(function () {
+
+        alert('123');
+
+    });
 
 
 </script>

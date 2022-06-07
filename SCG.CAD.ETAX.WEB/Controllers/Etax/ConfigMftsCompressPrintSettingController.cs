@@ -30,7 +30,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _OneTime()
+        {
+            return View();
+        }
 
+        public IActionResult _AnyTime()
+        {
+            return View();
+        }
 
 
 

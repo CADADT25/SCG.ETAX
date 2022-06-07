@@ -1,4 +1,7 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using System.Collections;
+using System.Globalization;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class ConfigMftsEmailSettingService
     {
@@ -196,8 +199,60 @@
                             setNewOnetime = setNewOnetime.Substring(1);
                         }
 
-                        update.ConfigMftsEmailSettingOneTime += "|" + setNewOnetime;
+                        var GetOldValue = update.ConfigMftsEmailSettingOneTime;
 
+                        GetOldValue = GetOldValue += "|" + setNewOnetime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSortOld = new ArrayList();
+
+                        ArrayList ArrayDateSortNew = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                DateTime dt = DateTime.ParseExact(item.ToString(), "dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                                string s = dt.ToString("yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                                ArrayDateSortOld.Add(s);
+                            }
+                        }
+
+                        ArrayDateSortOld.Sort();
+
+                        foreach (var item in ArrayDateSortOld)
+                        {
+                            DateTime dt = DateTime.ParseExact(item.ToString(), "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                            string s = dt.ToString("dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                            ArrayDateSortNew.Add(s);
+                        }
+
+                        var setSort = "";
+
+                        int count = ArrayDateSortNew.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSortNew)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigMftsEmailSettingOneTime = setSort;
 
                         _dbContext.SaveChanges();
 
@@ -243,7 +298,46 @@
                             setNewAnytime = setNewAnytime.Substring(1, 5);
                         }
 
-                        update.ConfigMftsEmailSettingAnyTime += "|" + setNewAnytime;
+
+                        var GetOldValue = update.ConfigMftsEmailSettingAnyTime;
+
+                        GetOldValue = GetOldValue += "|" + setNewAnytime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSort = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                ArrayDateSort.Add(item);
+                            }
+                        }
+
+                        ArrayDateSort.Sort();
+
+                        var setSort = "";
+
+                        int count = ArrayDateSort.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSort)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigMftsEmailSettingAnyTime = setSort;
 
 
                         _dbContext.SaveChanges();
@@ -266,7 +360,6 @@
             }
             return resp;
         }
-
 
         public Response DELETE_ONETIME(DeleteOnetime param)
         {
@@ -365,7 +458,6 @@
             }
             return resp;
         }
-
 
         public Response UPDATE_NEXTTIME(ConfigNextTime param)
         {

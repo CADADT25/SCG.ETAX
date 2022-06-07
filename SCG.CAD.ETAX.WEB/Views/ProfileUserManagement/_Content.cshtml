@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-end align-items-center">
+                <a id="btnCallModalCreateProfileUserManagement" onclick="callModalInsertProfileUserManagement();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                    <i class="fas fa-plus"></i> Cerate New
+                </a>
+                &nbsp;&nbsp;
+                @*<a id="btnExportProfileUserManagement" onclick="ExportProfileUserManagement()" class="pointer btn btn-icon icon-left text-white btn-success">
+                    <i class="fas fa-file-export"></i> Export (.csv)
+                </a>*@
+            </div>
+
+
+            <div class="card-body">
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-hover-animation" id="tbProfileUserManagementMain">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PK Key</th>
+                                <th class="text-center">No</th>
+                                <th>Name</th>
+                                <th>Last name</th>
+                                <th>Email</th>
+                                <th>Expire</th>
+                                <th>IsActive</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

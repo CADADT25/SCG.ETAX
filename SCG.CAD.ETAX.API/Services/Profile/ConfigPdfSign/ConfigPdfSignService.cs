@@ -1,4 +1,7 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using System.Collections;
+using System.Globalization;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class ConfigPdfSignService
     {
@@ -200,7 +203,60 @@
                             setNewOnetime = setNewOnetime.Substring(1);
                         }
 
-                        update.ConfigPdfsignOneTime += "|" + setNewOnetime;
+                        var GetOldValue = update.ConfigPdfsignOneTime;
+
+                        GetOldValue = GetOldValue += "|" + setNewOnetime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSortOld = new ArrayList();
+
+                        ArrayList ArrayDateSortNew = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                DateTime dt = DateTime.ParseExact(item.ToString(), "dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                                string s = dt.ToString("yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                                ArrayDateSortOld.Add(s);
+                            }
+                        }
+
+                        ArrayDateSortOld.Sort();
+
+                        foreach (var item in ArrayDateSortOld)
+                        {
+                            DateTime dt = DateTime.ParseExact(item.ToString(), "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                            string s = dt.ToString("dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                            ArrayDateSortNew.Add(s);
+                        }
+
+                        var setSort = "";
+
+                        int count = ArrayDateSortNew.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSortNew)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigPdfsignOneTime = setSort;
 
 
                         _dbContext.SaveChanges();
@@ -247,7 +303,46 @@
                             setNewAnytime = setNewAnytime.Substring(1, 5);
                         }
 
-                        update.ConfigPdfsignAnyTime += "|" + setNewAnytime;
+
+                        var GetOldValue = update.ConfigPdfsignAnyTime;
+
+                        GetOldValue = GetOldValue += "|" + setNewAnytime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSort = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                ArrayDateSort.Add(item);
+                            }
+                        }
+
+                        ArrayDateSort.Sort();
+
+                        var setSort = "";
+
+                        int count = ArrayDateSort.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSort)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigPdfsignAnyTime = setSort;
 
 
                         _dbContext.SaveChanges();

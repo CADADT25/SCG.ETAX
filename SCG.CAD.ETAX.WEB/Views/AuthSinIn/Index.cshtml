@@ -12,7 +12,7 @@
     <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Login Page - Vuexy - Bootstrap HTML admin template</title>
+    <title>Login Page - ETAX Application</title>
     <link rel="apple-touch-icon" href="~/app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="~/app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
@@ -33,6 +33,9 @@
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/vertical-menu.css">
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/form-validation.css">
     <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/page-auth.css">
+
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/extensions/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css">
     <!-- END: Page CSS-->
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
@@ -77,7 +80,7 @@
                                     </g>
                                 </g>
                             </svg>
-                            <h2 class="brand-text text-primary ml-1">Vuexy</h2>
+                            <h2 class="brand-text text-primary ml-1">ETAX</h2>
                         </a>
                         <!-- /Brand logo-->
                         <!-- Left Text-->
@@ -88,56 +91,64 @@
                         <!-- Login-->
                         <div class="d-flex col-lg-4 align-items-center auth-bg px-2 p-lg-5">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
-                                <h2 class="card-title font-weight-bold mb-1">Welcome to Vuexy! 👋</h2>
+                                <h2 class="card-title font-weight-bold mb-1">Welcome to ETAX! 👋</h2>
                                 <p class="card-text mb-2">Please sign-in to your account and start the adventure</p>
+
+                                @*using (Html.BeginForm("getLogin", "AuthSinIn", FormMethod.Post))*@
+                                @*{*@
+
+                                @*<div class="mt-2">
+                                    <div class="form-group">
+                                    <label class="form-label" for="LoginEmail">Email</label>
+                                    <input class="form-control" id="LoginEmail" type="text" name="LoginEmail" placeholder="john@example.com" aria-describedby="LoginEmail" autofocus="" tabindex="1" />
+                                    </div>
+                                    <div class="form-group">
+                                    <div class="d-flex justify-content-between">
+                                    <label for="login-password">Password</label><a href="javascript:void(0);"><small>Forgot Password?</small></a>
+                                    </div>
+                                    <div class="input-group input-group-merge form-password-toggle">
+                                    <input class="form-control form-control-merge" id="LoginPassword" type="password" name="LoginPassword" placeholder="············" aria-describedby="LoginPassword" tabindex="2" />
+                                    <div class="input-group-append">
+                                    <span class="input-group-text cursor-pointer">
+                                    <i data-feather="eye"></i>
+                                    </span>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block" tabindex="4">Sign in</button>
+                                    </div>*@
+
+                                @*}*@
+
                                 <div class="mt-2">
                                     <div class="form-group">
-                                        <label class="form-label" for="login-email">Email</label>
-                                        <input class="form-control" id="login-email" type="text" name="login-email" placeholder="john@example.com" aria-describedby="login-email" autofocus="" tabindex="1" />
+                                        <label class="form-label" for="LoginEmail">Email</label>
+                                        <input class="form-control" id="LoginEmail" type="text" name="LoginEmail" placeholder="john@example.com" aria-describedby="LoginEmail" autofocus="" tabindex="1" />
                                     </div>
                                     <div class="form-group">
                                         <div class="d-flex justify-content-between">
-                                            <label for="login-password">Password</label><a href="page-auth-forgot-password-v2.html"><small>Forgot Password?</small></a>
+                                            <label for="login-password">Password</label><a href="javascript:void(0);"><small>Forgot Password?</small></a>
                                         </div>
                                         <div class="input-group input-group-merge form-password-toggle">
-                                            <input class="form-control form-control-merge" id="login-password" type="password" name="login-password" placeholder="············" aria-describedby="login-password" tabindex="2" />
-                                            <div class="input-group-append"><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span></div>
+                                            <input class="form-control form-control-merge" id="LoginPassword" type="password" name="LoginPassword" placeholder="············" aria-describedby="LoginPassword" tabindex="2" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text cursor-pointer">
+                                                    <i data-feather="eye"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" id="remember-me" type="checkbox" tabindex="3" />
-                                            <label class="custom-control-label" for="remember-me"> Remember Me</label>
-                                        </div>
-                                    </div>
-                                    <a class="btn btn-primary btn-block" tabindex="4" onclick="checklogin()">Sign in</a>
+                                    <button type="submit" onclick="checklogin();" class="btn btn-primary btn-block" tabindex="4">Sign in</button>
                                 </div>
+
                                 <p class="text-center mt-2">
                                     <span>New on our platform?</span>
                                     <a>
                                         <span>&nbsp;Create an account</span>
                                     </a>
                                 </p>
-                                <div class="divider my-2">
-                                    <div class="divider-text">or</div>
-                                </div>
-                                <div class="auth-footer-btn d-flex justify-content-center">
-                                    <a class="btn btn-facebook" href="javascript:void(0)">
-                                        <i data-feather="facebook"></i>
-                                    </a>
-                                    <a class="btn btn-twitter white" href="javascript:void(0)">
-                                        <i data-feather="twitter"></i>
-                                    </a>
-                                    <a class="btn btn-google" href="javascript:void(0)">
-                                        <i data-feather="mail"></i>
-                                    </a>
-                                    <a class="btn btn-github" href="javascript:void(0)">
-                                        <i data-feather="github"></i>
-                                    </a>
-                                </div>
                             </div>
                         </div>
-                        <!-- /Login-->
                     </div>
                 </div>
             </div>
@@ -157,39 +168,85 @@
     <!-- BEGIN: Page JS-->
     <script src="~/app-assets/js/scripts/pages/page-auth-login.js"></script>
     <!-- END: Page JS-->
+    <script src="~/js/common.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
+    <script src="~/app-assets/vendors/js/extensions/polyfill.min.js"></script>
+    <script src="~/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
+
 
     <script type="text/javascript">
 
-            $(window).on('load', function() {
-                if (feather) {
-                    feather.replace({
-                        width: 14,
-                        height: 14
-                    });
-                }
-            })
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
 
-            $(document).ready(function () {
+        $(document).ready(function () {
+
+
+        });
+
+
+        function checklogin(){
+
+            $.blockUI();
+
+            var model = new Object();
+
+            model.username = $('#LoginEmail').val();
+            model.password = $('#LoginPassword').val();
+
+            var getJsonString = JSON.stringify(model);
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetLogin", "AuthSinIn")",
+                dataType: "json",
+                data: { jsonString : getJsonString },
+                success: function (result) {
+
+
+
+                    data = $.parseJSON(result);
+
+                    if(data.UrlRedirect != ""){
+                        window.location.href= data.UrlRedirect;
+
+                    }else{
+
+
+                        fnSweetAlert_Error(data.MessageRedirect);
+
+                        $.unblockUI();
+                    }
+
+
+                    //alert(data.UrlRedirect);
+
+
+                    //var errorMessage = data.erroR_MESSAGE;
+
+                    //if(data.status == true){
+
+                    //    fnSweetAlert_SaveSuccess();
+
+                    //}
+                    //else{
+                    //    fnSweetAlert_Error(errorMessage);
+                    //}
+
+                }
 
 
             });
 
 
-            function checklogin(){
-
-                var result = false;
-
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("getLogin", "AuthSignIn")",
-                    dataType: "json",
-                    success: function (result) {
-
-                        result = true;
-
-                    }
-                });
-            }
+        }
 
     </script>
 </body>

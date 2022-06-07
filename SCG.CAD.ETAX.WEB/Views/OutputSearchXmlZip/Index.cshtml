@@ -223,6 +223,7 @@
                 var arr=[];
 
                 var getDaysArray = function(minDate, maxDate) {
+
                     for(dt=new Date(minDate); dt<=new Date(maxDate); dt.setDate(dt.getDate()+1)){
 
                         let d = dt;
@@ -234,12 +235,18 @@
                         let dtnew = year+"-"+month+"-"+day;
 
                         arr.push(dtnew);
+
+                        alert(dtnew);
+
+
                     }
                     return arr;
                 };
 
                 var daylist = getDaysArray(new Date(minDate),new Date(maxDate));
                 daylist.join("\n")
+
+                alert(daylist);
 
                 table.columns(6).search(daylist).draw();
             }

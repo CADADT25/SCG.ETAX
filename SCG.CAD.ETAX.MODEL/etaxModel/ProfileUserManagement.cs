@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
-    public partial class AuthenUserProfile
+    public partial class ProfileUserManagement
     {
         [Key]
         public int UserNo { get; set; }
@@ -12,7 +12,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string DomainName { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
-        public string RoleId { get; set; } = null!;
+        public string GroupId { get; set; } = null!;
         public DateTime? PasswordRegister { get; set; }
         public DateTime? PasswordExpire { get; set; }
         public string? AttempLogin { get; set; }
