@@ -1,15 +1,10 @@
-﻿
-
-using System.Data;
-using System.Text;
+﻿using System.Data;
 using System.Text.Json;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.XML.GENERATOR.Controller;
 using SCG.CAD.ETAX.XML.GENERATOR.Models;
+using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
@@ -25,6 +20,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         ProfileBranchController profileBranchController = new ProfileBranchController();
         ProductUnitController productUnitController = new ProductUnitController();
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        LogHelper log = new LogHelper();
 
 
         List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
@@ -39,6 +35,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<ProductUnit> productUnit = new List<ProductUnit>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
+        string pathlog = @"C:\log\";
+        string namepathlog = "PATHLOGFILE_XMLGENERATOR";
 
         public void ProcessGenXMLFile()
         {
@@ -57,12 +55,15 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 {
                     var filename = Path.GetFileName(textfile);
                     Console.WriteLine("Start Read TextFile : " + textfile);
+                    log.InsertLog(pathlog, "Start Read TextFile : " + textfile);
                     var dt = ConvertToDataTable(textfile, row);
                     if (dt != null && dt.Rows.Count > 0)
                     {
                         Console.WriteLine("ConvertToDataTable success");
+                        log.InsertLog(pathlog, "ConvertToDataTable success");
                         var cs = ConvertDTtoClass(dt);
                         Console.WriteLine("ConvertToClass success");
+                        log.InsertLog(pathlog, "ConvertToClass success");
                         round = 1;
                         pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPTEXTFILE").ConfigGlobalValue;
                         foreach (var classtextfile in cs)
@@ -73,16 +74,21 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                                 configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
                             }
                             Console.WriteLine("Start round : " + round);
+                            log.InsertLog(pathlog, "Start round : " + round);
 
                             Console.WriteLine("Start Insert Data TransactionDescription");
+                            log.InsertLog(pathlog, "Start Insert Data TransactionDescription");
                             InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
                             Console.WriteLine("End Insert Data TransactionDescription");
+                            log.InsertLog(pathlog, "End Insert Data TransactionDescription");
 
                             Console.WriteLine("Start ValidateFileText");
+                            log.InsertLog(pathlog, "Start ValidateFileText");
                             errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
                             if (errormessage.Count > 0)
                             {
                                 Console.WriteLine("ValidateFileText Fail");
+                                log.InsertLog(pathlog, "ValidateFileText Fail");
                                 UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
                                 nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
                                 GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
@@ -90,18 +96,23 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                             else
                             {
                                 Console.WriteLine("ValidateFileText Success");
+                                log.InsertLog(pathlog, "ValidateFileText Success");
                                 errormessage = new List<string>();
 
                                 var dataxml = ConvertClasstoXMLFormat(classtextfile);
                                 Console.WriteLine("ConvertClasstoXMLFormat success");
+                                log.InsertLog(pathlog, "ConvertClasstoXMLFormat success");
 
                                 Console.WriteLine("Start ValidateSchematron");
+                                log.InsertLog(pathlog, "Start ValidateSchematron");
                                 errormessage.AddRange(ValidateSchematron(dataxml));
                                 Console.WriteLine("End ValidateSchematron");
+                                log.InsertLog(pathlog, "End ValidateSchematron");
 
                                 if (errormessage.Count > 0)
                                 {
                                     Console.WriteLine("ValidateSchematron Fail");
+                                    log.InsertLog(pathlog, "ValidateSchematron Fail");
                                     UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
                                     nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
                                     GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
@@ -109,26 +120,31 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                                 else
                                 {
                                     Console.WriteLine("Start Gen XML File");
+                                    log.InsertLog(pathlog, "Start Gen XML File");
                                     string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
                                     var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO, classtextfile.BILLING_DATE);
 
                                     Console.WriteLine("End Gen XML File");
+                                    log.InsertLog(pathlog, "End Gen XML File");
                                 }
                             }
                             round += 1;
                         }
                     }
                     Console.WriteLine("End Read TextFile : " + textfile);
+                    log.InsertLog(pathlog, "End Read TextFile : " + textfile);
 
                     Console.WriteLine("Start Move File");
+                    log.InsertLog(pathlog, "Start Move File");
                     MoveFile(textfile, filename);
                     Console.WriteLine("End Move File");
+                    log.InsertLog(pathlog, "End Move File");
                 }
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -155,7 +171,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -279,8 +295,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -315,7 +330,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -457,7 +472,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -501,7 +516,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -519,7 +534,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -553,7 +568,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return errormessage;
         }
@@ -730,7 +745,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -765,21 +780,25 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     File.Move(pathinput, output + filename);
                 }
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
+                log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
+                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
                 }
                 else
                 {
                     Console.WriteLine("The original file no longer exists, which is expected.");
+                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
                 }
                 result = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("The process failed: {0}", e.ToString());
+                Console.WriteLine("The process failed: {0}", ex.ToString());
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -888,7 +907,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     write.WriteLine(lineheader);
                     foreach (var item in lineitem)
                     {
-                        //write.WriteLine(Environment.NewLine);
                         write.WriteLine(item);
                     }
                     write.Flush();
@@ -899,7 +917,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -921,7 +939,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -976,7 +994,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }

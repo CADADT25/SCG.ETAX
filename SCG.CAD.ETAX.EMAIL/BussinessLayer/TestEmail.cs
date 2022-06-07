@@ -1,5 +1,4 @@
-﻿using SCG.CAD.ETAX.EMAIL.Controller;
-using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 {

@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
-using SCG.CAD.ETAX.XML.GENERATOR.Controller;
 using SCG.CAD.ETAX.XML.GENERATOR.Models;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR
 {

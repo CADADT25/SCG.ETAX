@@ -1,6 +1,6 @@
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.PDF.SIGN.BussinessLayer;
-using SCG.CAD.ETAX.PDF.SIGN.Controller;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.PDF.SIGN
 {
@@ -67,6 +67,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN
             {
                 throw ex;
             }
+            result = true;
             return result;
         }
     }

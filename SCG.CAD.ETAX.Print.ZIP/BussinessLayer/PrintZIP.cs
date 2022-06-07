@@ -1,6 +1,5 @@
 ﻿using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.PRINT.ZIP.Controller;
 using SCG.CAD.ETAX.XML.PRINT.ZIP.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
 {
@@ -18,47 +19,60 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
         OutputSearchPrintingController outputSearchPrintingController = new OutputSearchPrintingController();
         TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        LogHelper log = new LogHelper();
 
         List<ConfigMftsCompressPrintSetting> configPrintSetting = new List<ConfigMftsCompressPrintSetting>();
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
         string outputsearchprintingno;
+        string pathlog = @"C:\log\";
+        string namepathlog = "PATHLOGFILE_PRINTZIP";
+
         public void ProcessPrintzip()
         {
             string zipName = "";
             try
             {
                 Console.WriteLine("Start PrintZip");
+                log.InsertLog(pathlog, "Start PrintZip");
                 GetDataFromDataBase();
                 GetListTransactionDescription();
                 Console.WriteLine("Start Read All PDF");
+                log.InsertLog(pathlog, "Start Read All PDF");
                 var dataallCompany = ReadFile();
                 Console.WriteLine("End Read All PDF");
+                log.InsertLog(pathlog, "End Read All PDF");
                 pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPRINTZIPFILE").ConfigGlobalValue;
                 foreach (var data in dataallCompany)
                 {
                     Console.WriteLine("Start Zip Company : " + data.CompanyCode);
+                    log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
                     zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
                     var resultZipFile = Zipfile(data, zipName);
 
                     Console.WriteLine("Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
+                    log.InsertLog(pathlog, "Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
                     var resultTransactionPrintZip = InsertTransactionPrintZip(data, zipName);
                     GetListTransactionDescription();
                     if (resultZipFile)
                     {
                         Console.WriteLine("Start Update Status TransactionDescription Company : " + data.CompanyCode);
+                        log.InsertLog(pathlog, "Start Update Status TransactionDescription Company : " + data.CompanyCode);
                         var resultUpdateStatus = UpdateStatusTransactionDescription(data);
                         Console.WriteLine("End Update Status TransactionDescription Company : " + data.CompanyCode);
+                        log.InsertLog(pathlog, "End Update Status TransactionDescription Company : " + data.CompanyCode);
                     }
                     Console.WriteLine("End Zip Company : " + data.CompanyCode);
+                    log.InsertLog(pathlog, "End Zip Company : " + data.CompanyCode);
 
                 }
                 Console.WriteLine("End PrintZip");
+                log.InsertLog(pathlog, "End PrintZip");
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
         public List<FileModel> ReadFile()
@@ -98,7 +112,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -129,7 +143,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -189,7 +203,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -200,10 +214,11 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             {
                 configPrintSetting = configMftsCompressPrintSettingController.List().Result;
                 configGlobal = configGlobalController.List().Result;
+                pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -215,7 +230,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -239,6 +254,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         foreach (var file in dataFile.FileDetails)
                         {
                             Console.WriteLine("Zip Company : " + dataFile.CompanyCode + " | File Name : " + file.FileName);
+                            log.InsertLog(pathlog, "Zip Company : " + dataFile.CompanyCode + " | File Name : " + file.FileName);
                             archive.CreateEntryFromFile(file.FilePath, file.FileName);
                         }
                     }
@@ -247,7 +263,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -278,7 +294,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -297,6 +313,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                     if (updatetransaction != null)
                     {
                         Console.WriteLine("Update Status TransactionDescription BillingNo : " + filedata.BillingNo);
+                        log.InsertLog(pathlog, "Update Status TransactionDescription BillingNo : " + filedata.BillingNo);
                         updatetransaction.OutputPdfTransactionNo = outputsearchprintingno;
                         updatetransaction.PrintStatus = "Successful";
                         updatetransaction.PrintDetail = "PDF file's was prepared for printing completely";
@@ -304,8 +321,10 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         listupdatetransaction.Add(updatetransaction);
 
                         Console.WriteLine("Start MoveFile Company : " + dataFile.CompanyCode);
+                        log.InsertLog(pathlog, "Start MoveFile Company : " + dataFile.CompanyCode);
                         MoveFile(filedata.FilePath, filedata.FileName, updatetransaction.BillingDate ?? DateTime.Now);
                         Console.WriteLine("End MoveFile Company : " + dataFile.CompanyCode);
+                        log.InsertLog(pathlog, "End MoveFile Company : " + dataFile.CompanyCode);
                     }
                 }
                 if (listupdatetransaction.Count > 0)
@@ -321,7 +340,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -350,21 +369,25 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
+                log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
+                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
                 }
                 else
                 {
                     Console.WriteLine("The original file no longer exists, which is expected.");
+                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
                 }
                 result = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("The process failed: {0}", e.ToString());
+                Console.WriteLine("The process failed: {0}", ex.ToString());
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }

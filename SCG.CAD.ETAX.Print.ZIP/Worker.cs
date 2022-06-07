@@ -1,6 +1,6 @@
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer;
-using SCG.CAD.ETAX.PRINT.ZIP.Controller;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.Print.ZIP
 {

@@ -1,6 +1,6 @@
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.XML.SIGN.BussinessLayer;
-using SCG.CAD.ETAX.XML.SIGN.Controller;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.XML.SIGN
 {

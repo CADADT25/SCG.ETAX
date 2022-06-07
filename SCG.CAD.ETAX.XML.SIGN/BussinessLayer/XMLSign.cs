@@ -1,15 +1,10 @@
-﻿using iTextSharp.text.pdf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SCG.CAD.ETAX.XML.SIGN.Controller;
-using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL.etaxModel;
 using System.Text.Json;
 using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.XML.SIGN.Models;
 using System.Xml;
+using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
@@ -18,10 +13,13 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         ConfigXMLSignController configXMLSignController = new ConfigXMLSignController();
         TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        LogHelper log = new LogHelper();
 
         List<ConfigXmlSign> configXmlSign = new List<ConfigXmlSign>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
+        string pathlog = @"C:\log\";
+        string namepathlog = "PATHLOGFILE_XMLSIGN";
 
         public void ProcessXMLSign()
         {
@@ -39,8 +37,10 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                 GetDataFromDataBase();
                 Console.WriteLine("Start Read All XMLFile");
+                log.InsertLog(pathlog, "Start Read All XMLFile");
                 var allfile = ReadXmlFile();
                 Console.WriteLine("End Read All XMLFile");
+                log.InsertLog(pathlog, "End Read All XMLFile");
 
                 if (allfile != null && allfile.Count > 0)
                 {
@@ -49,16 +49,21 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     {
                         round += 1;
                         Console.WriteLine("Start round : " + round);
+                        log.InsertLog(pathlog, "Start round : " + round);
                         billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
                         Console.WriteLine("billno : " + billno);
+                        log.InsertLog(pathlog, "billno : " + billno);
                         XmlDocument doc = new XmlDocument();
                         doc.Load(src.FullPath);
 
                         Console.WriteLine("Send To Sign");
+                        log.InsertLog(pathlog, "Send To Sign");
                         resultXMLSign = SendFileXMLSign(doc);
 
                         Console.WriteLine("Status Sign : " + resultXMLSign.ToString());
+                        log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.ToString());
                         Console.WriteLine("Update Status in DataBase");
+                        log.InsertLog(pathlog, "Update Status in DataBase");
 
                         fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                         pathoutbound = src.Outbound;
@@ -83,19 +88,24 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         UpdateStatusAfterSignXML(resultXMLSign, billno, fullpath, dataTran);
 
                         Console.WriteLine("Start Export XML file");
+                        log.InsertLog(pathlog, "Start Export XML file");
                         ExportXMLAfterSign( doc, pathoutbound, fullpath);
                         Console.WriteLine("End Export XML file");
-                        
+                        log.InsertLog(pathlog, "End Export XML file");
+
                         Console.WriteLine("Start Move file");
+                        log.InsertLog(pathlog, "Start Move file");
                         MoveFile(src.FullPath, src.FileName + fileType, billingdate);
                         Console.WriteLine("End Move file");
+                        log.InsertLog(pathlog, "End Move file");
                     }
                 }
                 Console.WriteLine("End XMLSign");
+                log.InsertLog(pathlog, "End XMLSign");
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -140,7 +150,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -171,7 +181,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -185,7 +195,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -231,7 +241,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -251,7 +261,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -262,10 +272,11 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             {
                 configXmlSign = configXMLSignController.List().Result;
                 configGlobal = configGlobalController.List().Result;
+                pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -293,21 +304,25 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
+                log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
+                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
                 }
                 else
                 {
                     Console.WriteLine("The original file no longer exists, which is expected.");
+                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
                 }
                 result = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("The process failed: {0}", e.ToString());
+                Console.WriteLine("The process failed: {0}", ex.ToString());
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }

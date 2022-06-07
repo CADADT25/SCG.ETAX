@@ -1,6 +1,6 @@
 using SCG.CAD.ETAX.EMAIL.BussinessLayer;
-using SCG.CAD.ETAX.EMAIL.Controller;
 using SCG.CAD.ETAX.MODEL.etaxModel;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.EMAIL
 {

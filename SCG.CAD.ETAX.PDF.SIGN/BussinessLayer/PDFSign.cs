@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SCG.CAD.ETAX.PDF.SIGN.Controller;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MODEL;
 using System.Text.Json;
 using SCG.CAD.ETAX.PDF.SIGN.Models;
+using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 {
@@ -17,10 +18,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         ConfigPDFSignController configXMLSignController = new ConfigPDFSignController();
         TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        LogHelper log = new LogHelper();
 
         List<ConfigPdfSign> configPDFSign = new List<ConfigPdfSign>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
+        string pathlog = @"D:\log\";
+        string namepathlog = "PATHLOGFILE_PDFSIGN";
 
         public List<PDFSignModel> ReadPdfFile()
         {
@@ -58,7 +62,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -90,7 +94,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -108,11 +112,14 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             try
             {
                 Console.WriteLine("Start PDFSign");
+                log.InsertLog(pathlog, "Start PDFSign");
                 GetDataFromDataBase();
 
                 Console.WriteLine("Start Read All PDFFile");
+                log.InsertLog(pathlog, "Start Read All PDFFile");
                 var allfile = ReadPdfFile();
                 Console.WriteLine("End Read All PDFFile");
+                log.InsertLog(pathlog, "End Read All PDFFile");
 
                 if (allfile != null && allfile.Count > 0)
                 {
@@ -121,7 +128,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     {
                         round += 1;
                         Console.WriteLine("Start round : " + round);
-                        if(src.FileName.IndexOf('_') > -1)
+                        log.InsertLog(pathlog, "Start round : " + round);
+                        if (src.FileName.IndexOf('_') > -1)
                         {
                             billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
                         }
@@ -130,14 +138,18 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                             billno = src.FileName.Substring(8);
                         }
                         Console.WriteLine("billno : " + billno);
+                        log.InsertLog(pathlog, "billno : " + billno);
 
                         PdfReader reader = new PdfReader(src.FullPath);
 
                         Console.WriteLine("Send To Sign");
+                        log.InsertLog(pathlog, "Send To Sign");
                         resultPDFSign = SendFilePDFSign();
 
                         Console.WriteLine("Status Sign : " + resultPDFSign.ToString());
+                        log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.ToString());
                         Console.WriteLine("Update Status in DataBase");
+                        log.InsertLog(pathlog, "Update Status in DataBase");
 
                         fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                         pathoutbound = src.Outbound;
@@ -162,19 +174,23 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
 
                         Console.WriteLine("Start Export PDF file");
+                        log.InsertLog(pathlog, "Start Export PDF file");
                         ExportPDFAfterSign(reader, pathoutbound, fullpath);
                         Console.WriteLine("End Export PDF file");
+                        log.InsertLog(pathlog, "End Export PDF file");
                         reader.Close();
                         Console.WriteLine("Start Move file");
+                        log.InsertLog(pathlog, "Start Move file");
                         MoveFile(src.FullPath, src.FileName + fileType, billingdate);
                         Console.WriteLine("End Move file");
+                        log.InsertLog(pathlog, "End Move file");
 
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -187,7 +203,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -286,7 +302,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -308,7 +324,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
         }
@@ -319,10 +335,11 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             {
                 configPDFSign = configXMLSignController.List().Result;
                 configGlobal = configGlobalController.List().Result;
+                pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
 
@@ -349,21 +366,25 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
+                log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
                 // See if the original exists now.  
                 if (File.Exists(pathinput))
                 {
                     Console.WriteLine("The original file still exists, which is unexpected.");
+                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
                 }
                 else
                 {
                     Console.WriteLine("The original file no longer exists, which is expected.");
+                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
                 }
                 result = true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
+                log.InsertLog(pathlog, "Exception : " + e.ToString());
             }
             return result;
         }
