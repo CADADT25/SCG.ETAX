@@ -112,8 +112,9 @@
                         update.ConfigMftsEmailSettingPort = param.ConfigMftsEmailSettingPort;
                         update.ConfigMftsEmailSettingUsername = param.ConfigMftsEmailSettingUsername;
                         update.ConfigMftsEmailSettingPassword = param.ConfigMftsEmailSettingPassword;
-                        update.ConfigMftsEmailSettingOneTime = param.ConfigMftsEmailSettingOneTime;
+                        update.ConfigMftsEmailSettingOneTime += param.ConfigMftsEmailSettingOneTime;
                         update.ConfigMftsEmailSettingAnyTime = param.ConfigMftsEmailSettingAnyTime;
+                        update.ConfigMftsEmailSettingNextTime = param.ConfigMftsEmailSettingNextTime;
                         update.ConfigMftsEmailSettingApiKey = param.ConfigMftsEmailSettingApiKey;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
@@ -173,6 +174,248 @@
             return resp;
         }
 
+        public Response UPDATE_ONETIME(ConfigMftsEmailSetting param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsEmailSetting.Where(x => x.ConfigMftsEmailSettingNo == param.ConfigMftsEmailSettingNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        var setNewOnetime = "";
+
+                        setNewOnetime += "|" + param.ConfigMftsEmailSettingOneTime;
+
+                        var findFirstIndex = setNewOnetime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewOnetime = setNewOnetime.Substring(1);
+                        }
+
+                        update.ConfigMftsEmailSettingOneTime += "|" + setNewOnetime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_ANYTIME(ConfigMftsEmailSetting param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsEmailSetting.Where(x => x.ConfigMftsEmailSettingNo == param.ConfigMftsEmailSettingNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var setNewAnytime = "";
+
+                        setNewAnytime += "|" + param.ConfigMftsEmailSettingAnyTime;
+
+                        var findFirstIndex = setNewAnytime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewAnytime = setNewAnytime.Substring(1, 5);
+                        }
+
+                        update.ConfigMftsEmailSettingAnyTime += "|" + setNewAnytime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response DELETE_ONETIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsEmailSetting.Where(x => x.ConfigMftsEmailSettingNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsEmailSettingOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsEmailSettingOneTime = setNewOneTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response DELETE_ANYTIME(DeleteAnytime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsEmailSetting.Where(x => x.ConfigMftsEmailSettingNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getAnyTime = update.ConfigMftsEmailSettingAnyTime;
+
+                        var splitAnyTime = getAnyTime.Split("|");
+
+                        var setNewAnyTime = "";
+
+                        for (int i = 0; i < splitAnyTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewAnyTime += "|" + splitAnyTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsEmailSettingAnyTime = setNewAnyTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response UPDATE_NEXTTIME(ConfigNextTime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsEmailSetting.Where(x => x.ConfigMftsEmailSettingNo == param.Id).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsEmailSettingOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.OneTimePosition)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsEmailSettingOneTime = setNewOneTime.Substring(1);
+                        update.ConfigMftsEmailSettingNextTime = param.NextTime;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
     }
 }

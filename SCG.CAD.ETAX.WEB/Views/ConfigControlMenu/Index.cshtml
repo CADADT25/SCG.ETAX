@@ -218,12 +218,14 @@
         model.ConfigControlMenuValue = $('#txtUpdateMenuValue').val();
 
         model.CreateBy = $("#leftSideEmail").text();
-        model.CreateDate = new Date();
+        //model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
-        model.UpdateDate = new Date();
-        model.Isactive = IsActive;
+        //model.UpdateDate = new Date();
+        //model.Isactive = IsActive;
 
         var getJsonString = JSON.stringify(model);
+
+        //alert(getJsonString);
 
         $.ajax({
             type: "POST",

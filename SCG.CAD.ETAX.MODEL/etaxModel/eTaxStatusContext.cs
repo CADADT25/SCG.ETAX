@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<TransactionDescription> TransactionDescriptions { get; set; } = null!;
+        public virtual DbSet<ConfigPdfSign> ConfigPdfSigns { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,35 +29,151 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TransactionDescription>(entity =>
+            modelBuilder.Entity<ConfigPdfSign>(entity =>
             {
-                entity.HasKey(e => e.TransactionNo);
+                entity.HasKey(e => e.ConfigPdfsignNo);
 
-                entity.ToTable("transactionDescription");
+                entity.ToTable("configPdfSign");
 
-                entity.Property(e => e.TransactionNo).HasColumnName("transactionNo");
+                entity.Property(e => e.ConfigPdfsignNo).HasColumnName("configPdfsignNo");
 
-                entity.Property(e => e.BillTo)
+                entity.Property(e => e.ConfigPdfsignAnyTime)
                     .HasMaxLength(255)
-                    .HasColumnName("billTo");
+                    .HasColumnName("configPdfsignAnyTime");
 
-                entity.Property(e => e.BillingDate)
-                    .HasColumnType("date")
-                    .HasColumnName("billingDate");
-
-                entity.Property(e => e.BillingNumber)
+                entity.Property(e => e.ConfigPdfsignCompanyCode)
                     .HasMaxLength(255)
-                    .HasColumnName("billingNumber");
+                    .HasColumnName("configPdfsignCompanyCode");
 
-                entity.Property(e => e.BillingYear).HasColumnName("billingYear");
-
-                entity.Property(e => e.CompanyCode)
+                entity.Property(e => e.ConfigPdfsignCompanyTax)
                     .HasMaxLength(255)
-                    .HasColumnName("companyCode");
+                    .HasColumnName("configPdfsignCompanyTax");
 
-                entity.Property(e => e.CompanyName)
-                    .HasMaxLength(500)
-                    .HasColumnName("companyName");
+                entity.Property(e => e.ConfigPdfsignDsLocation)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignDsLocation");
+
+                entity.Property(e => e.ConfigPdfsignDsReason)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignDsReason");
+
+                entity.Property(e => e.ConfigPdfsignFontName)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFontName");
+
+                entity.Property(e => e.ConfigPdfsignFontSize)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFontSize");
+
+                entity.Property(e => e.ConfigPdfsignFtpHost)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFtpHost");
+
+                entity.Property(e => e.ConfigPdfsignFtpPassword)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFtpPassword");
+
+                entity.Property(e => e.ConfigPdfsignFtpPort)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFtpPort");
+
+                entity.Property(e => e.ConfigPdfsignFtpUserName)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignFtpUserName");
+
+                entity.Property(e => e.ConfigPdfsignHsmModule)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignHsmModule");
+
+                entity.Property(e => e.ConfigPdfsignHsmPassword)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignHsmPassword");
+
+                entity.Property(e => e.ConfigPdfsignHsmSerial)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignHsmSerial");
+
+                entity.Property(e => e.ConfigPdfsignHsmSlot)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignHsmSlot");
+
+                entity.Property(e => e.ConfigPdfsignImage).HasColumnName("configPdfsignImage");
+
+                entity.Property(e => e.ConfigPdfsignInputPath)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignInputPath");
+
+                entity.Property(e => e.ConfigPdfsignInputSource)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignInputSource");
+
+                entity.Property(e => e.ConfigPdfsignInputType)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignInputType");
+
+                entity.Property(e => e.ConfigPdfsignKeyAlias)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignKeyAlias");
+
+                entity.Property(e => e.ConfigPdfsignNextTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("configPdfsignNextTime");
+
+                entity.Property(e => e.ConfigPdfsignOneTime)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOneTime");
+
+                entity.Property(e => e.ConfigPdfsignOnlineRecordNumber)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOnlineRecordNumber");
+
+                entity.Property(e => e.ConfigPdfsignOperationMode)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOperationMode");
+
+                entity.Property(e => e.ConfigPdfsignOutputPath)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOutputPath");
+
+                entity.Property(e => e.ConfigPdfsignOutputSource)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOutputSource");
+
+                entity.Property(e => e.ConfigPdfsignOutputType)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignOutputType");
+
+                entity.Property(e => e.ConfigPdfsignPage)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignPage");
+
+                entity.Property(e => e.ConfigPdfsignTimestampPassword)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignTimestampPassword");
+
+                entity.Property(e => e.ConfigPdfsignTimestampUrl)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignTimestampUrl");
+
+                entity.Property(e => e.ConfigPdfsignTimestampUserName)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignTimestampUserName");
+
+                entity.Property(e => e.ConfigPdfsignUlx)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignUlx");
+
+                entity.Property(e => e.ConfigPdfsignUly)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignUly");
+
+                entity.Property(e => e.ConfigPdfsignVisibleDs)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignVisibleDs");
+
+                entity.Property(e => e.ConfigPdfsignWithTimeStamp)
+                    .HasMaxLength(255)
+                    .HasColumnName("configPdfsignWithTimeStamp");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -67,155 +183,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.CustomerId)
-                    .HasMaxLength(255)
-                    .HasColumnName("customerId");
-
-                entity.Property(e => e.CustomerName)
-                    .HasMaxLength(255)
-                    .HasColumnName("customerName");
-
-                entity.Property(e => e.DmsAttachmentFileName)
-                    .HasMaxLength(255)
-                    .HasColumnName("dmsAttachmentFileName");
-
-                entity.Property(e => e.DmsAttachmentFilePath)
-                    .HasMaxLength(255)
-                    .HasColumnName("dmsAttachmentFilePath");
-
-                entity.Property(e => e.DocType)
-                    .HasMaxLength(255)
-                    .HasColumnName("docType");
-
-                entity.Property(e => e.EmailSendDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("emailSendDateTime");
-
-                entity.Property(e => e.EmailSendDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("emailSendDetail");
-
-                entity.Property(e => e.EmailSendStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("emailSendStatus");
-
-                entity.Property(e => e.FiDoc)
-                    .HasMaxLength(255)
-                    .HasColumnName("fiDoc");
-
-                entity.Property(e => e.Foc).HasColumnName("foc");
-
-                entity.Property(e => e.GenerateDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("generateDateTime");
-
-                entity.Property(e => e.GenerateDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("generateDetail");
-
-                entity.Property(e => e.GenerateStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("generateStatus");
-
-                entity.Property(e => e.Ic).HasColumnName("ic");
-
-                entity.Property(e => e.ImageDocType)
-                    .HasMaxLength(255)
-                    .HasColumnName("imageDocType");
-
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
-
-                entity.Property(e => e.OneTimeEmail)
-                    .HasMaxLength(255)
-                    .HasColumnName("oneTimeEmail");
-
-                entity.Property(e => e.OutputMailTransactionNo)
-                    .HasMaxLength(255)
-                    .HasColumnName("outputMailTransactionNo");
-
-                entity.Property(e => e.OutputPdfTransactionNo)
-                    .HasMaxLength(255)
-                    .HasColumnName("outputPdfTransactionNo");
-
-                entity.Property(e => e.OutputXmlTransactionNo)
-                    .HasMaxLength(255)
-                    .HasColumnName("outputXmlTransactionNo");
-
-                entity.Property(e => e.Payer)
-                    .HasMaxLength(255)
-                    .HasColumnName("payer");
-
-                entity.Property(e => e.PdfIndexingDateTime)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfIndexingDateTime");
-
-                entity.Property(e => e.PdfIndexingDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfIndexingDetail");
-
-                entity.Property(e => e.PdfIndexingStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfIndexingStatus");
-
-                entity.Property(e => e.PdfSignDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("pdfSignDateTime");
-
-                entity.Property(e => e.PdfSignDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfSignDetail");
-
-                entity.Property(e => e.PdfSignLocation)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfSignLocation");
-
-                entity.Property(e => e.PdfSignStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("pdfSignStatus");
-
-                entity.Property(e => e.PoNumber)
-                    .HasMaxLength(255)
-                    .HasColumnName("poNumber");
-
-                entity.Property(e => e.PostingYear)
-                    .HasMaxLength(255)
-                    .HasColumnName("postingYear");
-
-                entity.Property(e => e.PrintDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("printDateTime");
-
-                entity.Property(e => e.PrintDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("printDetail");
-
-                entity.Property(e => e.PrintStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("printStatus");
-
-                entity.Property(e => e.ProcessingDate)
-                    .HasColumnType("date")
-                    .HasColumnName("processingDate");
-
-                entity.Property(e => e.SellOrg)
-                    .HasMaxLength(255)
-                    .HasColumnName("sellOrg");
-
-                entity.Property(e => e.ShipTo)
-                    .HasMaxLength(255)
-                    .HasColumnName("shipTo");
-
-                entity.Property(e => e.SoldTo)
-                    .HasMaxLength(255)
-                    .HasColumnName("soldTo");
-
-                entity.Property(e => e.SourceName)
-                    .HasMaxLength(255)
-                    .HasColumnName("sourceName");
-
-                entity.Property(e => e.TypeInput)
-                    .HasMaxLength(255)
-                    .HasColumnName("typeInput");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
@@ -224,34 +194,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
-
-                entity.Property(e => e.XmlCompressDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("xmlCompressDateTime");
-
-                entity.Property(e => e.XmlCompressDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("xmlCompressDetail");
-
-                entity.Property(e => e.XmlCompressStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("xmlCompressStatus");
-
-                entity.Property(e => e.XmlSignDateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("xmlSignDateTime");
-
-                entity.Property(e => e.XmlSignDetail)
-                    .HasMaxLength(255)
-                    .HasColumnName("xmlSignDetail");
-
-                entity.Property(e => e.XmlSignLocation)
-                    .HasMaxLength(255)
-                    .HasColumnName("xmlSignLocation");
-
-                entity.Property(e => e.XmlSignStatus)
-                    .HasMaxLength(255)
-                    .HasColumnName("xmlSignStatus");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,7 +1,307 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = " ProfileUserGroup ";
+    Layout = null;
 }
 
-<h1>Index</h1>
+@await Html.PartialAsync("~/Views/ProfileUserGroup/_Content.cshtml")
 
+
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+
+        RenderProfileUserGroup();
+
+    });
+
+
+    function fnDropdownProfileUserRoleInsert() {
+
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Role ---").appendTo("#txtInsertProfileUserGroupRoleId");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserRole")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.profileUserRoleNo,
+                        text: data.profileUserRoleName
+                    }).html(data.profileUserRoleName).appendTo("#txtInsertProfileUserGroupRoleId");
+            });
+        })
+
+    }
+
+    function fnDropdownProfileUserRoleUpdate() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserRole")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.profileUserRoleNo,
+                        text: data.profileUserRoleName
+                    }).html(data.profileUserRoleName).appendTo("#txtUpdateProfileUserGroupRoleId");
+            });
+        })
+    }
+
+
+    function RenderProfileUserGroup(){
+
+        var table = $("#tbProfileUserGroupMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, 
+            "serverSide": false, 
+            "filter": true, 
+            "orderMulti": true,
+            "pageLength": 10,
+
+            "ajax": {
+                url: "@Url.Action("List", "ProfileUserGroup")",
+                type: "POST",
+                datatype: "json"
+            },
+
+
+            "columns": [
+
+                {
+                    data: "profileUserGroupNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    className: "text-center",
+                    width: "5%",
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "profileUserGroupName",
+                    width: "30%"
+                },
+                {
+                    data: "profileUserGroupDescription",
+                    width: "30%"
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-primary",
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    orderable: false,
+                    width: "2%"
+                }
+            ]
+        });
+
+        table.on( 'order.dt search.dt', function () {
+            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+
+
+        EditProfileUserGroup(table);
+        DeleteProfileUserGroup(table);
+    }
+
+    function fnInsertCancelProfileUserGroup(){
+
+        document.getElementById('txtInsertProfileUserGroupName').value = '';
+        document.getElementById('txtInsertProfileUserGroupDescription').value = '';
+        $('#txtProfileUserGroupRoleId').empty();
+
+        $("#modalCreateProfileUserGroup").modal('hide');
+    }
+
+    function fnUpdateCancelProfileUserGroup(){
+
+        document.getElementById('txtUpdateProfileUserGroupNo').value = '';
+        document.getElementById('txtUpdateProfileUserGroupName').value = '';
+        document.getElementById('txtUpdateProfileUserGroupDescription').value = '';
+
+        $('#txtUpdateProfileUserGroupRoleId').empty();
+
+        $("#modalUpdateProfileUserGroup").modal('hide');
+    }
+
+    function callModalInsertProfileUserGroup(){
+
+        fnDropdownProfileUserRoleInsert();
+
+        document.getElementById('txtInsertProfileUserGroupName').value = '';
+        document.getElementById('txtInsertProfileUserGroupDescription').value = '';
+
+        $("#modalCreateProfileUserGroup").modal('show');
+    }
+
+    function fnInsertProfileUserGroup(){
+
+        if ( $('#txtInsertProfileUserGroupName').val() != '' )
+        {
+            callProfileUserGroupInsertController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateInsertProfileUserGroup();
+        }
+
+    }
+
+    function fnUpdateProfileUserGroup(){
+
+        if ( $('#txtUpdateProfileUserGroupName').val() != '' )
+        {
+            callProfileUserGroupUpdateController();
+        }
+        else {
+            fnToastrInputDataFail();
+            validateUpdateProfileUserGroup();
+        }
+    }
+
+    function EditProfileUserGroup(table){
+
+        $('#tbProfileUserGroupMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            fnDropdownProfileUserRoleUpdate();
+
+            callProfileUserGroupGetDetailController(getPK);
+
+        });
+    }
+
+
+    function callProfileUserGroupGetDetailController(getPK){
+
+       
+        document.getElementById('txtUpdateProfileUserGroupName').value = '';
+        document.getElementById('txtUpdateProfileUserGroupDescription').value = '';
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileUserGroup")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                document.getElementById('txtUpdateProfileUserGroupNo').value = data.ProfileUserGroupNo;
+                document.getElementById('txtUpdateProfileUserGroupName').value = data.ProfileUserGroupName;
+                document.getElementById('txtUpdateProfileUserGroupDescription').value = data.ProfileUserGroupDescription;
+
+
+                document.getElementById("txtUpdateProfileUserGroupRoleId").value = data.ProfileUserRoleId;
+
+                //$('#txtUpdateProfileUserGroupRoleId').empty().append($("<option/>").val(""+data.ProfileUserRoleId+"").text(""+data.ProfileUserRoleId+""))
+                //.val(""+data.ProfileUserRoleId+"").trigger("change");
+
+                $("#modalUpdateProfileUserGroup").modal('show');
+            }
+        });
+    }
+
+    function callProfileUserGroupInsertController(){
+
+        var model = new Object();
+
+        model.ProfileUserGroupName = $('#txtInsertProfileUserGroupName').val();
+        model.ProfileUserGroupDescription = $('#txtInsertProfileUserGroupDescription').val();
+        model.ProfileUserRoleId = $('#txtInsertProfileUserGroupRoleId').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Insert", "ProfileUserGroup")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp);
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalCreateProfileUserGroup").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callProfileUserGroupIndex();
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+
+            }
+        });
+    }
+
+    function callProfileUserGroupUpdateController(){
+
+        var model = new Object();
+
+        model.ProfileUserGroupNo = $('#txtUpdateProfileUserGroupNo').val();
+        model.ProfileUserGroupName = $('#txtUpdateProfileUserGroupName').val();
+        model.ProfileUserGroupDescription = $('#txtUpdateProfileUserGroupDescription').val();
+        model.ProfileUserRoleId = $('#txtUpdateProfileUserGroupRoleId').val();
+
+        model.CreateBy = $("#leftSideEmail").text();
+        model.UpdateBy = $("#leftSideEmail").text();
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "ProfileUserGroup")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $("#modalUpdateProfileUserGroup").modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                    callProfileUserGroupIndex();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    }
+
+    function callProfileUserGroupIndex() {
+        setTimeout(function(){
+            $.blockUI();
+            $("#contentPartial").load("@Url.Action("Index", "ProfileUserGroup")");
+            $.unblockUI();
+        }, 500);
+    }
+
+
+</script>

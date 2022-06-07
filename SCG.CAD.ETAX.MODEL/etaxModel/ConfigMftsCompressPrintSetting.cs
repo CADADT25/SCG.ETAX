@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsCompressPrintSettingDataSource { get; set; }
         public string? ConfigMftsCompressPrintSettingOneTime { get; set; }
         public string? ConfigMftsCompressPrintSettingAnyTime { get; set; }
+        public DateTime? ConfigMftsCompressPrintSettingNextTime { get; set; }
         public string? ConfigMftsCompressPrintSettingInputPdf { get; set; }
         public string? ConfigMftsCompressPrintSettingOutputPdf { get; set; }
         public string CreateBy { get; set; } = null!;

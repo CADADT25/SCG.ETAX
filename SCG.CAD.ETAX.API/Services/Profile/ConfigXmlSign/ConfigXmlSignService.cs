@@ -110,6 +110,10 @@
                         update.ConfigXmlsignOutputConvertPath = param.ConfigXmlsignOutputConvertPath;
                         update.ConfigXmlsignHsmSerial = param.ConfigXmlsignHsmSerial;
                         update.ConfigXmlsignCertificateSerial = param.ConfigXmlsignCertificateSerial;
+                        update.ConfigXmlsignOneTime = param.ConfigXmlsignOneTime;
+                        update.ConfigXmlsignAnyTime = param.ConfigXmlsignAnyTime;
+                        update.ConfigXmlsignNextTime = param.ConfigXmlsignNextTime;
+
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -167,6 +171,252 @@
             }
             return resp;
         }
+
+
+
+        public Response UPDATE_ONETIME(ConfigXmlSign param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.ConfigXmlsignNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        var setNewOnetime = "";
+
+                        setNewOnetime += "|" + param.ConfigXmlsignOneTime;
+
+                        var findFirstIndex = setNewOnetime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewOnetime = setNewOnetime.Substring(1);
+                        }
+
+                        update.ConfigXmlsignOneTime += "|" + setNewOnetime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_ANYTIME(ConfigXmlSign param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.ConfigXmlsignNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var setNewAnytime = "";
+
+                        setNewAnytime += "|" + param.ConfigXmlsignAnyTime;
+
+                        var findFirstIndex = setNewAnytime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewAnytime = setNewAnytime.Substring(1, 5);
+                        }
+
+                        update.ConfigXmlsignAnyTime += "|" + setNewAnytime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response DELETE_ONETIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigXmlsignOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigXmlsignOneTime = setNewOneTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response DELETE_ANYTIME(DeleteAnytime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getAnyTime = update.ConfigXmlsignAnyTime;
+
+                        var splitAnyTime = getAnyTime.Split("|");
+
+                        var setNewAnyTime = "";
+
+                        for (int i = 0; i < splitAnyTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewAnyTime += "|" + splitAnyTime[i];
+                            }
+                        }
+
+                        update.ConfigXmlsignAnyTime = setNewAnyTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response UPDATE_NEXTTIME(ConfigNextTime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignNo == param.Id).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigXmlsignOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.OneTimePosition)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigXmlsignOneTime = setNewOneTime.Substring(1);
+                        update.ConfigXmlsignNextTime = param.NextTime;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
 
     }
 }

@@ -41,7 +41,7 @@
     <div class="col-md-12 col-12">
         <div class="form-group">
             <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailSmtp" onclick="onChangeConfigEmailSmtp();" />
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailSmtp" onclick="onChangeConfigEmailSmtpUpdate();" />
                 <label class="custom-control-label" for="toggleUpdateConfigEmailSmtp">Batch</label>
             </div>
         </div>
@@ -85,8 +85,8 @@
     <div class="col-md-12 col-12">
         <div class="form-group">
             <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailApi" onclick="onChangeConfigEmailApi();" />
-                <label class="custom-control-label" for="toggleUpdateConfigEmailApi">Batch</label>
+                <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigEmailApi" onclick="onChangeConfigEmailApiUpdate();" />
+                <label class="custom-control-label" for="toggleUpdateConfigEmailApi">API</label>
             </div>
         </div>
     </div>
@@ -96,7 +96,7 @@
 
     <div class="col-md-11 col-12">
         <div class="form-group">
-            <label><spa class="text-danger">* </spa> Email </label>
+            <label><spa class="text-danger">* </spa> Api Key </label>
             <input type="text" id="txtUpdateConfigMftsEmailSettingApiKey" onkeyup="validateUpdateConfigMftsEmailSetting();" class="form-control">
         </div>
     </div>

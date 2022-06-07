@@ -106,6 +106,7 @@
                         update.ConfigMftsCompressPrintSettingCompanyCode = param.ConfigMftsCompressPrintSettingCompanyCode;
                         update.ConfigMftsCompressPrintSettingOneTime = param.ConfigMftsCompressPrintSettingOneTime;
                         update.ConfigMftsCompressPrintSettingAnyTime = param.ConfigMftsCompressPrintSettingAnyTime;
+                        update.ConfigMftsCompressPrintSettingNextTime = param.ConfigMftsCompressPrintSettingNextTime;
                         update.ConfigMftsCompressPrintSettingOutputPdf = param.ConfigMftsCompressPrintSettingOutputPdf;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
@@ -165,5 +166,247 @@
             return resp;
         }
 
+
+        public Response UPDATE_ONETIME(ConfigMftsCompressPrintSetting param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsCompressPrintSetting.Where(x => x.ConfigMftsCompressPrintSettingNo == param.ConfigMftsCompressPrintSettingNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        var setNewOnetime = "";
+
+                        setNewOnetime += "|" + param.ConfigMftsCompressPrintSettingOneTime;
+
+                        var findFirstIndex = setNewOnetime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewOnetime = setNewOnetime.Substring(1);
+                        }
+
+                        update.ConfigMftsCompressPrintSettingOneTime += "|" + setNewOnetime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_ANYTIME(ConfigMftsCompressPrintSetting param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsCompressPrintSetting.Where(x => x.ConfigMftsCompressPrintSettingNo == param.ConfigMftsCompressPrintSettingNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var setNewAnytime = "";
+
+                        setNewAnytime += "|" + param.ConfigMftsCompressPrintSettingAnyTime;
+
+                        var findFirstIndex = setNewAnytime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewAnytime = setNewAnytime.Substring(1, 5);
+                        }
+
+                        update.ConfigMftsCompressPrintSettingAnyTime += "|" + setNewAnytime;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response DELETE_ONETIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsCompressPrintSetting.Where(x => x.ConfigMftsCompressPrintSettingNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsCompressPrintSettingOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsCompressPrintSettingOneTime = setNewOneTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response DELETE_ANYTIME(DeleteAnytime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsCompressPrintSetting.Where(x => x.ConfigMftsCompressPrintSettingNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getAnyTime = update.ConfigMftsCompressPrintSettingAnyTime;
+
+                        var splitAnyTime = getAnyTime.Split("|");
+
+                        var setNewAnyTime = "";
+
+                        for (int i = 0; i < splitAnyTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewAnyTime += "|" + splitAnyTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsCompressPrintSettingAnyTime = setNewAnyTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_NEXTTIME(ConfigNextTime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsCompressPrintSetting.Where(x => x.ConfigMftsCompressPrintSettingNo == param.Id).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsCompressPrintSettingOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.OneTimePosition)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsCompressPrintSettingOneTime = setNewOneTime.Substring(1);
+                        update.ConfigMftsCompressPrintSettingNextTime = param.NextTime;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
     }
 }

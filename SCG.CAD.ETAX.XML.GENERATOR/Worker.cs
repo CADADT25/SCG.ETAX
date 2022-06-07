@@ -21,7 +21,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
         {
             if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLGENERATOR"))
             {
-                // call business layer
+                //// call business layer
                 xMLGenerate.ProcessGenXMLFile();
                 //var layer1 = pDFSign.GetAllPDFFile();
 

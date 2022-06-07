@@ -7,8 +7,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int ProfileUserRoleNo { get; set; }
-        public string? ProfileUserRoleNameTh { get; set; }
-        public string? ProfileUserRoleNameEn { get; set; }
+        public string? ProfileUserRoleName { get; set; }
         public string? ProfileUserRoleDescription { get; set; }
         public string? ProfileUserRoleMunu { get; set; }
         public string? ProfileUserRoleFunction { get; set; }

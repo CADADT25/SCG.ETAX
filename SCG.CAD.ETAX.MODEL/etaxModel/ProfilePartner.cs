@@ -10,7 +10,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? CustomerId { get; set; }
         public string? CompanyCode { get; set; }
         public string? SellOrg { get; set; }
-        public string? PartnerOutputType { get; set; }
+        public int? PartnerOutputType { get; set; }
         public string? NumberOfCopies { get; set; }
         public string? SoldToCode { get; set; }
         public string? SoldToEmail { get; set; }
@@ -25,5 +25,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string UpdateBy { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
         public int Isactive { get; set; }
+        public int? StatusPrint { get; set; }
+        public int? StatusEmail { get; set; }
+        public int? StatusSignPdf { get; set; }
+        public int? StatusSignXml { get; set; }
     }
 }

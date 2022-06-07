@@ -49,7 +49,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
 
-                    
+
 
                     result = JsonConvert.SerializeObject(tran[0]);
 
@@ -83,6 +83,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.OrderBy(x => x.CompanyCode).ToList();
                 }
                 else
                 {
@@ -222,7 +224,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                     if (tran.Count > 0)
                     {
-                        tran = tran.Where(x => x.Isactive == 1).ToList();
+                        tran = tran.Where(x => x.Isactive == 1).OrderBy(x => x.CompanyCode).ToList();
                     }
                 }
 
