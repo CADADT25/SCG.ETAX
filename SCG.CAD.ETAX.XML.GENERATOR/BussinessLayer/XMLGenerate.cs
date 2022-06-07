@@ -397,7 +397,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id = data.BUYER_TAXID ?? "" + data.BUYER_BRANCH ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress = new PostalTradeAddress();
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode = data.BUYER_PSTLZ ?? "";
+                if (data.BUYER_LAND1.ToUpper() != "TH" && String.IsNullOrEmpty(data.BUYER_PSTLZ))
+                {
+                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode = "0";
+                }
+                else
+                {
+                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode = data.BUYER_PSTLZ ?? "";
+                }
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.line1 = data.BUYER_ADDRESS1 ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID = data.BUYER_LAND1 ?? "";
 

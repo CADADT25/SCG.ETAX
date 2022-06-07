@@ -11,6 +11,13 @@ namespace SCG.CAD.ETAX.UTILITY
     public class LogicToolHelper
     {
         ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        ConfigMftsEmailSettingController configMftsEmailSettingController = new ConfigMftsEmailSettingController();
+        ConfigPDFSignController configPDFSignController = new ConfigPDFSignController();
+        ConfigMftsCompressPrintSettingController configMftsCompressPrintSettingController = new ConfigMftsCompressPrintSettingController();
+        ConfigXMLGeneratorController configXMLGeneratorController = new ConfigXMLGeneratorController();
+        ConfigXMLSignController configXMLSignController = new ConfigXMLSignController();
+        ConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new ConfigMftsCompressXmlSettingController();
+
         List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
         public bool CheckBatchRunningTime(string configrunningname)
         {
@@ -54,15 +61,16 @@ namespace SCG.CAD.ETAX.UTILITY
             }
         }
 
-        public bool CheckRunTime(string anytime, DateTime? onetime, DateTime? nexttime, string batchname, int indexno)
+        public bool CheckRunTime(DateTime? nexttime)
         {
             bool result = false;
             try
             {
-                if(CheckRunAnyTime(anytime, nexttime) || CheckRunOneTime(onetime))
+                if (DateTime.Now >= nexttime)
                 {
                     result = true;
                 }
+
             }
             catch (Exception ex)
             {
@@ -71,15 +79,40 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
-        public bool CheckRunAnyTime(string anytime, DateTime? nexttime)
+        public DateTime SetNextRunTime(string anytime, string onetime, string batchname, int index)
         {
-            bool result = false;
+            DateTime result;
+            DateTime? dateonetime;
+            DateTime dateanytime;
+            DateTime nexttime;
+            bool clearOnetime = false;
             try
             {
-                if(DateTime.Now <= nexttime)
+                dateonetime = CheckRunOneTime(onetime);
+                dateanytime = CheckRunAnyTime(anytime);
+                if (dateonetime == null)
                 {
-                    result = true;
+                    //Set anytime
+                    nexttime = dateanytime;
                 }
+                else if (dateonetime <= dateanytime)
+                {
+                    //Set onetime
+                    clearOnetime = true;
+                    nexttime = dateonetime ?? dateanytime;
+                }
+                else if (dateonetime > dateanytime)
+                {
+                    //Set anytime
+                    nexttime = dateanytime;
+                }
+                else
+                {
+                    //Set anytime
+                    nexttime = dateanytime;
+                }
+                result = nexttime;
+                SendSetNextRunTime(batchname, index, nexttime, clearOnetime);
             }
             catch (Exception ex)
             {
@@ -88,18 +121,65 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
-        public bool CheckRunOneTime(DateTime? onetime)
-        {
 
-            bool result = false;
+        public DateTime CheckRunAnyTime(string anytime)
+        {
+            DateTime result = new DateTime();
+            DateTime datenow = DateTime.Now;
+            DateTime nexttime = DateTime.Now;
+            List<DateTime> listdate = new List<DateTime>();
+            string[] timearray;
             try
             {
-                if(onetime != null)
+                var anytimearray = anytime.Split('|');
+                foreach (var time in anytimearray)
                 {
-                    if(onetime <= DateTime.Now)
+                    timearray = time.Split(':');
+                    if (datenow.Hour > Convert.ToInt32(timearray[0]))
                     {
-                        result = true;
+                        //Set Next day
+                        nexttime = ChangeTime(nexttime.AddDays(1), Convert.ToInt32(timearray[0]), Convert.ToInt32(timearray[1]));
                     }
+                    else if (datenow.Hour == Convert.ToInt32(timearray[0]))
+                    {
+                        if (datenow.Minute > Convert.ToInt32(timearray[1]))
+                        {
+                            //Set Next day
+                            nexttime = ChangeTime(nexttime.AddDays(1), Convert.ToInt32(timearray[0]), Convert.ToInt32(timearray[1]));
+                        }
+                        else
+                        {
+                            //Set Current day
+                            nexttime = ChangeTime(nexttime, Convert.ToInt32(timearray[0]), Convert.ToInt32(timearray[1]));
+                        }
+                    }
+                    else
+                    {
+                        //Set Current day
+                        nexttime = ChangeTime(nexttime, Convert.ToInt32(timearray[0]), Convert.ToInt32(timearray[1]));
+                    }
+                    listdate.Add(nexttime);
+                }
+                result = listdate.OrderBy(x => x).First();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public DateTime? CheckRunOneTime(string onetime)
+        {
+
+            DateTime? result = null;
+            try
+            {
+                if (!String.IsNullOrEmpty(onetime))
+                {
+                    var onetimearray = onetime.Split('|');
+                    result = Convert.ToDateTime(onetimearray[0]);
                 }
             }
             catch (Exception ex)
@@ -109,27 +189,76 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
-        public void SetRunTime(string batchname)
+        public void SendSetNextRunTime(string batchname, int index, DateTime nexttime, bool clearOnetime)
         {
             switch (batchname.ToUpper())
             {
                 case "SCG.CAD.ETAX.EMAIL":
+                    configMftsEmailSettingController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.INDEXING.TO.DMS":
                     break;
                 case "SCG.CAD.ETAX.PDF.SIGN":
+                    configPDFSignController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.PRINT.ZIP":
+                    configMftsCompressPrintSettingController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.XML.GENERATOR":
+                    configXMLGeneratorController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.XML.SIGN":
+                    configXMLSignController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.XML.ZIP":
+                    configMftsCompressXmlSettingController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 default:
                     break;
             }
         }
+
+        public void SendClearOneTime(string batchname, int index)
+        {
+            switch (batchname.ToUpper())
+            {
+                case "SCG.CAD.ETAX.EMAIL":
+                    configMftsEmailSettingController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.INDEXING.TO.DMS":
+                    break;
+                case "SCG.CAD.ETAX.PDF.SIGN":
+                    configPDFSignController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.PRINT.ZIP":
+                    configMftsCompressPrintSettingController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.XML.GENERATOR":
+                    configXMLGeneratorController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.XML.SIGN":
+                    configXMLSignController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.XML.ZIP":
+                    configMftsCompressXmlSettingController.SendDeleteOneTime(index);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public DateTime ChangeTime(DateTime dateTime, int hours, int minutes)
+        {
+            return new DateTime(
+                dateTime.Year,
+                dateTime.Month,
+                dateTime.Day,
+                hours,
+                minutes,
+                00,
+                000,
+                dateTime.Kind);
+        }
+
     }
 }
