@@ -17,6 +17,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsIndexGenerationSettingOutputPort { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputUsername { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputPassword { get; set; }
+        public string? ConfigMftsIndexGenerationSettingOutputOneTime { get; set; }
+        public string? ConfigMftsIndexGenerationSettingOutputAnyTime { get; set; }
+        public DateTime? ConfigMftsIndexGenerationSettingOutputNextTime { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;

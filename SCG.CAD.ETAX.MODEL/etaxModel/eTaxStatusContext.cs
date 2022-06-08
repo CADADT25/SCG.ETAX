@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileUserManagement> ProfileUserManagements { get; set; } = null!;
+        public virtual DbSet<ConfigMftsIndexGenerationSettingOutput> ConfigMftsIndexGenerationSettingOutputs { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,24 +29,65 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileUserManagement>(entity =>
+            modelBuilder.Entity<ConfigMftsIndexGenerationSettingOutput>(entity =>
             {
-                entity.HasKey(e => e.UserNo)
-                    .HasName("PK_authenUserProfile");
+                entity.HasKey(e => e.ConfigMftsIndexGenerationSettingOutputNo);
 
-                entity.ToTable("profileUserManagement");
+                entity.ToTable("configMftsIndexGenerationSettingOutput");
 
-                entity.Property(e => e.UserNo).HasColumnName("userNo");
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputNo).HasColumnName("configMftsIndexGenerationSettingOutputNo");
 
-                entity.Property(e => e.AccountStatus).HasColumnName("accountStatus");
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputAnyTime)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputAnyTime");
 
-                entity.Property(e => e.AttempLast)
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputCompanyCode)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputCompanyCode");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputFolder)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputFolder");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputHost)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputHost");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputLogReceiveFolder");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputLogReceiveType)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputLogReceiveType");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputNextTime)
                     .HasColumnType("datetime")
-                    .HasColumnName("attempLast");
+                    .HasColumnName("configMftsIndexGenerationSettingOutputNextTime");
 
-                entity.Property(e => e.AttempLogin)
-                    .HasMaxLength(150)
-                    .HasColumnName("attempLogin");
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputOneTime)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputOneTime");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputPassword)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputPassword");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputPort)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputPort");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputSourceName)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputSourceName");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputType)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputType");
+
+                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputUsername)
+                    .HasMaxLength(300)
+                    .HasColumnName("configMftsIndexGenerationSettingOutputUsername");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -56,27 +97,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.DomainName)
-                    .HasMaxLength(150)
-                    .HasColumnName("domainName");
-
-                entity.Property(e => e.FirstName)
-                    .HasMaxLength(150)
-                    .HasColumnName("firstName");
-
-                entity.Property(e => e.GroupId).HasMaxLength(150);
-
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(150)
-                    .HasColumnName("lastName");
-
-                entity.Property(e => e.PasswordExpire)
-                    .HasColumnType("datetime")
-                    .HasColumnName("passwordExpire");
-
-                entity.Property(e => e.PasswordRegister)
-                    .HasColumnType("datetime")
-                    .HasColumnName("passwordRegister");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
@@ -85,14 +108,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
-
-                entity.Property(e => e.UserEmail)
-                    .HasMaxLength(150)
-                    .HasColumnName("userEmail");
-
-                entity.Property(e => e.UserPassword)
-                    .HasMaxLength(150)
-                    .HasColumnName("userPassword");
             });
 
             OnModelCreatingPartial(modelBuilder);
