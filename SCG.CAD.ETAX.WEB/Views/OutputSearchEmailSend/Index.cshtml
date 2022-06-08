@@ -75,17 +75,18 @@
                     //data: "productUnitNo",
                     className: "text-center",
                     width: "5%",
+                    visible: false,
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
                     data: "outputSearchEmailSendCompanyCode",
-                    width: "10%"
+                    width: "5%"
                 },
                 {
                     data: "outputSearchEmailSendSubject",
-                    width: "10%"
+                    width: "40%"
                 },
                 {
                     data: "outputSearchEmailSendFileName",
@@ -94,6 +95,7 @@
                 {
                     data: "outputSearchEmailSendStatus",
                     width: "10%",
+                    visible: false,
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';

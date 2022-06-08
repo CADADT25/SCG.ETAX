@@ -1,0 +1,20 @@
+﻿@{
+    Layout = null;
+}
+
+<script src="~/assets/validate/TransactionDescriptionValidate.js"></script>
+
+<div class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalViewTransactionDescription" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                 @await Html.PartialAsync("~/Views/TransactionDescription/_View.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnViewCancelTransactionDescription();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

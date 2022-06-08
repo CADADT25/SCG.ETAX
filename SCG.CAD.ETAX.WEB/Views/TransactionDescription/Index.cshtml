@@ -80,7 +80,7 @@
                     data: "billingNumber",
                     width: "10%",
                     render: function (data, type, row) {
-                        return' '+ data.substr( 0, 100 ) +  ' <a> <i class="fas fa-eye text-primary"> </i> </a>';
+                        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-eye text-primary"> </i> </a>';
                     }
                 },
                 {
@@ -189,10 +189,70 @@
     }
 
 
-    function fnCallBillingDetail(){
+    function fnCallBillingDetail(getPk){
 
 
 
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "TransactionDescription")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result);
+
+
+                // Billing Date format
+                var billingDate = new Date(data.BillingDate);
+
+                let setBillingDate = billingDate;
+                let monthBillingDate = (setBillingDate.getMonth() + 1).toString().padStart(2, '0');
+                let dayBillingDate = setBillingDate.getDate().toString().padStart(2, '0');
+                let yearBillingDate = setBillingDate.getFullYear();
+
+                let newBillingDate = dayBillingDate+" - "+monthBillingDate+" - "+yearBillingDate;
+
+
+                // Processing Date format
+
+                var processingDate = new Date(data.BillingDate);
+
+                let setProcessingDate = processingDate;
+
+                let monthProcessingDate = (setProcessingDate.getMonth() + 1).toString().padStart(2, '0');
+                let dayProcessingDate = setProcessingDate.getDate().toString().padStart(2, '0');
+                let yearProcessingDate = setProcessingDate.getFullYear();
+
+                let newProcessingDate = dayProcessingDate+" - "+monthProcessingDate+" - "+yearProcessingDate;
+
+
+                $('#txtViewTransactionDecriptionBillingNo').text(data.BillingNumber);
+                $('#txtViewTransactionDecriptionBillingDate').text(newBillingDate);
+                $('#txtViewTransactionDecriptionProcessingDate').text(newProcessingDate);
+
+                $('#txtViewTransactionDecriptionCompanyCode').text(data.CompanyCode);
+                $('#txtViewTransactionDecriptionCustomerCode').text(data.CustomerId);
+                $('#txtViewTransactionDecriptionCompanyName').text(data.CompanyName);
+                $('#txtViewTransactionDecriptionCustomerName').text(data.CustomerName);
+
+
+                $('#txtViewTransactionDecriptionSoldTo').text(data.SoldTo);
+                $('#txtViewTransactionDecriptionShipTo').text(data.ShipTo);
+                $('#txtViewTransactionDecriptionBillTo').text(data.BillTo);
+                $('#txtViewTransactionDecriptionPayer').text(data.Payer);
+
+
+
+                $("#modalViewTransactionDescription").modal('show');
+
+            }
+        });
+
+    }
+
+    function fnViewCancelTransactionDescription(){
+        $("#modalViewTransactionDescription").modal('hide');
     }
 
 
