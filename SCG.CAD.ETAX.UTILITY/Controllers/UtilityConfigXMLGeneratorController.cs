@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ConfigXMLGeneratorController
+    public class UtilityConfigXMLGeneratorController
     {
         public async Task<List<ConfigXmlGenerator>> List()
         {

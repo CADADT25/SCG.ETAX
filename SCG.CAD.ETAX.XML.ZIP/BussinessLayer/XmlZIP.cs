@@ -15,10 +15,10 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
 {
     public class XmlZIP
     {
-        ConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new ConfigMftsCompressXmlSettingController();
-        OutputSearchXmlZipController outputSearchXmlZipController = new OutputSearchXmlZipController();
-        TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new UtilityConfigMftsCompressXmlSettingController();
+        UtilityOutputSearchXmlZipController outputSearchXmlZipController = new UtilityOutputSearchXmlZipController();
+        UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
 
         List<ConfigMftsCompressXmlSetting> configXmlSetting = new List<ConfigMftsCompressXmlSetting>();

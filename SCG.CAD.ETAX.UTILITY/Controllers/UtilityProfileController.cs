@@ -4,7 +4,7 @@ using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ProfileController
+    public class UtilityProfileController
     {
         public async Task<List<ProfileCompany>> ProfileCompanyList()
         {

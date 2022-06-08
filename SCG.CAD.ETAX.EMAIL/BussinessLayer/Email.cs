@@ -11,14 +11,14 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 {
     public class Email
     {
-        ConfigMftsEmailSettingController configMftsEmailSettingController = new ConfigMftsEmailSettingController();
-        TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
-        ProfileCustomerController profileCustomerController = new ProfileCustomerController();
-        ProfileEmailTemplateController profileEmailTemplateController = new ProfileEmailTemplateController();
-        OutputSearchEmailSendController outputSearchEmailSendController = new OutputSearchEmailSendController();
-        ProfileCompanyController profileCompanyController = new ProfileCompanyController();
-        RdDocumentController rdDocumentController = new RdDocumentController();
+        UtilityConfigMftsEmailSettingController configMftsEmailSettingController = new UtilityConfigMftsEmailSettingController();
+        UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
+        UtilityProfileCustomerController profileCustomerController = new UtilityProfileCustomerController();
+        UtilityProfileEmailTemplateController profileEmailTemplateController = new UtilityProfileEmailTemplateController();
+        UtilityOutputSearchEmailSendController outputSearchEmailSendController = new UtilityOutputSearchEmailSendController();
+        UtilityProfileCompanyController profileCompanyController = new UtilityProfileCompanyController();
+        UtilityRdDocumentController rdDocumentController = new UtilityRdDocumentController();
         LogHelper log = new LogHelper();
 
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();

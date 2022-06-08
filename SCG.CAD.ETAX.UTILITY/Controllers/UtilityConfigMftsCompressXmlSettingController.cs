@@ -5,21 +5,21 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ConfigMftsCompressPrintSettingController
+    public class UtilityConfigMftsCompressXmlSettingController
     {
-        public async Task<List<ConfigMftsCompressPrintSetting>> List()
+        public async Task<List<ConfigMftsCompressXmlSetting>> List()
         {
             Response resp = new Response();
 
-            List<ConfigMftsCompressPrintSetting> tran = new List<ConfigMftsCompressPrintSetting>();
+            List<ConfigMftsCompressXmlSetting> tran = new List<ConfigMftsCompressXmlSetting>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsCompressPrintSetting/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsCompressXmlSetting/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ConfigMftsCompressPrintSetting>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigMftsCompressXmlSetting>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressPrintSetting/DeleteOneTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/DeleteOneTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
@@ -71,7 +71,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressPrintSetting/UpdateNextTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/UpdateNextTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;

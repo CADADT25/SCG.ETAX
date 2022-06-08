@@ -10,9 +10,9 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
     public class XMLSign
     {
-        ConfigXMLSignController configXMLSignController = new ConfigXMLSignController();
-        TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigXMLSignController configXMLSignController = new UtilityConfigXMLSignController();
+        UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
 
         List<ConfigXmlSign> configXmlSign = new List<ConfigXmlSign>();

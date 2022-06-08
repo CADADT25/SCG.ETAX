@@ -1,28 +1,29 @@
-﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class TaxCodeController
+    public class UtilityProductUnitController
     {
-        public async Task<List<TaxCode>> List()
+        public async Task<List<ProductUnit>> List()
         {
             Response resp = new Response();
 
-            List<TaxCode> tran = new List<TaxCode>();
+            List<ProductUnit> tran = new List<ProductUnit>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/TaxCode/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<TaxCode>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
-                    
+
                 }
             }
             catch (Exception ex)

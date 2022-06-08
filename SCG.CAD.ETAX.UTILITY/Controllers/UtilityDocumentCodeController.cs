@@ -5,21 +5,21 @@ using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ProductUnitController
+    public class UtilityDocumentCodeController
     {
-        public async Task<List<ProductUnit>> List()
+        public async Task<List<DocumentCode>> List()
         {
             Response resp = new Response();
 
-            List<ProductUnit> tran = new List<ProductUnit>();
+            List<DocumentCode> tran = new List<DocumentCode>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProductUnit/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/DocumentCode/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProductUnit>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<DocumentCode>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -35,4 +35,5 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return tran;
         }
     }
+
 }

@@ -5,21 +5,21 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ConfigXMLSignController
+    public class UtilityConfigPDFSignController
     {
-        public async Task<List<ConfigXmlSign>> List()
+        public async Task<List<ConfigPdfSign>> List()
         {
             Response resp = new Response();
 
-            List<ConfigXmlSign> tran = new List<ConfigXmlSign>();
+            List<ConfigPdfSign> tran = new List<ConfigPdfSign>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigXmlSign/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigPdfSign/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ConfigXmlSign>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigPdfSign>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigXmlSign/DeleteOneTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigPdfSign/DeleteOneTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
@@ -71,7 +71,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigXmlSign/UpdateNextTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigPdfSign/UpdateNextTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;

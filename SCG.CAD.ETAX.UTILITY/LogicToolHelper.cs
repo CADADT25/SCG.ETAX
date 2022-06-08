@@ -10,13 +10,13 @@ namespace SCG.CAD.ETAX.UTILITY
 {
     public class LogicToolHelper
     {
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
-        ConfigMftsEmailSettingController configMftsEmailSettingController = new ConfigMftsEmailSettingController();
-        ConfigPDFSignController configPDFSignController = new ConfigPDFSignController();
-        ConfigMftsCompressPrintSettingController configMftsCompressPrintSettingController = new ConfigMftsCompressPrintSettingController();
-        ConfigXMLGeneratorController configXMLGeneratorController = new ConfigXMLGeneratorController();
-        ConfigXMLSignController configXMLSignController = new ConfigXMLSignController();
-        ConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new ConfigMftsCompressXmlSettingController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
+        UtilityConfigMftsEmailSettingController configMftsEmailSettingController = new UtilityConfigMftsEmailSettingController();
+        UtilityConfigPDFSignController configPDFSignController = new UtilityConfigPDFSignController();
+        UtilityConfigMftsCompressPrintSettingController configMftsCompressPrintSettingController = new UtilityConfigMftsCompressPrintSettingController();
+        UtilityConfigXMLGeneratorController configXMLGeneratorController = new UtilityConfigXMLGeneratorController();
+        UtilityConfigXMLSignController configXMLSignController = new UtilityConfigXMLSignController();
+        UtilityConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new UtilityConfigMftsCompressXmlSettingController();
 
         List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
         public bool CheckBatchRunningTime(string configrunningname)

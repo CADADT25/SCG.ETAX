@@ -15,9 +15,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 {
     public class PDFSign
     {
-        ConfigPDFSignController configXMLSignController = new ConfigPDFSignController();
-        TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigPDFSignController configXMLSignController = new UtilityConfigPDFSignController();
+        UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
 
         List<ConfigPdfSign> configPDFSign = new List<ConfigPdfSign>();

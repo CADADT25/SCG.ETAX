@@ -4,21 +4,21 @@ using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ProfileCustomerController
+    public class UtilityConfigGlobalController
     {
-        public async Task<List<ProfileCustomer>> List()
+        public async Task<List<ConfigGlobal>> List()
         {
             Response resp = new Response();
 
-            List<ProfileCustomer> tran = new List<ProfileCustomer>();
+            List<ConfigGlobal> tran = new List<ConfigGlobal>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {

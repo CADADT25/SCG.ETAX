@@ -5,21 +5,21 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ConfigMftsEmailSettingController
+    public class UtilityConfigXMLSignController
     {
-        public async Task<List<ConfigMftsEmailSetting>> List()
+        public async Task<List<ConfigXmlSign>> List()
         {
             Response resp = new Response();
 
-            List<ConfigMftsEmailSetting> tran = new List<ConfigMftsEmailSetting>();
+            List<ConfigXmlSign> tran = new List<ConfigXmlSign>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsEmailSetting/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigXmlSign/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ConfigMftsEmailSetting>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigXmlSign>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsEmailSetting/DeleteOneTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigXmlSign/DeleteOneTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
@@ -71,11 +71,10 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsEmailSetting/UpdateNextTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigXmlSign/UpdateNextTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
         }
-
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class TransactionDescriptionController
+    public class UtilityTransactionDescriptionController
     {
         public async Task<List<TransactionDescription>> List()
         {

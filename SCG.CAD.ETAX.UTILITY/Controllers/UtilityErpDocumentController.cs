@@ -5,21 +5,21 @@ using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class RdDocumentController
+    public class UtilityErpDocumentController
     {
-        public async Task<List<RdDocument>> List()
+        public async Task<List<ErpDocument>> List()
         {
             Response resp = new Response();
 
-            List<RdDocument> tran = new List<RdDocument>();
+            List<ErpDocument> tran = new List<ErpDocument>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/RdDocument/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ErpDocument/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<RdDocument>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ErpDocument>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {

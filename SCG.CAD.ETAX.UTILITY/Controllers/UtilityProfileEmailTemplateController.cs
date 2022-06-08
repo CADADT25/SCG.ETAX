@@ -1,25 +1,24 @@
-﻿
-using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL.etaxModel;
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ErpDocumentController
+    public class UtilityProfileEmailTemplateController
     {
-        public async Task<List<ErpDocument>> List()
+        public async Task<List<ProfileEmailTemplate>> List()
         {
             Response resp = new Response();
 
-            List<ErpDocument> tran = new List<ErpDocument>();
+            List<ProfileEmailTemplate> tran = new List<ProfileEmailTemplate>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ErpDocument/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileEmailTemplate/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ErpDocument>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ProfileEmailTemplate>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {

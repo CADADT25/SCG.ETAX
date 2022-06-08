@@ -68,7 +68,7 @@
                     width: "10%"
                 },
                 {
-                    data: "isactive",
+                    data: "accountStatus",
                     width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
@@ -83,7 +83,7 @@
                     width: "2%"
                 }
             ]
-            
+
         });
 
         table.on( 'order.dt search.dt', function () {
@@ -94,10 +94,49 @@
 
 
         EditProfileUserManagement(table);
-        DeleteProfileUserManagement(table);
+
+    }
+
+    function EditProfileUserManagement(table){
+
+        $('#tbProfileUserManagementMain').on('click', 'td.editor-edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var getPK = data[Object.keys(data)[0]];
+
+            $("#contentPartial").load("@Url.Action("_Update", "ProfileUserManagement")");
+
+            callProfileUserManagementGetDetailController(getPK);
+
+        });
     }
 
 
+    function callProfileUserManagementGetDetailController(getPK){
+
+            var setEmail = "";
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Detail", "ProfileUserManagement")",
+                data: { id : getPK },
+                //contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function (result) {
+
+                    data = $.parseJSON(result)
+
+                    $('#UserProfileEmail').text(data.UserEmail);
+
+                    document.getElementById('txtUpdateProfileUserManagementEmail').value = data.UserEmail;
+                    document.getElementById('txtUpdateProfileUserManagementName').value = data.FirstName;
+                    document.getElementById('txtUpdateProfileUserManagementLastName').value = data.LastName;
+
+                }
+            });
+
+        }
 
 
 

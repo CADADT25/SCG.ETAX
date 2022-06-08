@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class OutputSearchEmailSendController
+    public class UtilityOutputSearchEmailSendController
     {
         public async Task<List<OutputSearchEmailSend>> List()
         {

@@ -127,7 +127,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileUserManagement>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.Where(x => x.Isactive == 1).OrderBy(x => x.UserNo).ToList();
+                    tran = tran.Where(x => x.AccountStatus == 1).OrderBy(x => x.UserNo).ToList();
                 }
                 else
                 {

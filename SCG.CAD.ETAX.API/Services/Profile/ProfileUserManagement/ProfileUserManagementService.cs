@@ -116,7 +116,6 @@
                         update.AccountStatus = param.AccountStatus;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
-                        update.Isactive = param.Isactive;
 
                         _dbContext.SaveChanges();
 

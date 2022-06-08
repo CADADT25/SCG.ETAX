@@ -11,7 +11,7 @@ namespace SCG.CAD.ETAX.UTILITY
 {
     public class ControllerHelper
     {
-        TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
+        UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
 
         public List<TransactionDescription> List()
         {

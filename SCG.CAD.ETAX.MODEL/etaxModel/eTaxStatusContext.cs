@@ -38,9 +38,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
                 entity.Property(e => e.UserNo).HasColumnName("userNo");
 
-                entity.Property(e => e.AccountStatus)
-                    .HasMaxLength(10)
-                    .HasColumnName("accountStatus");
+                entity.Property(e => e.AccountStatus).HasColumnName("accountStatus");
 
                 entity.Property(e => e.AttempLast)
                     .HasColumnType("datetime")
@@ -67,8 +65,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnName("firstName");
 
                 entity.Property(e => e.GroupId).HasMaxLength(150);
-
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
 
                 entity.Property(e => e.LastName)
                     .HasMaxLength(150)

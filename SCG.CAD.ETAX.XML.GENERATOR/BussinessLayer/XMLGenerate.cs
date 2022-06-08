@@ -10,16 +10,16 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
     public class XMLGenerate
     {
-        ConfigXMLGeneratorController configXMLGeneratorController = new ConfigXMLGeneratorController();
-        TaxCodeController taxCodeController = new TaxCodeController();
-        DocumentCodeController documentCodeController = new DocumentCodeController();
+        UtilityConfigXMLGeneratorController configXMLGeneratorController = new UtilityConfigXMLGeneratorController();
+        UtilityTaxCodeController taxCodeController = new UtilityTaxCodeController();
+        UtilityDocumentCodeController documentCodeController = new UtilityDocumentCodeController();
         //ErpDocumentController erpDocumentController = new ErpDocumentController();
         //RdDocumentController rdDocumentController = new RdDocumentController();
-        ProfileController profileController = new ProfileController();
-        TransactionDescriptionController transactionDescription = new TransactionDescriptionController();
-        ProfileBranchController profileBranchController = new ProfileBranchController();
-        ProductUnitController productUnitController = new ProductUnitController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityProfileController profileController = new UtilityProfileController();
+        UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
+        UtilityProfileBranchController profileBranchController = new UtilityProfileBranchController();
+        UtilityProductUnitController productUnitController = new UtilityProductUnitController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
 
 

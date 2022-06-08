@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
-using SCG.CAD.ETAX.MODEL.etaxModel;
 using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class ConfigMftsCompressXmlSettingController
+    public class UtilityConfigMftsEmailSettingController
     {
-        public async Task<List<ConfigMftsCompressXmlSetting>> List()
+        public async Task<List<ConfigMftsEmailSetting>> List()
         {
             Response resp = new Response();
 
-            List<ConfigMftsCompressXmlSetting> tran = new List<ConfigMftsCompressXmlSetting>();
+            List<ConfigMftsEmailSetting> tran = new List<ConfigMftsEmailSetting>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsCompressXmlSetting/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsEmailSetting/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ConfigMftsCompressXmlSetting>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigMftsEmailSetting>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/DeleteOneTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsEmailSetting/DeleteOneTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
@@ -71,10 +71,11 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/UpdateNextTime", httpContent));
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsEmailSetting/UpdateNextTime", httpContent));
 
             //JsonResult Json = new JsonResult(task);
             return task;
         }
+
     }
 }

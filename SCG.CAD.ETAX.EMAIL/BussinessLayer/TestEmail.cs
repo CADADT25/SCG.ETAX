@@ -12,7 +12,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 {
     public class TestEmail
     {
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
         ConfigGlobal configGlobal = new ConfigGlobal();
         string pathoutputpdfsendemail;

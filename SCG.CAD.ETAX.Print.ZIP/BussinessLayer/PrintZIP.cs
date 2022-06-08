@@ -15,10 +15,10 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
 {
     public class PrintZIP
     {
-        ConfigMftsCompressPrintSettingController configMftsCompressPrintSettingController = new ConfigMftsCompressPrintSettingController();
-        OutputSearchPrintingController outputSearchPrintingController = new OutputSearchPrintingController();
-        TransactionDescriptionController transactionDescriptionController = new TransactionDescriptionController();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigMftsCompressPrintSettingController configMftsCompressPrintSettingController = new UtilityConfigMftsCompressPrintSettingController();
+        UtilityOutputSearchPrintingController outputSearchPrintingController = new UtilityOutputSearchPrintingController();
+        UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
 
         List<ConfigMftsCompressPrintSetting> configPrintSetting = new List<ConfigMftsCompressPrintSetting>();
