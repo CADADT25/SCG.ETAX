@@ -9,6 +9,8 @@ global using SCG.CAD.ETAX.API.Repositories;
 global using SCG.CAD.ETAX.API.Services;
 global using System.Data;
 global using SCG.CAD.ETAX.MODEL.etaxModel;
+global using System.Collections;
+global using System.Globalization;
 
 
 

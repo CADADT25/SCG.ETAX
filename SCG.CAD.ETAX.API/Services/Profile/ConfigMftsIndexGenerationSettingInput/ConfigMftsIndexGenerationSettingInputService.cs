@@ -107,6 +107,11 @@
                         update.ConfigMftsIndexGenerationSettingInputSourceName = param.ConfigMftsIndexGenerationSettingInputSourceName;
                         update.ConfigMftsIndexGenerationSettingInputSourceNameOut = param.ConfigMftsIndexGenerationSettingInputSourceNameOut;
                         update.ConfigMftsIndexGenerationSettingInputOcType = param.ConfigMftsIndexGenerationSettingInputOcType;
+                        update.ConfigMftsIndexGenerationSettingInputHost = param.ConfigMftsIndexGenerationSettingInputHost;
+                        update.ConfigMftsIndexGenerationSettingInputPort = param.ConfigMftsIndexGenerationSettingInputPort;
+                        update.ConfigMftsIndexGenerationSettingInputUsername = param.ConfigMftsIndexGenerationSettingInputUsername;
+                        update.ConfigMftsIndexGenerationSettingInputPassword = param.ConfigMftsIndexGenerationSettingInputPassword; 
+                        
 
 
                         update.UpdateBy = param.UpdateBy;
@@ -166,6 +171,341 @@
             }
             return resp;
         }
+
+
+        public Response UPDATE_ONETIME(ConfigMftsIndexGenerationSettingInput param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsIndexGenerationSettingInput.Where(x => x.ConfigMftsIndexGenerationSettingInputNo == param.ConfigMftsIndexGenerationSettingInputNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        var setNewOnetime = "";
+
+                        setNewOnetime += "|" + param.ConfigMftsIndexGenerationSettingInputOneTime;
+
+                        var findFirstIndex = setNewOnetime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewOnetime = setNewOnetime.Substring(1);
+                        }
+
+                        var GetOldValue = update.ConfigMftsIndexGenerationSettingInputOneTime;
+
+                        GetOldValue = GetOldValue += "|" + setNewOnetime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSortOld = new ArrayList();
+
+                        ArrayList ArrayDateSortNew = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                DateTime dt = DateTime.ParseExact(item.ToString(), "dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                                string s = dt.ToString("yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                                ArrayDateSortOld.Add(s);
+                            }
+                        }
+
+                        ArrayDateSortOld.Sort();
+
+                        foreach (var item in ArrayDateSortOld)
+                        {
+                            DateTime dt = DateTime.ParseExact(item.ToString(), "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                            string s = dt.ToString("dd-MM-yyyy hh:mm", CultureInfo.InvariantCulture);
+
+                            ArrayDateSortNew.Add(s);
+                        }
+
+                        var setSort = "";
+
+                        int count = ArrayDateSortNew.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSortNew)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigMftsIndexGenerationSettingInputOneTime = setSort;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_ANYTIME(ConfigMftsIndexGenerationSettingInput param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsIndexGenerationSettingInput.Where(x => x.ConfigMftsIndexGenerationSettingInputNo == param.ConfigMftsIndexGenerationSettingInputNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var setNewAnytime = "";
+
+                        setNewAnytime += "|" + param.ConfigMftsIndexGenerationSettingInputAnyTime;
+
+                        var findFirstIndex = setNewAnytime.Substring(0, 1);
+
+                        if (findFirstIndex == "|")
+                        {
+                            setNewAnytime = setNewAnytime.Substring(1, 5);
+                        }
+
+
+                        var GetOldValue = update.ConfigMftsIndexGenerationSettingInputAnyTime;
+
+                        GetOldValue = GetOldValue += "|" + setNewAnytime;
+
+                        var SetArrayOldValue = GetOldValue.Split("|");
+
+                        ArrayList ArrayDateSort = new ArrayList();
+
+                        foreach (var item in SetArrayOldValue)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                ArrayDateSort.Add(item);
+                            }
+                        }
+
+                        ArrayDateSort.Sort();
+
+                        var setSort = "";
+
+                        int count = ArrayDateSort.Count;
+
+                        int idx = 1;
+
+                        foreach (var item in ArrayDateSort)
+                        {
+                            if (idx == count)
+                            {
+                                setSort += item;
+                            }
+                            else
+                            {
+                                setSort += item + "|";
+                            }
+
+                            idx++;
+                        }
+
+                        update.ConfigMftsIndexGenerationSettingInputAnyTime = setSort;
+
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response DELETE_ONETIME(DeleteOnetime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsIndexGenerationSettingInput.Where(x => x.ConfigMftsIndexGenerationSettingInputNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsIndexGenerationSettingInputOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsIndexGenerationSettingInputOneTime = setNewOneTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response DELETE_ANYTIME(DeleteAnytime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsIndexGenerationSettingInput.Where(x => x.ConfigMftsIndexGenerationSettingInputNo == param.pk).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getAnyTime = update.ConfigMftsIndexGenerationSettingInputAnyTime;
+
+                        var splitAnyTime = getAnyTime.Split("|");
+
+                        var setNewAnyTime = "";
+
+                        for (int i = 0; i < splitAnyTime.Length; i++)
+                        {
+                            if (i != param.position)
+                            {
+                                setNewAnyTime += "|" + splitAnyTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsIndexGenerationSettingInputAnyTime = setNewAnyTime.Substring(1);
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATE_NEXTTIME(ConfigNextTime param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.configMftsIndexGenerationSettingInput.Where(x => x.ConfigMftsIndexGenerationSettingInputNo == param.Id).FirstOrDefault();
+
+                    if (update != null)
+                    {
+
+                        var getOnetime = update.ConfigMftsIndexGenerationSettingInputOneTime;
+
+                        var splitOneTime = getOnetime.Split("|");
+
+                        var setNewOneTime = "";
+
+                        for (int i = 0; i < splitOneTime.Length; i++)
+                        {
+                            if (i != param.OneTimePosition)
+                            {
+                                setNewOneTime += "|" + splitOneTime[i];
+                            }
+                        }
+
+                        update.ConfigMftsIndexGenerationSettingInputOneTime = setNewOneTime.Substring(1);
+                        update.ConfigMftsIndexGenerationSettingInputNextTime = param.NextTime;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
 
     }
 }

@@ -63,5 +63,53 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
 
+
+        [HttpPost]
+        [Route("UpdateOneTime")]
+        public IActionResult UpdateOneTime(ConfigMftsIndexGenerationSettingInput param)
+        {
+            var result = repo.UPDATE_ONETIME(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("UpdateAnyTime")]
+        public IActionResult UpdateAnyTime(ConfigMftsIndexGenerationSettingInput param)
+        {
+            var result = repo.UPDATE_ANYTIME(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("DeleteOneTime")]
+        public IActionResult DeleteOneTime(DeleteOnetime param)
+        {
+            var result = repo.DELETE_ONETIME(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("DeleteAnyTime")]
+        public IActionResult DeleteAnyTime(DeleteAnytime param)
+        {
+            var result = repo.DELETE_ANYTIME(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("UpdateNextTime")]
+        public IActionResult UpdateNextTime(ConfigNextTime param)
+        {
+            var result = repo.UPDATE_NEXTTIME(param).Result;
+
+            return Ok(result);
+        }
+
+
+
     }
 }
