@@ -154,7 +154,7 @@
             document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 
 
-            $("#modalCreateProfileCertificate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalCreateProfileCertificate").modal('hide');
     }
 
     function fnUpdateCancelProfileCertificate(){
@@ -167,7 +167,7 @@
             document.getElementById('txtUpdateProfileCertificateStartDate').value = '';
             document.getElementById('txtUpdateProfileCertificateEndDate').value = '';
 
-            $("#modalUpdateProfileCertificate").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+            $("#modalUpdateProfileCertificate").modal('hide');
     }
 
     function callModalInsertProfileCertificate(){

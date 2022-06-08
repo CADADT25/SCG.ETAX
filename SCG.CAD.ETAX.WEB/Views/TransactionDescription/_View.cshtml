@@ -64,42 +64,25 @@
                 <div class="card-body invoice-padding pt-0">
                     <div class="row invoice-spacing">
                         <div class="col-xl-8 p-0">
-                            <p class="mb-2 font-weight-bold pl-1">Sold To:   <span id="txtViewTransactionDecriptionSoldTo"></span></p>
-                            <p class="mb-2 font-weight-bold pl-1">Ship To:   <span id="txtViewTransactionDecriptionShipTo"></span></p>
-                            <p class="mb-2 font-weight-bold pl-1">Bill To:   <span id="txtViewTransactionDecriptionBillTo"></span></p>
-                            <p class="mb-2 font-weight-bold pl-1">Payer:     <span id="txtViewTransactionDecriptionPayer"></span></p>
+                            <p class="mb-2 font-weight-bold pl-1">Sold To:   <span class="font-weight-light" id="txtViewTransactionDecriptionSoldTo"></span></p>
+                            <p class="mb-2 font-weight-bold pl-1">Ship To:   <span class="font-weight-light" id="txtViewTransactionDecriptionShipTo"></span></p>
+                            <p class="mb-2 font-weight-bold pl-1">Bill To:   <span class="font-weight-light" id="txtViewTransactionDecriptionBillTo"></span></p>
+                            <p class="mb-2 font-weight-bold pl-1">Payer:     <span class="font-weight-light" id="txtViewTransactionDecriptionPayer"></span></p>
                             @*<h6 class="mb-25">Thomas shelby</h6>
-                            <p class="card-text mb-25">Shelby Company Limited</p>
-                            <p class="card-text mb-25">Small Heath, B10 0HF, UK</p>
-                            <p class="card-text mb-25">718-986-6062</p>
-                            <p class="card-text mb-0">peakyFBlinders@gmail.com</p>*@
+                                <p class="card-text mb-25">Shelby Company Limited</p>
+                                <p class="card-text mb-25">Small Heath, B10 0HF, UK</p>
+                                <p class="card-text mb-25">718-986-6062</p>
+                                <p class="card-text mb-0">peakyFBlinders@gmail.com</p>*@
                         </div>
                         <div class="col-xl-4 p-0 mt-xl-0 mt-2">
-                            <h6 class="mb-2">Payment Details:</h6>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="pr-1">Total Due:</td>
-                                        <td><span class="font-weight-bold">$12,110.55</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pr-1">Bank name:</td>
-                                        <td>American Bank</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pr-1">Country:</td>
-                                        <td>United States</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pr-1">IBAN:</td>
-                                        <td>ETD95476213874685</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pr-1">SWIFT code:</td>
-                                        <td>BR91905</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h6 class="mb-2">
+                                Document Type:
+                                <span class="font-weight-light" id="txtViewTransactionDecriptionDocTypeCode"></span>
+                            </h6>
+                            <h6 class="mb-2">
+                                Data Source:
+                                <span class="font-weight-light" id="txtViewTransactionDecriptionDataSource"></span>
+                            </h6>
                         </div>
                     </div>
                 </div>
@@ -110,49 +93,107 @@
                         <thead>
                             <tr>
                                 <th class="py-1">Task description</th>
-                                <th class="py-1">Rate</th>
-                                <th class="py-1">Hours</th>
-                                <th class="py-1">Total</th>
+                                <th class="py-1">Status</th>
+                                <th class="py-1">Datetime</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="py-1">
-                                    <p class="card-text font-weight-bold mb-25">Native App Development</p>
-                                    <p class="card-text text-nowrap">
-                                        Developed a full stack native app using React Native, Bootstrap & Python
-                                    </p>
+                                    <p class="card-text font-weight-bold mb-25">XML Generate</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionGenerateDetail"></p>
                                 </td>
                                 <td class="py-1">
-                                    <span class="font-weight-bold">$60.00</span>
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionGenerateStatus"></span>
                                 </td>
                                 <td class="py-1">
-                                    <span class="font-weight-bold">30</span>
-                                </td>
-                                <td class="py-1">
-                                    <span class="font-weight-bold">$1,800.00</span>
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionGenerateDateTime"></span>
                                 </td>
                             </tr>
                             <tr class="border-bottom">
                                 <td class="py-1">
-                                    <p class="card-text font-weight-bold mb-25">Ui Kit Design</p>
-                                    <p class="card-text text-nowrap">Designed a UI kit for native app using Sketch, Figma & Adobe XD</p>
+                                    <p class="card-text font-weight-bold mb-25">XML Sign</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionXmlSignDetail"></p>
                                 </td>
                                 <td class="py-1">
-                                    <span class="font-weight-bold">$60.00</span>
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionXmlSignStatus"></span>
                                 </td>
                                 <td class="py-1">
-                                    <span class="font-weight-bold">20</span>
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionXmlSignDateTime"></span>
+                                </td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td class="py-1">
+                                    <p class="card-text font-weight-bold mb-25">PDF Sign</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionPdfSignDetail"></p>
                                 </td>
                                 <td class="py-1">
-                                    <span class="font-weight-bold">$1200.00</span>
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionPdfSignStatus"></span>
+                                </td>
+                                <td class="py-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionPdfSignDateTime"></span>
+                                </td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td class="py-1">
+                                    <p class="card-text font-weight-bold mb-25">Print</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionPrintDetail"></p>
+                                </td>
+                                <td class="py-1">
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionPrintStatus"></span>
+                                </td>
+                                <td class="py-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionPrintDateTime"></span>
+                                </td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td class="py-1">
+                                    <p class="card-text font-weight-bold mb-25">Email</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionEmailSendDetail"></p>
+                                </td>
+                                <td class="py-1">
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionEmailSendStatus"></span>
+                                </td>
+                                <td class="py-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionEmailSendDateTime"></span>
+                                </td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td class="py-1">
+                                    <p class="card-text font-weight-bold mb-25">XML Compress</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionXmlCompressDetail"></p>
+                                </td>
+                                <td class="py-1">
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionXmlCompressStatus"></span>
+                                </td>
+                                <td class="py-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionXmlCompressDateTime"></span>
+                                </td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td class="py-1">
+                                    <p class="card-text font-weight-bold mb-25">PDF Indexing</p>
+                                    <p class="card-text text-nowrap" id="txtViewTransactionDecriptionPdfIndexingDetail"></p>
+                                </td>
+                                <td class="py-1">
+                                    <span class="font-weight-bold btn btn-sm" id="txtViewTransactionDecriptionPdfIndexingStatus"></span>
+                                </td>
+                                <td class="py-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="font-weight-bold" id="txtViewTransactionDecriptionPdfIndexingDateTime"></span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="card-body invoice-padding pb-0">
+                @*<div class="card-body invoice-padding pb-0">
                     <div class="row invoice-sales-total-wrapper">
                         <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
                             <p class="card-text mb-0">
@@ -181,7 +222,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
                 <!-- Invoice Description ends -->
 
                 <hr class="invoice-spacing" />
@@ -190,10 +231,9 @@
                 <div class="card-body invoice-padding pt-0">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-weight-bold">Note:</span>
-                            <span>
-                                It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance
-                                projects. Thank You!
+                            <span class="font-weight-bold">Last Modify:</span>
+                            <span id="txtViewTransactionDecriptionUpdateDate">
+                                
                             </span>
                         </div>
                     </div>

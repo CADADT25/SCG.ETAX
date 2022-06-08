@@ -11,6 +11,7 @@ global using System.Data;
 global using SCG.CAD.ETAX.MODEL.etaxModel;
 global using System.Collections;
 global using System.Globalization;
+global using Newtonsoft.Json;
 
 
 

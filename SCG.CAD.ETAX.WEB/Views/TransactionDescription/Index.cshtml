@@ -19,16 +19,18 @@
         $('#tranSearchDocumentType').select2();
         $('#tranSearchDateType').select2();
         $('#tranSearchDataSource').select2();
-        $('#tranSearchSellOrg').select2();
+        //$('#tranSearchSellOrg').select2();
 
         $("#tranSearchDateRang").flatpickr({
-            mode: "range"
+            mode: "range",
+            altInput: true,
+            dateFormat: "d-m-Y",
         });
 
         fnDropdownTransactionSearchCompanyCode();
         fnDropdownTransactionSearchDocumentType();
         fnDropdownTransactionSearchDataSource();
-        fnDropdownTransactionSearchSellOrg();
+        //fnDropdownTransactionSearchSellOrg();
 
         RenderTransaction();
 
@@ -62,20 +64,7 @@
                     render: function (data, type, full, meta){
                     return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
                 },
-                {
-                    data: "transactionNo",
-                    className: "text-center",
-                    width: "5%",
-                    visible: false
-                },
-                {
-                    className: "text-center",
-                    width: "5%",
-                    visible: false,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
+                
                 {
                     data: "billingNumber",
                     width: "10%",
@@ -86,11 +75,6 @@
                 {
                     data: "companyCode",
                     width: "5%"
-                },
-                {
-                    data: "sellOrg",
-                    width: "5%",
-                    visible: false,
                 },
                 {
                     data: "customerId",
@@ -153,24 +137,6 @@
                         return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
-                },
-                {
-                    data: "isactive",
-                    width: "5%",
-                    visible: false,
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
-                    }
-                },
-                {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-eye" data-toggle="tooltip" title="View data on record"/>',
-                    orderable: false,
-                    visible: false,
-                    width: "2%"
                 }
             ],
             select: {
@@ -180,18 +146,12 @@
         });
 
 
-        table.on( 'order.dt search.dt', function () {
-            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
+
 
     }
 
 
     function fnCallBillingDetail(getPk){
-
-
 
         $.ajax({
             type: "GET",
@@ -236,12 +196,44 @@
                 $('#txtViewTransactionDecriptionCompanyName').text(data.CompanyName);
                 $('#txtViewTransactionDecriptionCustomerName').text(data.CustomerName);
 
-
                 $('#txtViewTransactionDecriptionSoldTo').text(data.SoldTo);
                 $('#txtViewTransactionDecriptionShipTo').text(data.ShipTo);
                 $('#txtViewTransactionDecriptionBillTo').text(data.BillTo);
                 $('#txtViewTransactionDecriptionPayer').text(data.Payer);
 
+                $('#txtViewTransactionDecriptionDocTypeCode').text(data.DocType);
+                $('#txtViewTransactionDecriptionDataSource').text(data.SourceName);
+
+                $('#txtViewTransactionDecriptionGenerateDetail').text(data.GenerateDetail);
+                $('#txtViewTransactionDecriptionGenerateStatus').text(data.GenerateStatus);
+                $('#txtViewTransactionDecriptionGenerateDateTime').text(data.GenerateDateTime);
+
+                $('#txtViewTransactionDecriptionXmlSignDetail').text(data.XmlSignDetail);
+                $('#txtViewTransactionDecriptionXmlSignStatus').text(data.XmlSignStatus);
+                $('#txtViewTransactionDecriptionXmlSignDateTime').text(data.XmlSignDateTime);
+
+                $('#txtViewTransactionDecriptionPdfSignDetail').text(data.PdfSignDetail);
+                $('#txtViewTransactionDecriptionPdfSignStatus').text(data.PdfSignStatus);
+                $('#txtViewTransactionDecriptionPdfSignDateTime').text(data.PdfSignDateTime);
+
+                $('#txtViewTransactionDecriptionPrintDetail').text(data.PrintDetail);
+                $('#txtViewTransactionDecriptionPrintStatus').text(data.PrintStatus);
+                $('#txtViewTransactionDecriptionPrintDateTime').text(data.PrintDateTime);
+
+                $('#txtViewTransactionDecriptionEmailSendDetail').text(data.EmailSendDetail);
+                $('#txtViewTransactionDecriptionEmailSendStatus').text(data.EmailSendStatus);
+                $('#txtViewTransactionDecriptionEmailSendDateTime').text(data.EmailSendDateTime);
+
+                $('#txtViewTransactionDecriptionXmlCompressDetail').text(data.XmlCompressDetail);
+                $('#txtViewTransactionDecriptionXmlCompressStatus').text(data.XmlCompressStatus);
+                $('#txtViewTransactionDecriptionXmlCompressDateTime').text(data.XmlCompressDateTime);
+
+                $('#txtViewTransactionDecriptionPdfIndexingDetail').text(data.PdfIndexingDetail);
+                $('#txtViewTransactionDecriptionPdfIndexingStatus').text(data.PdfIndexingStatus);
+                $('#txtViewTransactionDecriptionPdfIndexingDateTime').text(data.PdfIndexingDateTime);
+
+
+                $('#txtViewTransactionDecriptionUpdateDate').text(data.UpdateDate);
 
 
                 $("#modalViewTransactionDescription").modal('show');
@@ -295,18 +287,7 @@
         })
     }
 
-    function fnDropdownTransactionSearchSellOrg() {
-
-        $.getJSON("@Url.Action("DropDownListAll", "ProfileSellOrg")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.sellOrgCode,
-                        text: data.sellOrgCode
-                    }).html(data.sellOrgCode).appendTo("#tranSearchSellOrg");
-            });
-        })
-    }
+  
 
     function fnSearchTransaction(){
 
@@ -320,8 +301,6 @@
         var getDateType = $('#tranSearchDateType').val();
         var getDateBetween = $('#tranSearchDateRang').val();
         var getDataSource = $('#tranSearchDataSource').val();
-        var getSellOrg = $('#tranSearchSellOrg').val();
-
 
         var model = new Object();
 
@@ -335,15 +314,122 @@
         model.tranSearchDateType = getDateType;
         model.tranSearchDateBetween = getDateBetween;
         model.tranSearchDataSource = getDataSource
-        model.tranSearchSellOrg = getSellOrg;
+        //model.tranSearchSellOrg = getSellOrg;
 
         var JsonString = JSON.stringify(model);
 
+        $('#tbTransactionMain').DataTable().destroy();
 
+        $('#tbTransactionMain').DataTable({
 
-        var table = $('#tbTransactionMain').DataTable();
+            
 
-        table.ajax.reload();
+            "scrollY": true,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "retrieve": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax":
+                {
+                    type: "GET",
+                    url: "@Url.Action("Search", "transactionDescription")",
+                    data: { transactionSearchJson : JsonString },
+                    dataType: "json"
+                },
+                "columns": [
+
+                {
+                    width: "2%",
+                    render: function (data, type, full, meta){
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                
+                {
+                    data: "billingNumber",
+                    width: "15%",
+                    render: function (data, type, row) {
+                        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-eye text-primary"> </i> </a>';
+                    }
+                },
+                {
+                    data: "companyCode",
+                    width: "5%"
+                },
+                {
+                    data: "customerId",
+                    width: "5%",
+                    visible: false,
+                },
+                
+                {
+                    data: "generateStatus",
+                    width: "2%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "xmlSignStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "pdfSignStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "printStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "emailSendStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "xmlCompressStatus",
+                    width: "3%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                },
+                {
+                    data: "pdfIndexingStatus",
+                    width: "2%",
+                    render: function (data, type, row) {
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                    }
+                }
+            ],
+
+            select: {
+                style:    'os',
+                selector: 'td:first-child'
+             },
+
+             destroy : true
+            
+        }).ajax.reload();
 
         //RenderTransaction(JsonString);
 

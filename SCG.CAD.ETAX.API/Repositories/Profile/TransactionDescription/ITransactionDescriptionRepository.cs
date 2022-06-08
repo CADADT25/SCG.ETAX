@@ -9,5 +9,7 @@
         Task<Response> UPDATE(TransactionDescription param);
         Task<Response> UPDATE_LIST(List<TransactionDescription> param);
         Task<Response> DELETE(TransactionDescription param);
+        Task<Response> SEARCH(string JsonString);
+
     }
 }

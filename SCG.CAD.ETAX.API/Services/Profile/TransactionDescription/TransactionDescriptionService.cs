@@ -1,4 +1,6 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class TransactionDescriptionService
     {
@@ -292,9 +294,9 @@
                             }
                             else
                             {
-                                transactionSearchError.Add(new transactionSearchErrorModel 
-                                { 
-                                    tranSearchErrorBillingNo = "123", 
+                                transactionSearchError.Add(new transactionSearchErrorModel
+                                {
+                                    tranSearchErrorBillingNo = "123",
                                     tranSearchErrorDetail = "Can't update because data not found."
                                 });
                             }
@@ -350,6 +352,72 @@
             return resp;
         }
 
+        public Response SEARCH(string JsonString)
+        {
+            Response resp = new Response();
+
+            transactionSearchModel obj = new transactionSearchModel();
+
+            List<TransactionDescription> tran = new List<TransactionDescription>();
+
+            try
+            {
+                obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
+
+                if (obj != null)
+                {
+
+                    var setTransearchStatus = obj.tranSearchStatus.ToList();
+
+
+                    tran = _dbContext.transactionDescription.Where(
+                            x => !string.IsNullOrEmpty(x.BillingNumber) ? x.BillingNumber.Contains(obj.tranSearchBillingNo) : x.BillingNumber != "" ||
+                            !string.IsNullOrEmpty(x.CustomerId) ? x.CustomerId.Contains(obj.tranSearchCustomerCode) : x.CustomerId != "" ||
+                            !string.IsNullOrEmpty(x.SourceName) ? x.SourceName.Contains(obj.tranSearchDataSource) : x.SourceName != ""                             
+                            )
+                            .ToList();
+
+
+                    if (tran.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = tran;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+                else
+                {
+
+                    var getList = _dbContext.transactionDescription.ToList();
+
+                    if (getList.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = getList;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
 
     }
