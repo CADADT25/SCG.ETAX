@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ReadLogFile = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.cbbpath = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.StopStartService = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
             this.lblstatus = new System.Windows.Forms.Label();
             this.btnprocess = new System.Windows.Forms.Button();
@@ -42,48 +42,52 @@
             this.label2 = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.ReadLogFile.SuspendLayout();
+            this.StopStartService.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.ReadLogFile);
+            this.tabControl1.Controls.Add(this.StopStartService);
             this.tabControl1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Location = new System.Drawing.Point(15, 15);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1238, 691);
+            this.tabControl1.Size = new System.Drawing.Size(1548, 864);
             this.tabControl1.TabIndex = 4;
             // 
-            // tabPage1
+            // ReadLogFile
             // 
-            this.tabPage1.Controls.Add(this.richTextBox1);
-            this.tabPage1.Controls.Add(this.button1);
-            this.tabPage1.Controls.Add(this.cbbpath);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 29);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1230, 658);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "ReadLogFile";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.ReadLogFile.Controls.Add(this.richTextBox1);
+            this.ReadLogFile.Controls.Add(this.button1);
+            this.ReadLogFile.Controls.Add(this.cbbpath);
+            this.ReadLogFile.Controls.Add(this.label1);
+            this.ReadLogFile.Location = new System.Drawing.Point(4, 34);
+            this.ReadLogFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReadLogFile.Name = "ReadLogFile";
+            this.ReadLogFile.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReadLogFile.Size = new System.Drawing.Size(1540, 826);
+            this.ReadLogFile.TabIndex = 0;
+            this.ReadLogFile.Text = "ReadLogFile";
+            this.ReadLogFile.UseVisualStyleBackColor = true;
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(30, 82);
+            this.richTextBox1.Location = new System.Drawing.Point(38, 102);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(1163, 544);
+            this.richTextBox1.Size = new System.Drawing.Size(1453, 679);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(783, 28);
+            this.button1.Location = new System.Drawing.Point(979, 35);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
+            this.button1.Size = new System.Drawing.Size(118, 36);
             this.button1.TabIndex = 2;
             this.button1.Text = "Load";
             this.button1.UseVisualStyleBackColor = true;
@@ -92,57 +96,63 @@
             // cbbpath
             // 
             this.cbbpath.FormattingEnabled = true;
-            this.cbbpath.Location = new System.Drawing.Point(235, 28);
+            this.cbbpath.Location = new System.Drawing.Point(294, 35);
+            this.cbbpath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbbpath.Name = "cbbpath";
-            this.cbbpath.Size = new System.Drawing.Size(501, 28);
+            this.cbbpath.Size = new System.Drawing.Size(625, 33);
             this.cbbpath.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(95, 31);
+            this.label1.Location = new System.Drawing.Point(119, 39);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 20);
+            this.label1.Size = new System.Drawing.Size(138, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Choose File Log";
             // 
-            // tabPage2
+            // StopStartService
             // 
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.lblstatus);
-            this.tabPage2.Controls.Add(this.btnprocess);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.richTextBox2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 29);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1230, 658);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Stop/Start Service";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.StopStartService.Controls.Add(this.label4);
+            this.StopStartService.Controls.Add(this.lblstatus);
+            this.StopStartService.Controls.Add(this.btnprocess);
+            this.StopStartService.Controls.Add(this.label3);
+            this.StopStartService.Controls.Add(this.label2);
+            this.StopStartService.Controls.Add(this.richTextBox2);
+            this.StopStartService.Location = new System.Drawing.Point(4, 34);
+            this.StopStartService.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StopStartService.Name = "StopStartService";
+            this.StopStartService.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StopStartService.Size = new System.Drawing.Size(1540, 826);
+            this.StopStartService.TabIndex = 1;
+            this.StopStartService.Text = "Stop/Start Service";
+            this.StopStartService.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(116, 25);
+            this.label4.Location = new System.Drawing.Point(145, 31);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(0, 20);
+            this.label4.Size = new System.Drawing.Size(0, 25);
             this.label4.TabIndex = 9;
             // 
             // lblstatus
             // 
             this.lblstatus.AutoSize = true;
-            this.lblstatus.Location = new System.Drawing.Point(127, 57);
+            this.lblstatus.Location = new System.Drawing.Point(159, 71);
+            this.lblstatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblstatus.Name = "lblstatus";
-            this.lblstatus.Size = new System.Drawing.Size(0, 20);
+            this.lblstatus.Size = new System.Drawing.Size(0, 25);
             this.lblstatus.TabIndex = 8;
             // 
             // btnprocess
             // 
-            this.btnprocess.Location = new System.Drawing.Point(53, 97);
+            this.btnprocess.Location = new System.Drawing.Point(66, 121);
+            this.btnprocess.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnprocess.Name = "btnprocess";
-            this.btnprocess.Size = new System.Drawing.Size(141, 29);
+            this.btnprocess.Size = new System.Drawing.Size(176, 36);
             this.btnprocess.TabIndex = 7;
             this.btnprocess.Text = "...";
             this.btnprocess.UseVisualStyleBackColor = true;
@@ -151,42 +161,46 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(53, 57);
+            this.label3.Location = new System.Drawing.Point(66, 71);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 20);
+            this.label3.Size = new System.Drawing.Size(69, 25);
             this.label3.TabIndex = 6;
             this.label3.Text = "Status :";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(53, 25);
+            this.label2.Location = new System.Drawing.Point(66, 31);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 20);
+            this.label2.Size = new System.Drawing.Size(81, 25);
             this.label2.TabIndex = 5;
             this.label2.Text = "Service : ";
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(34, 146);
+            this.richTextBox2.Location = new System.Drawing.Point(42, 182);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(1163, 491);
+            this.richTextBox2.Size = new System.Drawing.Size(1453, 613);
             this.richTextBox2.TabIndex = 4;
             this.richTextBox2.Text = "";
             // 
             // Monitor_XMLSign
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 715);
+            this.ClientSize = new System.Drawing.Size(1578, 894);
             this.Controls.Add(this.tabControl1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Monitor_XMLSign";
-            this.Text = "XMLSign";
+            this.Text = "Monitor_XMLSign";
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.ReadLogFile.ResumeLayout(false);
+            this.ReadLogFile.PerformLayout();
+            this.StopStartService.ResumeLayout(false);
+            this.StopStartService.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -194,8 +208,8 @@
         #endregion
 
         private TabControl tabControl1;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
+        private TabPage ReadLogFile;
+        private TabPage StopStartService;
         private RichTextBox richTextBox1;
         private Button button1;
         private ComboBox cbbpath;

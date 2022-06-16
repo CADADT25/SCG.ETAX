@@ -17,56 +17,88 @@ namespace SCG.CAD.ETAX.MONITOR
         List<string>  pathfilelog = new List<string>();
         public Monitor_XMLGenerator()
         {
-            InitializeComponent();
-            //GetConfig();
-            InfiniteLoopCheckServiceStatus();
-            //pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
-            pathfilelog = service.ReadAllLogFile(@"C:\Code_Dev\sign\");
-            SetValueComboBox();
+            try
+            {
+                InitializeComponent();
+                GetConfig();
+                InfiniteLoopCheckServiceStatus();
+                pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
+                //pathfilelog = service.ReadAllLogFile(@"D:\log\");
+                SetValueComboBox();
+
+            }
+            catch (Exception ex)
+            {
+                service.ShowMessageBox(ex.Message);
+            }
         }
 
         public async void InfiniteLoopCheckServiceStatus()
         {
-            while (stopcheckservicestatus)
+            try
             {
-                await Task.Delay(100);
-                status = service.GetStatusService(servicename);
-                lblstatus.Text = status;
-                if (status.Equals("Running", StringComparison.InvariantCultureIgnoreCase))
+                while (stopcheckservicestatus)
                 {
-                    btnprocess.Text = "Stop Service";
+                    status = service.GetStatusService(servicename);
+                    lblstatus.Text = status;
+                    if (!status.Equals("Running", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        btnprocess.Text = "Start Service";
+                    }
+                    else
+                    {
+                        btnprocess.Text = "Stop Service";
+                        InfiniteLoopReadLogFile();
+                    }
+                    await service.SetDelay();
+                    btnprocess.Enabled = true;
                 }
-                else
-                {
-                    btnprocess.Text = "Start Service";
-                }
+            }
+            catch (Exception ex)
+            {
+                service.ShowMessageBox(ex.Message);
             }
         }
 
         public async void InfiniteLoopReadLogFile()
         {
-            while (stopreadlogfile)
+            try
             {
-                await Task.Delay(100);
-                string content = File.ReadAllText(pathfilelog.First());
-                richTextBox1.Text = content;
+                while (stopreadlogfile)
+                {
+                    string content = service.ReadFileOnly(pathfilelog.FirstOrDefault());
+                    richTextBox2.Focus();
+                    richTextBox2.AppendText(content);
+                    await service.SetDelay();
+                }
+            }
+            catch (Exception ex)
+            {
+                service.ShowMessageBox(ex.Message);
             }
         }
 
         public void btnprocess_Click(object sender, EventArgs e)
         {
-            if(status.Equals("Running",StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                service.StartService(servicename,1);
-                //pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
-                pathfilelog = service.ReadAllLogFile(@"C:\Code_Dev\sign\");
-                stopreadlogfile = true;
-                InfiniteLoopReadLogFile();
+                btnprocess.Enabled = false;
+                if (!status.Equals("Running", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    service.StartService(servicename, 1);
+                    pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
+                    //pathfilelog = service.ReadAllLogFile(@"D:\log\");
+                    stopreadlogfile = true;
+                }
+                else
+                {
+                    service.StopService(servicename, 1);
+                    stopreadlogfile = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                service.StopService(servicename,1);
-                stopreadlogfile = false;
+                service.ShowMessageBox(ex.Message);
             }
         }
 
@@ -74,75 +106,77 @@ namespace SCG.CAD.ETAX.MONITOR
         {
             try
             {
-                configGlobal = service.GetConfigGlobal().First(x=> x.ConfigGlobalName == namepathlog);
+                configGlobal = service.GetConfigGlobal().First(x => x.ConfigGlobalName == namepathlog);
                 label4.Text = servicename;
             }
             catch (Exception ex)
             {
-                throw ex;
+                service.ShowMessageBox(ex.Message);
             }
         }
 
         public void SetValueComboBox()
         {
-            ComboBox comboBox;
-            List<ComboBox> comboBoxs = new List<ComboBox>();
-
-            DataTable dtblDataSource = new DataTable();
-            dtblDataSource.Columns.Add("DisplayMember");
-            dtblDataSource.Columns.Add("ValueMember");
-            foreach (var item in pathfilelog)
+            try
             {
-                comboBox = new ComboBox();
-                comboBox.DisplayMember = Path.GetFileName(item);
-                comboBox.ValueMember = item;
-                comboBoxs.Add(comboBox);
-                dtblDataSource.Rows.Add(Path.GetFileName(item), item);
+                ComboBox comboBox;
+                List<ComboBox> comboBoxs = new List<ComboBox>();
+
+                DataTable dtblDataSource = new DataTable();
+                dtblDataSource.Columns.Add("DisplayMember");
+                dtblDataSource.Columns.Add("ValueMember");
+                foreach (var item in pathfilelog)
+                {
+                    comboBox = new ComboBox();
+                    comboBox.DisplayMember = Path.GetFileName(item);
+                    comboBox.ValueMember = item;
+                    comboBoxs.Add(comboBox);
+                    dtblDataSource.Rows.Add(Path.GetFileName(item), item);
+                }
+
+                cbbpath.Items.Clear();
+                cbbpath.DataSource = dtblDataSource;
+                cbbpath.DisplayMember = "DisplayMember";
+                cbbpath.ValueMember = "ValueMember";
             }
-
-            cbbpath.Items.Clear();
-            cbbpath.DataSource = dtblDataSource;
-            cbbpath.DisplayMember = "DisplayMember";
-            cbbpath.ValueMember = "ValueMember";
-
-
+            catch (Exception ex)
+            {
+                service.ShowMessageBox(ex.Message);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                string content = File.ReadAllText(cbbpath.SelectedValue.ToString());
+                string content = service.ReadFileOnly(cbbpath.SelectedValue.ToString());
                 richTextBox1.Text = content;
             }
             catch (Exception ex)
             {
-                throw ex;
+                service.ShowMessageBox(ex.Message);
             }
         }
 
-        //private void tabPage1_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage1"])//your specific tabname
-        //    {
-        //        SetValueComboBox();
-        //    }
-        //    else if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage2"])//your specific tabname
-        //    {
-        //        InfiniteLoopReadLogFile();
-        //    }
-        //}
-        //private void tabPage2_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage1"])//your specific tabname
-        //    {
-        //        SetValueComboBox();
-        //    }
-        //    else if (tabControl1.SelectedTab == tabControl1.TabPages["tabPage2"])//your specific tabname
-        //    {
-        //        InfiniteLoopReadLogFile();
-        //    }
-        //}
-
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tabControl1.SelectedTab.Name == "ReadLogFile")
+                {
+                    stopcheckservicestatus = false;
+                    stopreadlogfile = false;
+                }
+                else
+                {
+                    stopcheckservicestatus = true;
+                    InfiniteLoopCheckServiceStatus();
+                }
+            }
+            catch (Exception ex)
+            {
+                service.ShowMessageBox(ex.Message);
+            }
+        }
     }
 }

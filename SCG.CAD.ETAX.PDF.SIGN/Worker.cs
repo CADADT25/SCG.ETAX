@@ -8,7 +8,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN
     {
         private readonly ILogger<Worker> _logger;
         PDFSign pDFSign = new PDFSign();
-        LogicToolHelper logicToolHelper = new LogicToolHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper(); 
+        LogHelper log = new LogHelper();
+        string pathlog = @"D:\log\";
 
         public Worker(ILogger<Worker> logger)
         {
@@ -17,15 +19,22 @@ namespace SCG.CAD.ETAX.PDF.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPDFSIGN"))
+            log.InsertLog(pathlog, "Test Service");
+            while (!stoppingToken.IsCancellationRequested)
             {
-                pDFSign.ProcessPdfSign();
-                //while (!stoppingToken.IsCancellationRequested)
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    await Task.Delay(1000, stoppingToken);
-                //}
+                log.InsertLog(pathlog, "Loop Service");
+                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                await Task.Delay(10000, stoppingToken);
             }
+            //if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPDFSIGN"))
+            //{
+            //    pDFSign.ProcessPdfSign();
+            //    //while (!stoppingToken.IsCancellationRequested)
+            //    //{
+            //    //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    //    await Task.Delay(1000, stoppingToken);
+            //    //}
+            //}
         }
     }
 }

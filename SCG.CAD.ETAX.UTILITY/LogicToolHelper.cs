@@ -40,6 +40,7 @@ namespace SCG.CAD.ETAX.UTILITY
                         result = true;
                     }
                 }
+                result = true;
             }
             catch (Exception ex)
             {

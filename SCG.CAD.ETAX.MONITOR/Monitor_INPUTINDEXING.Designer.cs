@@ -1,6 +1,6 @@
 ﻿namespace SCG.CAD.ETAX.MONITOR
 {
-    partial class Monitor_PDFSign
+    partial class Monitor_INPUTINDEXING
     {
         /// <summary>
         ///  Required designer variable.
@@ -41,7 +41,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.ReadLogFile.SuspendLayout();
             this.StopStartService.SuspendLayout();
@@ -53,12 +52,11 @@
             this.tabControl1.Controls.Add(this.StopStartService);
             this.tabControl1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabControl1.Location = new System.Drawing.Point(15, 15);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1548, 900);
+            this.tabControl1.Size = new System.Drawing.Size(1548, 864);
             this.tabControl1.TabIndex = 4;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // ReadLogFile
             // 
@@ -67,10 +65,10 @@
             this.ReadLogFile.Controls.Add(this.cbbpath);
             this.ReadLogFile.Controls.Add(this.label1);
             this.ReadLogFile.Location = new System.Drawing.Point(4, 34);
-            this.ReadLogFile.Margin = new System.Windows.Forms.Padding(4);
+            this.ReadLogFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ReadLogFile.Name = "ReadLogFile";
-            this.ReadLogFile.Padding = new System.Windows.Forms.Padding(4);
-            this.ReadLogFile.Size = new System.Drawing.Size(1540, 862);
+            this.ReadLogFile.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReadLogFile.Size = new System.Drawing.Size(1540, 826);
             this.ReadLogFile.TabIndex = 0;
             this.ReadLogFile.Text = "ReadLogFile";
             this.ReadLogFile.UseVisualStyleBackColor = true;
@@ -78,16 +76,16 @@
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(38, 102);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(1453, 740);
+            this.richTextBox1.Size = new System.Drawing.Size(1453, 679);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(979, 35);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(118, 36);
             this.button1.TabIndex = 2;
@@ -99,7 +97,7 @@
             // 
             this.cbbpath.FormattingEnabled = true;
             this.cbbpath.Location = new System.Drawing.Point(294, 35);
-            this.cbbpath.Margin = new System.Windows.Forms.Padding(4);
+            this.cbbpath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbbpath.Name = "cbbpath";
             this.cbbpath.Size = new System.Drawing.Size(625, 33);
             this.cbbpath.TabIndex = 1;
@@ -123,10 +121,10 @@
             this.StopStartService.Controls.Add(this.label2);
             this.StopStartService.Controls.Add(this.richTextBox2);
             this.StopStartService.Location = new System.Drawing.Point(4, 34);
-            this.StopStartService.Margin = new System.Windows.Forms.Padding(4);
+            this.StopStartService.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.StopStartService.Name = "StopStartService";
-            this.StopStartService.Padding = new System.Windows.Forms.Padding(4);
-            this.StopStartService.Size = new System.Drawing.Size(1540, 862);
+            this.StopStartService.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StopStartService.Size = new System.Drawing.Size(1540, 826);
             this.StopStartService.TabIndex = 1;
             this.StopStartService.Text = "Stop/Start Service";
             this.StopStartService.UseVisualStyleBackColor = true;
@@ -152,7 +150,7 @@
             // btnprocess
             // 
             this.btnprocess.Location = new System.Drawing.Point(66, 121);
-            this.btnprocess.Margin = new System.Windows.Forms.Padding(4);
+            this.btnprocess.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnprocess.Name = "btnprocess";
             this.btnprocess.Size = new System.Drawing.Size(176, 36);
             this.btnprocess.TabIndex = 7;
@@ -183,38 +181,27 @@
             // richTextBox2
             // 
             this.richTextBox2.Location = new System.Drawing.Point(42, 182);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(1453, 660);
+            this.richTextBox2.Size = new System.Drawing.Size(1453, 613);
             this.richTextBox2.TabIndex = 4;
             this.richTextBox2.Text = "";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(65, 866);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(0, 25);
-            this.label5.TabIndex = 5;
-            // 
-            // Monitor_PDFSign
+            // Monitor_INPUTINDEXING
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1578, 928);
-            this.Controls.Add(this.label5);
+            this.ClientSize = new System.Drawing.Size(1578, 894);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "Monitor_PDFSign";
-            this.Text = "Monitor_PDFSign";
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "Monitor_INPUTINDEXING";
+            this.Text = "Monitor_INPUTINDEXING";
             this.tabControl1.ResumeLayout(false);
             this.ReadLogFile.ResumeLayout(false);
             this.ReadLogFile.PerformLayout();
             this.StopStartService.ResumeLayout(false);
             this.StopStartService.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -233,6 +220,5 @@
         private RichTextBox richTextBox2;
         private Label lblstatus;
         private Label label4;
-        private Label label5;
     }
 }

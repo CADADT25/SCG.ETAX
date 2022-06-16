@@ -1,26 +1,27 @@
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MONITOR.BussinessLayer;
 using System.Data;
+using System.ServiceProcess;
 
 namespace SCG.CAD.ETAX.MONITOR
 {
-    public partial class Monitor_PDFSign : Form
+    public partial class Monitor_INPUTINDEXING : Form
     {
         Service service = new Service();
         ConfigGlobal configGlobal = new ConfigGlobal();
         bool stopcheckservicestatus = true;
         bool stopreadlogfile = true;
         string status = "";
-        string servicename = "SCG.CAD.ETAX.PDF.SIGN";
-        string namepathlog = "PATHLOGFILE_PDFSIGN";
-        List<string> pathfilelog = new List<string>();
-        public Monitor_PDFSign()
+        string servicename = "SCG.CAD.ETAX.INPUTINDEXING";
+        string namepathlog = "PATHLOGFILE_INPUTINDEXING";
+        List<string>  pathfilelog = new List<string>();
+        public Monitor_INPUTINDEXING()
         {
             try
             {
                 InitializeComponent();
                 GetConfig();
-                //InfiniteLoopCheckServiceStatus();
+                InfiniteLoopCheckServiceStatus();
                 pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
                 //pathfilelog = service.ReadAllLogFile(@"D:\log\");
                 SetValueComboBox();
@@ -177,6 +178,5 @@ namespace SCG.CAD.ETAX.MONITOR
                 service.ShowMessageBox(ex.Message);
             }
         }
-
     }
 }

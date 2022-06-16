@@ -1,18 +1,13 @@
 ﻿using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.MONITOR.Controller;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
 {
     public class Service
     {
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
+        UtilityConfigGlobalController utilityConfigGlobalController = new UtilityConfigGlobalController();
         public string GetStatusService(string serviceName)
         {
             try
@@ -45,9 +40,9 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
                 service.Start();
                 service.WaitForStatus(ServiceControllerStatus.Running, timeout);
             }
-            catch
+            catch (Exception ex)
             {
-                // ...
+                throw ex;
             }
         }
 
@@ -61,9 +56,9 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
                 service.Stop();
                 service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
             }
-            catch
+            catch (Exception ex)
             {
-                // ...
+                throw ex;
             }
         }
 
@@ -71,7 +66,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
         {
             try
             {
-                configGlobal = configGlobalController.List().Result;
+                configGlobal = utilityConfigGlobalController.List().Result;
                 return configGlobal;
             }
             catch (Exception ex)
@@ -102,6 +97,44 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
                 throw ex;
             }
             return result;
+        }
+
+        public string ReadFileOnly(string path)
+        {
+            string text = "";
+            try
+            {
+                if (!String.IsNullOrEmpty(path))
+                {
+                    text = File.ReadAllText(path);
+                }
+
+                //using (FileStream stream = File.Open("path to file", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                //{
+                //    using (StreamReader reader = new StreamReader(stream))
+                //    {
+                //        while (!reader.EndOfStream)
+                //        {
+
+                //        }
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return text;
+        }
+
+        public async Task SetDelay()
+        {
+            await Task.Delay(10000);
+        }
+
+        public void ShowMessageBox(string message)
+        {
+            MessageBox.Show(message,"Error");
         }
 
     }

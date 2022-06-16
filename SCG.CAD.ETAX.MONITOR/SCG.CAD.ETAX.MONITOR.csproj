@@ -9,23 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controller\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
   </ItemGroup>
 
@@ -37,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Monitor_OUTPUTINDEXING.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Monitor_INPUTINDEXING.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Monitor_XMLGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
