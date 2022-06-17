@@ -170,5 +170,108 @@
             return resp;
         }
 
+        public Response SEARCH(string JsonString)
+        {
+            Response resp = new Response();
+
+            outputSearchXmlModel obj = new outputSearchXmlModel();
+
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+
+            try
+            {
+                obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(JsonString);
+
+                DateTime getMinDate = new DateTime();
+                DateTime getMaxDate = new DateTime();
+
+                var getDocType = obj.outPutSearchDocType.ToUpper();
+
+                var getStatus = obj.outPutSearchStatus;
+
+                int statusDownload = 99;
+
+                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
+
+                if (!string.IsNullOrEmpty(getStatus))
+                {
+                    statusDownload = Convert.ToInt32(getStatus);
+                }
+                else
+                {
+                    statusDownload = 99;
+                }
+
+                var getArrayDate = obj.outPutSearchDate.Split("to");
+
+                if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                {
+                    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                }
+                else
+                {
+                    getMinDate = DateTime.Now.AddDays(-30);
+                    getMaxDate = DateTime.Now.AddDays(30);
+                }
+
+                if (obj != null)
+                {
+
+                    tran = _dbContext.outputSearchXmlZip.Where(
+
+                            x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
+
+                            obj.outPutSearchCompanyCode.Count > 0 ? ( obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+
+                            statusDownload == 99 ? ( x.OutputSearchXmlZipDowloadStatus != 1 && x.OutputSearchXmlZipDowloadStatus != 0  && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+
+                            getDocType != "ALL" ? (obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper() && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDocType != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+
+                            ).ToList();
+
+                    if (tran.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = tran;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+                else
+                {
+
+                    var getList = _dbContext.outputSearchXmlZip.ToList();
+
+                    if (getList.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = getList;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+
     }
 }

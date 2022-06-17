@@ -73,6 +73,13 @@
                     }
                 },
                 {
+                    data: "postingYear",
+                    width: "5%",
+                    render: function (data, type, row) {
+                        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                    }
+                },
+                {
                     data: "companyCode",
                     width: "5%"
                 },

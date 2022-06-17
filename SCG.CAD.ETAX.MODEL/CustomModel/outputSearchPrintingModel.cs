@@ -8,8 +8,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public class outputSearchPrintingModel
     {
-        public string? outPutSearchCompanyCode { get; set; }
+        public List<string>? outPutSearchCompanyCode { get; set; }
         public string? outPutSearchDate { get; set; }
         public string? outPutSearchStatus { get; set; }
+
     }
 }

@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<section id="basic-tabs-components">
+    <div class="row match-height">
+        <!-- Tabs with Icon starts -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Inbox events</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="Todo-tab" data-toggle="tab" href="#Todo" aria-controls="home" role="tab" aria-selected="true">
+                                <i class="fas fa-home"></i> To do
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="MyApproval-tab" data-toggle="tab" href="#MyApproval" aria-controls="profile" role="tab" aria-selected="false">
+                                <i class="fas fa-home"></i> My Approval
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="InProgress-tab" data-toggle="tab" href="#InProgress" aria-controls="about" role="tab" aria-selected="false">
+                                <i class="fas fa-home"></i> In Progress
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="Complete-tab" data-toggle="tab" href="#Complete" aria-controls="about" role="tab" aria-selected="false">
+                                <i class="fas fa-home"></i> Complete
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="All-tab" data-toggle="tab" href="#All" aria-controls="about" role="tab" aria-selected="false">
+                                <i class="fas fa-home"></i> All
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="Todo" aria-labelledby="Todo-tab" role="tabpanel">
+                            @await Html.PartialAsync("~/Views/InboxTodo/Index.cshtml")
+                        </div>
+                        <div class="tab-pane" id="MyApproval" aria-labelledby="MyApproval-tab" role="tabpanel">
+                            @await Html.PartialAsync("~/Views/InboxMyApproval/Index.cshtml")
+                        </div>
+                        <div class="tab-pane" id="InProgress" aria-labelledby="InProgress-tab" role="tabpanel">
+                            @await Html.PartialAsync("~/Views/InboxInprogress/Index.cshtml")
+                        </div>
+                        <div class="tab-pane" id="Complete" aria-labelledby="Complete-tab" role="tabpanel">
+                            @await Html.PartialAsync("~/Views/InboxComplete/Index.cshtml")
+                        </div>
+                        <div class="tab-pane" id="All" aria-labelledby="All-tab" role="tabpanel">
+                            @await Html.PartialAsync("~/Views/InboxAll/Index.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tabs with Icon ends -->
+    </div>
+</section>

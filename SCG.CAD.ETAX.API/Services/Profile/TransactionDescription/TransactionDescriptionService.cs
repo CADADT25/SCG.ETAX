@@ -367,14 +367,36 @@ namespace SCG.CAD.ETAX.API.Services
                 if (obj != null)
                 {
 
-                    var setTransearchStatus = obj.tranSearchStatus.ToList();
-
-
                     tran = _dbContext.transactionDescription.Where(
-                            x => !string.IsNullOrEmpty(x.BillingNumber) ? x.BillingNumber.Contains(obj.tranSearchBillingNo) : x.BillingNumber != "" ||
-                            !string.IsNullOrEmpty(x.CustomerId) ? x.CustomerId.Contains(obj.tranSearchCustomerCode) : x.CustomerId != "" ||
-                            !string.IsNullOrEmpty(x.SourceName) ? x.SourceName.Contains(obj.tranSearchDataSource) : x.SourceName != ""                             
+                            x => !string.IsNullOrEmpty(x.BillingNumber) ? x.BillingNumber.Contains(obj.tranSearchBillingNo) : x.BillingNumber != "" &&
+
+                            !string.IsNullOrEmpty(x.CustomerId) ? x.CustomerId.Contains(obj.tranSearchCustomerCode) : x.CustomerId != "" &&
+
+                            !string.IsNullOrEmpty(x.SourceName) ? x.SourceName.Contains(obj.tranSearchDataSource) : x.SourceName != "" &&
+
+                            obj.tranSearchCompanyCode.Count > 0 ? obj.tranSearchCompanyCode.Contains(x.CompanyCode) : x.CompanyCode != "" &&
+
+                                ( 
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.EmailSendStatus) : x.EmailSendStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.GenerateStatus) : x.GenerateStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PdfIndexingStatus) : x.PdfIndexingStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PdfSignStatus) : x.PdfSignStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PrintStatus) : x.PrintStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.XmlCompressStatus) : x.XmlCompressStatus != "" ||
+
+                                    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.XmlSignStatus) : x.XmlSignStatus != "" 
+                                ) && 
+                                obj.tranSearchDocumentType.Count > 0 ? obj.tranSearchDocumentType.Contains(x.DocType) : x.DocType != ""  && 
+                                
+                                !string.IsNullOrEmpty(obj.tranSearchDataSource) ? obj.tranSearchDataSource.Contains(x.SourceName) : x.SourceName != ""
                             )
+
+
                             .ToList();
 
 
