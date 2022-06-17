@@ -1,3 +1,6 @@
+using SCG.CAD.ETAX.MONITOR.BussinessLayer;
+using SCG.CAD.ETAX.MONITOR.Models;
+
 namespace SCG.CAD.ETAX.MONITOR
 {
     internal static class Program
@@ -13,6 +16,7 @@ namespace SCG.CAD.ETAX.MONITOR
             ApplicationConfiguration.Initialize();
             MonitorProgram runMonitor = MonitorProgram.NotMonitor;
             runMonitor = MonitorProgram.Monitor_PDFSign;
+            Service service = new Service();
             switch (runMonitor)
             {
                 case MonitorProgram.Monitor_EMAIL:
@@ -33,22 +37,17 @@ namespace SCG.CAD.ETAX.MONITOR
                 case MonitorProgram.Monitor_XMLZip:
                     Application.Run(new Monitor_XMLZip());
                     break;
+                case MonitorProgram.Monitor_INPUTINDEXING:
+                    Application.Run(new Monitor_INPUTINDEXING());
+                    break;
+                case MonitorProgram.Monitor_OUTPUTINDEXING:
+                    Application.Run(new Monitor_OUTPUTINDEXING());
+                    break;
                 default:
-                    Console.WriteLine("Nothing");
+                    service.ShowMessageBox("Not Choose Program Monitor");
                     break;
             }
 
-        }
-
-        public enum MonitorProgram
-        {
-            Monitor_EMAIL = 1,
-            Monitor_PDFSign = 2,
-            Monitor_PRINTZip = 3,
-            Monitor_XMLGenerator = 4,
-            Monitor_XMLSign = 5,
-            Monitor_XMLZip = 6,
-            NotMonitor = 99
         }
     }
 }

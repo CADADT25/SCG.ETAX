@@ -1,25 +1,24 @@
 ﻿using SCG.CAD.ETAX.MODEL.etaxModel;
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
-using Microsoft.Extensions.Configuration;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
-    public class UtilityConfigGlobalController
+    public class UtilityConfigMftsIndexGenerationSettingOutputController
     {
-        public async Task<List<ConfigGlobal>> List()
+        public async Task<List<ConfigMftsIndexGenerationSettingOutput>> List()
         {
             Response resp = new Response();
 
-            List<ConfigGlobal> tran = new List<ConfigGlobal>();
+            List<ConfigMftsIndexGenerationSettingOutput> tran = new List<ConfigMftsIndexGenerationSettingOutput>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsIndexGenerationSettingInput/GetListAll"));
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<ConfigGlobal>>(task.OUTPUT_DATA.ToString());
+                    tran = JsonConvert.DeserializeObject<List<ConfigMftsIndexGenerationSettingOutput>>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
