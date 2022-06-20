@@ -1,5 +1,5 @@
 ﻿using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.MONITOR.Controllers;
+using System.Net.Http.Headers;
 using System.ServiceProcess;
 
 namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
@@ -7,7 +7,6 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
     public class Service
     {
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
-        ConfigGlobalController configGlobalController = new ConfigGlobalController();
         public string GetStatusService(string serviceName)
         {
             try
@@ -24,8 +23,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                ShowMessageBox(ex.Message);
             }
             return "";
         }
@@ -42,7 +40,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                ShowMessageBox(ex.Message);
             }
         }
 
@@ -58,20 +56,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public List<ConfigGlobal> GetConfigGlobal()
-        {
-            try
-            {
-                configGlobal = configGlobalController.List().Result;
-                return configGlobal;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                ShowMessageBox(ex.Message);
             }
         }
 
@@ -94,7 +79,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                ShowMessageBox(ex.Message);
             }
             return result;
         }
@@ -122,7 +107,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                ShowMessageBox(ex.Message);
             }
             return text;
         }
@@ -136,6 +121,5 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
         {
             MessageBox.Show(message,"Error");
         }
-
     }
 }
