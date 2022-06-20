@@ -1,5 +1,5 @@
 ﻿using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.UTILITY.Controllers;
+using SCG.CAD.ETAX.MONITOR.Controllers;
 using System.ServiceProcess;
 
 namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
@@ -7,7 +7,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
     public class Service
     {
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
-        UtilityConfigGlobalController utilityConfigGlobalController = new UtilityConfigGlobalController();
+        ConfigGlobalController configGlobalController = new ConfigGlobalController();
         public string GetStatusService(string serviceName)
         {
             try
@@ -66,7 +66,7 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
         {
             try
             {
-                configGlobal = utilityConfigGlobalController.List().Result;
+                configGlobal = configGlobalController.List().Result;
                 return configGlobal;
             }
             catch (Exception ex)
