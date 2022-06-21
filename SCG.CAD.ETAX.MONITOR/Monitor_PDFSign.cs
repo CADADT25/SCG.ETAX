@@ -14,12 +14,12 @@ namespace SCG.CAD.ETAX.MONITOR
         string servicename = "SCG.CAD.ETAX.PDF.SIGN";
         string namepathlog = "PATHLOGFILE_PDFSIGN";
         List<string> pathfilelog = new List<string>();
-        public Monitor_PDFSign()
+        public Monitor_PDFSign(List<ConfigGlobal> config)
         {
             try
             {
                 InitializeComponent();
-                GetConfig();
+                GetConfig(config);
                 //InfiniteLoopCheckServiceStatus();
                 pathfilelog = service.ReadAllLogFile(configGlobal.ConfigGlobalValue);
                 //pathfilelog = service.ReadAllLogFile(@"D:\log\");
@@ -66,6 +66,7 @@ namespace SCG.CAD.ETAX.MONITOR
                 while (stopreadlogfile)
                 {
                     string content = service.ReadFileOnly(pathfilelog.FirstOrDefault());
+                    richTextBox2.Clear();
                     richTextBox2.Focus();
                     richTextBox2.AppendText(content);
                     await service.SetDelay();
@@ -101,11 +102,11 @@ namespace SCG.CAD.ETAX.MONITOR
             }
         }
 
-        public void GetConfig()
+        public void GetConfig(List<ConfigGlobal> config)
         {
             try
             {
-                configGlobal = service.GetConfigGlobal().First(x => x.ConfigGlobalName == namepathlog);
+                configGlobal = config.First(x => x.ConfigGlobalName == namepathlog);
                 label4.Text = servicename;
             }
             catch (Exception ex)
@@ -177,6 +178,7 @@ namespace SCG.CAD.ETAX.MONITOR
                 service.ShowMessageBox(ex.Message);
             }
         }
+
 
     }
 }

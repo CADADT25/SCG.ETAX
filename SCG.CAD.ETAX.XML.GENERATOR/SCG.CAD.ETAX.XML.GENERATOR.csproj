@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
     <PackageReference Include="NMatrix" Version="0.3.0" />
     <PackageReference Include="Pkcs11Interop" Version="5.1.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
