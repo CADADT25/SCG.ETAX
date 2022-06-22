@@ -15,7 +15,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 {
     public class PDFSign
     {
-        UtilityConfigPDFSignController configXMLSignController = new UtilityConfigPDFSignController();
+        UtilityConfigPDFSignController configPDFSignController = new UtilityConfigPDFSignController();
         UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
@@ -91,6 +91,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 {
                     result = true;
                 }
+                result = true;
             }
             catch (Exception ex)
             {
@@ -213,7 +214,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             bool result = false;
             try
             {
-
                 Task<Response> res;
                 if(dataTran == null)
                 {
@@ -333,7 +333,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             try
             {
-                configPDFSign = configXMLSignController.List().Result;
+                configPDFSign = configPDFSignController.List().Result;
                 configGlobal = configGlobalController.List().Result;
                 pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }

@@ -12,8 +12,10 @@ namespace SCG.CAD.ETAX.MONITOR
         bool stopcheckservicestatus = true;
         bool stopreadlogfile = true;
         string status = "";
-        string servicename = "SCG.CAD.ETAX.EMAIL";
+        string servicename = "SCG.CAD.ETAX.XML.GENERATOR";
         string namepathlog = "PATHLOGFILE_XMLGENERATOR";
+        string pathlogcurrentdate = @"D:\";
+        int length = 0;
         List<string>  pathfilelog = new List<string>();
         public Monitor_XMLGenerator(List<ConfigGlobal> config)
         {
@@ -66,10 +68,18 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 while (stopreadlogfile)
                 {
-                    string content = service.ReadFileOnly(pathfilelog.FirstOrDefault());
-                    richTextBox2.Clear();
-                    richTextBox2.Focus();
-                    richTextBox2.AppendText(content);
+                    //string content = service.ReadFileOnly(pathfilelog.FirstOrDefault(x=> x.StartsWith(DateTime.Now.ToString("yyyyMMdd"))));
+                    string content = service.ReadFileOnly(pathlogcurrentdate);
+                    if(length == content.Length)
+                    {
+                        richTextBox2.Clear();
+                        richTextBox2.Focus();
+                        richTextBox2.AppendText(content);
+                    }
+                    else
+                    {
+                        length = content.Length;
+                    }
                     await service.SetDelay();
                 }
             }
@@ -109,6 +119,7 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 configGlobal = config.First(x => x.ConfigGlobalName == namepathlog);
                 label4.Text = servicename;
+                pathlogcurrentdate = configGlobal.ConfigGlobalValue + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
             }
             catch (Exception ex)
             {

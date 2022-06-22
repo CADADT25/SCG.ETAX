@@ -89,25 +89,24 @@ namespace SCG.CAD.ETAX.MONITOR.BussinessLayer
             string text = "";
             try
             {
-                if (!String.IsNullOrEmpty(path))
-                {
-                    text = File.ReadAllText(path);
-                }
-
-                //using (FileStream stream = File.Open("path to file", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                //if (!String.IsNullOrEmpty(path))
                 //{
-                //    using (StreamReader reader = new StreamReader(stream))
+                //    if (File.Exists(path))
                 //    {
-                //        while (!reader.EndOfStream)
-                //        {
-
-                //        }
+                //        text = File.ReadAllText(path);
                 //    }
                 //}
+                using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        text = reader.ReadToEnd();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                ShowMessageBox(ex.Message);
+                //ShowMessageBox(ex.Message);
             }
             return text;
         }

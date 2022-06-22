@@ -12,7 +12,7 @@ namespace SCG.CAD.ETAX.MONITOR
         bool stopcheckservicestatus = true;
         bool stopreadlogfile = true;
         string status = "";
-        string servicename = "SCG.CAD.ETAX.INDEXING";
+        string servicename = "SCG.CAD.ETAX.OUTPUTINDEXING";
         string namepathlog = "PATHLOGFILE_OUTPUTINDEXING";
         List<string>  pathfilelog = new List<string>();
         public Monitor_OUTPUTINDEXING(List<ConfigGlobal> config)

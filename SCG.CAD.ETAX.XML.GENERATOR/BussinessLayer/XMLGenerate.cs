@@ -35,7 +35,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<ProductUnit> productUnit = new List<ProductUnit>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         string pathoutput;
-        string pathlog = @"C:\log\";
+        string pathlog = @"D:\log\";
         string namepathlog = "PATHLOGFILE_XMLGENERATOR";
 
         public void ProcessGenXMLFile()
@@ -943,6 +943,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 productUnit = productUnitController.List().Result;
                 profileBranches = profileBranchController.List().Result;
                 configGlobal = configGlobalController.List().Result;
+
+                pathlog = configGlobal.First(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {
