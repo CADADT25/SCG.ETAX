@@ -161,7 +161,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         {
                             billingdate = dataTran.BillingDate ?? DateTime.Now;
                         }
-                        pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
+                        //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
                         if (resultPDFSign)
                         {
                             pathoutbound += "\\Success\\";

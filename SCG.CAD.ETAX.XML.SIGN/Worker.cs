@@ -16,14 +16,18 @@ namespace SCG.CAD.ETAX.XML.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLSIGN"))
+            while (!stoppingToken.IsCancellationRequested)
             {
-                xMLSign.ProcessXMLSign();
-                //while (!stoppingToken.IsCancellationRequested)
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    await Task.Delay(1000, stoppingToken);
-                //}
+                if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLSIGN"))
+                {
+                    xMLSign.ProcessXMLSign();
+                    //while (!stoppingToken.IsCancellationRequested)
+                    //{
+                    //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    //    await Task.Delay(1000, stoppingToken);
+                    //}
+                }
+                await Task.Delay(100000, stoppingToken);
             }
         }
     }

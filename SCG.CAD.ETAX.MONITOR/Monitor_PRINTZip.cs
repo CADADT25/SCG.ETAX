@@ -14,6 +14,8 @@ namespace SCG.CAD.ETAX.MONITOR
         string status = "";
         string servicename = "SCG.CAD.ETAX.PRINT.ZIP";
         string namepathlog = "PATHLOGFILE_PRINTZIP";
+        string pathlogcurrentdate = @"D:\";
+        int length = 0;
         List<string>  pathfilelog = new List<string>();
         public Monitor_PRINTZip(List<ConfigGlobal> config)
         {
@@ -66,7 +68,7 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 while (stopreadlogfile)
                 {
-                    string content = service.ReadFileOnly(pathfilelog.FirstOrDefault());
+                    string content = service.ReadFileOnly(pathlogcurrentdate);
                     richTextBox2.Clear();
                     richTextBox2.Focus();
                     richTextBox2.AppendText(content);
@@ -109,6 +111,7 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 configGlobal = config.First(x => x.ConfigGlobalName == namepathlog);
                 label4.Text = servicename;
+                pathlogcurrentdate = configGlobal.ConfigGlobalValue + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
             }
             catch (Exception ex)
             {

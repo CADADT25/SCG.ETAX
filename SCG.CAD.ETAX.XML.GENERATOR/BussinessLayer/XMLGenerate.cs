@@ -493,7 +493,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 DateTime billdate = Convert.ToDateTime(billingdate);
-                pathoutbound += "\\" + billdate.ToString("yyyy") + "\\" + billdate.ToString("MM") + "\\";
+                //pathoutbound += "\\" + billdate.ToString("yyyy") + "\\" + billdate.ToString("MM") + "\\";
                 if (!Directory.Exists(pathoutbound))
                 {
                     Directory.CreateDirectory(pathoutbound);

@@ -8,6 +8,7 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS
     {
         private readonly ILogger<Worker> _logger;
         InputIndexing inputIndexing = new InputIndexing(); 
+        OutputIndexing outputIndexing = new OutputIndexing();
         LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         public Worker(ILogger<Worker> logger)
@@ -17,14 +18,14 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPDFSIGN"))
+            while (!stoppingToken.IsCancellationRequested)
             {
-                inputIndexing.ProcessIndexing();
-                //while (!stoppingToken.IsCancellationRequested)
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    await Task.Delay(1000, stoppingToken);
-                //}
+                if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPDFSIGN"))
+                {
+                    //inputIndexing.ProcessIndexing();
+                    outputIndexing.ProcessIndexing();
+                }
+                await Task.Delay(100000, stoppingToken);
             }
         }
     }

@@ -140,6 +140,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                 {
                     result = true;
                 }
+                result = true;
             }
             catch (Exception ex)
             {
@@ -320,11 +321,11 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         updatetransaction.PrintDateTime = DateTime.Now;
                         listupdatetransaction.Add(updatetransaction);
 
-                        Console.WriteLine("Start MoveFile Company : " + dataFile.CompanyCode);
-                        log.InsertLog(pathlog, "Start MoveFile Company : " + dataFile.CompanyCode);
-                        MoveFile(filedata.FilePath, filedata.FileName, updatetransaction.BillingDate ?? DateTime.Now);
-                        Console.WriteLine("End MoveFile Company : " + dataFile.CompanyCode);
-                        log.InsertLog(pathlog, "End MoveFile Company : " + dataFile.CompanyCode);
+                        //Console.WriteLine("Start MoveFile Company : " + dataFile.CompanyCode);
+                        //log.InsertLog(pathlog, "Start MoveFile Company : " + dataFile.CompanyCode);
+                        //MoveFile(filedata.FilePath, filedata.FileName, updatetransaction.BillingDate ?? DateTime.Now);
+                        //Console.WriteLine("End MoveFile Company : " + dataFile.CompanyCode);
+                        //log.InsertLog(pathlog, "End MoveFile Company : " + dataFile.CompanyCode);
                     }
                 }
                 if (listupdatetransaction.Count > 0)

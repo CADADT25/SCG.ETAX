@@ -105,16 +105,19 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
                         log.InsertLog(pathlog, "Prepare To Send To SAP by SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName);
 
                         imageDocType = ListImageFile(indexingInputBySounceName);
-                        controllFile = GenControlFile(imageDocType);
-                        controllFileName = "index" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
-                        if (output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper() == "FOLDER")
+                        if(imageDocType.Count > 0)
                         {
-                            SendToFolder(output, imageDocType);
-                            CreateControlFile(controllFile, output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder, controllFileName);
-                        }
-                        else
-                        {
-                            UploadToSFTP(output, imageDocType, controllFile, controllFileName);
+                            controllFile = GenControlFile(imageDocType);
+                            controllFileName = "index" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+                            if (output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper() == "FOLDER")
+                            {
+                                SendToFolder(output, imageDocType);
+                                CreateControlFile(controllFile, output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder, controllFileName);
+                            }
+                            else
+                            {
+                                UploadToSFTP(output, imageDocType, controllFile, controllFileName);
+                            }
                         }
                     }
                 }
@@ -306,7 +309,7 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
                 configIndexInput = configMftsIndexGenerationSettingInputController.List().Result;
                 configIndexOutput = configMftsIndexGenerationSettingOutputController.List().Result;
                 transactionDescription = transactionDescriptionController.List().Result;
-                transactionDescription = transactionDescription.Where(x => x.XmlSignStatus == "Successful" && x.PdfIndexingStatus == "Successful").ToList();
+                transactionDescription = transactionDescription.Where(x => x.XmlSignStatus == "Successful" && x.PdfSignStatus == "Successful").ToList();
                 pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)

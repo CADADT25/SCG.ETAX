@@ -74,7 +74,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         {
                             billingdate = dataTran.BillingDate ?? DateTime.Now;
                         }
-                        pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
+                        //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
                         if (resultXMLSign)
                         {
                             pathoutbound += "\\Success\\";
@@ -130,19 +130,21 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     if (CheckRunningTime(config))
                     {
                         pathFolder = config.ConfigXmlsignInputPath;
-
-                        directoryInfo = new DirectoryInfo(pathFolder);
-                        listpath = directoryInfo.GetFiles(fileType)
-                         .OrderBy(f => f.LastWriteTime).ToList();
-
-                        foreach (var item in listpath)
+                        if (Directory.Exists(pathFolder))
                         {
-                            xMLSignModel = new XMLSignModel();
-                            xMLSignModel.FullPath = item.FullName;
-                            xMLSignModel.FileName = Path.GetFileName(item.FullName).Replace(".xml", "");
-                            xMLSignModel.Outbound = config.ConfigXmlsignOutputPath;
-                            xMLSignModel.Inbound = config.ConfigXmlsignInputPath;
-                            result.Add(xMLSignModel);
+                            directoryInfo = new DirectoryInfo(pathFolder);
+                            listpath = directoryInfo.GetFiles(fileType)
+                             .OrderBy(f => f.LastWriteTime).ToList();
+
+                            foreach (var item in listpath)
+                            {
+                                xMLSignModel = new XMLSignModel();
+                                xMLSignModel.FullPath = item.FullName;
+                                xMLSignModel.FileName = Path.GetFileName(item.FullName).Replace(".xml", "");
+                                xMLSignModel.Outbound = config.ConfigXmlsignOutputPath;
+                                xMLSignModel.Inbound = config.ConfigXmlsignInputPath;
+                                result.Add(xMLSignModel);
+                            }
                         }
                     }
                 }
@@ -178,6 +180,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 {
                     result = true;
                 }
+                result = true;
             }
             catch (Exception ex)
             {

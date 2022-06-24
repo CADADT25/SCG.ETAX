@@ -14,7 +14,9 @@ namespace SCG.CAD.ETAX.MONITOR
         string status = "";
         string servicename = "SCG.CAD.ETAX.XML.SIGN";
         string namepathlog = "PATHLOGFILE_XMLSIGN";
-        List<string>  pathfilelog = new List<string>();
+        string pathlogcurrentdate = @"D:\";
+        int length = 0;
+        List<string> pathfilelog = new List<string>();
         public Monitor_XMLSign(List<ConfigGlobal> config)
         {
             try
@@ -66,10 +68,17 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 while (stopreadlogfile)
                 {
-                    string content = service.ReadFileOnly(pathfilelog.FirstOrDefault());
-                    richTextBox2.Clear();
-                    richTextBox2.Focus();
-                    richTextBox2.AppendText(content);
+                    string content = service.ReadFileOnly(pathlogcurrentdate);
+                    if (length == content.Length)
+                    {
+                        richTextBox2.Clear();
+                        richTextBox2.Focus();
+                        richTextBox2.AppendText(content);
+                    }
+                    else
+                    {
+                        length = content.Length;
+                    }
                     await service.SetDelay();
                 }
             }
@@ -109,6 +118,7 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 configGlobal = config.First(x => x.ConfigGlobalName == namepathlog);
                 label4.Text = servicename;
+                pathlogcurrentdate = configGlobal.ConfigGlobalValue + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
             }
             catch (Exception ex)
             {

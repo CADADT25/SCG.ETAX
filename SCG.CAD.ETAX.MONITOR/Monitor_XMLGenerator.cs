@@ -1,7 +1,6 @@
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MONITOR.BussinessLayer;
 using System.Data;
-using System.ServiceProcess;
 
 namespace SCG.CAD.ETAX.MONITOR
 {
@@ -16,7 +15,7 @@ namespace SCG.CAD.ETAX.MONITOR
         string namepathlog = "PATHLOGFILE_XMLGENERATOR";
         string pathlogcurrentdate = @"D:\";
         int length = 0;
-        List<string>  pathfilelog = new List<string>();
+        List<string> pathfilelog = new List<string>();
         public Monitor_XMLGenerator(List<ConfigGlobal> config)
         {
             try
@@ -68,7 +67,6 @@ namespace SCG.CAD.ETAX.MONITOR
             {
                 while (stopreadlogfile)
                 {
-                    //string content = service.ReadFileOnly(pathfilelog.FirstOrDefault(x=> x.StartsWith(DateTime.Now.ToString("yyyyMMdd"))));
                     string content = service.ReadFileOnly(pathlogcurrentdate);
                     if(length == content.Length)
                     {

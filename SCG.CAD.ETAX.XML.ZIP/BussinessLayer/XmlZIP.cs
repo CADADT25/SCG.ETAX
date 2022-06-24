@@ -136,6 +136,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 {
                     result = true;
                 }
+                result = true;
             }
             catch (Exception ex)
             {
@@ -282,7 +283,8 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                     flagnewfile = true;
                     listxmlfileupdate = new List<XmlFileDetail>();
                     //zipPath = @"D:\Example\result.zip";
-                    zipPath = dataFile.OutPath + "\\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\" + doctype.DocumentType;
+                    //zipPath = dataFile.OutPath + "\\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\" + doctype.DocumentType;
+                    zipPath = dataFile.OutPath + "\\" + doctype.DocumentType;
                     if (!Directory.Exists(zipPath))
                     {
                         Directory.CreateDirectory(zipPath);

@@ -16,20 +16,14 @@ namespace SCG.CAD.ETAX.Print.ZIP
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPRINTZIP"))
+            while (!stoppingToken.IsCancellationRequested)
             {
-                printZIP.ProcessPrintzip();
-                //while (!stoppingToken.IsCancellationRequested)
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    await Task.Delay(1000, stoppingToken);
-                //}
+                if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPRINTZIP"))
+                {
+                    printZIP.ProcessPrintzip();
+                }
+                await Task.Delay(100000, stoppingToken);
             }
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    await Task.Delay(1000, stoppingToken);
-            //}
         }
     }
 }

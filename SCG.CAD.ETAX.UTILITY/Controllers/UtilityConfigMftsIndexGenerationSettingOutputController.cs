@@ -14,7 +14,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsIndexGenerationSettingInput/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigMftsIndexGenerationSettingOutput/GetListAll"));
 
                 if (task.STATUS)
                 {
