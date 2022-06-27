@@ -1,15 +1,10 @@
 ﻿using Renci.SshNet;
-using SCG.CAD.ETAX.INDEXING.TO.DMS.Models;
+using SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.Models;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
+namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
 {
     public class InputIndexing
     {

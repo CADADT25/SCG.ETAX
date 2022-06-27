@@ -1,13 +1,13 @@
 ﻿using Renci.SshNet;
 using Renci.SshNet.Sftp;
-using SCG.CAD.ETAX.INDEXING.TO.DMS.Models;
+using SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.Models;
 using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System.Text.Json;
 
-namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
+namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
 {
     public class OutputIndexing
     {
@@ -26,7 +26,6 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
 
         public void ProcessIndexing()
         {
-            List<IndexingInputModel> indexingInputModel = new List<IndexingInputModel>();
             List<ConfigMftsIndexGenerationSettingOutput> configOutput = new List<ConfigMftsIndexGenerationSettingOutput>();
             List<IndexingOutputModel> listFileLoginIndex = new List<IndexingOutputModel>();
             List<LoginIndexFIle> loginIndexFIle = new List<LoginIndexFIle>();
@@ -68,7 +67,6 @@ namespace SCG.CAD.ETAX.INDEXING.TO.DMS.BussinessLayer
         public List<ConfigMftsIndexGenerationSettingOutput> GetIndexingOutput()
         {
             List<ConfigMftsIndexGenerationSettingOutput> result = new List<ConfigMftsIndexGenerationSettingOutput>();
-            IndexingInputModel indexingInput = new IndexingInputModel();
             try
             {
                 foreach (var output in configIndexOutput)

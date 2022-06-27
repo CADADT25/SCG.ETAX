@@ -1,13 +1,12 @@
-
-using SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer;
+using SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer;
 using SCG.CAD.ETAX.UTILITY;
 
-namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS
+namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        OutputIndexing outputIndexing = new OutputIndexing();
+        InputIndexing inputIndexing = new InputIndexing();
         LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         public Worker(ILogger<Worker> logger)
@@ -21,8 +20,7 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEINDEXING"))
                 {
-                    //inputIndexing.ProcessIndexing();
-                    outputIndexing.ProcessIndexing();
+                    inputIndexing.ProcessIndexing();
                 }
                 await Task.Delay(100000, stoppingToken);
             }

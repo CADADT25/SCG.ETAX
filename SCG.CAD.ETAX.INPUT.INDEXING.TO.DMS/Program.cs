@@ -1,4 +1,4 @@
-using SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS;
+using SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>

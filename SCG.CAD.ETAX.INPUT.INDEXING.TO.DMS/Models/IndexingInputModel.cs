@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCG.CAD.ETAX.INDEXING.TO.DMS.Models
+namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.Models
 {
     public class IndexingInputModel
     {
