@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "SCG.CAD.ETAX.INDEXING.TO.DMS": {
+    "SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
