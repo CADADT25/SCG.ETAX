@@ -91,6 +91,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                         fileModel.CompanyCode = config.ConfigMftsCompressXmlSettingCompanyCode;
                         fileModel.FileDetails = new List<Filedetail>();
                         datatransaction = transactionDescription.Where(x => x.XmlSignStatus == "Successful" &&
+                                                                        x.XmlCompressStatus == "Waiting" &&
                                                                         x.CompanyCode == config.ConfigMftsCompressXmlSettingCompanyCode &&
                                                                         x.Isactive == 1).ToList();
                         foreach (var file in datatransaction)

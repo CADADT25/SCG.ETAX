@@ -22,7 +22,7 @@ namespace SCG.CAD.ETAX.MONITOR
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             MonitorProgram runMonitor = MonitorProgram.NotMonitor;
-            runMonitor = MonitorProgram.Monitor_PRINTZip;
+            runMonitor = MonitorProgram.Monitor_OUTPUTINDEXING;
             RunAsyncGetConfig().GetAwaiter().GetResult();
             switch (runMonitor)
             {

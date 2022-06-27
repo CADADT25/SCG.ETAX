@@ -100,10 +100,10 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                     {
                         listFileLoginIndex.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
                     }
-                    else
-                    {
-                        listFileLoginIndex.AddRange(ReadFileFromSFTP(output));
-                    }
+                    //else
+                    //{
+                    //    listFileLoginIndex.AddRange(ReadFileFromSFTP(output));
+                    //}
                 }
             }
             catch (Exception ex)
@@ -281,10 +281,10 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                 {
                     imageName = data.ImageName.Split('-');
                     fidoccode = imageName[1].Split('_')[0];
-                    update = transactionDescription.Where(x => x.FiDoc == fidoccode).FirstOrDefault();
+                    update = transactionDescription.Where(x => x.FiDoc == fidoccode && x.PdfIndexingStatus != "Successful").FirstOrDefault();
                     if(update != null)
                     {
-                        update.PdfIndexingDetail = imageName[5].Split('|')[2];
+                        update.PdfIndexingDetail = data.Massage;
                         update.PdfIndexingStatus = "Successful";
                         update.PdfIndexingDateTime = DateTime.Now.ToString("yyyyMMdd");
                         if(imageName[2].ToUpper() == "E")

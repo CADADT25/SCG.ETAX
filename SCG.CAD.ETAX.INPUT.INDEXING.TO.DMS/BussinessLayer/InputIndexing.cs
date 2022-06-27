@@ -1,8 +1,10 @@
 ﻿using Renci.SshNet;
 using SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.Models;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
+using System.Text.Json;
 
 namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
 {
@@ -30,7 +32,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             {
                 Console.WriteLine("Start Input Indexing");
                 log.InsertLog(pathlog, "Start Input Indexing");
-
+                GetDataTransactionDescription();
                 GetDataFromDataBase();
                 indexingInputModel = GetIndexingInput();
                 PrepareToSendToSAP(indexingInputModel);
@@ -87,12 +89,15 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             bool result = false;
             List<IndexingInputModel> indexingInputBySounceName = new List<IndexingInputModel>();
             List<ImageDocType> imageDocType = new List<ImageDocType>();
+            List<TransactionDescription> dataUpdate = new List<TransactionDescription>();
             byte[] controllFile = null;
             string controllFileName = "";
+            bool resultSendFile = false;
             try
             {
                 foreach (var output in configIndexOutput)
                 {
+                    resultSendFile = false;
                     indexingInputBySounceName = indexingInputModel.Where(x => x.SourceNameOutput == output.ConfigMftsIndexGenerationSettingOutputSourceName).ToList();
                     if (indexingInputBySounceName != null && indexingInputBySounceName.Count > 0)
                     {
@@ -100,18 +105,24 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                         log.InsertLog(pathlog, "Prepare To Send To SAP by SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName);
 
                         imageDocType = ListImageFile(indexingInputBySounceName);
-                        if(imageDocType.Count > 0)
+                        if (imageDocType.Count > 0)
                         {
                             controllFile = GenControlFile(imageDocType);
                             controllFileName = "index" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
                             if (output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper() == "FOLDER")
                             {
-                                SendToFolder(output, imageDocType);
+                                resultSendFile = SendToFolder(output, imageDocType);
                                 CreateControlFile(controllFile, output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder, controllFileName);
                             }
-                            else
+                            //else
+                            //{
+                            //    resultSendFile = UploadToSFTP(output, imageDocType, controllFile, controllFileName);
+                            //}
+
+                            if (resultSendFile)
                             {
-                                UploadToSFTP(output, imageDocType, controllFile, controllFileName);
+                                dataUpdate = PrepareTransactionDescription(imageDocType, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
+                                UpdateTransactionDescription(dataUpdate);
                             }
                         }
                     }
@@ -176,8 +187,8 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 {
                     using (TextWriter tw = new StreamWriter(ms))
                     {
-                        foreach(var filename in imageDocType)
-                        tw.WriteLine(filename.ReName);
+                        foreach (var filename in imageDocType)
+                            tw.WriteLine(filename.ReName);
                         tw.Flush();
                         ms.Position = 0;
                         result = ms.ToArray();
@@ -228,7 +239,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                     Directory.CreateDirectory(outpath);
                 }
 
-                foreach(var file in imageDocType)
+                foreach (var file in imageDocType)
                 {
                     if (File.Exists(outpath + "\\" + file.ReName))
                     {
@@ -246,7 +257,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             return result;
         }
 
-        public bool UploadToSFTP(ConfigMftsIndexGenerationSettingOutput configOutput, List<ImageDocType> imageDocType, byte[] controllFile,string controllFileName)
+        public bool UploadToSFTP(ConfigMftsIndexGenerationSettingOutput configOutput, List<ImageDocType> imageDocType, byte[] controllFile, string controllFileName)
         {
             bool result = false;
             try
@@ -303,9 +314,20 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 configGlobal = configGlobalController.List().Result;
                 configIndexInput = configMftsIndexGenerationSettingInputController.List().Result;
                 configIndexOutput = configMftsIndexGenerationSettingOutputController.List().Result;
-                transactionDescription = transactionDescriptionController.List().Result;
                 transactionDescription = transactionDescription.Where(x => x.XmlSignStatus == "Successful" && x.PdfSignStatus == "Successful").ToList();
                 pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+        }
+
+        public void GetDataTransactionDescription()
+        {
+            try
+            {
+                transactionDescription = transactionDescriptionController.List().Result;
             }
             catch (Exception ex)
             {
@@ -319,6 +341,112 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             try
             {
                 result = logicTool.CheckRunTime(input.ConfigMftsIndexGenerationSettingInputNextTime);
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+
+        public List<TransactionDescription> PrepareTransactionDescription(List<ImageDocType> listdata, string path, string filename)
+        {
+            List<TransactionDescription> result = new List<TransactionDescription>();
+            List<TransactionDescription> dataUpdate = new List<TransactionDescription>();
+            TransactionDescription data = new TransactionDescription();
+            List<string> listBillNo = new List<string>();
+
+            try
+            {
+                GetDataTransactionDescription();
+                listBillNo = listdata.Select(x => x.BillNo).ToList();
+                dataUpdate = transactionDescription.Where(x => listBillNo.Contains(x.BillingNumber))
+                                .Select(x=> new TransactionDescription
+                                {
+                                    TransactionNo = x.TransactionNo,
+                                    BillingNumber    = x.BillingNumber,
+                                    BillingDate = x.BillingDate,
+                                    BillingYear = x.BillingYear,
+                                    ProcessingDate = x.ProcessingDate,
+                                    CompanyCode = x.CompanyCode,
+                                    CompanyName = x.CompanyName,
+                                    CustomerId = x.CustomerId,
+                                    CustomerName = x.CustomerName,
+                                    SoldTo = x.SoldTo,
+                                    ShipTo = x.ShipTo,
+                                    BillTo = x.BillTo,
+                                    Payer = x.Payer,
+                                    SourceName = x.SourceName,
+                                    Foc = x.Foc,
+                                    Ic = x.Ic,
+                                    PostingYear = x.PostingYear,
+                                    FiDoc = x.FiDoc,
+                                    ImageDocType = x.ImageDocType,
+                                    DocType = x.DocType,
+                                    SellOrg = x.SellOrg,
+                                    PoNumber = x.PoNumber,
+                                    TypeInput = x.TypeInput,
+                                    GenerateStatus = x.GenerateStatus,
+                                    GenerateDetail = x.GenerateDetail,
+                                    GenerateDateTime = x.GenerateDateTime,
+                                    XmlSignStatus = x.XmlSignStatus,
+                                    XmlSignDetail = x.XmlSignDetail,
+                                    XmlSignDateTime = x.XmlSignDateTime,
+                                    PdfSignStatus = x.PdfSignStatus,
+                                    PdfSignDetail = x.PdfSignDetail,
+                                    PdfSignDateTime = x.PdfSignDateTime,
+                                    PrintStatus = x.PrintStatus,
+                                    PrintDetail = x.PrintDetail,
+                                    PrintDateTime = x.PrintDateTime,
+                                    EmailSendStatus = x.EmailSendStatus,
+                                    EmailSendDetail = x.EmailSendDetail,
+                                    EmailSendDateTime = x.EmailSendDateTime,
+                                    XmlCompressStatus = x.XmlCompressStatus,
+                                    XmlCompressDetail = x.XmlCompressDetail,
+                                    XmlCompressDateTime = x.XmlCompressDateTime,
+                                    PdfIndexingStatus = x.PdfIndexingStatus,
+                                    PdfIndexingDetail = x.PdfIndexingDetail,
+                                    PdfIndexingDateTime = x.PdfIndexingDateTime,
+                                    PdfSignLocation = x.PdfSignLocation,
+                                    XmlSignLocation = x.XmlSignLocation,
+                                    OutputXmlTransactionNo = x.OutputXmlTransactionNo,
+                                    OutputPdfTransactionNo = x.OutputPdfTransactionNo,
+                                    OutputMailTransactionNo = x.OutputMailTransactionNo,
+                                    DmsAttachmentFileName = filename,
+                                    DmsAttachmentFilePath = path,
+                                    CreateBy = x.CreateBy,
+                                    CreateDate = x.CreateDate,
+                                    UpdateBy = "BATCH",
+                                    UpdateDate = DateTime.Now,
+                                    Isactive = x.Isactive,
+                                    OneTimeEmail = x.OneTimeEmail
+                                })
+                                .ToList();
+                result = dataUpdate;
+
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+
+        public bool UpdateTransactionDescription(List<TransactionDescription> dataUpdate)
+        {
+            bool result = false;
+            Task<Response> res;
+            try
+            {
+                if (dataUpdate.Count > 0)
+                {
+                    var json = JsonSerializer.Serialize(dataUpdate);
+                    res = transactionDescriptionController.UpdateList(json);
+                    if (res.Result.MESSAGE == "Updated Success.")
+                    {
+                        result = true;
+                    }
+                }
             }
             catch (Exception ex)
             {

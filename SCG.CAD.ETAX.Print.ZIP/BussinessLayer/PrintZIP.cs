@@ -95,6 +95,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         fileModel.CompanyCode = config.ConfigMftsCompressPrintSettingCompanyCode;
                         fileModel.FileDetails = new List<Filedetail>();
                         datatransaction = transactionDescription.Where(x => x.PdfSignStatus == "Successful" &&
+                                                                        x.PrintStatus == "Waiting" &&
                                                                         x.CompanyCode == config.ConfigMftsCompressPrintSettingCompanyCode &&
                                                                         x.Isactive == 1).ToList();
                         foreach (var file in datatransaction)
