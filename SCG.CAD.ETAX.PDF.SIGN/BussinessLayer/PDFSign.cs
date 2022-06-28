@@ -231,6 +231,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     dataTran.XmlCompressStatus = "Waiting";
                     dataTran.XmlSignStatus = "Waiting";
                     dataTran.EmailSendStatus = "Waiting";
+                    dataTran.DmsAttachmentFileName = null;
+                    dataTran.DmsAttachmentFilePath = null;
                     if (status)
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
