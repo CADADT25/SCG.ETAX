@@ -212,6 +212,10 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 {
                     Directory.CreateDirectory(path);
                 }
+                if(File.Exists(path + "\\" + filename))
+                {
+                    File.Delete(path + "\\" + filename);
+                }
 
                 FileStream oFileStream = new FileStream(path + "\\" + filename, System.IO.FileMode.Create);
                 oFileStream.Write(controllfile, 0, controllfile.Length);
@@ -249,6 +253,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                     Console.WriteLine("File : " + file.ReName);
                     log.InsertLog(pathlog, "File : " + file.ReName);
                 }
+                result = true;
             }
             catch (Exception ex)
             {
