@@ -66,26 +66,12 @@
             "columns": [
 
                 {
-                    data: "outputSearchEmailSendNo",
-                    className: "text-center",
-                    width: "5%",
-                    visible: false
-                },
-                {
-                    //data: "productUnitNo",
-                    className: "text-center",
-                    width: "5%",
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
                     data: "outputSearchEmailSendCompanyCode",
-                    width: "10%"
+                    width: "5%"
                 },
                 {
                     data: "outputSearchEmailSendSubject",
-                    width: "10%"
+                    width: "40%"
                 },
                 {
                     data: "outputSearchEmailSendFileName",
@@ -94,6 +80,7 @@
                 {
                     data: "outputSearchEmailSendStatus",
                     width: "10%",
+                    visible: false,
                     className: "text-center",
                     render: function (data, type, row) {
                         return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
@@ -108,12 +95,6 @@
                 }
             ]
         });
-
-        table.on( 'order.dt search.dt', function () {
-            table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
 
 
         EditOutputSearchEmailSend(table);
@@ -199,7 +180,79 @@
 
     // [end] Ajax call Controller
 
+    function fnSearchOutputEmailSend(){
 
+        var getCompanyCode = $('#OutputSearchEmailSendCustomerCode').val();
+        var getDateBetween = $('#OutputSearchEmailSendDate').val();
+        var getPrintDownloadStatus = $('#OutputSearchEmailSendStatus').val();
+
+        var model = new Object();
+
+        model.outPutSearchEmailCompanyCode = getCompanyCode;
+        model.outPutSearchEmailDate = getDateBetween;
+        model.outPutSearchEmailStatus = getPrintDownloadStatus;
+
+        var JsonString = JSON.stringify(model);
+
+        $('#tboutputSearchEmailSendMain').DataTable().destroy();
+
+
+        $('#tboutputSearchEmailSendMain').DataTable({
+
+            "scrollY": true,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "retrieve": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 10,
+
+            "ajax":
+                {
+                    type: "GET",
+                    url: "@Url.Action("Search", "OutputSearchEmailSend")",
+                    data: { jsonSearchString : JsonString },
+                    dataType: "json"
+                },
+                "columns": [
+
+                    
+                {
+                    data: "outputSearchEmailSendCompanyCode",
+                    width: "5%"
+                },
+                {
+                    data: "outputSearchEmailSendSubject",
+                    width: "40%"
+                },
+                {
+                    data: "outputSearchEmailSendFileName",
+                    width: "10%"
+                },
+                {
+                    data: "outputSearchEmailSendStatus",
+                    width: "10%",
+                    visible: false,
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                    }
+                },
+                {
+                    data: null,
+                    className: "dt-center editor-edit text-center text-warning",
+                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
+                    orderable: false,
+                    width: "2%"
+                }
+                
+            ],
+
+
+             destroy : true
+            
+        }).ajax.reload();
+    }
 
 
     function callOutputSearchEmailSendIndex() {

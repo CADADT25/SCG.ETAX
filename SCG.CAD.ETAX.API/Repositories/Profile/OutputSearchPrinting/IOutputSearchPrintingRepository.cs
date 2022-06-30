@@ -7,5 +7,7 @@
         Task<Response> INSERT(OutputSearchPrinting param);
         Task<Response> UPDATE(OutputSearchPrinting param);
         Task<Response> DELETE(OutputSearchPrinting param);
+        Task<Response> SEARCH(string JsonString);
+
     }
 }

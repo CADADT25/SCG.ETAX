@@ -173,5 +173,104 @@
             return resp;
         }
 
+
+        public Response SEARCH(string JsonString)
+        {
+            Response resp = new Response();
+
+            outputSearchEmailModel obj = new outputSearchEmailModel();
+
+            List<OutputSearchEmailSend> tran = new List<OutputSearchEmailSend>();
+
+            try
+            {
+                obj = JsonConvert.DeserializeObject<outputSearchEmailModel>(JsonString);
+
+                DateTime getMinDate = new DateTime();
+                DateTime getMaxDate = new DateTime();
+
+                var getStatus = obj.outPutSearchEmailStatus;
+
+                int statusDownload = 99;
+
+                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchEmailStatus;
+
+                if (!string.IsNullOrEmpty(getStatus))
+                {
+                    statusDownload = Convert.ToInt32(getStatus);
+                }
+                else
+                {
+                    statusDownload = 99;
+                }
+
+                var getArrayDate = obj.outPutSearchEmailDate.Split("to");
+
+                if (!string.IsNullOrEmpty(obj.outPutSearchEmailDate))
+                {
+                    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                }
+                else
+                {
+                    getMinDate = DateTime.Now.AddDays(-30);
+                    getMaxDate = DateTime.Now.AddDays(30);
+                }
+
+                if (obj != null)
+                {
+
+                    tran = _dbContext.outputSearchEmailSend.Where(
+
+                            x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
+
+                            obj.outPutSearchEmailCompanyCode.Count > 0 ? (obj.outPutSearchEmailCompanyCode.Contains(x.OutputSearchEmailSendCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+
+                            statusDownload == 99 ? (x.OutputSearchEmailSendStatus != 1 && x.OutputSearchEmailSendStatus != 0 && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+
+                            ).ToList();
+
+                    if (tran.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = tran;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+                else
+                {
+
+                    var getList = _dbContext.outputSearchEmailSend.ToList();
+
+                    if (getList.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data success. ";
+                        resp.OUTPUT_DATA = getList;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
     }
 }

@@ -8,17 +8,16 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public class transactionSearchModel
     {
-        public string tranSearchBillingNo { get; set; }
-        public string tranSearchStatus { get; set; }
-        public string tranSearchIcO2c { get; set; }
-        public string tranSearchCustomerCode { get; set; }
-        public string tranSearchCompanyCode { get; set; }
-        public string tranSearchOutputType { get; set; }
-        public string tranSearchDocumentType { get; set; }
-        public string tranSearchDateType { get; set; }
-        public string tranSearchDateBetween { get; set; }
-        public string tranSearchDataSource { get; set; }
-        public string tranSearchSellOrg { get; set; }
+        public string? tranSearchBillingNo { get; set; }
+        public List<string>? tranSearchStatus { get; set; }
+        public List<string>? tranSearchIcO2c { get; set; }
+        public string? tranSearchCustomerCode { get; set; }
+        public List<string>? tranSearchCompanyCode { get; set; }
+        public List<string>? tranSearchOutputType { get; set; }
+        public List<string>? tranSearchDocumentType { get; set; }
+        public string? tranSearchDateType { get; set; }
+        public string? tranSearchDateBetween { get; set; }
+        public string? tranSearchDataSource { get; set; }
 
     }
 }

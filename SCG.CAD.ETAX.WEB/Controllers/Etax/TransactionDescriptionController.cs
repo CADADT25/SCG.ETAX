@@ -26,6 +26,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        public IActionResult _View()
+        {
+            return View();
+        }
 
 
         public async Task<JsonResult> Detail(int id)
@@ -94,6 +98,41 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
 
             return Json(new { data = tran });
+        }
+
+
+        public async Task<JsonResult> Search(string transactionSearchJson)
+        {
+
+            List<TransactionDescription> tran = new List<TransactionDescription>();
+
+            Response resp = new Response();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/Search?JsonString= " + transactionSearchJson + " "));
+
+                if (task.STATUS)
+                {
+
+                    tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return Json(new { data = tran });
+
         }
 
         public async Task<JsonResult> Insert(string jsonString)

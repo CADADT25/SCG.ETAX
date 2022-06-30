@@ -153,6 +153,40 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> Search(string jsonSearchString)
+        {
+
+            List<OutputSearchPrinting> tran = new List<OutputSearchPrinting>();
+
+            Response resp = new Response();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchPrinting/Search?JsonString= " + jsonSearchString + " "));
+
+                if (task.STATUS)
+                {
+
+                    tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return Json(new { data = tran });
+
+        }
+
 
     }
 }
