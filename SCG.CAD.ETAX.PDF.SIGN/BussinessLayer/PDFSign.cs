@@ -10,6 +10,7 @@ using System.Text.Json;
 using SCG.CAD.ETAX.PDF.SIGN.Models;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY;
+using SCG.CAD.ETAX.MODEL.CustomModel;
 
 namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 {
@@ -18,7 +19,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         UtilityConfigPDFSignController configPDFSignController = new UtilityConfigPDFSignController();
         UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
+        UtilityAPISignController signPDFController = new UtilityAPISignController();
         LogHelper log = new LogHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigPdfSign> configPDFSign = new List<ConfigPdfSign>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
@@ -29,11 +32,14 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         public List<PDFSignModel> ReadPdfFile()
         {
             List<PDFSignModel> result = new List<PDFSignModel>();
+            PDFSignModel pDFSignModel = new PDFSignModel();
             string pathFolder = "";
             string fileType = "*.pdf";
             List<FileInfo> listpath;
-            PDFSignModel pdfSignModel = new PDFSignModel();
+            ListFilePDF pdfDetail = new ListFilePDF();
             DirectoryInfo directoryInfo;
+            string billno = "";
+            string filename = "";
 
             try
             {
@@ -41,6 +47,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 {
                     if (CheckRunningTime(config))
                     {
+                        pDFSignModel = new PDFSignModel();
+                        pDFSignModel.configPdfSign = config;
+                        pDFSignModel.listFilePDFs = new List<ListFilePDF>();
                         pathFolder = config.ConfigPdfsignInputPath;
 
                         directoryInfo = new DirectoryInfo(pathFolder);
@@ -49,13 +58,24 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                         foreach (var item in listpath)
                         {
-                            pdfSignModel = new PDFSignModel();
-                            pdfSignModel.FullPath = item.FullName;
-                            pdfSignModel.FileName = Path.GetFileName(item.FullName).Replace(".pdf", "");
-                            pdfSignModel.Outbound = config.ConfigPdfsignOutputPath;
-                            pdfSignModel.Inbound = config.ConfigPdfsignInputPath;
-                            result.Add(pdfSignModel);
+                            filename = Path.GetFileName(item.FullName).Replace(".pdf", "");
+                            if (filename.IndexOf('_') > -1)
+                            {
+                                billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                            }
+                            else
+                            {
+                                billno = filename.Substring(8);
+                            }
+                            pdfDetail = new ListFilePDF();
+                            pdfDetail.FullPath = item.FullName;
+                            pdfDetail.FileName = filename;
+                            pdfDetail.Outbound = config.ConfigPdfsignOutputPath;
+                            pdfDetail.Inbound = config.ConfigPdfsignInputPath;
+                            pdfDetail.Billno = billno;
+                            pDFSignModel.listFilePDFs.Add(pdfDetail);
                         }
+                        result.Add(pDFSignModel);
                     }
                 }
 
@@ -104,12 +124,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             string fileNameDest = "";
             string fullpath = "";
-            bool resultPDFSign = false;
+            APIResponseSignModel resultPDFSign = new APIResponseSignModel();
             string billno = "";
             int round = 0;
             string pathoutbound = "";
             string fileType = ".pdf";
             DateTime billingdate;
+            APISendFilePDFSignModel dataSend = new APISendFilePDFSignModel();
             try
             {
                 Console.WriteLine("Start PDFSign");
@@ -127,64 +148,63 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
                     foreach (var src in allfile)
                     {
-                        round += 1;
-                        Console.WriteLine("Start round : " + round);
-                        log.InsertLog(pathlog, "Start round : " + round);
-                        if (src.FileName.IndexOf('_') > -1)
+                        if(src.listFilePDFs.Count > 0)
                         {
-                            billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
+                            foreach(var file in src.listFilePDFs)
+                            {
+                                round += 1;
+                                Console.WriteLine("Start round : " + round);
+                                log.InsertLog(pathlog, "Start round : " + round);
+                                Console.WriteLine("billno : " + billno);
+                                log.InsertLog(pathlog, "billno : " + billno);
+
+                                Console.WriteLine("Prepare PDF");
+                                log.InsertLog(pathlog, "Prepare PDF");
+                                dataSend = PrepareSendPDFSign(src.configPdfSign, file.FullPath);
+
+                                Console.WriteLine("Send To Sign");
+                                log.InsertLog(pathlog, "Send To Sign");
+                                resultPDFSign = SendFilePDFSign(dataSend);
+
+                                Console.WriteLine("Status Sign : " + resultPDFSign.ToString());
+                                log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.ToString());
+                                Console.WriteLine("Update Status in DataBase");
+                                log.InsertLog(pathlog, "Update Status in DataBase");
+
+                                fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                pathoutbound = file.Outbound;
+
+                                var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
+                                billingdate = DateTime.Now;
+                                if (dataTran != null)
+                                {
+                                    billingdate = dataTran.BillingDate ?? DateTime.Now;
+                                }
+                                //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
+                                if (resultPDFSign.resultCode == "000")
+                                {
+                                    pathoutbound += "\\Success\\";
+                                }
+                                else
+                                {
+                                    pathoutbound += "\\Fail\\";
+                                }
+                                fullpath = pathoutbound + fileNameDest + fileType;
+
+                                UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
+
+                                Console.WriteLine("Start Export PDF file");
+                                log.InsertLog(pathlog, "Start Export PDF file");
+                                ExportPDFAfterSign(resultPDFSign, pathoutbound, fullpath);
+                                Console.WriteLine("End Export PDF file");
+                                log.InsertLog(pathlog, "End Export PDF file");
+                                Console.WriteLine("Start Move file");
+                                log.InsertLog(pathlog, "Start Move file");
+                                MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                Console.WriteLine("End Move file");
+                                log.InsertLog(pathlog, "End Move file");
+                            }
                         }
-                        else
-                        {
-                            billno = src.FileName.Substring(8);
-                        }
-                        Console.WriteLine("billno : " + billno);
-                        log.InsertLog(pathlog, "billno : " + billno);
-
-                        PdfReader reader = new PdfReader(src.FullPath);
-
-                        Console.WriteLine("Send To Sign");
-                        log.InsertLog(pathlog, "Send To Sign");
-                        resultPDFSign = SendFilePDFSign();
-
-                        Console.WriteLine("Status Sign : " + resultPDFSign.ToString());
-                        log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.ToString());
-                        Console.WriteLine("Update Status in DataBase");
-                        log.InsertLog(pathlog, "Update Status in DataBase");
-
-                        fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        pathoutbound = src.Outbound;
-
-                        var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
-                        billingdate = DateTime.Now;
-                        if (dataTran != null)
-                        {
-                            billingdate = dataTran.BillingDate ?? DateTime.Now;
-                        }
-                        //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
-                        if (resultPDFSign)
-                        {
-                            pathoutbound += "\\Success\\";
-                        }
-                        else
-                        {
-                            pathoutbound += "\\Fail\\";
-                        }
-                        fullpath = pathoutbound + fileNameDest + fileType;
-
-                        UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
-
-                        Console.WriteLine("Start Export PDF file");
-                        log.InsertLog(pathlog, "Start Export PDF file");
-                        ExportPDFAfterSign(reader, pathoutbound, fullpath);
-                        Console.WriteLine("End Export PDF file");
-                        log.InsertLog(pathlog, "End Export PDF file");
-                        reader.Close();
-                        Console.WriteLine("Start Move file");
-                        log.InsertLog(pathlog, "Start Move file");
-                        MoveFile(src.FullPath, src.FileName + fileType, billingdate);
-                        Console.WriteLine("End Move file");
-                        log.InsertLog(pathlog, "End Move file");
 
                     }
                 }
@@ -195,12 +215,13 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
         }
 
-        public bool SendFilePDFSign()
+        public APIResponseSignModel SendFilePDFSign(APISendFilePDFSignModel data)
         {
-            bool result = false;
+            APIResponseSignModel result = new APIResponseSignModel();
             try
             {
-                result = true;
+                var json = JsonSerializer.Serialize(data);
+                result = signPDFController.SendFilePDFSign(json).Result;
             }
             catch (Exception ex)
             {
@@ -209,7 +230,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
         
-        public bool UpdateStatusAfterSignPDF(bool status, string billno, string pathfile,TransactionDescription dataTran)
+        public bool UpdateStatusAfterSignPDF(APIResponseSignModel pdfsign, string billno, string pathfile,TransactionDescription dataTran)
         {
             bool result = false;
             try
@@ -233,7 +254,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     dataTran.EmailSendStatus = "Waiting";
                     dataTran.DmsAttachmentFileName = null;
                     dataTran.DmsAttachmentFilePath = null;
-                    if (status)
+                    if (pdfsign.resultCode.Equals("000"))
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
                         dataTran.PdfSignDetail = "PDF was signed completely";
@@ -268,7 +289,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 }
                 else
                 {
-                    if (status)
+                    if (pdfsign.resultCode.Equals("000"))
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
                         dataTran.PdfSignDetail = "PDF was signed completely";
@@ -309,7 +330,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public bool ExportPDFAfterSign(PdfReader reader, string pathoutbound, string fullpath)
+        public bool ExportPDFAfterSign(APIResponseSignModel pdfsign, string pathoutbound, string fullpath)
         {
             bool result = false;
             try
@@ -319,8 +340,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     Directory.CreateDirectory(pathoutbound);
                 }
 
-                FileStream os = new FileStream(fullpath, FileMode.Create);
-                PdfStamper stamper = PdfStamper.CreateSignature(reader, os, '\0');
+                File.WriteAllText(fullpath, pdfsign.fileSigned);
 
                 result = true;
             }
@@ -390,5 +410,41 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
             return result;
         }
+
+        public APISendFilePDFSignModel PrepareSendPDFSign(ConfigPdfSign config, string filepath)
+        {
+            APISendFilePDFSignModel result = new APISendFilePDFSignModel();
+            try
+            {
+                result.hsmName = "pse";
+                result.hsmSerial = "571271:28593";
+                result.slotPassword = "P@ssw0rd1";
+                result.keyAlias = "NEW06391012205001173_200916150834";
+                result.certSerial = "5c6e65dc1b7b9da8";
+                //result.hsmSerial = config.ConfigPdfsignHsmSerial;
+                //result.slotPassword = config.ConfigPdfsignHsmPassword;
+                //result.keyAlias = config.ConfigPdfsignKeyAlias;
+                //result.certSerial = config.ConfigPdfsignHsmSerial;
+                result.signatureType = "text";
+                result.coordinateUpperLeftX = 200;
+                result.coordinateUpperLeftY = 700;
+                result.page = "first";
+                result.fontName = "Tahoma";
+                result.fontSize = 8;
+                result.fontType = "";
+                result.fontSpace = 0;
+                result.fontColor = "";
+                result.imageEncode = "";
+                result.reason = "";
+                result.location = "";
+                result.fileEncode = logicToolHelper.ConvertFileToEncodeBase64(filepath);
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+
     }
 }

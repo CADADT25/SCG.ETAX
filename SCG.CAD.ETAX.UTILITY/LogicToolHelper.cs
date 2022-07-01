@@ -262,5 +262,13 @@ namespace SCG.CAD.ETAX.UTILITY
                 dateTime.Kind);
         }
 
+        public string ConvertFileToEncodeBase64(string filepath)
+        {
+            string result = "";
+            Byte[] bytes = File.ReadAllBytes(filepath);
+            result = Convert.ToBase64String(bytes);
+            return result;
+        }
+
     }
 }

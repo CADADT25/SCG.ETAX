@@ -5,6 +5,7 @@ using SCG.CAD.ETAX.XML.SIGN.Models;
 using System.Xml;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY;
+using SCG.CAD.ETAX.MODEL.CustomModel;
 
 namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
@@ -13,7 +14,9 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         UtilityConfigXMLSignController configXMLSignController = new UtilityConfigXMLSignController();
         UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
+        UtilityAPISignController signXMLController = new UtilityAPISignController();
         LogHelper log = new LogHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigXmlSign> configXmlSign = new List<ConfigXmlSign>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
@@ -25,12 +28,12 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         {
             string fullpath = "";
             string fileNameDest = "";
-            bool resultXMLSign = false;
-            string billno = "";
+            APIResponseSignModel resultXMLSign = new APIResponseSignModel();
             int round = 0;
             string fileType = ".xml";
             string pathoutbound = "";
             DateTime billingdate;
+            APISendFileXMLSignModel dataSend = new APISendFileXMLSignModel();
             try
             {
                 Console.WriteLine("Start XMLSign");
@@ -47,57 +50,66 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
                     foreach (var src in allfile)
                     {
-                        round += 1;
-                        Console.WriteLine("Start round : " + round);
-                        log.InsertLog(pathlog, "Start round : " + round);
-                        billno = src.FileName.Substring(8, (src.FileName.IndexOf('_')) - 8);
-                        Console.WriteLine("billno : " + billno);
-                        log.InsertLog(pathlog, "billno : " + billno);
-                        XmlDocument doc = new XmlDocument();
-                        doc.Load(src.FullPath);
-
-                        Console.WriteLine("Send To Sign");
-                        log.InsertLog(pathlog, "Send To Sign");
-                        resultXMLSign = SendFileXMLSign(doc);
-
-                        Console.WriteLine("Status Sign : " + resultXMLSign.ToString());
-                        log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.ToString());
-                        Console.WriteLine("Update Status in DataBase");
-                        log.InsertLog(pathlog, "Update Status in DataBase");
-
-                        fileNameDest = src.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        pathoutbound = src.Outbound;
-
-                        var dataTran = transactionDescription.GetBilling(billno).Result.FirstOrDefault();
-                        billingdate = DateTime.Now;
-                        if (dataTran!= null)
+                        if (src.listFileXMLs.Count > 0)
                         {
-                            billingdate = dataTran.BillingDate ?? DateTime.Now;
-                        }
-                        //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
-                        if (resultXMLSign)
-                        {
-                            pathoutbound += "\\Success\\";
-                        }
-                        else
-                        {
-                            pathoutbound += "\\Fail\\";
-                        }
-                        fullpath = pathoutbound + fileNameDest + fileType;
+                            foreach (var file in src.listFileXMLs)
+                            {
+                                round += 1;
+                                Console.WriteLine("Start round : " + round);
+                                log.InsertLog(pathlog, "Start round : " + round);
+                                Console.WriteLine("billno : " + file.Billno);
+                                log.InsertLog(pathlog, "billno : " + file.Billno);
+                                XmlDocument doc = new XmlDocument();
+                                doc.Load(file.FullPath);
 
-                        UpdateStatusAfterSignXML(resultXMLSign, billno, fullpath, dataTran);
+                                Console.WriteLine("Prepare PDF");
+                                log.InsertLog(pathlog, "Prepare PDF");
+                                dataSend = PrepareSendXMLSign(src.configPdfSign, file.FullPath);
 
-                        Console.WriteLine("Start Export XML file");
-                        log.InsertLog(pathlog, "Start Export XML file");
-                        ExportXMLAfterSign( doc, pathoutbound, fullpath);
-                        Console.WriteLine("End Export XML file");
-                        log.InsertLog(pathlog, "End Export XML file");
+                                Console.WriteLine("Send To Sign");
+                                log.InsertLog(pathlog, "Send To Sign");
+                                resultXMLSign = SendFileXMLSign(dataSend);
 
-                        Console.WriteLine("Start Move file");
-                        log.InsertLog(pathlog, "Start Move file");
-                        MoveFile(src.FullPath, src.FileName + fileType, billingdate);
-                        Console.WriteLine("End Move file");
-                        log.InsertLog(pathlog, "End Move file");
+                                Console.WriteLine("Status Sign : " + resultXMLSign.ToString());
+                                log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.ToString());
+                                Console.WriteLine("Update Status in DataBase");
+                                log.InsertLog(pathlog, "Update Status in DataBase");
+
+                                fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                pathoutbound = file.Outbound;
+
+                                var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
+                                billingdate = DateTime.Now;
+                                if (dataTran != null)
+                                {
+                                    billingdate = dataTran.BillingDate ?? DateTime.Now;
+                                }
+                                //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
+                                if (resultXMLSign.resultCode == "000")
+                                {
+                                    pathoutbound += "\\Success\\";
+                                }
+                                else
+                                {
+                                    pathoutbound += "\\Fail\\";
+                                }
+                                fullpath = pathoutbound + fileNameDest + fileType;
+
+                                UpdateStatusAfterSignXML(resultXMLSign, file.Billno, fullpath, dataTran);
+
+                                Console.WriteLine("Start Export XML file");
+                                log.InsertLog(pathlog, "Start Export XML file");
+                                ExportXMLAfterSign(doc, pathoutbound, fullpath);
+                                Console.WriteLine("End Export XML file");
+                                log.InsertLog(pathlog, "End Export XML file");
+
+                                Console.WriteLine("Start Move file");
+                                log.InsertLog(pathlog, "Start Move file");
+                                MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                Console.WriteLine("End Move file");
+                                log.InsertLog(pathlog, "End Move file");
+                            }
+                        }
                     }
                 }
                 Console.WriteLine("End XMLSign");
@@ -112,23 +124,23 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         public List<XMLSignModel> ReadXmlFile()
         {
             List<XMLSignModel> result = new List<XMLSignModel>();
+            XMLSignModel xMLSignModel = new XMLSignModel();
             string pathFolder = "";
             string fileType = "*.xml";
             List<FileInfo> listpath;
-            XMLSignModel xMLSignModel = new XMLSignModel();
+            ListFileXML xmlDetail = new ListFileXML();
             DirectoryInfo directoryInfo;
-            //ConfigXmlSign config = new ConfigXmlSign();
-            //config.ConfigXmlsignInputPath = @"D:\sign";
-            //config.ConfigXmlsignOutputPath = @"D:\sign";
-            //configXmlSign = new List<ConfigXmlSign>();
-            //configXmlSign.Add(config);
+            string billno = "";
+            string filename = "";
             try
             {
-                //pathFolder = @"C:\Code_Dev\sign";
                 foreach (var config in configXmlSign)
                 {
                     if (CheckRunningTime(config))
                     {
+                        xMLSignModel = new XMLSignModel();
+                        xMLSignModel.configPdfSign = config;
+                        xMLSignModel.listFileXMLs = new List<ListFileXML>();
                         pathFolder = config.ConfigXmlsignInputPath;
                         if (Directory.Exists(pathFolder))
                         {
@@ -138,13 +150,17 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                             foreach (var item in listpath)
                             {
-                                xMLSignModel = new XMLSignModel();
-                                xMLSignModel.FullPath = item.FullName;
-                                xMLSignModel.FileName = Path.GetFileName(item.FullName).Replace(".xml", "");
-                                xMLSignModel.Outbound = config.ConfigXmlsignOutputPath;
-                                xMLSignModel.Inbound = config.ConfigXmlsignInputPath;
-                                result.Add(xMLSignModel);
+                                filename = Path.GetFileName(item.FullName).Replace(".xml", "");
+                                billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                                xmlDetail = new ListFileXML();
+                                xmlDetail.FullPath = item.FullName;
+                                xmlDetail.FileName = filename;
+                                xmlDetail.Outbound = config.ConfigXmlsignOutputPath;
+                                xmlDetail.Inbound = config.ConfigXmlsignInputPath;
+                                xmlDetail.Billno = billno;
+                                xMLSignModel.listFileXMLs.Add(xmlDetail);
                             }
+                            result.Add(xMLSignModel);
                         }
                     }
                 }
@@ -189,12 +205,13 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool SendFileXMLSign(XmlDocument doc)
+        public APIResponseSignModel SendFileXMLSign(APISendFileXMLSignModel data)
         {
-            bool result = false;
+            APIResponseSignModel result = new APIResponseSignModel();
             try
             {
-                result = true;
+                var json = JsonSerializer.Serialize(data);
+                result = signXMLController.SendFilePDFSign(json).Result;
             }
             catch (Exception ex)
             {
@@ -203,14 +220,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool UpdateStatusAfterSignXML(bool status, string billno, string pathfile, TransactionDescription dataTran)
+        public bool UpdateStatusAfterSignXML(APIResponseSignModel xmlsign, string billno, string pathfile, TransactionDescription dataTran)
         {
             bool result = false;
             string jsondata = "";
             try
             {
                 Task<Response> res;
-                if (status)
+                if (xmlsign.resultCode.Equals("000"))
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
                     dataTran.XmlSignDetail = "XML was signed completely";
@@ -286,8 +303,6 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         public bool MoveFile(string pathinput, string filename, DateTime billingdate)
         {
             bool result = false;
-            //pathinpput = @"c:\temp\MySample.txt";
-            //string pathoutput = @"D:\sign\backupfile\";
             string output = "";
 
             try
@@ -325,6 +340,26 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             catch (Exception ex)
             {
                 Console.WriteLine("The process failed: {0}", ex.ToString());
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+
+        public APISendFileXMLSignModel PrepareSendXMLSign(ConfigXmlSign config, string filepath)
+        {
+            APISendFileXMLSignModel result = new APISendFileXMLSignModel();
+            try
+            {
+                result.hsmName = "pse";
+                result.hsmSerial = "571271:28593";
+                result.slotPassword = "P@ssw0rd1";
+                result.keyAlias = "NEW06391012205001173_200916150834";
+                result.certSerial = "5c6e65dc1b7b9da8";
+                result.documentType = "";
+                result.fileEncode = logicToolHelper.ConvertFileToEncodeBase64(filepath);
+            }
+            catch (Exception ex)
+            {
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;
