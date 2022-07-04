@@ -15,6 +15,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             int countlengthpo = 0;
             bool checksalesunit = false;
             bool checkprice = false;
+            bool checkbuyeraddress = false;
             try
             {
                 if (tool.CheckDataRule(textfile.BUYER_PSTLZ, "") || tool.CheckDataRule(textfile.SELLER_PSTLZ, ""))
@@ -99,6 +100,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 if (tool.CheckSpecialChar(s))
                 {
                     result.Add("Failled มีอักษรพิเศษใน Text file");
+                }
+                if (tool.CheckDataRule(textfile.BUYER_ADDRESS1, ""))
+                {
+                    result.Add("Failed ไม่มีที่อยู่ผู้ซื้อ");
                 }
 
             }
