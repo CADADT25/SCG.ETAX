@@ -153,6 +153,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                             foreach(var file in src.listFilePDFs)
                             {
                                 round += 1;
+                                billno = file.Billno;
                                 Console.WriteLine("Start round : " + round);
                                 log.InsertLog(pathlog, "Start round : " + round);
                                 Console.WriteLine("billno : " + billno);
@@ -166,8 +167,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                                 log.InsertLog(pathlog, "Send To Sign");
                                 resultPDFSign = SendFilePDFSign(dataSend);
 
-                                Console.WriteLine("Status Sign : " + resultPDFSign.ToString());
-                                log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.ToString());
+                                Console.WriteLine("Status Sign : " + resultPDFSign.resultDes.ToString());
+                                log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.resultDes.ToString());
                                 Console.WriteLine("Update Status in DataBase");
                                 log.InsertLog(pathlog, "Update Status in DataBase");
 
