@@ -31,6 +31,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         List<ProfileCompany> profileCompany = new List<ProfileCompany>();
         List<ProfileSeller> profileSeller = new List<ProfileSeller>();
         List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
+        List<TransactionDescription> datatransactionDescription = new List<TransactionDescription>();
         List<ProfileBranch> profileBranches = new List<ProfileBranch>();
         List<ProductUnit> productUnit = new List<ProductUnit>();
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
@@ -68,67 +69,70 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPTEXTFILE").ConfigGlobalValue;
                         foreach (var classtextfile in cs)
                         {
-                            companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
-                            if(companydata != null)
+                            if (!CheckCancelBillingOrSentRevenueDepartment(classtextfile.BILLING_NO))
                             {
-                                configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
-                            }
-                            Console.WriteLine("Start round : " + round);
-                            log.InsertLog(pathlog, "Start round : " + round);
+                                companydata = profileCompany.FirstOrDefault(x => x.TaxNumber == classtextfile.SELLER_TIN);
+                                if (companydata != null)
+                                {
+                                    configXML = configXMLGenerator.FirstOrDefault(x => x.ConfigXmlGeneratorCompanyCode == companydata.CompanyCode);
+                                }
+                                Console.WriteLine("Start round : " + round);
+                                log.InsertLog(pathlog, "Start round : " + round);
 
-                            Console.WriteLine("Start Insert Data TransactionDescription");
-                            log.InsertLog(pathlog, "Start Insert Data TransactionDescription");
-                            InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
-                            Console.WriteLine("End Insert Data TransactionDescription");
-                            log.InsertLog(pathlog, "End Insert Data TransactionDescription");
+                                Console.WriteLine("Start Insert Data TransactionDescription");
+                                log.InsertLog(pathlog, "Start Insert Data TransactionDescription");
+                                InsertDataTransactionDescription(classtextfile, configXML.ConfigXmlGeneratorInputSource);
+                                Console.WriteLine("End Insert Data TransactionDescription");
+                                log.InsertLog(pathlog, "End Insert Data TransactionDescription");
 
-                            Console.WriteLine("Start ValidateFileText");
-                            log.InsertLog(pathlog, "Start ValidateFileText");
-                            errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
-                            if (errormessage.Count > 0)
-                            {
-                                Console.WriteLine("ValidateFileText Fail");
-                                log.InsertLog(pathlog, "ValidateFileText Fail");
-                                UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
-                                nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
-                                GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
-                            }
-                            else
-                            {
-                                Console.WriteLine("ValidateFileText Success");
-                                log.InsertLog(pathlog, "ValidateFileText Success");
-                                errormessage = new List<string>();
-
-                                var dataxml = ConvertClasstoXMLFormat(classtextfile);
-                                Console.WriteLine("ConvertClasstoXMLFormat success");
-                                log.InsertLog(pathlog, "ConvertClasstoXMLFormat success");
-
-                                Console.WriteLine("Start ValidateSchematron");
-                                log.InsertLog(pathlog, "Start ValidateSchematron");
-                                errormessage.AddRange(ValidateSchematron(dataxml));
-                                Console.WriteLine("End ValidateSchematron");
-                                log.InsertLog(pathlog, "End ValidateSchematron");
-
+                                Console.WriteLine("Start ValidateFileText");
+                                log.InsertLog(pathlog, "Start ValidateFileText");
+                                errormessage = textFileValidate.ValidateTextFile(classtextfile, profileBranches, productUnit);
                                 if (errormessage.Count > 0)
                                 {
-                                    Console.WriteLine("ValidateSchematron Fail");
-                                    log.InsertLog(pathlog, "ValidateSchematron Fail");
+                                    Console.WriteLine("ValidateFileText Fail");
+                                    log.InsertLog(pathlog, "ValidateFileText Fail");
                                     UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
                                     nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
-                                    GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
+                                    GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Start Gen XML File");
-                                    log.InsertLog(pathlog, "Start Gen XML File");
-                                    string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
-                                    var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO, classtextfile.BILLING_DATE);
+                                    Console.WriteLine("ValidateFileText Success");
+                                    log.InsertLog(pathlog, "ValidateFileText Success");
+                                    errormessage = new List<string>();
 
-                                    Console.WriteLine("End Gen XML File");
-                                    log.InsertLog(pathlog, "End Gen XML File");
+                                    var dataxml = ConvertClasstoXMLFormat(classtextfile);
+                                    Console.WriteLine("ConvertClasstoXMLFormat success");
+                                    log.InsertLog(pathlog, "ConvertClasstoXMLFormat success");
+
+                                    Console.WriteLine("Start ValidateSchematron");
+                                    log.InsertLog(pathlog, "Start ValidateSchematron");
+                                    errormessage.AddRange(ValidateSchematron(dataxml));
+                                    Console.WriteLine("End ValidateSchematron");
+                                    log.InsertLog(pathlog, "End ValidateSchematron");
+
+                                    if (errormessage.Count > 0)
+                                    {
+                                        Console.WriteLine("ValidateSchematron Fail");
+                                        log.InsertLog(pathlog, "ValidateSchematron Fail");
+                                        UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                                        nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                                        GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Start Gen XML File");
+                                        log.InsertLog(pathlog, "Start Gen XML File");
+                                        string xmlfilename = companydata.CompanyCode + classtextfile.FISCAL_YEAR + classtextfile.BILLING_NO + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xml";
+                                        var xml = GenXMLFromTemplate(dataxml, configXML.ConfigXmlGeneratorOutputPath + "\\Success\\", xmlfilename, classtextfile.BILLING_NO, classtextfile.BILLING_DATE);
+
+                                        Console.WriteLine("End Gen XML File");
+                                        log.InsertLog(pathlog, "End Gen XML File");
+                                    }
                                 }
+                                round += 1;
                             }
-                            round += 1;
                         }
                     }
                     Console.WriteLine("End Read TextFile : " + textfile);
@@ -945,6 +949,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 productUnit = productUnitController.List().Result;
                 profileBranches = profileBranchController.List().Result;
                 configGlobal = configGlobalController.List().Result;
+                datatransactionDescription = transactionDescription.List().Result;
 
                 pathlog = configGlobal.First(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
@@ -1000,6 +1005,27 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         {
                             result = true;
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+
+        public bool CheckCancelBillingOrSentRevenueDepartment(string billno)
+        {
+            bool result = false;
+            try
+            {
+                var datatran = datatransactionDescription.FirstOrDefault(x=> x.BillingNumber == billno);
+                if(datatran != null)
+                {
+                    if(datatran.XmlSignStatus == "" || datatran.XmlSignStatus == "")
+                    {
+                        result = true;
                     }
                 }
             }

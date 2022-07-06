@@ -85,6 +85,5 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
             return result;
         }
-
     }
 }
