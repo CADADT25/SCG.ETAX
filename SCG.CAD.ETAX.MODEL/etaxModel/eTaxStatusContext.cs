@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigMftsIndexGenerationSettingOutput> ConfigMftsIndexGenerationSettingOutputs { get; set; } = null!;
+        public virtual DbSet<RequestCancelStatusCode> RequestCancelStatusCodes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,65 +29,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigMftsIndexGenerationSettingOutput>(entity =>
+            modelBuilder.Entity<RequestCancelStatusCode>(entity =>
             {
-                entity.HasKey(e => e.ConfigMftsIndexGenerationSettingOutputNo);
+                entity.HasKey(e => e.RequestCancelStatusCodeNo);
 
-                entity.ToTable("configMftsIndexGenerationSettingOutput");
+                entity.ToTable("requestCancelStatusCode");
 
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputNo).HasColumnName("configMftsIndexGenerationSettingOutputNo");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputAnyTime)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputAnyTime");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputCompanyCode)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputCompanyCode");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputFolder)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputFolder");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputHost)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputHost");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputLogReceiveFolder");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputLogReceiveType)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputLogReceiveType");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputNextTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("configMftsIndexGenerationSettingOutputNextTime");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputOneTime)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputOneTime");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputPassword)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputPassword");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputPort)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputPort");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputSourceName)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputSourceName");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputType)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputType");
-
-                entity.Property(e => e.ConfigMftsIndexGenerationSettingOutputUsername)
-                    .HasMaxLength(300)
-                    .HasColumnName("configMftsIndexGenerationSettingOutputUsername");
+                entity.Property(e => e.RequestCancelStatusCodeNo).HasColumnName("requestCancelStatusCodeNo");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -97,9 +45,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive)
-                    .HasColumnName("isactive")
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.RequestCancelStatusCode1).HasColumnName("requestCancelStatusCode");
+
+                entity.Property(e => e.RequestCancelStatusCodeName)
+                    .HasMaxLength(300)
+                    .HasColumnName("requestCancelStatusCodeName");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
