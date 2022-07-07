@@ -63,5 +63,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime? UpdateDate { get; set; }
         public int? Isactive { get; set; }
         public string? OneTimeEmail { get; set; }
+        public int? SentRevenueDepartment { get; set; }
+        public int? CancelBilling { get; set; }
     }
 }
