@@ -270,5 +270,20 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
+        public bool ConvertIntToBoolean(int? value)
+        {
+            // null = false
+            // 1 = true
+            // else = false
+            bool result = false;
+
+            if(value != null && value == 1)
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
     }
 }

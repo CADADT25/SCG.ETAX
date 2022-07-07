@@ -21,6 +21,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
         UtilityProductUnitController productUnitController = new UtilityProductUnitController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
+        LogicTool Tool = new LogicTool();
+        LogicToolHelper toolHelper = new LogicToolHelper();
 
 
         List<ConfigXmlGenerator> configXMLGenerator = new List<ConfigXmlGenerator>();
@@ -351,7 +353,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 ProfileSeller profile = new ProfileSeller();
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
-                LogicTool Tool = new LogicTool();
                 string schemeID = "OTHR";
                 xmldata = new CrossIndustryInvoice();
                 supplyChainTradeTransaction = new SupplyChainTradeTransaction();
@@ -1023,7 +1024,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 var datatran = datatransactionDescription.FirstOrDefault(x=> x.BillingNumber == billno);
                 if(datatran != null)
                 {
-                    if(datatran.XmlSignStatus == "" || datatran.XmlSignStatus == "")
+                    if(toolHelper.ConvertIntToBoolean(datatran.CancelBilling) || toolHelper.ConvertIntToBoolean(datatran.SentRevenueDepartment))
                     {
                         result = true;
                     }
