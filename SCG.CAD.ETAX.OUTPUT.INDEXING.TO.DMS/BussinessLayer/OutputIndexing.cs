@@ -39,15 +39,18 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                 configOutput = GetIndexingOutput();
                 listFileLoginIndex = ReadFile(configOutput);
 
+                foreach(var item in listFileLoginIndex)
+                {
+                    loginIndexFIle.AddRange(ReadResultInLoginIndexFile(item));
+                }
 
-                loginIndexFIle = ReadResultInLoginIndexFile(listFileLoginIndex);
+
                 GetDataTransactionDescriptionFromDataBase();
-
                 Console.WriteLine("Start Update Status Transaction");
                 log.InsertLog(pathlog, "Start Update Status Transaction");
 
                 ListUpdate = PrepareListUpdateDataTransaction(loginIndexFIle);
-                if(ListUpdate.Count > 0)
+                if (ListUpdate.Count > 0)
                 {
                     UpdateDataTransaction(ListUpdate);
                 }
@@ -87,23 +90,29 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
         public List<IndexingOutputModel> ReadFile(List<ConfigMftsIndexGenerationSettingOutput> configoutput)
         {
             List<IndexingOutputModel> listFileLoginIndex = new List<IndexingOutputModel>();
+            IndexingOutputModel FileLoginIndex = new IndexingOutputModel();
             try
             {
                 foreach (var output in configoutput)
                 {
+                    FileLoginIndex = new IndexingOutputModel();
                     Console.WriteLine("Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
                     log.InsertLog(pathlog, "Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
+                    FileLoginIndex.SourceName = output.ConfigMftsIndexGenerationSettingOutputSourceName;
+                    FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputFolder;
+                    FileLoginIndex.FileDetails = new List<FileDetail>();
 
                     Console.WriteLine("Read File From Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
                     log.InsertLog(pathlog, "Read File Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
                     if (output.ConfigMftsIndexGenerationSettingOutputType.ToUpper() == "FOLDER")
                     {
-                        listFileLoginIndex.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
+                        FileLoginIndex.FileDetails.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
                     }
                     //else
                     //{
-                    //    listFileLoginIndex.AddRange(ReadFileFromSFTP(output));
+                    //    FileLoginIndex.FIleDetails.AddRange(ReadFileFromSFTP(output));
                     //}
+                    listFileLoginIndex.Add(FileLoginIndex);
                 }
             }
             catch (Exception ex)
@@ -113,11 +122,11 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             return listFileLoginIndex;
         }
 
-        public List<IndexingOutputModel> ReadFileFromSFTP(ConfigMftsIndexGenerationSettingOutput configoutput)
+        public List<FileDetail> ReadFileFromSFTP(ConfigMftsIndexGenerationSettingOutput configoutput)
         {
             IEnumerable<SftpFile> allFileInPath;
-            List<IndexingOutputModel> result = new List<IndexingOutputModel>();
-            IndexingOutputModel filedetail = new IndexingOutputModel();
+            List<FileDetail> result = new List<FileDetail>();
+            FileDetail filedetail = new FileDetail();
             string filename = "logindex";
             try
             {
@@ -139,12 +148,12 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                         {
                             if (item.Name.StartsWith(filename))
                             {
-                                filedetail = new IndexingOutputModel();
+                                filedetail = new FileDetail();
                                 Console.WriteLine("Read File  : " + item.Name);
                                 log.InsertLog(pathlog, "Read File  : " + item.Name);
-                                filedetail.FIleName = item.Name;
-                                filedetail.FIleValues = new List<string>();
-                                filedetail.FIleValues = client.ReadAllLines(item.FullName).ToList();
+                                filedetail.FileName = item.Name;
+                                filedetail.FileValues = new List<string>();
+                                filedetail.FileValues = client.ReadAllLines(item.FullName).ToList();
                                 result.Add(filedetail);
                             }
                         }
@@ -163,10 +172,10 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             return result;
         }
 
-        public List<IndexingOutputModel> ReadFileFromFolder(string path)
+        public List<FileDetail> ReadFileFromFolder(string path)
         {
-            List<IndexingOutputModel> result = new List<IndexingOutputModel>();
-            IndexingOutputModel filedetail = new IndexingOutputModel();
+            List<FileDetail> result = new List<FileDetail>();
+            FileDetail filedetail = new FileDetail();
             string[] file = new string[0];
             string fileType = "*.txt";
             string filename = "logindex";
@@ -181,10 +190,10 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                         name = Path.GetFileName(item);
                         if (name.StartsWith(filename))
                         {
-                            filedetail = new IndexingOutputModel();
-                            filedetail.FIleName = name;
-                            filedetail.FIleValues = new List<string>();
-                            filedetail.FIleValues = File.ReadAllLines(item).ToList();
+                            filedetail = new FileDetail();
+                            filedetail.FileName = name;
+                            filedetail.FileValues = new List<string>();
+                            filedetail.FileValues = File.ReadAllLines(item).ToList();
                             result.Add(filedetail);
                         }
                     }
@@ -237,23 +246,25 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             return result;
         }
 
-        public List<LoginIndexFIle> ReadResultInLoginIndexFile(List<IndexingOutputModel> indexingOutputModels)
+        public List<LoginIndexFIle> ReadResultInLoginIndexFile(IndexingOutputModel indexingOutputModels)
         {
             List<LoginIndexFIle> result = new List<LoginIndexFIle>();
             LoginIndexFIle loginIndexFIle = new LoginIndexFIle();
             string[] text;
             try
             {
-                foreach (var file in indexingOutputModels)
+                foreach (var file in indexingOutputModels.FileDetails)
                 {
-                    Console.WriteLine("Read Text In File Name : " + file.FIleName);
-                    log.InsertLog(pathlog, "Read Text In File Name : " + file.FIleName);
-                    foreach(var filedetail in file.FIleValues)
+                    Console.WriteLine("Read Text In File Name : " + file.FileName);
+                    log.InsertLog(pathlog, "Read Text In File Name : " + file.FileName);
+                    foreach (var filedetail in file.FileValues)
                     {
                         Console.WriteLine("Text : " + filedetail);
                         log.InsertLog(pathlog, "Text : " + filedetail);
                         text = filedetail.Split('|');
                         loginIndexFIle = new LoginIndexFIle();
+                        loginIndexFIle.FileName = file.FileName;
+                        loginIndexFIle.Path = indexingOutputModels.Path;
                         loginIndexFIle.ImageName = text[0];
                         loginIndexFIle.ImageDocDd = text[1];
                         loginIndexFIle.Result = text[2];
@@ -277,17 +288,19 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             string fidoccode = "";
             try
             {
-                foreach(var data in loginIndexFIle)
+                foreach (var data in loginIndexFIle)
                 {
                     imageName = data.ImageName.Split('-');
                     fidoccode = imageName[1].Split('_')[0];
                     update = transactionDescription.Where(x => x.FiDoc == fidoccode && x.PdfIndexingStatus != "Successful").FirstOrDefault();
-                    if(update != null)
+                    if (update != null)
                     {
                         update.PdfIndexingDetail = data.Massage;
                         update.PdfIndexingStatus = "Successful";
                         update.PdfIndexingDateTime = DateTime.Now.ToString("yyyyMMdd");
-                        if(imageName[2].ToUpper() == "E")
+                        update.DmsAttachmentFileName = data.FileName;
+                        update.DmsAttachmentFilePath = data.Path;
+                        if (imageName[2].ToUpper() == "E")
                         {
                             update.PdfIndexingStatus = "Failed";
                         }

@@ -226,7 +226,10 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             try
             {
                 var json = JsonSerializer.Serialize(data);
-                result = signPDFController.SendFilePDFSign(json).Result;
+                //result = signPDFController.SendFilePDFSign(json).Result;
+                result.fileSigned = data.fileEncode;
+                result.resultCode = "000";
+                result.resultDes = "Success";
             }
             catch (Exception ex)
             {

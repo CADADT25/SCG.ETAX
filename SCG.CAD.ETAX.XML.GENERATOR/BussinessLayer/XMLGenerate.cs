@@ -737,7 +737,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 data.XmlCompressStatus = "Waiting";
                 data.XmlSignStatus = "Waiting";
                 data.EmailSendStatus = "Waiting";
-                data.PdfSignStatus = "Waiting";
+                //data.PdfSignStatus = "Waiting";
                 data.DmsAttachmentFileName = null;
                 data.DmsAttachmentFilePath = null;
 
