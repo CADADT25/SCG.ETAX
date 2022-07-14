@@ -20,8 +20,8 @@ namespace SCG.CAD.ETAX.EMAIL
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMESENDEMAIL"))
                 {
-                    //email.ProcessSendEmail();
-                    testemail.TestSendEmail();
+                    email.ProcessSendEmail();
+                    //testemail.TestSendEmail();
                     //testemail.ToEmlStream();
                     //_lifetime.StopApplication();
                 }

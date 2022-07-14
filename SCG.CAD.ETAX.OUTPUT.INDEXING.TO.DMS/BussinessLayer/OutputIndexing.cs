@@ -292,7 +292,7 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                 {
                     imageName = data.ImageName.Split('-');
                     fidoccode = imageName[1].Split('_')[0];
-                    update = transactionDescription.Where(x => x.FiDoc == fidoccode && x.PdfIndexingStatus != "Successful").FirstOrDefault();
+                    update = transactionDescription.FirstOrDefault(x => x.FiDoc == fidoccode && x.PdfIndexingStatus != "Successful");
                     if (update != null)
                     {
                         update.PdfIndexingDetail = data.Massage;

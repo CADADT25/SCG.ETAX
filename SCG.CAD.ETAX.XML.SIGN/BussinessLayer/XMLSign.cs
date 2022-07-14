@@ -310,7 +310,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
             try
             {
-                output = pathoutput + "\\" + billingdate.ToString("YYYY") + "\\" + billingdate.ToString("MM") + "\\";
+                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  

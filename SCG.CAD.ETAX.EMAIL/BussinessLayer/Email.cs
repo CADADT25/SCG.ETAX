@@ -147,59 +147,62 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                                     filePDFsend = new List<PDFFileDetailModel>();
                                     foreach (var item in dataPDFsend)
                                     {
-                                        pDFFileDetails = new PDFFileDetailModel();
-                                        using (FileStream zipFileToOpen = new FileStream(item.PdfSignLocation, FileMode.Open))
+                                        if (File.Exists(item.PdfSignLocation))
                                         {
-                                            filesize = CalculateMBbyByte(zipFileToOpen.Length);
-                                            sumfilesize += filesize;
-                                            if (sumfilesize > maxsize)
+                                            pDFFileDetails = new PDFFileDetailModel();
+                                            using (FileStream zipFileToOpen = new FileStream(item.PdfSignLocation, FileMode.Open))
                                             {
-                                                SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
-                                                fileemail = ReadEMLFile();
-                                                filename = config.ConfigMftsEmailSettingCompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".eml";
-                                                //MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
-                                                InsertOutputSearchEmailSend(config, customer, subjectemail, pathoutputcontentemail + "\\" + filename);
-                                                UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
-                                                sumfilesize = filesize;
-                                                filePDFsend = new List<PDFFileDetailModel>();
-                                                pDFFileDetails.BillingNo = item.BillingNumber;
-                                                pDFFileDetails.FullPath = item.PdfSignLocation;
-                                                pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                                pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
-                                                pDFFileDetails.CustomerId = item.CustomerId;
-                                                pDFFileDetails.CustomerName = item.CustomerName;
-                                                pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
-                                                filePDFsend.Add(pDFFileDetails);
-                                            }
-                                            else if (sumfilesize == maxsize)
-                                            {
-                                                pDFFileDetails.BillingNo = item.BillingNumber;
-                                                pDFFileDetails.FullPath = item.PdfSignLocation;
-                                                pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                                pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
-                                                pDFFileDetails.CustomerId = item.CustomerId;
-                                                pDFFileDetails.CustomerName = item.CustomerName;
-                                                pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
-                                                filePDFsend.Add(pDFFileDetails);
-                                                SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
-                                                fileemail = ReadEMLFile();
-                                                filename = config.ConfigMftsEmailSettingCompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".eml";
-                                                //MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
-                                                InsertOutputSearchEmailSend(config, customer, subjectemail, pathoutputcontentemail + "\\" + filename);
-                                                UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
-                                                sumfilesize = 0;
-                                                filePDFsend = new List<PDFFileDetailModel>();
-                                            }
-                                            else
-                                            {
-                                                pDFFileDetails.BillingNo = item.BillingNumber;
-                                                pDFFileDetails.FullPath = item.PdfSignLocation;
-                                                pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
-                                                pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
-                                                pDFFileDetails.CustomerId = item.CustomerId;
-                                                pDFFileDetails.CustomerName = item.CustomerName;
-                                                pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
-                                                filePDFsend.Add(pDFFileDetails);
+                                                filesize = CalculateMBbyByte(zipFileToOpen.Length);
+                                                sumfilesize += filesize;
+                                                if (sumfilesize > maxsize)
+                                                {
+                                                    SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
+                                                    fileemail = ReadEMLFile();
+                                                    filename = config.ConfigMftsEmailSettingCompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".eml";
+                                                    MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
+                                                    InsertOutputSearchEmailSend(config, customer, subjectemail, pathoutputcontentemail + "\\" + filename);
+                                                    UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
+                                                    sumfilesize = filesize;
+                                                    filePDFsend = new List<PDFFileDetailModel>();
+                                                    pDFFileDetails.BillingNo = item.BillingNumber;
+                                                    pDFFileDetails.FullPath = item.PdfSignLocation;
+                                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                                    pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                                    pDFFileDetails.CustomerId = item.CustomerId;
+                                                    pDFFileDetails.CustomerName = item.CustomerName;
+                                                    pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
+                                                    filePDFsend.Add(pDFFileDetails);
+                                                }
+                                                else if (sumfilesize == maxsize)
+                                                {
+                                                    pDFFileDetails.BillingNo = item.BillingNumber;
+                                                    pDFFileDetails.FullPath = item.PdfSignLocation;
+                                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                                    pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                                    pDFFileDetails.CustomerId = item.CustomerId;
+                                                    pDFFileDetails.CustomerName = item.CustomerName;
+                                                    pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
+                                                    filePDFsend.Add(pDFFileDetails);
+                                                    SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
+                                                    fileemail = ReadEMLFile();
+                                                    filename = config.ConfigMftsEmailSettingCompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".eml";
+                                                    MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
+                                                    InsertOutputSearchEmailSend(config, customer, subjectemail, pathoutputcontentemail + "\\" + filename);
+                                                    UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
+                                                    sumfilesize = 0;
+                                                    filePDFsend = new List<PDFFileDetailModel>();
+                                                }
+                                                else
+                                                {
+                                                    pDFFileDetails.BillingNo = item.BillingNumber;
+                                                    pDFFileDetails.FullPath = item.PdfSignLocation;
+                                                    pDFFileDetails.BillingDate = item.BillingDate ?? DateTime.Now;
+                                                    pDFFileDetails.RenameFileName = RenameFileName(config.ConfigMftsEmailSettingCompanyCode, item.PdfSignLocation);
+                                                    pDFFileDetails.CustomerId = item.CustomerId;
+                                                    pDFFileDetails.CustomerName = item.CustomerName;
+                                                    pDFFileDetails.Doctype = GetDocType(item.DocType ?? "");
+                                                    filePDFsend.Add(pDFFileDetails);
+                                                }
                                             }
                                         }
                                     }
@@ -208,7 +211,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                                         SendEmailbyCompany(filePDFsend, config, customer, subjectemail, profileCompany);
                                         fileemail = ReadEMLFile();
                                         filename = config.ConfigMftsEmailSettingCompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".eml";
-                                        //MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
+                                        MoveFile(fileemail.FullName, pathoutputcontentemail, filename, DateTime.Now);
                                         InsertOutputSearchEmailSend(config, customer, subjectemail, pathoutputcontentemail + "\\" + filename);
                                         UpdateStatusTransactionDescription(filePDFsend, config.ConfigMftsEmailSettingCompanyCode, customerid);
                                         sumfilesize = 0;
@@ -234,24 +237,25 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             bool result = false;
             try
             {
-                if (config.ConfigMftsEmailSettingOneTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime) &&
-                        Convert.ToDateTime(config.ConfigMftsEmailSettingOneTime) <= DateTime.Now)
-                {
-                    result = true;
-                }
-                if (config.ConfigMftsEmailSettingAnyTime != null &&
-                    !String.IsNullOrEmpty(config.ConfigMftsEmailSettingAnyTime))
-                {
-                    if (config.ConfigMftsEmailSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    result = true;
-                }
+                //if (config.ConfigMftsEmailSettingOneTime != null &&
+                //        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime) &&
+                //        Convert.ToDateTime(config.ConfigMftsEmailSettingOneTime) <= DateTime.Now)
+                //{
+                //    result = true;
+                //}
+                //if (config.ConfigMftsEmailSettingAnyTime != null &&
+                //    !String.IsNullOrEmpty(config.ConfigMftsEmailSettingAnyTime))
+                //{
+                //    if (config.ConfigMftsEmailSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+                //    {
+                //        result = true;
+                //    }
+                //}
+                //else
+                //{
+                //    result = true;
+                //}
+                result = true;
             }
             catch (Exception ex)
             {
@@ -637,29 +641,36 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
 
         public FileInfo ReadEMLFile()
         {
-            FileInfo result = new FileInfo(null);
-            string[] fullpath = new string[0];
+            //FileInfo result = new FileInfo(null);
             string pathFolder = "";
             string fileType = "*.eml";
             try
             {
-                pathFolder = AppDomain.CurrentDomain.BaseDirectory + "\\TempEmail\\";
+                //pathFolder = AppDomain.CurrentDomain.BaseDirectory + "\\TempEmail\\";
+                pathFolder = @"D:\SCG.CAD.ETAX\SCG.CAD.ETAX.EMAIL\bin\Debug\net6.0\TempEmail";
                 if (!Directory.Exists(pathFolder))
                 {
                     Directory.CreateDirectory(pathFolder);
                 }
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(pathFolder);
-                var myFile = directoryInfo.GetFiles(fileType)
-                 .OrderByDescending(f => f.LastWriteTime)
-                 .First();
-                result = myFile;
+                if (directoryInfo != null)
+                {
+                    foreach (var email in directoryInfo.GetFiles(fileType))
+                    {
+                        Console.WriteLine(email);
+                    }
+                    var myFile = directoryInfo.GetFiles(fileType)
+                     .OrderByDescending(f => f.LastWriteTime)
+                     .First();
+                    return myFile;
+                }
             }
             catch (Exception ex)
             {
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
-            return result;
+            return null;
         }
 
     }
