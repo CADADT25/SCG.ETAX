@@ -20,43 +20,56 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         List<ConfigMftsIndexGenerationSettingOutput> configIndexOutput = new List<ConfigMftsIndexGenerationSettingOutput>();
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         string pathlog = @"D:\log\";
         string namepathlog = "PATHLOGFILE_OUTPUTINDEXING";
+        string batchname = "SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS";
 
         public void ProcessIndexing()
         {
-            List<ConfigMftsIndexGenerationSettingOutput> configOutput = new List<ConfigMftsIndexGenerationSettingOutput>();
             List<IndexingOutputModel> listFileLoginIndex = new List<IndexingOutputModel>();
             List<LoginIndexFIle> loginIndexFIle = new List<LoginIndexFIle>();
             List<TransactionDescription> ListUpdate = new List<TransactionDescription>();
+            DateTime nexttime;
             try
             {
                 Console.WriteLine("Start Output Indexing");
                 log.InsertLog(pathlog, "Start Output Indexing");
 
                 GetDataFromDataBase();
-                configOutput = GetIndexingOutput();
-                listFileLoginIndex = ReadFile(configOutput);
 
-                foreach(var item in listFileLoginIndex)
+                foreach (var output in configIndexOutput)
                 {
-                    loginIndexFIle.AddRange(ReadResultInLoginIndexFile(item));
+                    if (logicToolHelper.CheckRunTime(output.ConfigMftsIndexGenerationSettingOutputNextTime))
+                    {
+                        listFileLoginIndex = ReadFile(output);
+
+                        foreach (var item in listFileLoginIndex)
+                        {
+                            loginIndexFIle.AddRange(ReadResultInLoginIndexFile(item));
+                        }
+
+
+                        GetDataTransactionDescriptionFromDataBase();
+                        Console.WriteLine("Start Update Status Transaction");
+                        log.InsertLog(pathlog, "Start Update Status Transaction");
+
+                        ListUpdate = PrepareListUpdateDataTransaction(loginIndexFIle);
+                        if (ListUpdate.Count > 0)
+                        {
+                            UpdateDataTransaction(ListUpdate);
+                        }
+
+                        Console.WriteLine("End Update Status Transaction : " + ListUpdate.Count + " Records");
+                        log.InsertLog(pathlog, "End Update Status Transaction");
+
+                        nexttime = logicToolHelper.SetNextRunTime(output.ConfigMftsIndexGenerationSettingOutputAnyTime, output.ConfigMftsIndexGenerationSettingOutputOneTime, batchname, output.ConfigMftsIndexGenerationSettingOutputNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
+                    }
                 }
 
-
-                GetDataTransactionDescriptionFromDataBase();
-                Console.WriteLine("Start Update Status Transaction");
-                log.InsertLog(pathlog, "Start Update Status Transaction");
-
-                ListUpdate = PrepareListUpdateDataTransaction(loginIndexFIle);
-                if (ListUpdate.Count > 0)
-                {
-                    UpdateDataTransaction(ListUpdate);
-                }
-
-                Console.WriteLine("End Update Status Transaction : " + ListUpdate.Count + " Records");
-                log.InsertLog(pathlog, "End Update Status Transaction");
 
                 Console.WriteLine("End Output Indexing");
                 log.InsertLog(pathlog, "End Output Indexing");
@@ -67,53 +80,30 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             }
         }
 
-        public List<ConfigMftsIndexGenerationSettingOutput> GetIndexingOutput()
-        {
-            List<ConfigMftsIndexGenerationSettingOutput> result = new List<ConfigMftsIndexGenerationSettingOutput>();
-            try
-            {
-                foreach (var output in configIndexOutput)
-                {
-                    if (CheckRunningTime(output))
-                    {
-                        result.Add(output);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
-
-        public List<IndexingOutputModel> ReadFile(List<ConfigMftsIndexGenerationSettingOutput> configoutput)
+        public List<IndexingOutputModel> ReadFile(ConfigMftsIndexGenerationSettingOutput output)
         {
             List<IndexingOutputModel> listFileLoginIndex = new List<IndexingOutputModel>();
             IndexingOutputModel FileLoginIndex = new IndexingOutputModel();
             try
             {
-                foreach (var output in configoutput)
-                {
-                    FileLoginIndex = new IndexingOutputModel();
-                    Console.WriteLine("Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
-                    log.InsertLog(pathlog, "Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
-                    FileLoginIndex.SourceName = output.ConfigMftsIndexGenerationSettingOutputSourceName;
-                    FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputFolder;
-                    FileLoginIndex.FileDetails = new List<FileDetail>();
+                FileLoginIndex = new IndexingOutputModel();
+                Console.WriteLine("Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
+                log.InsertLog(pathlog, "Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
+                FileLoginIndex.SourceName = output.ConfigMftsIndexGenerationSettingOutputSourceName;
+                FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputFolder;
+                FileLoginIndex.FileDetails = new List<FileDetail>();
 
-                    Console.WriteLine("Read File From Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
-                    log.InsertLog(pathlog, "Read File Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
-                    if (output.ConfigMftsIndexGenerationSettingOutputType.ToUpper() == "FOLDER")
-                    {
-                        FileLoginIndex.FileDetails.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
-                    }
-                    //else
-                    //{
-                    //    FileLoginIndex.FIleDetails.AddRange(ReadFileFromSFTP(output));
-                    //}
-                    listFileLoginIndex.Add(FileLoginIndex);
+                Console.WriteLine("Read File From Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
+                log.InsertLog(pathlog, "Read File Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
+                if (output.ConfigMftsIndexGenerationSettingOutputType.ToUpper() == "FOLDER")
+                {
+                    FileLoginIndex.FileDetails.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
                 }
+                //else
+                //{
+                //    FileLoginIndex.FIleDetails.AddRange(ReadFileFromSFTP(output));
+                //}
+                listFileLoginIndex.Add(FileLoginIndex);
             }
             catch (Exception ex)
             {

@@ -102,6 +102,7 @@ namespace SCG.CAD.ETAX.UTILITY
                     //Set onetime
                     clearOnetime = true;
                     nexttime = dateonetime ?? dateanytime;
+                    SendClearOneTime(batchname, index);
                 }
                 else if (dateonetime > dateanytime)
                 {
@@ -198,7 +199,8 @@ namespace SCG.CAD.ETAX.UTILITY
                 case "SCG.CAD.ETAX.EMAIL":
                     configMftsEmailSettingController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
-                case "SCG.CAD.ETAX.INDEXING.TO.DMS":
+                case "SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS":
+                case "SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS":
                     break;
                 case "SCG.CAD.ETAX.PDF.SIGN":
                     configPDFSignController.SendUpdateNextTime(index, nexttime, clearOnetime);

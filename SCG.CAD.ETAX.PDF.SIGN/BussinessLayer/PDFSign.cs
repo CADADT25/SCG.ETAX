@@ -29,8 +29,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         string pathoutput;
         string pathlog = @"D:\log\";
         string namepathlog = "PATHLOGFILE_PDFSIGN";
+        string batchname = "SCG.CAD.ETAX.PDF.SIGN";
 
-        public List<PDFSignModel> ReadPdfFile()
+        public List<PDFSignModel> ReadPdfFile(ConfigPdfSign config)
         {
             List<PDFSignModel> result = new List<PDFSignModel>();
             PDFSignModel pDFSignModel = new PDFSignModel();
@@ -44,10 +45,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
             try
             {
-                foreach (var config in configPDFSign)
-                {
-                    if (CheckRunningTime(config))
-                    {
                         pDFSignModel = new PDFSignModel();
                         pDFSignModel.configPdfSign = config;
                         pDFSignModel.listFilePDFs = new List<ListFilePDF>();
@@ -77,42 +74,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                             pDFSignModel.listFilePDFs.Add(pdfDetail);
                         }
                         result.Add(pDFSignModel);
-                    }
-                }
 
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
-
-
-        public bool CheckRunningTime(ConfigPdfSign config)
-        {
-            bool result = false;
-            try
-            {
-                if (config.ConfigPdfsignOneTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigPdfsignOneTime) &&
-                        Convert.ToDateTime(config.ConfigPdfsignOneTime) <= DateTime.Now)
-                {
-                    result = true;
-                }
-                if (config.ConfigPdfsignAnyTime != null &&
-                    !String.IsNullOrEmpty(config.ConfigPdfsignAnyTime))
-                {
-                    if (config.ConfigPdfsignAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    result = true;
-                }
-                result = true;
             }
             catch (Exception ex)
             {
@@ -132,6 +94,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             string fileType = ".pdf";
             DateTime billingdate;
             APISendFilePDFSignModel dataSend = new APISendFilePDFSignModel();
+            DateTime nexttime;
             try
             {
                 Console.WriteLine("Start PDFSign");
@@ -140,79 +103,92 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                 Console.WriteLine("Start Read All PDFFile");
                 log.InsertLog(pathlog, "Start Read All PDFFile");
-                var allfile = ReadPdfFile();
-                Console.WriteLine("End Read All PDFFile");
-                log.InsertLog(pathlog, "End Read All PDFFile");
 
-                if (allfile != null && allfile.Count > 0)
+
+                foreach (var config in configPDFSign)
                 {
-                    pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
-                    foreach (var src in allfile)
+                    if (logicToolHelper.CheckRunTime(config.ConfigPdfsignNextTime))
                     {
-                        if(src.listFilePDFs.Count > 0)
+
+                        var allfile = ReadPdfFile(config);
+                        Console.WriteLine("End Read All PDFFile");
+                        log.InsertLog(pathlog, "End Read All PDFFile");
+
+                        if (allfile != null && allfile.Count > 0)
                         {
-                            foreach(var file in src.listFilePDFs)
+                            pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
+                            foreach (var src in allfile)
                             {
-                                round += 1;
-                                billno = file.Billno;
-                                Console.WriteLine("Start round : " + round);
-                                log.InsertLog(pathlog, "Start round : " + round);
-                                Console.WriteLine("billno : " + billno);
-                                log.InsertLog(pathlog, "billno : " + billno);
-
-                                var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
-                                if(!CheckCancelBillingOrSentRevenueDepartment(dataTran))
+                                if (src.listFilePDFs.Count > 0)
                                 {
-                                    Console.WriteLine("Prepare PDF");
-                                    log.InsertLog(pathlog, "Prepare PDF");
-                                    dataSend = PrepareSendPDFSign(src.configPdfSign, file.FullPath);
-
-                                    Console.WriteLine("Send To Sign");
-                                    log.InsertLog(pathlog, "Send To Sign");
-                                    resultPDFSign = SendFilePDFSign(dataSend);
-
-                                    Console.WriteLine("Status Sign : " + resultPDFSign.resultDes.ToString());
-                                    log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.resultDes.ToString());
-                                    Console.WriteLine("Update Status in DataBase");
-                                    log.InsertLog(pathlog, "Update Status in DataBase");
-
-                                    fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                                    pathoutbound = file.Outbound;
-
-                                    billingdate = DateTime.Now;
-                                    if (dataTran != null)
+                                    foreach (var file in src.listFilePDFs)
                                     {
-                                        billingdate = dataTran.BillingDate ?? DateTime.Now;
-                                    }
-                                    //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
-                                    if (resultPDFSign.resultCode == "000")
-                                    {
-                                        pathoutbound += "\\Success\\";
-                                    }
-                                    else
-                                    {
-                                        pathoutbound += "\\Fail\\";
-                                    }
-                                    fullpath = pathoutbound + fileNameDest + fileType;
+                                        round += 1;
+                                        billno = file.Billno;
+                                        Console.WriteLine("Start round : " + round);
+                                        log.InsertLog(pathlog, "Start round : " + round);
+                                        Console.WriteLine("billno : " + billno);
+                                        log.InsertLog(pathlog, "billno : " + billno);
 
-                                    UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
+                                        var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
+                                        if (!CheckCancelBillingOrSentRevenueDepartment(dataTran))
+                                        {
+                                            Console.WriteLine("Prepare PDF");
+                                            log.InsertLog(pathlog, "Prepare PDF");
+                                            dataSend = PrepareSendPDFSign(src.configPdfSign, file.FullPath);
 
-                                    Console.WriteLine("Start Export PDF file");
-                                    log.InsertLog(pathlog, "Start Export PDF file");
-                                    ExportPDFAfterSign(resultPDFSign, pathoutbound, fullpath);
-                                    Console.WriteLine("End Export PDF file");
-                                    log.InsertLog(pathlog, "End Export PDF file");
-                                    Console.WriteLine("Start Move file");
-                                    log.InsertLog(pathlog, "Start Move file");
-                                    MoveFile(file.FullPath, file.FileName + fileType, billingdate);
-                                    Console.WriteLine("End Move file");
-                                    log.InsertLog(pathlog, "End Move file");
+                                            Console.WriteLine("Send To Sign");
+                                            log.InsertLog(pathlog, "Send To Sign");
+                                            resultPDFSign = SendFilePDFSign(dataSend);
+
+                                            Console.WriteLine("Status Sign : " + resultPDFSign.resultDes.ToString());
+                                            log.InsertLog(pathlog, "Status Sign : " + resultPDFSign.resultDes.ToString());
+                                            Console.WriteLine("Update Status in DataBase");
+                                            log.InsertLog(pathlog, "Update Status in DataBase");
+
+                                            fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                            pathoutbound = file.Outbound;
+
+                                            billingdate = DateTime.Now;
+                                            if (dataTran != null)
+                                            {
+                                                billingdate = dataTran.BillingDate ?? DateTime.Now;
+                                            }
+                                            //pathoutbound += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM");
+                                            if (resultPDFSign.resultCode == "000")
+                                            {
+                                                pathoutbound += "\\Success\\";
+                                            }
+                                            else
+                                            {
+                                                pathoutbound += "\\Fail\\";
+                                            }
+                                            fullpath = pathoutbound + fileNameDest + fileType;
+
+                                            UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
+
+                                            Console.WriteLine("Start Export PDF file");
+                                            log.InsertLog(pathlog, "Start Export PDF file");
+                                            ExportPDFAfterSign(resultPDFSign, pathoutbound, fullpath);
+                                            Console.WriteLine("End Export PDF file");
+                                            log.InsertLog(pathlog, "End Export PDF file");
+                                            Console.WriteLine("Start Move file");
+                                            log.InsertLog(pathlog, "Start Move file");
+                                            MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                            Console.WriteLine("End Move file");
+                                            log.InsertLog(pathlog, "End Move file");
+                                        }
+                                    }
                                 }
+
                             }
                         }
-
+                        nexttime = logicToolHelper.SetNextRunTime(config.ConfigPdfsignAnyTime, config.ConfigPdfsignOneTime, batchname, config.ConfigPdfsignNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
                     }
                 }
+
             }
             catch (Exception ex)
             {
