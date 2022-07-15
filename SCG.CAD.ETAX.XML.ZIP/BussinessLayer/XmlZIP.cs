@@ -20,6 +20,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigMftsCompressXmlSetting> configXmlSetting = new List<ConfigMftsCompressXmlSetting>();
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
@@ -28,6 +29,8 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
         string outputxmltransactionno;
         string pathlog = @"C:\log\";
         string namepathlog = "PATHLOGFILE_XMLZIP";
+        string batchname = "SCG.CAD.ETAX.XML.ZIP";
+        DateTime nexttime;
 
         public void Xml_ZIP()
         {
@@ -39,30 +42,41 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 log.InsertLog(pathlog, "Start XmlZIP");
                 GetDataFromDataBase();
                 GetListTransactionDescription();
-                Console.WriteLine("Start Read All XML");
-                log.InsertLog(pathlog, "Start Read All XML");
-                var dataallCompany = ReadFile();
-                Console.WriteLine("End Read All XML");
-                log.InsertLog(pathlog, "End Read All XML");
-                pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLZIPFILE").ConfigGlobalValue;
-                foreach (var data in dataallCompany)
+
+                foreach (var config in configXmlSetting)
                 {
-                    Console.WriteLine("Start CompanyCode : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "Start CompanyCode : " + data.CompanyCode);
+                    if (logicToolHelper.CheckRunTime(config.ConfigMftsCompressXmlSettingNextTime))
+                    {
+                        Console.WriteLine("Start Read All XML");
+                        log.InsertLog(pathlog, "Start Read All XML");
+                        var dataallCompany = ReadFile(config);
+                        Console.WriteLine("End Read All XML");
+                        log.InsertLog(pathlog, "End Read All XML");
+                        pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLZIPFILE").ConfigGlobalValue;
+                        foreach (var data in dataallCompany)
+                        {
+                            Console.WriteLine("Start CompanyCode : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "Start CompanyCode : " + data.CompanyCode);
 
-                    Console.WriteLine("Start Separate DocumentType Company : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "Start Separate DocumentType Company : " + data.CompanyCode);
-                    xmlFileModel = separateXmlFilebyDocumentType(data);
-                    Console.WriteLine("End Separate DocumentType Company : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "End Separate DocumentType Company : " + data.CompanyCode);
+                            Console.WriteLine("Start Separate DocumentType Company : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "Start Separate DocumentType Company : " + data.CompanyCode);
+                            xmlFileModel = separateXmlFilebyDocumentType(data);
+                            Console.WriteLine("End Separate DocumentType Company : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "End Separate DocumentType Company : " + data.CompanyCode);
 
-                    Console.WriteLine("Start Zip Company : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
-                    zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
-                    //var resultZipFile = Zipfile(data, zipName);
-                    var resultZipfileMax3mb = ZipfileMax3mb(xmlFileModel);
-                    Console.WriteLine("End CompanyCode : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "End CompanyCode : " + data.CompanyCode);
+                            Console.WriteLine("Start Zip Company : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
+                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            //var resultZipFile = Zipfile(data, zipName);
+                            var resultZipfileMax3mb = ZipfileMax3mb(xmlFileModel);
+                            Console.WriteLine("End CompanyCode : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "End CompanyCode : " + data.CompanyCode);
+                        }
+
+                        nexttime = logicToolHelper.SetNextRunTime(config.ConfigMftsCompressXmlSettingAnyTime, config.ConfigMftsCompressXmlSettingOneTime, batchname, config.ConfigMftsCompressXmlSettingNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
+                    }
                 }
                 Console.WriteLine("End XmlZIP");
                 log.InsertLog(pathlog, "End XmlZIP");
@@ -72,7 +86,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
-        public List<FileModel> ReadFile()
+        public List<FileModel> ReadFile(ConfigMftsCompressXmlSetting config)
         {
             List<FileModel> result = new List<FileModel>();
             string fileType = "*.xml";
@@ -81,30 +95,24 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             List<TransactionDescription> datatransaction = new List<TransactionDescription>();
             try
             {
-                foreach (var config in configXmlSetting)
+                fileModel = new FileModel();
+                fileModel.InputPath = config.ConfigMftsCompressXmlSettingInputFolder;
+                fileModel.OutPath = config.ConfigMftsCompressXmlSettingOutputFolder;
+                fileModel.CompanyCode = config.ConfigMftsCompressXmlSettingCompanyCode;
+                fileModel.FileDetails = new List<Filedetail>();
+                datatransaction = transactionDescription.Where(x => x.XmlSignStatus == "Successful" &&
+                                                                x.XmlCompressStatus == "Waiting" &&
+                                                                x.CompanyCode == config.ConfigMftsCompressXmlSettingCompanyCode &&
+                                                                x.Isactive == 1).ToList();
+                foreach (var file in datatransaction)
                 {
-                    if (CheckRunningTime(config))
-                    {
-                        fileModel = new FileModel();
-                        fileModel.InputPath = config.ConfigMftsCompressXmlSettingInputFolder;
-                        fileModel.OutPath = config.ConfigMftsCompressXmlSettingOutputFolder;
-                        fileModel.CompanyCode = config.ConfigMftsCompressXmlSettingCompanyCode;
-                        fileModel.FileDetails = new List<Filedetail>();
-                        datatransaction = transactionDescription.Where(x => x.XmlSignStatus == "Successful" &&
-                                                                        x.XmlCompressStatus == "Waiting" &&
-                                                                        x.CompanyCode == config.ConfigMftsCompressXmlSettingCompanyCode &&
-                                                                        x.Isactive == 1).ToList();
-                        foreach (var file in datatransaction)
-                        {
-                            Filedetail = new Filedetail();
-                            Filedetail.FilePath = file.XmlSignLocation;
-                            Filedetail.FileName = Path.GetFileName(file.XmlSignLocation);
-                            Filedetail.BillingNo = file.BillingNumber;
-                            fileModel.FileDetails.Add(Filedetail);
-                        }
-                        result.Add(fileModel);
-                    }
+                    Filedetail = new Filedetail();
+                    Filedetail.FilePath = file.XmlSignLocation;
+                    Filedetail.FileName = Path.GetFileName(file.XmlSignLocation);
+                    Filedetail.BillingNo = file.BillingNumber;
+                    fileModel.FileDetails.Add(Filedetail);
                 }
+                result.Add(fileModel);
 
             }
             catch (Exception ex)
@@ -114,37 +122,37 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             return result;
         }
 
-        public bool CheckRunningTime(ConfigMftsCompressXmlSetting config)
-        {
-            bool result = false;
-            try
-            {
-                if (config.ConfigMftsCompressXmlSettingOneTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigMftsCompressXmlSettingOneTime) &&
-                        Convert.ToDateTime(config.ConfigMftsCompressXmlSettingOneTime) <= DateTime.Now)
-                {
-                    result = true;
-                }
-                if (config.ConfigMftsCompressXmlSettingAnyTime != null &&
-                    !String.IsNullOrEmpty(config.ConfigMftsCompressXmlSettingAnyTime))
-                {
-                    if (config.ConfigMftsCompressXmlSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    result = true;
-                }
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
+        //public bool CheckRunningTime(ConfigMftsCompressXmlSetting config)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        if (config.ConfigMftsCompressXmlSettingOneTime != null &&
+        //                !String.IsNullOrEmpty(config.ConfigMftsCompressXmlSettingOneTime) &&
+        //                Convert.ToDateTime(config.ConfigMftsCompressXmlSettingOneTime) <= DateTime.Now)
+        //        {
+        //            result = true;
+        //        }
+        //        if (config.ConfigMftsCompressXmlSettingAnyTime != null &&
+        //            !String.IsNullOrEmpty(config.ConfigMftsCompressXmlSettingAnyTime))
+        //        {
+        //            if (config.ConfigMftsCompressXmlSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
+        //            {
+        //                result = true;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            result = true;
+        //        }
+        //        result = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.InsertLog(pathlog, "Exception : " + ex.ToString());
+        //    }
+        //    return result;
+        //}
 
         public List<FileModel> ReadFile_Old()
         {
@@ -403,7 +411,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                 if (res.Result.MESSAGE == "Insert success.")
                 {
                     outputxmltransactionno = res.Result.OUTPUT_DATA.ToString();
-                       result = true;
+                    result = true;
                 }
             }
             catch (Exception ex)

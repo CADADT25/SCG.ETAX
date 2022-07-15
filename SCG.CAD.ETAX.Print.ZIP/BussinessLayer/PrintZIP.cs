@@ -20,6 +20,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         LogHelper log = new LogHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigMftsCompressPrintSetting> configPrintSetting = new List<ConfigMftsCompressPrintSetting>();
         List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
@@ -28,44 +29,56 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
         string outputsearchprintingno;
         string pathlog = @"C:\log\";
         string namepathlog = "PATHLOGFILE_PRINTZIP";
+        string batchname = "SCG.CAD.ETAX.PRINT.ZIP";
 
         public void ProcessPrintzip()
         {
             string zipName = "";
+            DateTime nexttime;
             try
             {
                 Console.WriteLine("Start PrintZip");
                 log.InsertLog(pathlog, "Start PrintZip");
                 GetDataFromDataBase();
                 GetListTransactionDescription();
-                Console.WriteLine("Start Read All PDF");
-                log.InsertLog(pathlog, "Start Read All PDF");
-                var dataallCompany = ReadFile();
-                Console.WriteLine("End Read All PDF");
-                log.InsertLog(pathlog, "End Read All PDF");
-                pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPRINTZIPFILE").ConfigGlobalValue;
-                foreach (var data in dataallCompany)
+
+                foreach (var config in configPrintSetting)
                 {
-                    Console.WriteLine("Start Zip Company : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
-                    zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
-                    var resultZipFile = Zipfile(data, zipName);
-
-                    Console.WriteLine("Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
-                    log.InsertLog(pathlog, "Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
-                    var resultTransactionPrintZip = InsertTransactionPrintZip(data, zipName);
-                    GetListTransactionDescription();
-                    if (resultZipFile)
+                    if (logicToolHelper.CheckRunTime(config.ConfigMftsCompressPrintSettingNextTime))
                     {
-                        Console.WriteLine("Start Update Status TransactionDescription Company : " + data.CompanyCode);
-                        log.InsertLog(pathlog, "Start Update Status TransactionDescription Company : " + data.CompanyCode);
-                        var resultUpdateStatus = UpdateStatusTransactionDescription(data);
-                        Console.WriteLine("End Update Status TransactionDescription Company : " + data.CompanyCode);
-                        log.InsertLog(pathlog, "End Update Status TransactionDescription Company : " + data.CompanyCode);
-                    }
-                    Console.WriteLine("End Zip Company : " + data.CompanyCode);
-                    log.InsertLog(pathlog, "End Zip Company : " + data.CompanyCode);
+                        Console.WriteLine("Start Read All PDF");
+                        log.InsertLog(pathlog, "Start Read All PDF");
+                        var dataallCompany = ReadFile(config);
+                        Console.WriteLine("End Read All PDF");
+                        log.InsertLog(pathlog, "End Read All PDF");
+                        pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPRINTZIPFILE").ConfigGlobalValue;
+                        foreach (var data in dataallCompany)
+                        {
+                            Console.WriteLine("Start Zip Company : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
+                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            var resultZipFile = Zipfile(data, zipName);
 
+                            Console.WriteLine("Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
+                            log.InsertLog(pathlog, "Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);
+                            var resultTransactionPrintZip = InsertTransactionPrintZip(data, zipName);
+                            GetListTransactionDescription();
+                            if (resultZipFile)
+                            {
+                                Console.WriteLine("Start Update Status TransactionDescription Company : " + data.CompanyCode);
+                                log.InsertLog(pathlog, "Start Update Status TransactionDescription Company : " + data.CompanyCode);
+                                var resultUpdateStatus = UpdateStatusTransactionDescription(data);
+                                Console.WriteLine("End Update Status TransactionDescription Company : " + data.CompanyCode);
+                                log.InsertLog(pathlog, "End Update Status TransactionDescription Company : " + data.CompanyCode);
+                            }
+                            Console.WriteLine("End Zip Company : " + data.CompanyCode);
+                            log.InsertLog(pathlog, "End Zip Company : " + data.CompanyCode);
+
+                        }
+                        nexttime = logicToolHelper.SetNextRunTime(config.ConfigMftsCompressPrintSettingAnyTime, config.ConfigMftsCompressPrintSettingOneTime, batchname, config.ConfigMftsCompressPrintSettingNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
+                    }
                 }
                 Console.WriteLine("End PrintZip");
                 log.InsertLog(pathlog, "End PrintZip");
@@ -75,7 +88,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
-        public List<FileModel> ReadFile()
+        public List<FileModel> ReadFile(ConfigMftsCompressPrintSetting config)
         {
             List<FileModel> result = new List<FileModel>();
             string fileType = "*.pdf";
@@ -84,11 +97,6 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             List<TransactionDescription> datatransaction = new List<TransactionDescription>();
             try
             {
-                //pathFolder = @"C:\Code_Dev\sign";
-                foreach (var config in configPrintSetting)
-                {
-                    if (CheckRunningTime(config))
-                    {
                         fileModel = new FileModel();
                         fileModel.InputPath = config.ConfigMftsCompressPrintSettingInputPdf;
                         fileModel.OutPath = config.ConfigMftsCompressPrintSettingOutputPdf;
@@ -107,8 +115,6 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                             fileModel.FileDetails.Add(Filedetail);
                         }
                         result.Add(fileModel);
-                    }
-                }
 
             }
             catch (Exception ex)

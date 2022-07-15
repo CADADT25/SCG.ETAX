@@ -20,6 +20,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
         UtilityProfileCompanyController profileCompanyController = new UtilityProfileCompanyController();
         UtilityRdDocumentController rdDocumentController = new UtilityRdDocumentController();
         LogHelper log = new LogHelper();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
         List<TransactionDescription> transactionDescriptions = new List<TransactionDescription>();
@@ -36,6 +37,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
         string outputsearchemailsendno = "";
         string pathlog = @"C:\log\";
         string namepathlog = "PATHLOGFILE_EMAIL";
+        string batchname = "SCG.CAD.ETAX.EMAIL";
 
         public void ProcessSendEmail()
         {
@@ -112,6 +114,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 string filename = "";
                 bool isactive = false;
                 string[] anytime = null;
+                DateTime nexttime;
 
                 List<TransactionDescription> dataPDFsend = new List<TransactionDescription>();
                 List<PDFFileDetailModel> filePDFsend = new List<PDFFileDetailModel>();
@@ -122,7 +125,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 FileInfo fileemail;
                 foreach (var config in configMftsEmailSettings)
                 {
-                    if (CheckRunningTime(config))
+                    if (logicToolHelper.CheckRunTime(config.ConfigMftsEmailSettingNextTime))
                     {
                         Console.WriteLine("Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                         log.InsertLog(pathlog, "Start CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
@@ -220,6 +223,9 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                                 }
                             }
                         }
+                        nexttime = logicToolHelper.SetNextRunTime(config.ConfigMftsEmailSettingAnyTime, config.ConfigMftsEmailSettingOneTime, batchname, config.ConfigMftsEmailSettingNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
                     }
                     Console.WriteLine("End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
                     log.InsertLog(pathlog, "End CompanyCode :" + config.ConfigMftsEmailSettingCompanyCode);
@@ -232,37 +238,6 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             return result;
         }
 
-        public bool CheckRunningTime(ConfigMftsEmailSetting config)
-        {
-            bool result = false;
-            try
-            {
-                //if (config.ConfigMftsEmailSettingOneTime != null &&
-                //        !String.IsNullOrEmpty(config.ConfigMftsEmailSettingOneTime) &&
-                //        Convert.ToDateTime(config.ConfigMftsEmailSettingOneTime) <= DateTime.Now)
-                //{
-                //    result = true;
-                //}
-                //if (config.ConfigMftsEmailSettingAnyTime != null &&
-                //    !String.IsNullOrEmpty(config.ConfigMftsEmailSettingAnyTime))
-                //{
-                //    if (config.ConfigMftsEmailSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                //    {
-                //        result = true;
-                //    }
-                //}
-                //else
-                //{
-                //    result = true;
-                //}
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
 
         public bool SendEmailbyCompany(List<PDFFileDetailModel> filePDFsend, ConfigMftsEmailSetting config, ProfileCustomer profileemailCustomer, string subjectemail, ProfileCompany profileCompany)
         {

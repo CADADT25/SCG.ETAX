@@ -17,6 +17,8 @@ namespace SCG.CAD.ETAX.UTILITY
         UtilityConfigXMLGeneratorController configXMLGeneratorController = new UtilityConfigXMLGeneratorController();
         UtilityConfigXMLSignController configXMLSignController = new UtilityConfigXMLSignController();
         UtilityConfigMftsCompressXmlSettingController configMftsCompressXmlSettingController = new UtilityConfigMftsCompressXmlSettingController();
+        UtilityConfigMftsIndexGenerationSettingInputController configMftsIndexGenerationSettingInputController = new UtilityConfigMftsIndexGenerationSettingInputController();
+        UtilityConfigMftsIndexGenerationSettingOutputController configMftsIndexGenerationSettingOutputController = new UtilityConfigMftsIndexGenerationSettingOutputController();
 
         List<ConfigGlobal> configGlobals = new List<ConfigGlobal>();
         public bool CheckBatchRunningTime(string configrunningname)
@@ -102,6 +104,7 @@ namespace SCG.CAD.ETAX.UTILITY
                     //Set onetime
                     clearOnetime = true;
                     nexttime = dateonetime ?? dateanytime;
+                    SendClearOneTime(batchname, index);
                 }
                 else if (dateonetime > dateanytime)
                 {
@@ -198,7 +201,11 @@ namespace SCG.CAD.ETAX.UTILITY
                 case "SCG.CAD.ETAX.EMAIL":
                     configMftsEmailSettingController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
-                case "SCG.CAD.ETAX.INDEXING.TO.DMS":
+                case "SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS":
+                    configMftsIndexGenerationSettingInputController.SendUpdateNextTime(index, nexttime, clearOnetime);
+                    break;
+                case "SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS":
+                    configMftsIndexGenerationSettingOutputController.SendUpdateNextTime(index, nexttime, clearOnetime);
                     break;
                 case "SCG.CAD.ETAX.PDF.SIGN":
                     configPDFSignController.SendUpdateNextTime(index, nexttime, clearOnetime);
@@ -226,6 +233,12 @@ namespace SCG.CAD.ETAX.UTILITY
             {
                 case "SCG.CAD.ETAX.EMAIL":
                     configMftsEmailSettingController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS":
+                    configMftsIndexGenerationSettingInputController.SendDeleteOneTime(index);
+                    break;
+                case "SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS":
+                    configMftsIndexGenerationSettingOutputController.SendDeleteOneTime(index);
                     break;
                 case "SCG.CAD.ETAX.INDEXING.TO.DMS":
                     break;

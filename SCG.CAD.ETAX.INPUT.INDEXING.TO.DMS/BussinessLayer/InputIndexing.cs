@@ -21,6 +21,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
         UtilityConfigMftsIndexGenerationSettingInputController configMftsIndexGenerationSettingInputController = new UtilityConfigMftsIndexGenerationSettingInputController();
         UtilityConfigMftsIndexGenerationSettingOutputController configMftsIndexGenerationSettingOutputController = new UtilityConfigMftsIndexGenerationSettingOutputController();
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        LogicToolHelper logicToolHelper = new LogicToolHelper();
 
         List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
         List<ConfigMftsIndexGenerationSettingInput> configIndexInput = new List<ConfigMftsIndexGenerationSettingInput>();
@@ -29,18 +30,31 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
 
         string pathlog = @"D:\log\";
         string namepathlog = "PATHLOGFILE_INPUTINDEXING";
+        string batchname = "SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS";
 
         public void ProcessIndexing()
         {
             List<IndexingInputModel> indexingInputModel = new List<IndexingInputModel>();
+            DateTime nexttime;
             try
             {
                 Console.WriteLine("Start Input Indexing");
                 log.InsertLog(pathlog, "Start Input Indexing");
                 GetDataTransactionDescription();
                 GetDataFromDataBase();
-                indexingInputModel = GetIndexingInput();
-                PrepareToSendToSAP(indexingInputModel);
+
+                foreach (var input in configIndexInput)
+                {
+                    if (logicToolHelper.CheckRunTime(input.ConfigMftsIndexGenerationSettingInputNextTime))
+                    {
+                        indexingInputModel = GetIndexingInput(input);
+                        PrepareToSendToSAP(indexingInputModel);
+
+                        nexttime = logicToolHelper.SetNextRunTime(input.ConfigMftsIndexGenerationSettingInputAnyTime, input.ConfigMftsIndexGenerationSettingInputOneTime, batchname, input.ConfigMftsIndexGenerationSettingInputNo);
+                        Console.WriteLine("Set NextTime : " + nexttime);
+                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
+                    }
+                }
 
 
                 Console.WriteLine("End Input Indexing");
@@ -52,36 +66,30 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             }
         }
 
-        public List<IndexingInputModel> GetIndexingInput()
+        public List<IndexingInputModel> GetIndexingInput(ConfigMftsIndexGenerationSettingInput input)
         {
             List<IndexingInputModel> result = new List<IndexingInputModel>();
             IndexingInputModel indexingInput = new IndexingInputModel();
             try
             {
-                foreach (var input in configIndexInput)
-                {
-                    if (CheckRunningTime(input))
-                    {
-                        indexingInput = new IndexingInputModel();
-                        indexingInput.CompanyCode = input.ConfigMftsIndexGenerationSettingInputCompanyCode;
-                        indexingInput.SourceNameInput = input.ConfigMftsIndexGenerationSettingInputSourceName;
-                        indexingInput.SourceNameOutput = input.ConfigMftsIndexGenerationSettingInputSourceNameOut;
-                        indexingInput.OcType = input.ConfigMftsIndexGenerationSettingInputOcType;
-                        indexingInput.ImageDocTypes = new List<ImageDocType>();
-                        indexingInput.ImageDocTypes = transactionDescription
-                                                            .Where(x => x.CompanyCode == input.ConfigMftsIndexGenerationSettingInputCompanyCode &&
-                                                            x.PdfIndexingStatus == "Waiting" && String.IsNullOrEmpty(x.DmsAttachmentFileName))
-                                                            .Select(x => new ImageDocType
-                                                            {
-                                                                BillNo = x.BillingNumber,
-                                                                ImageDocumentType = x.ImageDocType,
-                                                                PathFilePDF = x.PdfSignLocation,
-                                                                Year = x.BillingYear.ToString(),
-                                                                FiDocNumber = x.FiDoc
-                                                            }).ToList();
-                        result.Add(indexingInput);
-                    }
-                }
+                indexingInput = new IndexingInputModel();
+                indexingInput.CompanyCode = input.ConfigMftsIndexGenerationSettingInputCompanyCode;
+                indexingInput.SourceNameInput = input.ConfigMftsIndexGenerationSettingInputSourceName;
+                indexingInput.SourceNameOutput = input.ConfigMftsIndexGenerationSettingInputSourceNameOut;
+                indexingInput.OcType = input.ConfigMftsIndexGenerationSettingInputOcType;
+                indexingInput.ImageDocTypes = new List<ImageDocType>();
+                indexingInput.ImageDocTypes = transactionDescription
+                                                    .Where(x => x.CompanyCode == input.ConfigMftsIndexGenerationSettingInputCompanyCode &&
+                                                    x.PdfIndexingStatus == "Waiting" && String.IsNullOrEmpty(x.DmsAttachmentFileName))
+                                                    .Select(x => new ImageDocType
+                                                    {
+                                                        BillNo = x.BillingNumber,
+                                                        ImageDocumentType = x.ImageDocType,
+                                                        PathFilePDF = x.PdfSignLocation,
+                                                        Year = x.BillingYear.ToString(),
+                                                        FiDocNumber = x.FiDoc
+                                                    }).ToList();
+                result.Add(indexingInput);
             }
             catch (Exception ex)
             {
@@ -344,20 +352,6 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
             {
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
-        }
-
-        public bool CheckRunningTime(ConfigMftsIndexGenerationSettingInput input)
-        {
-            bool result = false;
-            try
-            {
-                result = logicTool.CheckRunTime(input.ConfigMftsIndexGenerationSettingInputNextTime);
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
         }
 
         public List<TransactionDescription> PrepareTransactionDescription(List<ImageDocType> listdata, string path, string filename)
