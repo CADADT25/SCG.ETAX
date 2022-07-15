@@ -150,8 +150,11 @@ namespace SCG.CAD.ETAX.MONITOR
         {
             try
             {
-                string content = service.ReadFileOnly(cbbpath.SelectedValue.ToString());
-                richTextBox1.Text = content;
+                if (cbbpath.SelectedValue != null)
+                {
+                    string content = service.ReadFileOnly(cbbpath.SelectedValue.ToString());
+                    richTextBox1.Text = content;
+                }
             }
             catch (Exception ex)
             {

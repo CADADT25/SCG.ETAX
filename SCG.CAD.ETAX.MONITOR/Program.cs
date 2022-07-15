@@ -21,8 +21,7 @@ namespace SCG.CAD.ETAX.MONITOR
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            MonitorProgram runMonitor = MonitorProgram.NotMonitor;
-            runMonitor = MonitorProgram.Monitor_INPUTINDEXING;
+            MonitorProgram runMonitor = MonitorProgram.MainMenu;
             RunAsyncGetConfig().GetAwaiter().GetResult();
             switch (runMonitor)
             {
@@ -50,6 +49,9 @@ namespace SCG.CAD.ETAX.MONITOR
                 case MonitorProgram.Monitor_OUTPUTINDEXING:
                     Application.Run(new Monitor_OUTPUTINDEXING(configGlobal));
                     break;
+                case MonitorProgram.MainMenu:
+                    Application.Run(new MainMenu(configGlobal));
+                    break;
                 default:
                     service.ShowMessageBox("Not Choose Program Monitor");
                     break;
@@ -60,7 +62,8 @@ namespace SCG.CAD.ETAX.MONITOR
         static async Task RunAsyncGetConfig()
         {
             // Update port # in the following line.
-            client.BaseAddress = new Uri("https://localhost:7274/");
+            //client.BaseAddress = new Uri("https://localhost:7274/");
+            client.BaseAddress = new Uri("http://172.30.190.181:8080/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

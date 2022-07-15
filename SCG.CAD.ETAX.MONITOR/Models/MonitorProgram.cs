@@ -16,6 +16,7 @@ namespace SCG.CAD.ETAX.MONITOR.Models
         Monitor_XMLZip = 6,
         Monitor_INPUTINDEXING = 7,
         Monitor_OUTPUTINDEXING = 8,
+        MainMenu = 00,
         NotMonitor = 99
     }
 }
