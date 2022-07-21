@@ -46,6 +46,24 @@ namespace SCG.CAD.ETAX.UTILITY
             return false;
         }
 
+        public bool UpdateListTransaction(string jsonString)
+        {
+            Task<Response> res;
+            try
+            {
+                res = transactionDescriptionController.Update(jsonString);
+                if (res.Result.MESSAGE == "Updated Success.")
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
+        }
+
         public List<TransactionDescription> ListTransaction()
         {
             List<TransactionDescription> tran = new List<TransactionDescription>();
