@@ -96,6 +96,110 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             }
         }
 
+        public bool UpdatePDFSignStatusByRecord(string billno, string updateby)
+        {
+            bool result = false;
+            string json;
+            TransactionDescription dataTran = new TransactionDescription();
+            try
+            {
+                GetConfig();
+                dataTran = PrepareDataUpdate(billno, updateby);
+                if(dataTran != null)
+                {
+                    json = JsonSerializer.Serialize(dataTran);
+                    result = adminToolHelper.UpdateTransaction(json);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public bool UpdatePDFSignStatusByMutipleRecords(List<string> listbillno, string updateby)
+        {
+            bool result = false;
+            string json;
+            TransactionDescription dataTran = new TransactionDescription();
+            List<TransactionDescription> listdataTran = new List<TransactionDescription>();
+            try
+            {
+                GetConfig();
+                foreach (var billno in listbillno)
+                {
+                    dataTran = PrepareDataUpdate(billno, updateby);
+                    if (dataTran != null)
+                    {
+                        listdataTran.Add(dataTran);
+                    }
+                }
+                if(listdataTran.Count > 0)
+                {
+                    json = JsonSerializer.Serialize(dataTran);
+                    result = adminToolHelper.UpdateTransaction(json);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public TransactionDescription PrepareDataUpdate(string billno, string updateby)
+        {
+            string filetype = "*.pdf";
+            string billnofile;
+            string filename;
+            List<string> files = new List<string>();
+            ConfigPdfSign config = new ConfigPdfSign();
+            List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
+            TransactionDescription dataTran = new TransactionDescription();
+            try
+            {
+                transactionDescription = adminToolHelper.GetBillingTransaction(billno);
+                if (transactionDescription != null && transactionDescription.Count > 0)
+                {
+                    config = configPdfSign.FirstOrDefault(x => x.ConfigPdfsignCompanyCode == transactionDescription[0].CompanyCode);
+                    files = adminToolHelper.GetFileInFolder(config.ConfigPdfsignOutputPath + "//Success", filetype);
+                    foreach (var file in files)
+                    {
+                        filename = Path.GetFileName(file).Replace(filetype, "");
+                        if (file.IndexOf('_') > -1)
+                        {
+                            billnofile = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                        }
+                        else
+                        {
+                            billnofile = filename.Substring(8);
+                        }
+
+                        if (billno == billnofile)
+                        {
+                            transactionDescription[0].PdfSignDateTime = DateTime.Now;
+                            transactionDescription[0].PdfSignDetail = "PDF was signed completely";
+                            transactionDescription[0].PdfSignStatus = "Successful";
+                            transactionDescription[0].UpdateBy = updateby;
+                            transactionDescription[0].UpdateDate = DateTime.Now;
+                            transactionDescription[0].PdfSignLocation = file;
+                            dataTran = transactionDescription[0];
+                            break;
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dataTran;
+        }
+
         public void GetConfig()
         {
             List<ConfigPdfSign> result = new List<ConfigPdfSign>();

@@ -363,6 +363,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                             client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
                             client.Send(message);
                         }
+                        result = true;
                     }
                     catch (Exception ex)
                     {
