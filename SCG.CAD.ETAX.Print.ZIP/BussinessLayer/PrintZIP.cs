@@ -124,38 +124,6 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             return result;
         }
 
-        public bool CheckRunningTime(ConfigMftsCompressPrintSetting config)
-        {
-            bool result = false;
-            try
-            {
-                if (config.ConfigMftsCompressPrintSettingOneTime != null &&
-                        !String.IsNullOrEmpty(config.ConfigMftsCompressPrintSettingOneTime) &&
-                        Convert.ToDateTime(config.ConfigMftsCompressPrintSettingOneTime) <= DateTime.Now)
-                {
-                    result = true;
-                }
-                if (config.ConfigMftsCompressPrintSettingAnyTime != null &&
-                    !String.IsNullOrEmpty(config.ConfigMftsCompressPrintSettingAnyTime))
-                {
-                    if (config.ConfigMftsCompressPrintSettingAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    result = true;
-                }
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
-
         public List<FileModel> ReadFile_Old()
         {
             List<FileModel> result = new List<FileModel>();

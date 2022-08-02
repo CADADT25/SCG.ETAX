@@ -133,11 +133,11 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                             //    resultSendFile = UploadToSFTP(output, imageDocType, controllFile, controllFileName);
                             //}
 
-                            if (resultSendFile)
-                            {
-                                dataUpdate = PrepareTransactionDescription(imageDocType, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
-                                UpdateTransactionDescription(dataUpdate);
-                            }
+                            //if (resultSendFile)
+                            //{
+                            //    dataUpdate = PrepareTransactionDescription(imageDocType, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
+                            //    UpdateTransactionDescription(dataUpdate);
+                            //}
                         }
                     }
                 }
