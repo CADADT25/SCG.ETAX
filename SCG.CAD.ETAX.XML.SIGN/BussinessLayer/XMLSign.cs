@@ -66,12 +66,11 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                         log.InsertLog(pathlog, "Start round : " + round);
                                         Console.WriteLine("billno : " + file.Billno);
                                         log.InsertLog(pathlog, "billno : " + file.Billno);
-                                        XmlDocument doc = new XmlDocument();
-                                        doc.Load(file.FullPath);
 
                                         Console.WriteLine("Prepare PDF");
                                         log.InsertLog(pathlog, "Prepare PDF");
-                                        dataSend = PrepareSendXMLSign(src.configPdfSign, file.FullPath);
+                                        var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
+                                        dataSend = PrepareSendXMLSign(src.configPdfSign, file.FullPath, dataTran.DocType);
 
                                         Console.WriteLine("Send To Sign");
                                         log.InsertLog(pathlog, "Send To Sign");
@@ -85,7 +84,6 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                         fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                                         pathoutbound = file.Outbound;
 
-                                        var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
                                         billingdate = DateTime.Now;
                                         if (dataTran != null)
                                         {
@@ -106,10 +104,16 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                                         Console.WriteLine("Start Export XML file");
                                         log.InsertLog(pathlog, "Start Export XML file");
-                                        ExportXMLAfterSign(doc, pathoutbound, fullpath);
+                                        if (resultXMLSign.resultCode == "000")
+                                        {
+                                            ExportXMLAfterSign(resultXMLSign.fileSigned, pathoutbound, fullpath);
+                                        }
+                                        else
+                                        {
+                                            ExportXMLAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
+                                        }
                                         Console.WriteLine("End Export XML file");
                                         log.InsertLog(pathlog, "End Export XML file");
-
                                         Console.WriteLine("Start Move file");
                                         log.InsertLog(pathlog, "Start Move file");
                                         MoveFile(file.FullPath, file.FileName + fileType, billingdate);
@@ -179,48 +183,17 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        //public bool CheckRunningTime(ConfigXmlSign config)
-        //{
-        //    bool result = false;
-        //    try
-        //    {
-        //        if (config.ConfigXmlsignOneTime != null &&
-        //                !String.IsNullOrEmpty(config.ConfigXmlsignOneTime) &&
-        //                Convert.ToDateTime(config.ConfigXmlsignOneTime) <= DateTime.Now)
-        //        {
-        //            result = true;
-        //        }
-        //        if (config.ConfigXmlsignAnyTime != null &&
-        //            !String.IsNullOrEmpty(config.ConfigXmlsignAnyTime))
-        //        {
-        //            if (config.ConfigXmlsignAnyTime.IndexOf(DateTime.Now.ToString("HH:mm")) >= 0)
-        //            {
-        //                result = true;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            result = true;
-        //        }
-        //        result = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.InsertLog(pathlog, "Exception : " + ex.ToString());
-        //    }
-        //    return result;
-        //}
-
         public APIResponseSignModel SendFileXMLSign(APISendFileXMLSignModel data)
         {
             APIResponseSignModel result = new APIResponseSignModel();
             try
             {
                 var json = JsonSerializer.Serialize(data);
-                //result = signXMLController.SendFilePDFSign(json).Result;
-                result.fileSigned = null;
-                result.resultCode = "000";
-                result.resultDes = "Success";
+                result = signXMLController.SendFileXMLSign(json).Result;
+                //result.fileSigned = null;
+                //result.resultCode = "000";
+                //result.resultDes = "Success";
+                log.InsertLog(pathlog, "Result : " + result.resultDes);
             }
             catch (Exception ex)
             {
@@ -255,7 +228,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 else
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
-                    dataTran.XmlSignDetail = "XML was signed Failed";
+                    dataTran.XmlSignDetail = xmlsign.resultDes;
                     dataTran.XmlSignStatus = "Failed";
                     dataTran.UpdateBy = "Batch";
                     dataTran.UpdateDate = DateTime.Now;
@@ -275,7 +248,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public bool ExportXMLAfterSign(XmlDocument doc, string pathoutbound, string fullpath)
+        public bool ExportXMLAfterSign(string filexml, string pathoutbound, string fullpath)
         {
             bool result = false;
             try
@@ -284,8 +257,11 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 {
                     Directory.CreateDirectory(pathoutbound);
                 }
-                TextWriter filestream = new StreamWriter(fullpath);
-                doc.Save(filestream);
+                byte[] bytes = Convert.FromBase64String(filexml);
+                FileStream stream = new FileStream(fullpath, FileMode.CreateNew);
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write(bytes, 0, bytes.Length);
+                writer.Close();
                 result = true;
             }
             catch (Exception ex)
@@ -354,18 +330,25 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public APISendFileXMLSignModel PrepareSendXMLSign(ConfigXmlSign config, string filepath)
+        public APISendFileXMLSignModel PrepareSendXMLSign(ConfigXmlSign config, string filepath,string documentType)
         {
             APISendFileXMLSignModel result = new APISendFileXMLSignModel();
             try
             {
+                //result.hsmName = "pse";
+                //result.hsmSerial = config.ConfigXmlsignHsmSerial;
+                //result.slotPassword = config.slotPassword;
+                //result.keyAlias = config.keyAlias;
+                //result.certSerial = config.ConfigXmlsignCertificateSerial;
+                result.documentType = documentType;
                 result.hsmName = "pse";
                 result.hsmSerial = "571271:28593";
                 result.slotPassword = "P@ssw0rd1";
                 result.keyAlias = "NEW06391012205001173_200916150834";
                 result.certSerial = "5c6e65dc1b7b9da8";
-                result.documentType = "";
+                //result.documentType = "388";
                 result.fileEncode = logicToolHelper.ConvertFileToEncodeBase64(filepath);
+
             }
             catch (Exception ex)
             {
