@@ -31,6 +31,44 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return task;
         }
 
+        public async Task<APIGetHSMSerialModel> GetHSMSerial(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            APIGetHSMSerialModel response = new APIGetHSMSerialModel();
+
+            var task = await Task.Run(() => PutURI("v1/hsmSerial", httpContent));
+            if (task.IsSuccessStatusCode)
+            {
+                var x = task.Content.ReadAsStringAsync().Result;
+                response = JsonConvert.DeserializeObject<APIGetHSMSerialModel>(x.ToString());
+            }
+            else
+            {
+                var getException = task.Content.ReadAsStringAsync();
+                response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        public async Task<APIGetKeyAliasModel> GetKeyAlias(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            APIGetKeyAliasModel response = new APIGetKeyAliasModel();
+
+            var task = await Task.Run(() => PutURI("v1/hsmSerial", httpContent));
+            if (task.IsSuccessStatusCode)
+            {
+                var x = task.Content.ReadAsStringAsync().Result;
+                response = JsonConvert.DeserializeObject<APIGetKeyAliasModel>(x.ToString());
+            }
+            else
+            {
+                var getException = task.Content.ReadAsStringAsync();
+                response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
         public static async Task<APIResponseSignModel> PostURI(string url, HttpContent c)
         {
             APIResponseSignModel response = new APIResponseSignModel();
@@ -48,9 +86,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
                     HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
 
-                    //var getException = await client.PostAsync(new Uri(apiUrl), c).Result.Content.ReadAsStringAsync();
-
-
                     if (result.IsSuccessStatusCode)
                     {
                         var x = result.Content.ReadAsStringAsync().Result;
@@ -61,6 +96,34 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                         var getException = result.Content.ReadAsStringAsync();
                         response.resultDes = getException.ToString();
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return response;
+        }
+
+        public static async Task<HttpResponseMessage> PutURI(string url, HttpContent c)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiPDFSign"];
+
+                    string apiUrl = baseAdress + url;
+
+                    client.DefaultRequestHeaders.Accept.Clear();
+
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
+
+                    response = result;
                 }
             }
             catch (Exception ex)
