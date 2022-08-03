@@ -49,7 +49,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime? XmlCompressDateTime { get; set; }
         public string? PdfIndexingStatus { get; set; }
         public string? PdfIndexingDetail { get; set; }
-        public string? PdfIndexingDateTime { get; set; }
+        public DateTime? PdfIndexingDateTime { get; set; }
         public string? PdfSignLocation { get; set; }
         public string? XmlSignLocation { get; set; }
         public string? OutputXmlTransactionNo { get; set; }

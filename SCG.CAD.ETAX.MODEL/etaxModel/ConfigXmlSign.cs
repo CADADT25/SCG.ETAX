@@ -19,7 +19,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigXmlsignOneTime { get; set; }
         public string? ConfigXmlsignAnyTime { get; set; }
         public DateTime? ConfigXmlsignNextTime { get; set; }
+        public string? ConfigXmlsignHsmModule { get; set; }
+        public string? ConfigXmlsignHsmSlot { get; set; }
+        public string? ConfigXmlsignHsmPassword { get; set; }
         public string? ConfigXmlsignHsmSerial { get; set; }
+        public string? ConfigXmlsignKeyAlias { get; set; }
         public string? ConfigXmlsignCertificateSerial { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }

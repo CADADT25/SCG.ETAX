@@ -29,7 +29,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     {
                         transactionDescription.PdfIndexingStatus = "Waiting";
                         transactionDescription.PdfIndexingDetail = "Reset Status";
-                        transactionDescription.PdfIndexingDateTime = DateTime.Now.ToString("yyyyMMdd");
+                        transactionDescription.PdfIndexingDateTime = DateTime.Now;
                         transactionDescription.UpdateBy = updateby;
                         transactionDescription.UpdateDate = DateTime.Now;
 
@@ -72,7 +72,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         {
                             transactionDescription.PdfIndexingStatus = "Waiting";
                             transactionDescription.PdfIndexingDetail = "Reset Status";
-                            transactionDescription.PdfIndexingDateTime = DateTime.Now.ToString("yyyyMMdd");
+                            transactionDescription.PdfIndexingDateTime = DateTime.Now;
                             transactionDescription.UpdateBy = updateby;
                             transactionDescription.UpdateDate = DateTime.Now;
                             updatetransactionDescription.Add(transactionDescription);

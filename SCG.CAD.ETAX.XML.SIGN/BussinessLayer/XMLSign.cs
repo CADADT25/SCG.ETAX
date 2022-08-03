@@ -335,10 +335,10 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             APISendFileXMLSignModel result = new APISendFileXMLSignModel();
             try
             {
-                //result.hsmName = "pse";
+                //result.hsmName = config.ConfigXmlsignHsmModule;
                 //result.hsmSerial = config.ConfigXmlsignHsmSerial;
-                //result.slotPassword = config.slotPassword;
-                //result.keyAlias = config.keyAlias;
+                //result.slotPassword = config.ConfigXmlsignHsmPassword;
+                //result.keyAlias = config.ConfigXmlsignKeyAlias;
                 //result.certSerial = config.ConfigXmlsignCertificateSerial;
                 result.documentType = documentType;
                 result.hsmName = "pse";

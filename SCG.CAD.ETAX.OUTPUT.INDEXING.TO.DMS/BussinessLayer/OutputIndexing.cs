@@ -287,7 +287,7 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                     {
                         update.PdfIndexingDetail = data.Massage;
                         update.PdfIndexingStatus = "Successful";
-                        update.PdfIndexingDateTime = DateTime.Now.ToString("yyyyMMdd");
+                        update.PdfIndexingDateTime = DateTime.Now;
                         update.DmsAttachmentFileName = data.FileName;
                         update.DmsAttachmentFilePath = data.Path;
                         if (imageName[2].ToUpper() == "E")
