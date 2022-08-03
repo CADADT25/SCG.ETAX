@@ -33,6 +33,7 @@ namespace SCG.CAD.ETAX.MONITOR
         public Monitor_EMAIL monitorEMAIL;
         public Monitor_OUTPUTINDEXING monitorOUTPUTINDEXING;
         public Monitor_INPUTINDEXING monitorINPUTINDEXING;
+        public ConnectHSM connectHSM;
 
         public MainMenu(List<ConfigGlobal> config)
         {
@@ -156,6 +157,19 @@ namespace SCG.CAD.ETAX.MONITOR
                 }
             }
             return checkrunning;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (CheckMonitorRunning("ConnectHSM"))
+            {
+                connectHSM.Close();
+            }
+            else
+            {
+                connectHSM = new ConnectHSM();
+                connectHSM.Show();
+            }
         }
     }
 }

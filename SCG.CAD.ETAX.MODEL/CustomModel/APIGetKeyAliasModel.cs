@@ -11,7 +11,7 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
         public string totalKeyAlias { get; set; }
         public string resultCode { get; set; }
         public string resultDes { get; set; }
-        public KeyAliasList keyAliasList { get; set; }
+        public List<KeyAliasList> keyAliasList { get; set; }
     }
 
     public class KeyAliasList

@@ -44,7 +44,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             else
             {
-                var getException = task.Content.ReadAsStringAsync();
+                var getException = task.Content.ReadAsStringAsync().Result;
                 response.resultDes = getException.ToString();
             }
             return response;
@@ -55,7 +55,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = await Task.Run(() => PutURI("v1/hsmSerial", httpContent));
+            var task = await Task.Run(() => PutURI("v1/keyAlias", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -63,7 +63,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             else
             {
-                var getException = task.Content.ReadAsStringAsync();
+                var getException = task.Content.ReadAsStringAsync().Result;
                 response.resultDes = getException.ToString();
             }
             return response;
@@ -100,7 +100,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
 
             return response;
@@ -113,7 +113,73 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiPDFSign"];
+                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiSign"];
+
+                    string apiUrl = baseAdress + url;
+
+                    client.DefaultRequestHeaders.Accept.Clear();
+
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage result = await client.PutAsync(new Uri(apiUrl), c);
+
+                    response = result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return response;
+        }
+
+        public async Task<APIGetHSMSerialModel> PutHSMSerialwithAPI(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            APIGetHSMSerialModel response = new APIGetHSMSerialModel();
+
+            var task = await Task.Run(() => PutURIwithAPI("api/ConnectHSM/GetHSMSerial", httpContent));
+            if (task.IsSuccessStatusCode)
+            {
+                var x = task.Content.ReadAsStringAsync().Result;
+                response = JsonConvert.DeserializeObject<APIGetHSMSerialModel>(x.ToString());
+            }
+            else
+            {
+                var getException = task.Content.ReadAsStringAsync().Result;
+                response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        public async Task<APIGetKeyAliasModel> PutKeyAliaswithAPI(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            APIGetKeyAliasModel response = new APIGetKeyAliasModel();
+
+            var task = await Task.Run(() => PutURIwithAPI("api/ConnectHSM/GetKeyAlias", httpContent));
+            if (task.IsSuccessStatusCode)
+            {
+                var x = task.Content.ReadAsStringAsync().Result;
+                response = JsonConvert.DeserializeObject<APIGetKeyAliasModel>(x.ToString());
+            }
+            else
+            {
+                var getException = task.Content.ReadAsStringAsync().Result;
+                response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        public static async Task<HttpResponseMessage> PutURIwithAPI(string url, HttpContent c)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
 
                     string apiUrl = baseAdress + url;
 
@@ -128,7 +194,77 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
 
+            return response;
+        }
+
+        public async Task<APIGetHSMSerialModel> GetHSMSerialwithAPI(string hsmName)
+        {
+            APIGetHSMSerialModel response = new APIGetHSMSerialModel();
+
+            var task = Task.Run(() => GetURIwithAPI("api/ConnectHSM/GetHSMSerial?hsmName=" + hsmName)).GetAwaiter().GetResult();
+            if (!string.IsNullOrEmpty(task))
+            {
+                response = JsonConvert.DeserializeObject<APIGetHSMSerialModel>(task);
+            }
+            else
+            {
+                //var getException = task.Content.ReadAsStringAsync().Result;
+                //response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        public async Task<APIGetKeyAliasModel> GetKeyAliaswithAPI(string hsmName, string hsmSerial)
+        {
+            APIGetKeyAliasModel response = new APIGetKeyAliasModel();
+
+            var task = Task.Run(() => GetURIwithAPI("api/ConnectHSM/GetKeyAlias?hsmName=" + hsmName + "&hsmSerial=" + hsmSerial)).GetAwaiter().GetResult(); ;
+            if (!string.IsNullOrEmpty(task))
+            {
+                response = JsonConvert.DeserializeObject<APIGetKeyAliasModel>(task);
+            }
+            else
+            {
+                //var getException = task.Content.ReadAsStringAsync().Result;
+                //response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        public async Task<string> GetURIwithAPI(string url)
+        {
+            string response = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
+                    string apiUrl = baseAdress + url;
+
+                    client.DefaultRequestHeaders.Accept.Clear();
+
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage result = await client.GetAsync(apiUrl);
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var x = result.Content.ReadAsStringAsync().Result;
+                        response = x.ToString();
+                    }
+                    else
+                    {
+                        var getException = result.Content.ReadAsStringAsync().Result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
             return response;

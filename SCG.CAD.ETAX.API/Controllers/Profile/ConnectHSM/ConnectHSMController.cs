@@ -1,6 +1,8 @@
-﻿using SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM;
 
-namespace SCG.CAD.ETAX.API.Controllers.Profile.ConnectHSM
+namespace SCG.CAD.ETAX.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -13,19 +15,19 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.ConnectHSM
             repo = new ConnectHSMRepository();
         }
 
-        [HttpPut]
+        [HttpGet]
         [Route("GetKeyAlias")]
-        public IActionResult GetKeyAlias(string jsonstring)
+        public IActionResult GetKeyAlias(string hsmName, string hsmSerial)
         {
-            var result = repo.GetKeyAlias(jsonstring).Result;
+            var result = repo.GetKeyAlias(hsmName, hsmSerial).Result;
 
             return Ok(result);
         }
-        [HttpPut]
+        [HttpGet]
         [Route("GetHSMSerial")]
-        public IActionResult GetHSMSerial(string jsonstring)
+        public IActionResult GetHSMSerial(string hsmName)
         {
-            var result = repo.GetHSMSerial(jsonstring).Result;
+            var result = repo.GetHSMSerial(hsmName).Result;
 
             return Ok(result);
         }

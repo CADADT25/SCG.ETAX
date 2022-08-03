@@ -11,7 +11,7 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
         public string totalHsmSerial { get; set; }
         public string resultCode { get; set; }
         public string resultDes { get; set; }
-        public HSMSerialList hsmSerialList { get; set; }
+        public List<HSMSerialList> hsmSerialList { get; set; }
     }
 
     public class HSMSerialList

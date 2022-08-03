@@ -4,7 +4,7 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM
 {
     public interface IConnectHSMRepository
     {
-        Task<APIGetHSMSerialModel> GetHSMSerial(string jsonString);
-        Task<APIGetKeyAliasModel> GetKeyAlias(string jsonString);
+        Task<APIGetHSMSerialModel> GetHSMSerial(string hsmName);
+        Task<APIGetKeyAliasModel> GetKeyAlias(string hsmName, string hsmSerial);
     }
 }
