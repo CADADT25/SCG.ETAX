@@ -43,9 +43,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(61, 33);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 25);
+            this.label1.Size = new System.Drawing.Size(103, 25);
             this.label1.TabIndex = 0;
-            this.label1.Text = "ModuleHSM :";
+            this.label1.Text = "HSM Name";
             // 
             // textBox1
             // 

@@ -67,17 +67,17 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                         Console.WriteLine("billno : " + file.Billno);
                                         log.InsertLog(pathlog, "billno : " + file.Billno);
 
-                                        Console.WriteLine("Prepare PDF");
-                                        log.InsertLog(pathlog, "Prepare PDF");
+                                        Console.WriteLine("Prepare XML");
+                                        log.InsertLog(pathlog, "Prepare XML");
                                         var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
                                         dataSend = PrepareSendXMLSign(src.configPdfSign, file.FullPath, dataTran.DocType);
-
+                                        log.InsertLog(pathlog, dataSend.fileEncode);
                                         Console.WriteLine("Send To Sign");
                                         log.InsertLog(pathlog, "Send To Sign");
                                         resultXMLSign = SendFileXMLSign(dataSend);
 
-                                        Console.WriteLine("Status Sign : " + resultXMLSign.ToString());
-                                        log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.ToString());
+                                        Console.WriteLine("Status Sign : " + resultXMLSign.resultDes.ToString());
+                                        log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.resultDes.ToString());
                                         Console.WriteLine("Update Status in DataBase");
                                         log.InsertLog(pathlog, "Update Status in DataBase");
 
@@ -194,6 +194,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 //result.resultCode = "000";
                 //result.resultDes = "Success";
                 log.InsertLog(pathlog, "Result : " + result.resultDes);
+                log.InsertLog(pathlog, "ResultCode : " + result.resultCode);
             }
             catch (Exception ex)
             {
@@ -229,6 +230,10 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
                     dataTran.XmlSignDetail = xmlsign.resultDes;
+                    if(xmlsign.resultDes.Length > 255)
+                    {
+                        dataTran.XmlSignDetail = (xmlsign.resultDes).Substring(0,254);
+                    }
                     dataTran.XmlSignStatus = "Failed";
                     dataTran.UpdateBy = "Batch";
                     dataTran.UpdateDate = DateTime.Now;

@@ -108,11 +108,11 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                                     Console.WriteLine("ConvertClasstoXMLFormat success");
                                     log.InsertLog(pathlog, "ConvertClasstoXMLFormat success");
 
-                                    Console.WriteLine("Start ValidateSchematron");
-                                    log.InsertLog(pathlog, "Start ValidateSchematron");
-                                    errormessage.AddRange(ValidateSchematron(dataxml));
-                                    Console.WriteLine("End ValidateSchematron");
-                                    log.InsertLog(pathlog, "End ValidateSchematron");
+                                    //Console.WriteLine("Start ValidateSchematron");
+                                    //log.InsertLog(pathlog, "Start ValidateSchematron");
+                                    //errormessage.AddRange(ValidateSchematron(dataxml));
+                                    //Console.WriteLine("End ValidateSchematron");
+                                    //log.InsertLog(pathlog, "End ValidateSchematron");
 
                                     if (errormessage.Count > 0)
                                     {
@@ -365,9 +365,14 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id = "ER3-2560";
                 xmldata.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID = "v2.0";
 
+                string doccodetext = doccode.DocumentDescription ?? "";
+                if (doccodetext.IndexOf('(') > 0){
+                    doccodetext = doccodetext.Substring(0, doccodetext.IndexOf('(') - 1);
+                }
+
                 xmldata.exchangedDocument = new ExchangedDocument();
                 xmldata.exchangedDocument.id = data.BILLING_NO ?? "";
-                xmldata.exchangedDocument.name = doccode.DocumentDescription ?? "";
+                xmldata.exchangedDocument.name = doccodetext;
                 xmldata.exchangedDocument.typeCode = doccode.DocumentCodeRd ?? "";
                 xmldata.exchangedDocument.issueDateTime = data.BILLING_DATE ?? "";
                 xmldata.exchangedDocument.createionDateTime = data.CREATE_DATE_TIME ?? "";
@@ -391,9 +396,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress = new PostalTradeAddress();
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.postcodeCode = data.SELLER_PSTLZ ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.streetName = profile.Road ?? "";
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.cityName = profile.District ?? "";//code
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.citySubDivisionName = profile.SubDistrict ?? "";//code
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID = data.SELLER_LAND1 ?? "";//schemeID="3166-1 alpha-2"
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.cityName = profile.District ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.citySubDivisionName = profile.SubDistrict ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID = data.SELLER_LAND1 ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countrySubDivisionID = profile.Province ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.buildingNumber = profile.Addressnumber ?? "";
 
@@ -401,6 +406,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.name = data.SELLER_NAME ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration = new SpecifiedTaxRegistration();
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.id = data.BUYER_TAXID ?? "" + data.BUYER_BRANCH ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.schemeagencyid = "RD";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.specifiedTaxRegistration.schemeID = "TXID";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress = new PostalTradeAddress();
                 if (data.BUYER_LAND1.ToUpper() != "TH" && String.IsNullOrEmpty(data.BUYER_PSTLZ))
                 {
@@ -413,21 +420,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.line1 = data.BUYER_ADDRESS1 ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID = data.BUYER_LAND1 ?? "";
 
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery = new ApplicableHeaderTradeDelivery();
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty = new ShipToTradeParty();
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress = new PostalTradeAddress();
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.postcodeCode = "";
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.lineThree = item.BUYER_CITY;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.streetName = item.BUYER_SUBDIV;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.cityName = item.BUYER_LAND1;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.citySubDivisionName = item.BUYER_LAND1;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countryID = item.BUYER_PROVINCE;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.countrySubDivisionID = item.BUYER_PROVINCE;
-                //supplyChainTradeTransaction.applicableHeaderTradeDelivery.shipToTradeParty.postalTradeAddress.buildingNumber = item.BUYER_BUILD_NO;
-
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement();
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
-                supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = data.DOC_CURRENCY ?? "";//listID="ISO 4217 3A"
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.invoiceCurrencyCode = data.DOC_CURRENCY ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode.listID = "ISO 4217 3A";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax = new ApplicableTradeTax();
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.typeCode = taxCode.FirstOrDefault(x => x.TaxCodeErp == data.TAX_CODE).TaxCodeRd ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedRate = data.TAX_RATE ?? "";
@@ -450,23 +446,27 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     includedSupplyChainTradeLineItem.specifiedTradeProduct = new SpecifiedTradeProduct();
                     includedSupplyChainTradeLineItem.specifiedTradeProduct.name = data.Item[i].PRODUCT_NAME ?? "";
                     includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote = new InformationNote();
-                    includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote.subject = data.Item[i].PO_NUMBER ?? "";//
+                    includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote.subject = data.Item[i].PO_NUMBER ?? "test";
+                    if (string.IsNullOrEmpty(data.Item[i].PO_NUMBER))
+                    {
+                        includedSupplyChainTradeLineItem.specifiedTradeProduct.informationNote.subject = "test";
+                    }
                     includedSupplyChainTradeLineItem.specifiedLineTradeAgreement = new SpecifiedLineTradeAgreement();
                     includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice = new GrossPriceProductTradePrice();
                     includedSupplyChainTradeLineItem.specifiedLineTradeAgreement.grossPriceProductTradePrice.chargeAmount = data.Item[i].CHARGE_AMOUNT ?? "";
                     includedSupplyChainTradeLineItem.specifiedLineTradeDelivery = new SpecifiedLineTradeDelivery();
-                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity = new BilledQuantity();//format
-                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.unitCode = data.Item[i].QUANTITY ?? "";//format
-                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.billedQuantity = data.Item[i].SALES_UNT ?? "";//format
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity = new BilledQuantity();
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.unitCode = data.Item[i].SALES_UNT ?? "";
+                    includedSupplyChainTradeLineItem.specifiedLineTradeDelivery.billedQuantity.billedQuantity = data.Item[i].QUANTITY ?? "";
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement = new SpecifiedLineTradeSettlement();
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge = new SpecifiedTradeAllowanceCharge();
                     if (Convert.ToDecimal(data.ALLOWANCE_AMOUNT) > 0)
                     {
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "True";
+                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "true";
                     }
                     else
                     {
-                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "False";
+                        includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator = "false";
                     }
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.actualAmount = data.ALLOWANCE_AMOUNT ?? "";
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation = new SpecifiedTradeSettlementLineMonetarySummation();
@@ -476,7 +476,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.currencyID = data.Item[i].CURRENCY ?? "";//format
                     includedSupplyChainTradeLineItem.specifiedLineTradeSettlement.specifiedTradeSettlementLineMonetarySummation.netIncludingTaxesLineTotalAmount.netIncludingTaxesLineTotalAmount = data.Item[i].GRAND_TOTAL_AMOUNT ?? "";//format
                     supplyChainTradeTransaction.includedSupplyChainTradeLineItem.Add(includedSupplyChainTradeLineItem);
-                    //supplyChainTradeTransaction.includedSupplyChainTradeLineItem = includedSupplyChainTradeLineItem;
                 }
 
                 xmldata.supplyChainTradeTransaction = supplyChainTradeTransaction;
