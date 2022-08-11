@@ -9,7 +9,7 @@
 @await Html.PartialAsync("~/Views/transactionDescription/_Content.cshtml")
 
 <script type="text/javascript">
-
+    var _dataExchangeColumnList = null;
      $(document).ready(function () {
 
         $('#tranSearchStatus').select2();
@@ -62,9 +62,11 @@
                 {
                     width: "2%",
                     render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                        return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(row['transactionNo']).html() + '">';}
+                    //return '<input type="checkbox" name="id[]" value="' + row['transactionNo'] + '" onclick="fnGetValueCheckbox(this)">';}
+                    //return '<input type="checkbox" name="id[]" value="' + row['transactionNo'] + '">';}
                 },
-                
+
                 {
                     data: "billingNumber",
                     width: "10%",
@@ -88,12 +90,12 @@
                     width: "5%",
                     visible: false,
                 },
-                
+
                 {
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -101,7 +103,7 @@
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -109,7 +111,7 @@
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -117,7 +119,7 @@
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -125,7 +127,7 @@
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -133,7 +135,7 @@
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -141,7 +143,7 @@
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 }
@@ -294,8 +296,6 @@
         })
     }
 
-  
-
     function fnSearchTransaction(){
 
         var getBillingNo = $('#tranSearchBillingNo').val();
@@ -329,7 +329,7 @@
 
         $('#tbTransactionMain').DataTable({
 
-            
+
 
             "scrollY": true,
             "processing": true, // for show progress bar
@@ -353,7 +353,7 @@
                     render: function (data, type, full, meta){
                     return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
                 },
-                
+
                 {
                     data: "billingNumber",
                     width: "15%",
@@ -370,12 +370,12 @@
                     width: "5%",
                     visible: false,
                 },
-                
+
                 {
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -383,7 +383,7 @@
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -391,7 +391,7 @@
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -399,7 +399,7 @@
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -407,7 +407,7 @@
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -415,7 +415,7 @@
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 },
@@ -423,7 +423,7 @@
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' : 
+                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
                         data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
                     }
                 }
@@ -435,12 +435,26 @@
              },
 
              destroy : true
-            
+
         }).ajax.reload();
 
         //RenderTransaction(JsonString);
 
     }
-
-
+    
+    //function fnGetValueCheckbox(thisObj) {
+    //    var dataExchangeCheckColumnVM = $('#tbTransactionMain').DataTable().row($(thisObj).parents('tr')).data();
+    //    var dataExchangeCheckColumnList = $('#tbTransactionMain').DataTable().rows().data();
+    //    for (var i = 0; i < dataExchangeCheckColumnList.length; i++) {
+    //        if (dataExchangeCheckColumnList[i].FieldCaption !== null) {
+    //            if (dataExchangeCheckColumnList[i].FieldCaption === dataExchangeCheckColumnVM.FieldCaption) {
+    //                dataExchangeCheckColumnList[i].ColumnCheck = thisObj.checked;
+    //            }
+    //        }
+    //    }
+    //    _dataExchangeColumnList = dataExchangeCheckColumnList
+    //    console.log('show checkbox');
+    //    console.log(dataExchangeCheckColumnList);
+    //    console.log(_dataExchangeColumnList);
+    //}
 </script>
