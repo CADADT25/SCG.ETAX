@@ -31,8 +31,6 @@
         $('#ddlUpdateProfileCompanyCertificate').select2();
 
         $("#contentPartial").load("@Url.Action("_Update", "ManagementCompanyProfile")");
-
-
     }
 
 
@@ -285,14 +283,28 @@
         $.unblockUI();
     }
 
-
+    function sleep(num) {
+      let now = new Date();
+      let stop = now.getTime() + num;
+      while(true) { now = new Date();
+    if(now.getTime() >
+    stop) return;
+      }
+    }
 
     // [Begin] Ajax call Controller
 
     function callProfileCompanyGetDetailController(getPK){
-
         updateProfileCompany();
+        
+        sleep(1000);
+        getProfileCompanyGetDetail(getPK);
 
+    }
+
+    function getProfileCompanyGetDetail(getPK){
+        
+        var res = null;
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detail", "ProfileCompany")",
@@ -300,28 +312,34 @@
             dataType: "json",
             success: function (result) {
 
-                data = $.parseJSON(result)
+                res = $.parseJSON(result);
+                console.log(res);
+                document.getElementById("txtUpdateProfileCompanyNo").value = res.CompanyNo;
+                document.getElementById("txtUpdateProfileCompanyCode").value = res.CompanyCode;
+                document.getElementById("txtUpdateProfileCompanyTaxNumber").value = res.TaxNumber;
+                document.getElementById("txtUpdateProfileCompanyNameTh").value = res.CompanyNameTh;
+                document.getElementById("txtUpdateProfileCompanyNameEn").value = res.CompanyNameEn;
+                //$("#txtUpdateProfileCompanyNo").text(data.CompanyNo);
+                //$("#txtUpdateProfileCompanyCode").text(data.CompanyCode);
+                //$("#txtUpdateProfileCompanyTaxNumber").text(data.TaxNumber);
+                //$("#txtUpdateProfileCompanyNameTh").text(data.CompanyNameTh);
+                //$("#txtUpdateProfileCompanyNameEn").text(data.CompanyNameEn);
 
-                document.getElementById('txtUpdateProfileCompanyNo').value = data.CompanyNo;
-                document.getElementById('txtUpdateProfileCompanyCode').value = data.CompanyCode;
-                document.getElementById('txtUpdateProfileCompanyTaxNumber').value = data.TaxNumber;
-                document.getElementById('txtUpdateProfileCompanyNameTh').value = data.CompanyNameTh;
-                document.getElementById('txtUpdateProfileCompanyNameEn').value = data.CompanyNameEn;
-
-                $('#companyCodeStateUpdate').text(data.CompanyCode);
-                fnUpdateDropdownProfileCompanyCertificate(data.CompanyCode);
-
-                $("#ddlUpdateProfileCompanyCertificate").select2("val", data.CertificateProfileNo);
+                $('#companyCodeStateUpdate').text(res.CompanyCode);
+                fnUpdateDropdownProfileCompanyCertificate(res.CompanyCode);
+                sleep(1000);
+                
 
 
-                if(data.IsEbill == 1){
+
+                if(res.IsEbill == 1){
                     document.getElementById("toggleUpdateProfileCompanyEbill").checked = true;
                 }
                 else{
                     document.getElementById("toggleUpdateProfileCompanyEbill").checked = false;
                 }
 
-                if(data.Isactive == 1){
+                if(res.Isactive == 1){
                     document.getElementById("toggleUpdateProfileCompanyIsActive").checked = true;
                 }
                 else{

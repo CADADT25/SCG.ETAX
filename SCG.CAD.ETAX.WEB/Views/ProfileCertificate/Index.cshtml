@@ -46,7 +46,7 @@
         }
 
         var table = $("#tbProfileCertificateMain").DataTable({
-
+            destroy: true,
             "scrollY": true,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
@@ -79,11 +79,15 @@
                     }
                 },
                 {
-                    data: "companyTaxNumber",
+                    data: "certificateHsmserial",
                     width: "20%"
                 },
                 {
-                    data: "companyName",
+                    data: "certificateCertSerial",
+                    width: "20%"
+                },
+                {
+                    data: "certificateKeyAlias",
                     width: "20%"
                 },
                 //{
@@ -106,14 +110,14 @@
                     data: "companyCertificateEndDate",
                     width: "20%"
                 },
-                {
-                    data: "isactive",
-                    width: "10%",
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
-                    }
-                },
+                //{
+                //    data: "isactive",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function (data, type, row) {
+                //        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                //    }
+                //},
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",

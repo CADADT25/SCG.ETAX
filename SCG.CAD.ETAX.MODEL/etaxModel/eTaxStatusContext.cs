@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigXmlSign> ConfigXmlSigns { get; set; } = null!;
+        public virtual DbSet<CertificateMaster> CertificateMasters { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,86 +29,33 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigXmlSign>(entity =>
+            modelBuilder.Entity<CertificateMaster>(entity =>
             {
-                entity.HasKey(e => e.ConfigXmlsignNo)
-                    .HasName("PK_configXmlign");
+                entity.HasNoKey();
 
-                entity.ToTable("configXmlSign");
+                entity.ToTable("CertificateMaster");
 
-                entity.Property(e => e.ConfigXmlsignNo).HasColumnName("configXmlsignNo");
+                entity.Property(e => e.CertificateCertSerial).HasColumnName("certificateCertSerial");
 
-                entity.Property(e => e.ConfigXmlsignAnyTime)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignAnyTime");
+                entity.Property(e => e.CertificateHsmname).HasColumnName("certificateHSMName");
 
-                entity.Property(e => e.ConfigXmlsignCertificateSerial)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignCertificateSerial");
+                entity.Property(e => e.CertificateHsmserial).HasColumnName("certificateHSMSerial");
 
-                entity.Property(e => e.ConfigXmlsignCompanyTax)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignCompanyTax");
+                entity.Property(e => e.CertificateKeyAlias).HasColumnName("certificateKeyAlias");
 
-                entity.Property(e => e.ConfigXmlsignCompanycode)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignCompanycode");
+                entity.Property(e => e.CertificateNo)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("certificateNo");
 
-                entity.Property(e => e.ConfigXmlsignHsmModule)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignHsmModule");
+                entity.Property(e => e.CertificateSlotPassword).HasColumnName("certificateSlotPassword");
 
-                entity.Property(e => e.ConfigXmlsignHsmPassword)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignHsmPassword");
-
-                entity.Property(e => e.ConfigXmlsignHsmSerial)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignHsmSerial");
-
-                entity.Property(e => e.ConfigXmlsignHsmSlot)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignHsmSlot");
-
-                entity.Property(e => e.ConfigXmlsignInputPath)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignInputPath");
-
-                entity.Property(e => e.ConfigXmlsignInputSource)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignInputSource");
-
-                entity.Property(e => e.ConfigXmlsignKeyAlias)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignKeyAlias");
-
-                entity.Property(e => e.ConfigXmlsignNextTime)
+                entity.Property(e => e.CompanyCertificateEndDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("configXmlsignNextTime");
+                    .HasColumnName("companyCertificateEndDate");
 
-                entity.Property(e => e.ConfigXmlsignOneTime)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOneTime");
-
-                entity.Property(e => e.ConfigXmlsignOnlineRecordNumber)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOnlineRecordNumber");
-
-                entity.Property(e => e.ConfigXmlsignOutputConvertPath)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOutputConvertPath");
-
-                entity.Property(e => e.ConfigXmlsignOutputConvertSource)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOutputConvertSource");
-
-                entity.Property(e => e.ConfigXmlsignOutputPath)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOutputPath");
-
-                entity.Property(e => e.ConfigXmlsignOutputSource)
-                    .HasMaxLength(255)
-                    .HasColumnName("configXmlsignOutputSource");
+                entity.Property(e => e.CompanyCertificateStartDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("companyCertificateStartDate");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)

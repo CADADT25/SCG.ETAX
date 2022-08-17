@@ -74,8 +74,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
             List<ProfileCertificate> tran = new List<ProfileCertificate>();
 
-            List<ProfileCompany> listProfileCompany = new List<ProfileCompany>();
-
             try
             {
                 var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCertificate/GetListAll"));
@@ -86,11 +84,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
                     var getComCodes = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
 
-                    listProfileCompany = JsonConvert.DeserializeObject<List<ProfileCompany>>(getComCodes.OUTPUT_DATA.ToString());
-
-                    var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
-
-                    tran = tran.Where(x => x.CompanyTaxNumber == getTaxNo).ToList();
+                    tran = tran.Where(x => x.CertificateCompanyCode == companyCode).ToList();
 
                 }
                 else
@@ -160,10 +154,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                     {
                         strBuilder.AppendLine("" +
                             "CertificateNo," +
-                            "CompanyTaxNumber," +
-                            "CompanyCertificateData," +
-                            "CompanyCertificateSerial," +
-                            "CompanyCertificateKeyAlias," +
+                            "CertificateHsmname," +
+                            "CertificateHsmserial," +
+                            "CertificateCertSerial," +
+                            "CertificateKeyAlias," +
                             "CompanyCertificateStartDate," +
                             "CompanyCertificateEndDate," +
                             "CreateBy," +
@@ -178,10 +172,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                         {
                             strBuilder.AppendLine($"" +
                                 $"{item.CertificateNo}," +
-                                $"{item.CompanyTaxNumber}," +
-                                $"{item.CompanyCertificateData}," +
-                                $"{item.CompanyCertificateSerial}," +
-                                $"{item.CompanyCertificateKeyAlias}," +
+                                $"{item.CertificateHsmname}," +
+                                $"{item.CertificateHsmserial}," +
+                                $"{item.CertificateCertSerial}," +
+                                $"{item.CertificateKeyAlias}," +
                                 $"{item.CompanyCertificateStartDate}," +
                                 $"{item.CompanyCertificateEndDate}," +
                                 $"{item.CreateBy}," +
@@ -235,7 +229,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
                     var getTaxNo = listProfileCompany.Where(x => x.CompanyCode == companyCode).Select(x => x.TaxNumber).FirstOrDefault();
 
-                    tran = tran.Where(x => x.CompanyTaxNumber == getTaxNo && x.Isactive == 1).ToList();
+                    tran = tran.Where(x => x.Isactive == 1).ToList();
 
                     if (tran.Count <= 0)
                     {

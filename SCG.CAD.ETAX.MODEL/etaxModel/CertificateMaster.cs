@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
-    public partial class ProfileCertificate
+    public partial class CertificateMaster
     {
         [Key]
         public int CertificateNo { get; set; }
-        public string? CertificateCompanyCode { get; set; }
         public string? CertificateHsmname { get; set; }
         public string? CertificateHsmserial { get; set; }
         public string? CertificateCertSerial { get; set; }

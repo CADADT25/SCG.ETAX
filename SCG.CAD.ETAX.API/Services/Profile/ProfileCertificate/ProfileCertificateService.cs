@@ -140,11 +140,12 @@
 
                     if (update != null)
                     {
-
-                        update.CompanyTaxNumber = param.CompanyTaxNumber;
-                        update.CompanyCertificateData = param.CompanyCertificateData;
-                        update.CompanyCertificateSerial = param.CompanyCertificateSerial;
-                        update.CompanyCertificateKeyAlias = param.CompanyCertificateKeyAlias;
+                        update.CertificateCompanyCode = param.CertificateCompanyCode;
+                        update.CertificateHsmname = param.CertificateHsmname;
+                        update.CertificateHsmserial = param.CertificateHsmserial;
+                        update.CertificateCertSerial = param.CertificateCertSerial;
+                        update.CertificateKeyAlias = param.CertificateKeyAlias;
+                        update.CertificateSlotPassword = param.CertificateSlotPassword;
                         update.CompanyCertificateStartDate = param.CompanyCertificateStartDate;
                         update.CompanyCertificateEndDate = param.CompanyCertificateEndDate;
                         update.UpdateBy = param.UpdateBy;
