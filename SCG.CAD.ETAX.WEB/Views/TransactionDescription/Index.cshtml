@@ -62,7 +62,7 @@
                 {
                     width: "2%",
                     render: function (data, type, full, meta){
-                        return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(row['transactionNo']).html() + '">';}
+                        return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
                     //return '<input type="checkbox" name="id[]" value="' + row['transactionNo'] + '" onclick="fnGetValueCheckbox(this)">';}
                     //return '<input type="checkbox" name="id[]" value="' + row['transactionNo'] + '">';}
                 },
