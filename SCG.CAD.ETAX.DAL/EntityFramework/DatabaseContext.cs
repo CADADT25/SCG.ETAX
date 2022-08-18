@@ -70,6 +70,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<ConfigControlFunction> configControlFunction { get; set; }
         public DbSet<ConfigControlMenu> configControlMenu { get; set; }
         public DbSet<ProfileUserManagement> profileUserManagement { get; set; }
+        public DbSet<CertificateMaster> certificateMaster { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
