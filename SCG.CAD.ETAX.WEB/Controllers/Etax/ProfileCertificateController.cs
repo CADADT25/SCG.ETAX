@@ -37,7 +37,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
         public async Task<JsonResult> Detail(int id)
         {
             List<ProfileCertificate> tran = new List<ProfileCertificate>();
-
             Response resp = new Response();
 
             var result = "";
@@ -50,7 +49,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 {
 
                     tran = JsonConvert.DeserializeObject<List<ProfileCertificate>>(task.OUTPUT_DATA.ToString());
-
                     result = JsonConvert.SerializeObject(tran[0]);
 
                 }

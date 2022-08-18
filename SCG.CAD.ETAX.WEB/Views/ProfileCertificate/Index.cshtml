@@ -15,9 +15,9 @@
 
         $("#txtInsertProfileCertificateEndDate").flatpickr();
 
-        $("#txtUpdateProfileCertificateStartDate").flatpickr();
+        //$("#txtUpdateProfileCertificateStartDate").flatpickr();
 
-        $("#txtUpdateProfileCertificateEndDate").flatpickr();
+        //$("#txtUpdateProfileCertificateEndDate").flatpickr();
 
 
         var setCompanyCode = $("#companyCodeState").text();
@@ -163,9 +163,7 @@
 
     function fnUpdateCancelProfileCertificate(){
 
-            document.getElementById('txtUpdateProfileCertificatTaxNumber').value = '';
-            document.getElementById('txtUpdateProfileCertificateCompanyName').value = '';
-            document.getElementById('txtUpdateProfileCertificateData').value = '';
+            document.getElementById('txtUpdateProfileCertificatHSMSerial').value = '';
             document.getElementById('txtUpdateProfileCertificateSerial').value = '';
             document.getElementById('txtUpdateProfileCertificateKeyAlias').value = '';
             document.getElementById('txtUpdateProfileCertificateStartDate').value = '';
@@ -297,14 +295,12 @@
             //contentType: 'application/json; charset=utf-8',
             dataType: "json",
             success: function (result) {
-
                 data = $.parseJSON(result)
-                document.getElementById('txtUpdateProfileCertificateNo').value = getPK;
-                document.getElementById('txtUpdateProfileCertificatTaxNumber').value = data.CompanyTaxNumber;
-                document.getElementById('txtUpdateProfileCertificateCompanyName').value = data.CompanyName;
-                document.getElementById('txtUpdateProfileCertificateData').value = data.CompanyCertificateData;
-                document.getElementById('txtUpdateProfileCertificateSerial').value = data.CompanyCertificateSerial;
-                document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CompanyCertificateKeyAlias;
+                console.log(data);
+                document.getElementById('txtUpdateProfileCertificateHSMName').value = data.CertificateHsmname;
+                document.getElementById('txtUpdateProfileCertificatHSMSerial').value = data.CertificateHsmserial;
+                document.getElementById('txtUpdateProfileCertificateSerial').value = data.CertificateCertSerial;
+                document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CertificateKeyAlias;
                 document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CompanyCertificateStartDate;
                 document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CompanyCertificateEndDate;
 
@@ -409,12 +405,10 @@
         var model = new Object();
 
 
-        model.CertificateNo = $('#txtUpdateProfileCertificateNo').val();
-        model.CompanyTaxNumber = $('#txtUpdateProfileCertificatTaxNumber').val();
-        model.CompanyName = $('#txtUpdateProfileCertificateCompanyName').val();
-        model.CompanyCertificateData = $('#txtUpdateProfileCertificateData').val();
-        model.CompanyCertificateSerial = $('#txtUpdateProfileCertificateSerial').val();
-        model.CompanyCertificateKeyAlias = $('#txtUpdateProfileCertificateKeyAlias').val();
+        model.CertificateHSMName = $('#txtUpdateProfileCertificateHSMName').val();
+        model.CertificateHSMSerial = $('#txtUpdateProfileCertificatHSMSerial').val();
+        model.CertificateCertSerial = $('#txtUpdateProfileCertificateSerial').val();
+        model.CertificateKeyAlias = $('#txtUpdateProfileCertificateKeyAlias').val();
         model.CompanyCertificateStartDate = $('#txtUpdateProfileCertificateStartDate').val();
         model.CompanyCertificateEndDate = $('#txtUpdateProfileCertificateEndDate').val();
         model.CreateBy = $("#leftSideEmail").text();
@@ -441,9 +435,7 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateProfileCertificatTaxNumber').value = '';
-                    document.getElementById('txtUpdateProfileCertificateCompanyName').value = '';
-                    document.getElementById('txtUpdateProfileCertificateData').value = '';
+                    document.getElementById('txtUpdateProfileCertificatHSMSerial').value = '';
                     document.getElementById('txtUpdateProfileCertificateSerial').value = '';
                     document.getElementById('txtUpdateProfileCertificateKeyAlias').value = '';
                     document.getElementById('txtUpdateProfileCertificateStartDate').value = '';

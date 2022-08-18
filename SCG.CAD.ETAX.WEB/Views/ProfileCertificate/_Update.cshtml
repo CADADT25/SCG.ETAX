@@ -1,58 +1,44 @@
 ﻿<form class="form form-vertical">
     <div class="row">
-        <div class="col-md-6 col-12" hidden>
+        <div class="col-md-6 col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>No</label>
-                <input disabled type="text" id="txtUpdateProfileCertificateNo" class="form-control">
+                <label><spa class="text-danger">* </spa>HSMName</label>
+                <input disabled type="text" id="txtUpdateProfileCertificateHSMName" class="form-control">
             </div>
         </div>
 
         <div class="col-md-6 col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>TaxNumber</label>
-                <input disabled type="text" id="txtUpdateProfileCertificatTaxNumber" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                <label><spa class="text-danger">* </spa>HSMSerial</label>
+                <input disabled type="text" id="txtUpdateProfileCertificatHSMSerial" class="form-control">
             </div>
         </div>
 
         <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>Company Name</label>
-                <input disabled type="text" id="txtUpdateProfileCertificateCompanyName" onkeyup="validateUpdateProfileCertificate();" class="form-control">
+                <label><spa class="text-danger">* </spa>CertificateSerial</label>
+                <input disabled type="text" id="txtUpdateProfileCertificateSerial" class="form-control">
             </div>
         </div>
 
         <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>Data</label>
-                <textarea style="height:50px" required id="txtUpdateProfileCertificateData" onkeyup="validateUpdateProfileCertificate();" class="form-control"></textarea>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>Serial</label>
-                <textarea style="height:50px" required type="text" id="txtUpdateProfileCertificateSerial" onkeyup="validateUpdateProfileCertificate();" class="form-control"></textarea>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="form-group">
-                <label><spa class="text-danger">* </spa>Key Alias</label>
-                <textarea style="height:50px" required type="text" id="txtUpdateProfileCertificateKeyAlias" onkeyup="validateUpdateProfileCertificate();" class="form-control"></textarea>
+                <label><spa class="text-danger">* </spa>KeyAlias</label>
+                <input disabled type="text" id="txtUpdateProfileCertificateKeyAlias" class="form-control">
             </div>
         </div>
 
         <div class="col-md-6 col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>Start Date</label>
-                <input type="text" id="txtUpdateProfileCertificateStartDate" onkeyup="validateUpdateProfileCertificate();" class="form-control flatpickr-date-time" placeholder="YYYY-MM-DD HH:MM">
+                <input disabled type="text" id="txtUpdateProfileCertificateStartDate" class="form-control">
             </div>
         </div>
 
         <div class="col-md-6 col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>End Date</label>
-                <input type="text" id="txtUpdateProfileCertificateEndDate" onkeyup="validateUpdateProfileCertificate();" class="form-control flatpickr-date-time" placeholder="YYYY-MM-DD HH:MM">
+                <input disabled type="text" id="txtUpdateProfileCertificateEndDate" class="form-control">
             </div>
         </div>
 
