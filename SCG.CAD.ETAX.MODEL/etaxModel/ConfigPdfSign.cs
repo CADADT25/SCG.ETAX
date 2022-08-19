@@ -29,6 +29,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigPdfsignHsmPassword { get; set; }
         public string? ConfigPdfsignHsmSerial { get; set; }
         public string? ConfigPdfsignKeyAlias { get; set; }
+        public string? ConfigPdfsignCertificateSerial { get; set; }
         public string? ConfigPdfsignVisibleDs { get; set; }
         public string? ConfigPdfsignFontName { get; set; }
         public string? ConfigPdfsignFontSize { get; set; }

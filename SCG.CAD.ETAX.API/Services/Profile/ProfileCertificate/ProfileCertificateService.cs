@@ -72,11 +72,47 @@
             {
                 using (_dbContext)
                 {
-                    param.CreateDate = dtNow;
-                    param.UpdateDate = dtNow;
+                    var datacer = _dbContext.profileCertificate.Where(x => x.CertificateCompanyCode == param.CertificateCompanyCode).ToList();
 
-                    _dbContext.profileCertificate.Add(param);
-                    _dbContext.SaveChanges();
+                    if (datacer.FirstOrDefault(x => x.CertificateCertSerial == param.CertificateCertSerial) == null)
+                    {
+                        var datainsert = _dbContext.certificateMaster.FirstOrDefault(x => x.CertificateCertSerial == param.CertificateCertSerial);
+
+                        if (datainsert != null)
+                        {
+                            param.CertificateHsmname = datainsert.CertificateHsmname;
+                            param.CertificateHsmserial = datainsert.CertificateHsmserial;
+                            param.CertificateCertSerial = datainsert.CertificateCertSerial;
+                            param.CertificateKeyAlias = datainsert.CertificateKeyAlias;
+                            param.CertificateSlotPassword = datainsert.CertificateSlotPassword;
+                            param.CompanyCertificateStartDate = datainsert.CompanyCertificateStartDate;
+                            param.CompanyCertificateEndDate = datainsert.CompanyCertificateEndDate;
+
+                            param.CreateDate = dtNow;
+                            param.UpdateDate = dtNow;
+
+                            _dbContext.profileCertificate.Add(param);
+                            _dbContext.SaveChanges();
+
+                            if (param.Isactive == 1)
+                            {
+                                foreach(var item in datacer)
+                                {
+                                    item.Isactive = 0;
+                                    //_dbContext.profileCertificate.Add(item);
+                                    _dbContext.SaveChanges();
+                                }
+
+                                var updateprofileCompany = _dbContext.profileCompany.FirstOrDefault(x => x.CompanyCode == param.CertificateCompanyCode);
+                                updateprofileCompany.CertificateProfileNo = param.CertificateNo;
+                                _dbContext.SaveChanges();
+
+                                UpdateConfigXMLSign(param.CertificateCompanyCode, datainsert);
+                                UpdateConfigPDFSign(param.CertificateCompanyCode, datainsert);
+                            }
+
+                        }
+                    }
 
 
                     resp.STATUS = true;
@@ -127,8 +163,6 @@
             return resp;
         }
 
-
-
         public Response UPDATE(ProfileCertificate param)
         {
             Response resp = new Response();
@@ -153,6 +187,29 @@
                         update.Isactive = param.Isactive;
 
                         _dbContext.SaveChanges();
+
+                        if (param.Isactive == 1)
+                        {
+                            var datacer = _dbContext.profileCertificate.Where(x => x.CertificateCompanyCode == param.CertificateCompanyCode).ToList();
+                            datacer = datacer.Where(x => x.CertificateNo != param.CertificateNo).ToList();
+                            if(datacer.Count > 0)
+                            {
+                                foreach (var item in datacer)
+                                {
+                                    item.Isactive = 0;
+                                    _dbContext.SaveChanges();
+                                }
+                            }
+
+                            var updateprofileCompany = _dbContext.profileCompany.FirstOrDefault(x => x.CompanyCode == param.CertificateCompanyCode);
+                            updateprofileCompany.CertificateProfileNo = param.CertificateNo;
+                            _dbContext.SaveChanges();
+
+                            var datainsert = _dbContext.certificateMaster.FirstOrDefault(x=> x.CertificateCertSerial == update.CertificateCertSerial);
+                            UpdateConfigXMLSign(param.CertificateCompanyCode, datainsert);
+                            UpdateConfigPDFSign(param.CertificateCompanyCode, datainsert);
+                        }
+
 
                         resp.STATUS = true;
                         resp.MESSAGE = "Updated Success.";
@@ -201,6 +258,72 @@
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UpdateConfigXMLSign(string companycode, CertificateMaster param)
+        {
+            Response resp = new Response();
+            ConfigXmlSign dataupdate = new ConfigXmlSign();
+            try
+            {
+                using (_dbContext)
+                {
+                    var dataconfig = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignCompanycode == companycode).ToList();
+                    if(dataconfig.Count > 0)
+                    {
+                        foreach (var item in dataconfig)
+                        {
+                            dataupdate = item;
+                            dataupdate.ConfigXmlsignHsmModule = param.CertificateHsmname;
+                            dataupdate.ConfigXmlsignHsmSerial = param.CertificateHsmserial;
+                            dataupdate.ConfigXmlsignHsmPassword = param.CertificateSlotPassword;
+                            dataupdate.ConfigXmlsignKeyAlias = param.CertificateKeyAlias;
+                            dataupdate.ConfigXmlsignCertificateSerial = param.CertificateCertSerial;
+                            _dbContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        private Response UpdateConfigPDFSign(string companycode, CertificateMaster param)
+        {
+            Response resp = new Response();
+            ConfigPdfSign dataupdate = new ConfigPdfSign();
+            try
+            {
+                using (_dbContext)
+                {
+                    var dataconfig = _dbContext.configPdfSign.Where(x => x.ConfigPdfsignCompanyCode == companycode).ToList();
+                    if (dataconfig.Count > 0)
+                    {
+                        foreach (var item in dataconfig)
+                        {
+                            dataupdate = item;
+                            dataupdate.ConfigPdfsignHsmModule = param.CertificateHsmname;
+                            dataupdate.ConfigPdfsignHsmSerial = param.CertificateHsmserial;
+                            dataupdate.ConfigPdfsignHsmPassword = param.CertificateSlotPassword;
+                            dataupdate.ConfigPdfsignKeyAlias = param.CertificateKeyAlias;
+                            dataupdate.ConfigPdfsignCertificateSerial = param.CertificateCertSerial;
+                            _dbContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

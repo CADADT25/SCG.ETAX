@@ -70,10 +70,24 @@ namespace SCG.CAD.ETAX.API.Services
         public Response INSERT(ConfigXmlSign param)
         {
             Response resp = new Response();
+            ProfileCertificate dataCertificate = new ProfileCertificate();
             try
             {
                 using (_dbContext)
                 {
+                    var profilecompany = _dbContext.profileCompany.FirstOrDefault(x => x.CompanyCode == param.ConfigXmlsignCompanycode);
+                    if (profilecompany != null)
+                    {
+                        dataCertificate = _dbContext.profileCertificate.FirstOrDefault(x => x.CertificateNo == profilecompany.CertificateProfileNo);
+                    }
+                    if (dataCertificate != null)
+                    {
+                        param.ConfigXmlsignHsmModule = dataCertificate.CertificateHsmname;
+                        param.ConfigXmlsignHsmSerial = dataCertificate.CertificateHsmserial;
+                        param.ConfigXmlsignHsmPassword = dataCertificate.CertificateSlotPassword;
+                        param.ConfigXmlsignKeyAlias = dataCertificate.CertificateKeyAlias;
+                        param.ConfigXmlsignCertificateSerial = dataCertificate.CertificateCertSerial;
+                    }
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -174,8 +188,6 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
-
-
 
         public Response UPDATE_ONETIME(ConfigXmlSign param)
         {
@@ -361,7 +373,6 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
-
         public Response DELETE_ONETIME(DeleteOnetime param)
         {
             Response resp = new Response();
@@ -510,7 +521,6 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
-
 
     }
 }

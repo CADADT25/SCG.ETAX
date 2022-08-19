@@ -11,14 +11,12 @@
 
      $(document).ready(function () {
 
-        $("#txtInsertProfileCertificateStartDate").flatpickr();
-
-        $("#txtInsertProfileCertificateEndDate").flatpickr();
 
         //$("#txtUpdateProfileCertificateStartDate").flatpickr();
 
         //$("#txtUpdateProfileCertificateEndDate").flatpickr();
-
+        
+        $('#ddlInsertProfileCertificatSerial').select2();
 
         var setCompanyCode = $("#companyCodeState").text();
 
@@ -149,11 +147,7 @@
 
     function fnInsertCancelProfileCertificate(){
 
-            document.getElementById('txtInsertProfileCertificatTaxNumber').value = '';
-            document.getElementById('txtInsertProfileCertificateCompanyName').value = '';
-            document.getElementById('txtInsertProfileCertificateData').value = '';
-            document.getElementById('txtInsertProfileCertificateSerial').value = '';
-            document.getElementById('txtInsertProfileCertificateKeyAlias').value = '';
+            document.getElementById('ddlInsertProfileCertificatSerial').value = '';
             document.getElementById('txtInsertProfileCertificateStartDate').value = '';
             document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 
@@ -171,48 +165,103 @@
 
             $("#modalUpdateProfileCertificate").modal('hide');
     }
-
+    
+    function sleep(num) {
+      let now = new Date();
+      let stop = now.getTime() + num;
+      while(true) { now = new Date();
+    if(now.getTime() >
+    stop) return;
+      }
+    }
     function callModalInsertProfileCertificate(){
-
-
-        var setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
-
-        if(setTaxNumber == null || setTaxNumber == ''){
-            setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
-
-            if(setTaxNumber == null || setTaxNumber == ''){
-                setTaxNumber = $("#txtInsertProfileCompanyTaxNumber").val();
-            }   
-        }
-
-        var setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
-
-        if(setCompanyName == null || setCompanyName == ''){
-            setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
-
-            if(setCompanyName == null || setCompanyName == ''){
-                setCompanyName = $("#txtInsertProfileCompanyNameTh").val();
-            }   
-        }
-
-
-        document.getElementById('txtInsertProfileCertificatTaxNumber').value = setTaxNumber;
-        document.getElementById('txtInsertProfileCertificateCompanyName').value = setCompanyName;
         
+        $('#ddlInsertProfileCertificatSerial').select2();
+        $("#ddlUpdateProfileCompanyCertificate").empty();
         $("#modalCreateProfileCertificate").modal('show');
+        
+        sleep(1000);
+        $.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
+            $.each(data.data, function (i, slaveValue) {
+            console.log(slaveValue);
+                $('select#ddlInsertProfileCertificatSerial').append(
+                $('<option></option>').val(slaveValue.certificateCertSerial).html(
+                 slaveValue.certificateCertSerial)
+                );
+            });
+
+            //$("#ddlInsertProfileCertificatSerial").trigger('change');
+        })
+        //var setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+        //if(setTaxNumber == null || setTaxNumber == ''){
+        //    setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
+
+        //    if(setTaxNumber == null || setTaxNumber == ''){
+        //        setTaxNumber = $("#txtInsertProfileCompanyTaxNumber").val();
+        //    }   
+        //}
+
+        //var setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+        //if(setCompanyName == null || setCompanyName == ''){
+        //    setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
+
+        //    if(setCompanyName == null || setCompanyName == ''){
+        //        setCompanyName = $("#txtInsertProfileCompanyNameTh").val();
+        //    }   
+        //}
+
+
+        //document.getElementById('txtInsertProfileCertificatTaxNumber').value = setTaxNumber;
+        //document.getElementById('txtInsertProfileCertificateCompanyName').value = setCompanyName;
+
+        //$.ajax({
+        //    type: "GET",
+        //    url: "Url.Action("List", "CertificateMaster")",
+        //    //data: { id : getPK },
+        //    //contentType: 'application/json; charset=utf-8',
+        //    dataType: "json",
+        //    success: function (result) {
+        //        data = $.parseJSON(result)
+        //        console.log('Mark');
+        //        console.log(data);
+
+        //        $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.CertificateCertSerial,
+        //                text: data.CertificateCertSerial
+        //            }).html(data.CertificateCertSerial).appendTo("#ddlInsertProfileCertificatSerial");
+        //        });
+
+        //        //document.getElementById('txtUpdateProfileCertificateHSMName').value = data.CertificateHsmname;
+        //        //document.getElementById('txtUpdateProfileCertificatHSMSerial').value = data.CertificateHsmserial;
+        //        //document.getElementById('txtUpdateProfileCertificateSerial').value = data.CertificateCertSerial;
+        //        //document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CertificateKeyAlias;
+        //        //document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CompanyCertificateStartDate;
+        //        //document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CompanyCertificateEndDate;
+
+
+        //        //if(data.Isactive == 1){
+        //        //    document.getElementById("toggleUpdateProfileCertificate").checked = true;
+        //        //}
+        //        //else{
+        //        //    document.getElementById("toggleUpdateProfileCertificate").checked = false;
+        //        //}
+
+        //        $("#modalUpdateProfileCertificate").modal('show');
+
+        //    }
+        //});
+        
+        //$("#modalCreateProfileCertificate").modal('show');
 
     }
 
     function fnInsertProfileCertificate(){
 
-        if (    $('#txtInsertProfileCertificatTaxNumber').val() != '' &&
-                $('#txtInsertProfileCertificateCompanyName').val() != '' &&
-                $('#txtInsertProfileCertificateData').val() != '' &&
-                $('#txtInsertProfileCertificateSerial').val() != '' &&
-                $('#txtInsertProfileCertificateKeyAlias').val() != '' &&
-                $('#txtInsertProfileCertificateStartDate').val() != '' &&
-                $('#txtInsertProfileCertificateEndDate').val() != ''
-            )
+        if ($('#ddlInsertProfileCertificatSerial').val() != '')
         {
             callProfileCertificateInsertController();
         }
@@ -330,14 +379,8 @@
         }
 
         var model = new Object();
-
-        model.CompanyTaxNumber = $('#txtInsertProfileCertificatTaxNumber').val();
-        model.CompanyName = $('#txtInsertProfileCertificateCompanyName').val();
-        model.CompanyCertificateData = $('#txtInsertProfileCertificateData').val();
-        model.CompanyCertificateSerial = $('#txtInsertProfileCertificateSerial').val();
-        model.CompanyCertificateKeyAlias = $('#txtInsertProfileCertificateKeyAlias').val();
-        model.CompanyCertificateStartDate = $('#txtInsertProfileCertificateStartDate').val();
-        model.CompanyCertificateEndDate = $('#txtInsertProfileCertificateEndDate').val();
+        model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        model.CertificateCertSerial = $('#ddlInsertProfileCertificatSerial').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -363,11 +406,7 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtInsertProfileCertificatTaxNumber').value = '';
-                    document.getElementById('txtInsertProfileCertificateCompanyName').value = '';
-                    document.getElementById('txtInsertProfileCertificateData').value = '';
-                    document.getElementById('txtInsertProfileCertificateSerial').value = '';
-                    document.getElementById('txtInsertProfileCertificateKeyAlias').value = '';
+                    document.getElementById('ddlInsertProfileCertificatSerial').value = '';
                     document.getElementById('txtInsertProfileCertificateStartDate').value = '';
                     document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 

@@ -70,10 +70,21 @@ namespace SCG.CAD.ETAX.API.Services
         public Response INSERT(ConfigPdfSign param)
         {
             Response resp = new Response();
+            ProfileCertificate dataCertificate = new ProfileCertificate();
             try
             {
                 using (_dbContext)
                 {
+                    var profilecompany = _dbContext.profileCompany.FirstOrDefault(x => x.CompanyCode == param.ConfigPdfsignCompanyCode);
+                    if (profilecompany != null)
+                    {
+                        dataCertificate = _dbContext.profileCertificate.FirstOrDefault(x => x.CertificateNo == profilecompany.CertificateProfileNo);
+                    }
+                    param.ConfigPdfsignHsmModule = dataCertificate.CertificateHsmname;
+                    param.ConfigPdfsignHsmSerial = dataCertificate.CertificateHsmserial;
+                    param.ConfigPdfsignHsmPassword = dataCertificate.CertificateSlotPassword;
+                    param.ConfigPdfsignKeyAlias = dataCertificate.CertificateKeyAlias;
+                    param.ConfigPdfsignCertificateSerial = dataCertificate.CertificateCertSerial;
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -515,7 +526,6 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
-
 
     }
 }

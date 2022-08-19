@@ -50,13 +50,13 @@
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.dataSourceNo,
+                        value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignInputSource");
 
                 $('<option>',
                     {
-                        value: data.dataSourceNo,
+                        value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignOutputSource");
 
@@ -147,7 +147,7 @@
             "columns": [
 
                 {
-                    data: "ConfigPdfSignNo",
+                    data: "configPdfSignNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -385,7 +385,8 @@
         }
 
         var model = new Object();
-
+        
+        model.configPdfsignCompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CustomerCode = $('#txtInsertConfigPdfSignCustomerCode').val();
         model.ConfigPdfSignInputSource = $('#ddlInsertConfigPdfSignInputSource').val();
         model.ConfigPdfSignInputPath = $('#txtInsertConfigPdfSignInputPath').val();
