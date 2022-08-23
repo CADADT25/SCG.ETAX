@@ -80,13 +80,14 @@
 
                         if (datainsert != null)
                         {
+                            param.CertificateName = datainsert.CertificateName;
                             param.CertificateHsmname = datainsert.CertificateHsmname;
                             param.CertificateHsmserial = datainsert.CertificateHsmserial;
                             param.CertificateCertSerial = datainsert.CertificateCertSerial;
                             param.CertificateKeyAlias = datainsert.CertificateKeyAlias;
                             param.CertificateSlotPassword = datainsert.CertificateSlotPassword;
-                            param.CompanyCertificateStartDate = datainsert.CompanyCertificateStartDate;
-                            param.CompanyCertificateEndDate = datainsert.CompanyCertificateEndDate;
+                            param.CertificateStartDate = datainsert.CertificateStartDate;
+                            param.CertificateEndDate = datainsert.CertificateEndDate;
 
                             param.CreateDate = dtNow;
                             param.UpdateDate = dtNow;
@@ -180,8 +181,8 @@
                         update.CertificateCertSerial = param.CertificateCertSerial;
                         update.CertificateKeyAlias = param.CertificateKeyAlias;
                         update.CertificateSlotPassword = param.CertificateSlotPassword;
-                        update.CompanyCertificateStartDate = param.CompanyCertificateStartDate;
-                        update.CompanyCertificateEndDate = param.CompanyCertificateEndDate;
+                        update.CertificateStartDate = param.CertificateStartDate;
+                        update.CertificateEndDate = param.CertificateEndDate;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
