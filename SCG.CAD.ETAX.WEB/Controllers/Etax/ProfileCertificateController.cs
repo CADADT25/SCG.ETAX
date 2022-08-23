@@ -174,8 +174,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                                 $"{item.CertificateHsmserial}," +
                                 $"{item.CertificateCertSerial}," +
                                 $"{item.CertificateKeyAlias}," +
-                                $"{item.CompanyCertificateStartDate}," +
-                                $"{item.CompanyCertificateEndDate}," +
+                                $"{item.CertificateStartDate}," +
+                                $"{item.CertificateEndDate}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +

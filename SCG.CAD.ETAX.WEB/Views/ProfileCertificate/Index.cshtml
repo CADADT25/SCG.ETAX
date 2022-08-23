@@ -77,15 +77,11 @@
                     }
                 },
                 {
-                    data: "certificateHsmserial",
+                    data: "certificateName",
                     width: "20%"
                 },
                 {
                     data: "certificateCertSerial",
-                    width: "20%"
-                },
-                {
-                    data: "certificateKeyAlias",
                     width: "20%"
                 },
                 //{
@@ -105,7 +101,7 @@
                 //    width: "20%"
                 //},
                 {
-                    data: "companyCertificateEndDate",
+                    data: "certificateEndDate",
                     width: "20%"
                 },
                 //{
@@ -350,8 +346,8 @@
                 document.getElementById('txtUpdateProfileCertificatHSMSerial').value = data.CertificateHsmserial;
                 document.getElementById('txtUpdateProfileCertificateSerial').value = data.CertificateCertSerial;
                 document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CertificateKeyAlias;
-                document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CompanyCertificateStartDate;
-                document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CompanyCertificateEndDate;
+                document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CertificateStartDate;
+                document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CertificateEndDate;
 
 
                 if(data.Isactive == 1){
@@ -504,8 +500,8 @@
         model.CompanyCertificateData = '';
         model.CompanyCertificateSerial = '';
         model.CompanyCertificateKeyAlias = '';
-        model.CompanyCertificateStartDate = '';
-        model.CompanyCertificateEndDate = '';
+        model.CertificateStartDate = '';
+        model.CertificateEndDate = '';
 
 
         model.CreateBy = $("#leftSideEmail").text();
