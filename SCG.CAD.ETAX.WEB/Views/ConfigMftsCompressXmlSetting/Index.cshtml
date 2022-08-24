@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-
+        console.log('mark...');
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
@@ -71,16 +71,12 @@
 
           if(value == 'FOLDER'){
 
-            $('#txtInsertConfigMftsCompressXmlSettingFolder').prop('disabled', false)
-
             $('#txtInsertConfigMftsCompressXmlSettingHost').prop('disabled', true)
             $('#txtInsertConfigMftsCompressXmlSettingPort').prop('disabled', true)
             $('#txtInsertConfigMftsCompressXmlSettingUsername').prop('disabled', true)
             $('#txtInsertConfigMftsCompressXmlSettingPassword').prop('disabled', true)
 
           }else{
-
-            $('#txtInsertConfigMftsCompressXmlSettingFolder').prop('disabled', true)
 
             $('#txtInsertConfigMftsCompressXmlSettingHost').prop('disabled', false)
             $('#txtInsertConfigMftsCompressXmlSettingPort').prop('disabled', false)
@@ -198,7 +194,7 @@
 
         document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = setCompanyCode;
 
-        //fnDropdownConfigMftsCompressXmlSettingDataSource();
+        fnDropdownConfigMftsCompressXmlSettingDataSource();
 
         $("#modalInsertConfigMftsCompressXmlSetting").modal('show');
     }
@@ -217,6 +213,7 @@
 
     function fnUpdateConfigMftsCompressXmlSetting(){
         if ($('#txtUpdateConfigMftsCompressXmlSettingCompanyCode').val() != '' && $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val() != '') {
+            
             callConfigMftsCompressXmlSettingUpdateController();
         }
         else {
@@ -233,7 +230,8 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
+            
+            fnDropdownConfigMftsCompressXmlSettingDataSource();
             callConfigMftsCompressXmlSettingGetDetailController(getPK);
         });
     }
@@ -291,13 +289,15 @@
 
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingNo').value = data.ConfigMftsCompressXmlSettingNo;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCode').value = data.ConfigMftsCompressXmlSettingCompanyCode;
-                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingEmail;
-                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = data.ConfigMftsCompressXmlSettingHost;
-                document.getElementById('txtUpdateConfigMftsCompressXmlSettingFolder').value = data.ConfigMftsCompressXmlSettingPort;
-                document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = data.ConfigMftsCompressXmlSettingUsername;
-                document.getElementById('txtUpdateConfigMftsCompressXmlSettingPort').value = data.ConfigMftsCompressXmlSettingPassword;
-                document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = data.ConfigMftsCompressXmlSettingApiKey;
-                document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCodePassword').value = data.ConfigMftsCompressXmlSettingApiKey;
+                //document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingSourceName;
+                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingSourceName;
+                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = data.ConfigMftsCompressXmlSettingCompressType;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingInputFolder').value = data.ConfigMftsCompressXmlSettingInputFolder;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingOutputFolder').value = data.ConfigMftsCompressXmlSettingOutputFolder;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = data.ConfigMftsCompressXmlSettingHost;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingPort').value = data.ConfigMftsCompressXmlSettingPort;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = data.ConfigMftsCompressXmlSettingUsername;
+                document.getElementById('txtUpdateConfigMftsCompressXmlSettingPassword').value = data.ConfigMftsCompressXmlSettingPassword;
 
 
                 if(data.Isactive == 1){
@@ -330,7 +330,8 @@
         model.configMftsCompressXmlSettingCompanyCode = $('#txtInsertConfigMftsCompressXmlSettingCompanyCode').val();
         model.configMftsCompressXmlSettingSourceName = $('#ddlInsertConfigMftsCompressXmlSettingDataSource').val();
         model.configMftsCompressXmlSettingCompressType = $('#ddlInsertConfigMftsCompressXmlSettingCompressType').val();
-        model.configMftsCompressXmlSettingOutputFolder = $('#txtInsertConfigMftsCompressXmlSettingFolder').val();
+        model.configMftsCompressXmlSettingInputFolder = $('#txtInsertConfigMftsCompressXmlSettingInputFolder').val();
+        model.configMftsCompressXmlSettingOutputFolder = $('#txtInsertConfigMftsCompressXmlSettingOutputFolder').val();
         model.configMftsCompressXmlSettingHost = $('#txtInsertConfigMftsCompressXmlSettingHost').val();
         model.configMftsCompressXmlSettingPort = $('#txtInsertConfigMftsCompressXmlSettingPort').val();
         model.configMftsCompressXmlSettingUsername = $('#txtInsertConfigMftsCompressXmlSettingUsername').val();
@@ -362,7 +363,8 @@
                     document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = '';
                     document.getElementById('ddlInsertConfigMftsCompressXmlSettingDataSource').value = '';
                     document.getElementById('ddlInsertConfigMftsCompressXmlSettingCompressType').value = '';
-                    document.getElementById('txtInsertConfigMftsCompressXmlSettingFolder').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingInputFolder').value = '';
+                    document.getElementById('txtInsertConfigMftsCompressXmlSettingOutputFolder').value = '';
                     document.getElementById('txtInsertConfigMftsCompressXmlSettingHost').value = '';
                     document.getElementById('txtInsertConfigMftsCompressXmlSettingPort').value = '';
                     document.getElementById('txtInsertConfigMftsCompressXmlSettingUsername').value = '';
@@ -397,7 +399,8 @@
         model.configMftsCompressXmlSettingCompanyCode = $('#txtUpdateConfigMftsCompressXmlSettingCompanyCode').val();
         model.configMftsCompressXmlSettingSourceName = $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val();
         model.configMftsCompressXmlSettingCompressType = $('#ddlUpdateConfigMftsCompressXmlSettingCompressType').val();
-        model.configMftsCompressXmlSettingOutputFolder = $('#txtUpdateConfigMftsCompressXmlSettingFolder').val();
+        model.configMftsCompressXmlSettingInputFolder = $('#txtUpdateConfigMftsCompressXmlSettingInputFolder').val();
+        model.configMftsCompressXmlSettingOutputFolder = $('#txtUpdateConfigMftsCompressXmlSettingOutputFolder').val();
         model.configMftsCompressXmlSettingHost = $('#txtUpdateConfigMftsCompressXmlSettingHost').val();
         model.configMftsCompressXmlSettingPort = $('#txtUpdateConfigMftsCompressXmlSettingPort').val();
         model.configMftsCompressXmlSettingUsername = $('#txtUpdateConfigMftsCompressXmlSettingUsername').val();
@@ -429,7 +432,8 @@
                     document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCode').value = '';
                     document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = '';
                     document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = '';
-                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingFolder').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingInputFolder').value = '';
+                    document.getElementById('txtUpdateConfigMftsCompressXmlSettingOutputFolder').value = '';
                     document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = '';
                     document.getElementById('txtUpdateConfigMftsCompressXmlSettingPort').value = '';
                     document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = '';
@@ -455,12 +459,12 @@
 
         model.configMftsCompressXmlSettingCompanyCode = '';
         model.configMftsCompressXmlSettingSourceName = '';
-        model.configMftsCompressXmlSettingCompressType '';
-        model.configMftsCompressXmlSettingOutputFolder =  '';
-        model.configMftsCompressXmlSettingHost =  '';
-        model.configMftsCompressXmlSettingPort =  '';
-        model.configMftsCompressXmlSettingUsername =  '';
-        model.configMftsCompressXmlSettingPassword =  '';
+        model.configMftsCompressXmlSettingCompressType = '';
+        model.configMftsCompressXmlSettingOutputFolder = '';
+        model.configMftsCompressXmlSettingHost = '';
+        model.configMftsCompressXmlSettingPort = '';
+        model.configMftsCompressXmlSettingUsername = '';
+        model.configMftsCompressXmlSettingPassword = '';
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();

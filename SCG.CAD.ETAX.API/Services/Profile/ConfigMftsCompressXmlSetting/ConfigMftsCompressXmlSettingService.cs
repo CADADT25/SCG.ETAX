@@ -109,6 +109,7 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigMftsCompressXmlSettingCompanyCode = param.ConfigMftsCompressXmlSettingCompanyCode;
                         update.ConfigMftsCompressXmlSettingSourceName = param.ConfigMftsCompressXmlSettingSourceName;
                         update.ConfigMftsCompressXmlSettingCompressType = param.ConfigMftsCompressXmlSettingCompressType;
+                        update.ConfigMftsCompressXmlSettingInputFolder = param.ConfigMftsCompressXmlSettingInputFolder;
                         update.ConfigMftsCompressXmlSettingOutputFolder = param.ConfigMftsCompressXmlSettingOutputFolder;
                         update.ConfigMftsCompressXmlSettingOneTime = param.ConfigMftsCompressXmlSettingOneTime;
                         update.ConfigMftsCompressXmlSettingAnyTime = param.ConfigMftsCompressXmlSettingAnyTime;

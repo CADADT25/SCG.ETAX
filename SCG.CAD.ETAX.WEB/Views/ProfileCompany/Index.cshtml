@@ -13,7 +13,7 @@
             RenderProfileCompany();
 
             $('#ddlInsertProfileCompanyCertificate').select2();
-            $('#ddlUpdateProfileCompanyCertificate').select2();
+            //$('#ddlUpdateProfileCompanyCertificate').select2();
 
         });
 
@@ -28,7 +28,7 @@
     function updateProfileCompany(){
 
 
-        $('#ddlUpdateProfileCompanyCertificate').select2();
+        //$('#ddlUpdateProfileCompanyCertificate').select2();
 
         $("#contentPartial").load("@Url.Action("_Update", "ManagementCompanyProfile")");
     }
@@ -138,18 +138,28 @@
         })
     }
 
-    function fnUpdateDropdownProfileCompanyCertificate(companyCode) {
+    function fnUpdateDropdownProfileCompanyCertificate(getPK) {
 
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+companyCode+"", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.certificateNo,
+        //                text: data.certificateNo
+        //            }).html(data.certificateNo).appendTo("#ddlUpdateProfileCompanyCertificate");
+        //    });
+        //})
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ProfileCertificate")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCertificate")?companyCode="+companyCode+"", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.certificateNo,
-                        text: data.certificateNo
-                    }).html(data.certificateNo).appendTo("#ddlUpdateProfileCompanyCertificate");
-            });
-        })
+                res = $.parseJSON(result);
+                document.getElementById("txtUpdateProfileCompanyCertificate").value = res.CertificateName;
+            }
+        });
     }
 
     function fnInsertCancelProfileCompany(){
@@ -168,7 +178,8 @@
             document.getElementById('txtUpdateProfileCompanyCode').value = '';
             document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
             document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
-            $("#ddlUpdateProfileCompanyCertificate").empty();
+            //$("#ddlUpdateProfileCompanyCertificate").empty();
+            $("#txtUpdateProfileCompanyCertificate").value = '';
             document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
             $("#modalUpdateProfileCompany").modal('hide');
 
@@ -210,7 +221,8 @@
 
     function fnUpdateProfileCompany(){
 
-        var Certificate = $('#ddlUpdateProfileCompanyCertificate').val();
+        //var Certificate = $('#ddlUpdateProfileCompanyCertificate').val();
+        var Certificate = $('#txtUpdateProfileCompanyCertificate').val();
 
         var TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
 
@@ -313,7 +325,6 @@
             success: function (result) {
 
                 res = $.parseJSON(result);
-                console.log(res);
                 document.getElementById("txtUpdateProfileCompanyNo").value = res.CompanyNo;
                 document.getElementById("txtUpdateProfileCompanyCode").value = res.CompanyCode;
                 document.getElementById("txtUpdateProfileCompanyTaxNumber").value = res.TaxNumber;
@@ -326,7 +337,7 @@
                 //$("#txtUpdateProfileCompanyNameEn").text(data.CompanyNameEn);
 
                 $('#companyCodeStateUpdate').text(res.CompanyCode);
-                fnUpdateDropdownProfileCompanyCertificate(res.CompanyCode);
+                fnUpdateDropdownProfileCompanyCertificate(res.CertificateProfileNo);
                 sleep(1000);
                 
 
@@ -545,7 +556,7 @@
         model.CompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CompanyNameTh = $('#txtUpdateProfileCompanyNameTh').val();
         model.CompanyNameEn = $('#txtUpdateProfileCompanyNameEn').val();
-        model.CertificateProfileNo = $('#ddlUpdateProfileCompanyCertificate').val();
+        //model.CertificateProfileNo = $('#ddlUpdateProfileCompanyCertificate').val();
         model.TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
         model.IsEbill = IsEbill;
         model.CreateBy = $("#leftSideEmail").text();

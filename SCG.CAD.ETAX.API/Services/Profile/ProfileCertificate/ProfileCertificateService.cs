@@ -175,14 +175,14 @@
 
                     if (update != null)
                     {
-                        update.CertificateCompanyCode = param.CertificateCompanyCode;
-                        update.CertificateHsmname = param.CertificateHsmname;
-                        update.CertificateHsmserial = param.CertificateHsmserial;
-                        update.CertificateCertSerial = param.CertificateCertSerial;
-                        update.CertificateKeyAlias = param.CertificateKeyAlias;
-                        update.CertificateSlotPassword = param.CertificateSlotPassword;
-                        update.CertificateStartDate = param.CertificateStartDate;
-                        update.CertificateEndDate = param.CertificateEndDate;
+                        //update.CertificateCompanyCode = param.CertificateCompanyCode;
+                        //update.CertificateHsmname = param.CertificateHsmname;
+                        //update.CertificateHsmserial = param.CertificateHsmserial;
+                        //update.CertificateCertSerial = param.CertificateCertSerial;
+                        //update.CertificateKeyAlias = param.CertificateKeyAlias;
+                        //update.CertificateSlotPassword = param.CertificateSlotPassword;
+                        //update.CertificateStartDate = param.CertificateStartDate;
+                        //update.CertificateEndDate = param.CertificateEndDate;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -270,21 +270,18 @@
             ConfigXmlSign dataupdate = new ConfigXmlSign();
             try
             {
-                using (_dbContext)
+                var dataconfig = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignCompanycode == companycode).ToList();
+                if (dataconfig.Count > 0)
                 {
-                    var dataconfig = _dbContext.configXmlSign.Where(x => x.ConfigXmlsignCompanycode == companycode).ToList();
-                    if(dataconfig.Count > 0)
+                    foreach (var item in dataconfig)
                     {
-                        foreach (var item in dataconfig)
-                        {
-                            dataupdate = item;
-                            dataupdate.ConfigXmlsignHsmModule = param.CertificateHsmname;
-                            dataupdate.ConfigXmlsignHsmSerial = param.CertificateHsmserial;
-                            dataupdate.ConfigXmlsignHsmPassword = param.CertificateSlotPassword;
-                            dataupdate.ConfigXmlsignKeyAlias = param.CertificateKeyAlias;
-                            dataupdate.ConfigXmlsignCertificateSerial = param.CertificateCertSerial;
-                            _dbContext.SaveChanges();
-                        }
+                        dataupdate = item;
+                        dataupdate.ConfigXmlsignHsmModule = param.CertificateHsmname;
+                        dataupdate.ConfigXmlsignHsmSerial = param.CertificateHsmserial;
+                        dataupdate.ConfigXmlsignHsmPassword = param.CertificateSlotPassword;
+                        dataupdate.ConfigXmlsignKeyAlias = param.CertificateKeyAlias;
+                        dataupdate.ConfigXmlsignCertificateSerial = param.CertificateCertSerial;
+                        _dbContext.SaveChanges();
                     }
                 }
             }
@@ -303,21 +300,18 @@
             ConfigPdfSign dataupdate = new ConfigPdfSign();
             try
             {
-                using (_dbContext)
+                var dataconfig = _dbContext.configPdfSign.Where(x => x.ConfigPdfsignCompanyCode == companycode).ToList();
+                if (dataconfig.Count > 0)
                 {
-                    var dataconfig = _dbContext.configPdfSign.Where(x => x.ConfigPdfsignCompanyCode == companycode).ToList();
-                    if (dataconfig.Count > 0)
+                    foreach (var item in dataconfig)
                     {
-                        foreach (var item in dataconfig)
-                        {
-                            dataupdate = item;
-                            dataupdate.ConfigPdfsignHsmModule = param.CertificateHsmname;
-                            dataupdate.ConfigPdfsignHsmSerial = param.CertificateHsmserial;
-                            dataupdate.ConfigPdfsignHsmPassword = param.CertificateSlotPassword;
-                            dataupdate.ConfigPdfsignKeyAlias = param.CertificateKeyAlias;
-                            dataupdate.ConfigPdfsignCertificateSerial = param.CertificateCertSerial;
-                            _dbContext.SaveChanges();
-                        }
+                        dataupdate = item;
+                        dataupdate.ConfigPdfsignHsmModule = param.CertificateHsmname;
+                        dataupdate.ConfigPdfsignHsmSerial = param.CertificateHsmserial;
+                        dataupdate.ConfigPdfsignHsmPassword = param.CertificateSlotPassword;
+                        dataupdate.ConfigPdfsignKeyAlias = param.CertificateKeyAlias;
+                        dataupdate.ConfigPdfsignCertificateSerial = param.CertificateCertSerial;
+                        _dbContext.SaveChanges();
                     }
                 }
             }

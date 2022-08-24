@@ -127,18 +127,6 @@
             setCompanyCode = $("#companyCodeStateUpdate").text();
         }
 
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("List", "ConfigPdfSign")",
-            data: { companyCode : setCompanyCode },
-            dataType: "json",
-            success: function (result) {
-                //data = $.parseJSON(result)
-                console.log('Mark');
-                console.log(result);
-            }
-        });
-
         var table = $("#tbConfigPdfSignMain").DataTable({
             destroy: true,
             "scrollY": false,

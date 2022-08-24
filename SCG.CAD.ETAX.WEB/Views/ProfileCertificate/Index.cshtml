@@ -8,7 +8,7 @@
 
 
 <script type="text/javascript">
-
+    var dataCertificateMaster = null;
      $(document).ready(function () {
 
 
@@ -28,6 +28,19 @@
 
         $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
+        });
+
+        
+        $('#ddlInsertProfileCertificatSerial').change(function() {
+            console.log('ddl');
+            console.log(dataCertificateMaster);
+            $.each(dataCertificateMaster, function (i, data) {
+                if(data.certificateCertSerial == $('#ddlInsertProfileCertificatSerial').val()){
+                    document.getElementById('txtInsertProfileCertificateName').value = data.certificateName;
+                    document.getElementById('txtInsertProfileCertificateStartDate').value = data.certificateStartDate;
+                    document.getElementById('txtInsertProfileCertificateEndDate').value = data.certificateEndDate;
+                }
+            });
         });
 
     });
@@ -154,6 +167,7 @@
     function fnUpdateCancelProfileCertificate(){
 
             document.getElementById('txtUpdateProfileCertificatHSMSerial').value = '';
+            document.getElementById('txtUpdateProfileCertificateName').value = '';
             document.getElementById('txtUpdateProfileCertificateSerial').value = '';
             document.getElementById('txtUpdateProfileCertificateKeyAlias').value = '';
             document.getElementById('txtUpdateProfileCertificateStartDate').value = '';
@@ -179,12 +193,14 @@
         sleep(1000);
         $.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
             $.each(data.data, function (i, slaveValue) {
-            console.log(slaveValue);
                 $('select#ddlInsertProfileCertificatSerial').append(
                 $('<option></option>').val(slaveValue.certificateCertSerial).html(
                  slaveValue.certificateCertSerial)
                 );
             });
+            dataCertificateMaster = data.data;
+            console.log('load');
+            console.log(dataCertificateMaster);
 
             //$("#ddlInsertProfileCertificatSerial").trigger('change');
         })
@@ -341,10 +357,11 @@
             dataType: "json",
             success: function (result) {
                 data = $.parseJSON(result)
-                console.log(data);
                 document.getElementById('txtUpdateProfileCertificateHSMName').value = data.CertificateHsmname;
+                document.getElementById('txtUpdateProfileCertificateNo').value = data.CertificateNo;
                 document.getElementById('txtUpdateProfileCertificatHSMSerial').value = data.CertificateHsmserial;
                 document.getElementById('txtUpdateProfileCertificateSerial').value = data.CertificateCertSerial;
+                document.getElementById('txtUpdateProfileCertificateName').value = data.CertificateName;
                 document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CertificateKeyAlias;
                 document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CertificateStartDate;
                 document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CertificateEndDate;
@@ -439,13 +456,16 @@
 
         var model = new Object();
 
-
+        
+        model.CertificateNo = $('#txtUpdateProfileCertificateNo').val();
+        model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CertificateHSMName = $('#txtUpdateProfileCertificateHSMName').val();
         model.CertificateHSMSerial = $('#txtUpdateProfileCertificatHSMSerial').val();
         model.CertificateCertSerial = $('#txtUpdateProfileCertificateSerial').val();
+        model.CertificateName = $('#txtUpdateProfileCertificateName').val();
         model.CertificateKeyAlias = $('#txtUpdateProfileCertificateKeyAlias').val();
-        model.CompanyCertificateStartDate = $('#txtUpdateProfileCertificateStartDate').val();
-        model.CompanyCertificateEndDate = $('#txtUpdateProfileCertificateEndDate').val();
+        model.CertificateStartDate = $('#txtUpdateProfileCertificateStartDate').val();
+        model.CertificateEndDate = $('#txtUpdateProfileCertificateEndDate').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -472,6 +492,7 @@
 
                     document.getElementById('txtUpdateProfileCertificatHSMSerial').value = '';
                     document.getElementById('txtUpdateProfileCertificateSerial').value = '';
+                    document.getElementById('txtUpdateProfileCertificateName').value = '';
                     document.getElementById('txtUpdateProfileCertificateKeyAlias').value = '';
                     document.getElementById('txtUpdateProfileCertificateStartDate').value = '';
                     document.getElementById('txtUpdateProfileCertificateEndDate').value = '';
