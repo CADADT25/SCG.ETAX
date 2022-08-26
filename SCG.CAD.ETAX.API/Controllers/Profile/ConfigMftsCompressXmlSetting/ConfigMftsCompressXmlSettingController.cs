@@ -60,8 +60,6 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
-
-
         [HttpPost]
         [Route("UpdateOneTime")]
         public IActionResult UpdateOneTime(ConfigMftsCompressXmlSetting param)

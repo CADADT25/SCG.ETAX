@@ -49,3 +49,46 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigMftsCompressXmlSettingOneTime" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Config One Time</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigMftsCompressXmlSettingOneTime();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigMftsCompressXmlSetting/_OneTime.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                @*<button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigMftsEmailSettingOneTime();">Close</button>*@
+                @*<button type="button" class="btn btn-primary" onclick="fnUpdateConfigMftsEmailSettingOneTime();">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateConfigMftsCompressXmlSettingAnyTime" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update @ViewData["Title"]</h5>
+                <button type="button" class="close" onclick="fnUpdateCancelConfigMftsCompressXmlSettingAnyTime();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("~/Views/ConfigMftsCompressXmlSetting/_AnyTime.cshtml")
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                @*<button type="button" class="btn btn-secondary" onclick="fnUpdateCancelConfigMftsEmailSettingAnyTime();">Close</button>*@
+                @*<button type="button" class="btn btn-primary" onclick="fnUpdateConfigMftsEmailSettingAnyTime();">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>

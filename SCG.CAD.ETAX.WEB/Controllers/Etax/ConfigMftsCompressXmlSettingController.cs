@@ -141,5 +141,50 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+        public async Task<JsonResult> UpdateOneTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/UpdateOneTime", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> UpdateAnyTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/UpdateAnyTime", httpContent));
+
+            return Json(task);
+        }
+
+
+        public async Task<JsonResult> DeleteOneTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/DeleteOneTime", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> DeleteAnyTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsCompressXmlSetting/DeleteAnyTime", httpContent));
+
+            return Json(task);
+        }
+
     }
 }
