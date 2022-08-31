@@ -20,7 +20,7 @@
                 RenderProfileSeller(setCompanyCode);
             }, 1200);
 
-            
+
 
              $('#toggleUpdateProfileSeller').change(function() {
                 $('#toggleUpdateProfileSeller-event').html('Toggle: ' + $(this).prop('checked'))
@@ -96,7 +96,7 @@
 
                 if(setCompanyCode == null || setCompanyCode == ''){
                     setCompanyCode = $("#companyCodeState").text();
-                }   
+                }
             }
 
             var table = $("#tbProfileSellerMain").DataTable({
@@ -157,11 +157,16 @@
                         }
                     },
                     {
-                        data: null,
-                        className: "dt-center editor-edit text-center text-primary",
-                        defaultContent: '<i class="pointer fas fa-pen"/>',
-                        orderable: false,
-                        width: "2%"
+                        //data: null,
+                        //className: "dt-center editor-edit text-center text-primary",
+                        //defaultContent: '<i class="pointer fas fa-pen"/>',
+                        //orderable: false,
+                        //width: "2%"
+                        data: "sellerNo",
+                        width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditProfileSeller(' + data +')" class="dt-center editor-edit text-center text-primary"><i class="pointer fas fa-pen"/></a>';
+                        }
                     }
                     //{
                     //    data: null,
@@ -180,8 +185,9 @@
             } ).draw();
 
 
-            EditProfileSeller(table);
-            DeleteProfileSeller(table);
+            //EditProfileSeller(table);
+            //DeleteProfileSeller(table);
+
         }
 
 
@@ -302,7 +308,7 @@
 
                 if(setCompanyCode == null || setCompanyCode == ''){
                     setCompanyCode = $("#companyCodeState").text();
-                }   
+                }
             }
 
             fnDropdownProfileSellerProvince();
@@ -364,14 +370,38 @@
             $('#tbProfileSellerMain').on('click', 'td.editor-edit', function () {
 
                 var data = table.row($(this).closest('tr')).data();
-
                 var getPK = data[Object.keys(data)[0]];
-
 
                 callProfileSellerGetDetailController(getPK);
 
             });
         }
+
+
+    function callEditProfileSeller(getPK){
+        callProfileSellerGetDetailController(getPK);
+    }
+
+    function callDeleteProfileSeller(getPK){
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    confirmButtonClass: 'btn btn-primary',
+                    cancelButtonClass: 'btn btn-danger ml-1',
+                    buttonsStyling: false,
+                    }).then(function (result) {
+                        if (result) {
+                            callProfileSellerDeleteController(getPK);
+                            callProfileSellerIndex();
+                          }
+                        })
+    }
 
         function DeleteProfileSeller(table){
 
@@ -416,7 +446,7 @@
 
         function callProfileSellerGetDetailController(getPK){
 
-            
+
 
             $.ajax({
                 type: "GET",
@@ -435,7 +465,7 @@
                     document.getElementById('txtUpdateProfileSellerBuilding').value = data.Building;
                     document.getElementById('txtUpdateProfileSellerRoad').value = data.Road;
 
-                    
+
                     $("#ddlUpdateProfileSellerDistrict").empty();
 
                     $("#ddlUpdateProfileSellerSubDistrict").empty();
@@ -522,7 +552,7 @@
                     data = $.parseJSON(resp)
 
                     var errorMessage = data.erroR_MESSAGE;
-                    
+
                     if(data.status == true){
 
                         fnSweetAlert_SaveSuccess();
@@ -595,6 +625,7 @@
 
                         fnSweetAlert_SaveSuccess();
 
+                        $("#modalUpdateProfileSeller").modal('hide');
                         callProfileSellerIndex();
                     }
                     else{
