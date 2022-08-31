@@ -111,6 +111,8 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigMftsCompressPrintSettingAnyTime = param.ConfigMftsCompressPrintSettingAnyTime;
                         update.ConfigMftsCompressPrintSettingNextTime = param.ConfigMftsCompressPrintSettingNextTime;
                         update.ConfigMftsCompressPrintSettingOutputPdf = param.ConfigMftsCompressPrintSettingOutputPdf;
+                        update.ConfigMftsCompressPrintSettingInputPdf = param.ConfigMftsCompressPrintSettingInputPdf;
+                        update.ConfigMftsCompressPrintSettingDataSource = param.ConfigMftsCompressPrintSettingDataSource;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;

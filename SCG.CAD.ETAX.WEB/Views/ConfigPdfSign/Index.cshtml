@@ -218,11 +218,16 @@
                     }
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    //data: null,
+                    //className: "dt-center editor-edit text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/> </i>',
+                    //orderable: false,
+                    //width: "2%"
+                    data: "configPdfsignNo",
+                        width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditConfigPdfSign(' + data +')" class="dt-center editor-edit text-center text-primary"><i class="pointer fas fa-pen"/></a>';
+                        }
                 }
             ]
         });
@@ -233,8 +238,8 @@
             } );
         } ).draw();
 
-        EditConfigPdfSign(table);
-        DeleteConfigPdfSign(table);
+        //EditConfigPdfSign(table);
+        //DeleteConfigPdfSign(table);
     }
 
 
@@ -300,6 +305,9 @@
             callConfigPdfSignGetDetailController(getPK);
         });
     }
+    function callEditConfigPdfSign(getPK){
+        callConfigPdfSignGetDetailController(getPK);
+    }
 
     function DeleteConfigPdfSign(table){
 
@@ -350,8 +358,9 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-
-                document.getElementById('txtUpdateConfigPdfSignNo').value = data.ConfigPdfSignNo;
+                console.log(data);
+                console.log(data.ConfigPdfsignNo);
+                document.getElementById('txtUpdateConfigPdfSignNo').value = data.ConfigPdfsignNo;
                 document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = data.CustomerCode;
                 document.getElementById('txtUpdateConfigPdfSignInputSource').value = data.ConfigPdfSignInputSource;
                 document.getElementById('txtUpdateConfigPdfSignInputPath').value = data.ConfigPdfSignInputPath;
