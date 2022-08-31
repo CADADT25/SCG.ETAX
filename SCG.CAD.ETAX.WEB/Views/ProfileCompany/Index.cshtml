@@ -295,15 +295,6 @@
         $.unblockUI();
     }
 
-    function sleep(num) {
-      let now = new Date();
-      let stop = now.getTime() + num;
-      while(true) { now = new Date();
-    if(now.getTime() >
-    stop) return;
-      }
-    }
-
     // [Begin] Ajax call Controller
 
     function callProfileCompanyGetDetailController(getPK){

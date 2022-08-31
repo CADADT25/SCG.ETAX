@@ -10,12 +10,25 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        console.log('mark...');
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
             RenderConfigMftsCompressXmlSetting(setCompanyCode);
         }, 1200);
+
+        
+        $("#txtConfigMftsCompressXmlSettingOneTime").flatpickr({
+            enableTime: true,
+            minDate: "today",
+            dateFormat: "d-m-Y H:i",
+        });
+
+
+         $("#txtConfigMftsCompressXmlSettingAnyTime").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+        });
 
     });
 
@@ -149,7 +162,7 @@
                     data: "configMftsCompressXmlSettingNo",
                     width: "13%",
                     render: function (data, type, row) {
-                        return'<a onclick="callModalInsertConfigMftsEmailSettingAnyTime(' + data +')" class="btn btn-primary btn-sm"> Any Time </a>';
+                        return'<a onclick="callModalInsertConfigMftsCompressXmlSettingAnyTime(' + data +')" class="btn btn-primary btn-sm"> Any Time </a>';
                     }
                 },
                 {
@@ -526,8 +539,11 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
+                console.log('Mark');
+                console.log(data.ConfigMftsCompressXmlSettingOneTime);
 
-                const myArray = data.ConfigMftsEmailSettingOneTime.split("|");
+                const myArray = data.ConfigMftsCompressXmlSettingOneTime.split("|");
+                console.log(myArray);
 
                 var i = 0;
 
@@ -544,15 +560,56 @@
                                     "<h6 class='transaction-title'>"+myArray[i]+"</h6>"+
                                 "</div>"+
                             "</div>"+
-                            "<div class='font-weight-bolder text-danger btn btn-danger btn-sm'><a onclick='callDeleteConfigMftsEmailOneTime("+ getPK + ","+[i]+")'> Delete </a></div></div>");
+                            "<div class='font-weight-bolder text-danger btn btn-danger btn-sm'><a onclick='callDeleteConfigMftsCompressXmlSettingOneTime("+ getPK + ","+[i]+")'> Delete </a></div></div>");
                         }
             }
         });
-
+        
+        sleep(1000);
         $("#modalUpdateConfigMftsCompressXmlSettingOneTime").modal('show');
     }
 
     
+    function callModalInsertConfigMftsCompressXmlSettingAnyTime(getPK){
+
+        $('#appendMftsCompressXmlAnyTime').empty();
+
+        $('#txtUpdateConfigMftsCompressXmlSettingAnyTimeNo').val(getPK);
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "ConfigMftsCompressXmlSetting")",
+            data: { id : getPK },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+                const myArray = data.ConfigMftsCompressXmlSettingAnyTime.split("|");
+
+                var i = 0;
+
+                for (i = 0; i < myArray.length; i++) {
+                        $('#appendMftsCompressXmlAnyTime').append(
+                            "<div class='transaction-item'>"+
+                            "<div class='media''>"+
+                                "<div class='rounded'>"+
+                                    "<div class='avatar-content'>"+
+                                        "<i class='fas fa-clock font-medium-3'></i>"+
+                                    "</div>"+
+                                "</div>"+
+                                "<div class='media-body pl-1'>"+
+                                    "<h6 class='transaction-title'>"+myArray[i]+"</h6>"+
+                                "</div>"+
+                            "</div>"+
+                            "<div class='font-weight-bolder text-danger btn btn-danger btn-sm'><a onclick='callDeleteConfigMftsCompressXmlSettingAnyTime("+ getPK + ","+[i]+")'> Delete </a></div></div>");
+                        }
+            }
+        });
+        
+        sleep(1000);
+        $("#modalUpdateConfigMftsCompressXmlSettingAnyTime").modal('show');
+    }
+
     function fnUpdateCancelConfigMftsCompressXmlSettingOneTime(){
         $("#modalUpdateConfigMftsCompressXmlSettingOneTime").modal('hide');
     }
@@ -567,6 +624,11 @@
 
         model.ConfigMftsCompressXmlSettingNo = $('#txtUpdateConfigMftsCompressXmlSettingOneTimeNo').val();
         model.ConfigMftsCompressXmlSettingOneTime = $('#txtConfigMftsCompressXmlSettingOneTime').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
 
         var getJsonString = JSON.stringify(model);
 
@@ -595,7 +657,116 @@
         });
 
     }
+    
+    function callConfigMftsCompressXmlSettingUpdateAnyTime(setPK){
 
+        var model = new Object();
+
+        model.configMftsCompressXmlSettingNo = $('#txtUpdateConfigMftsCompressXmlSettingAnyTimeNo').val();
+        model.configMftsCompressXmlSettingAnyTime = $('#txtConfigMftsCompressXmlSettingAnyTime').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 0;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateAnyTime", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsCompressXmlSettingAnyTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+    function callDeleteConfigMftsCompressXmlSettingOneTime(setPK,Postion){
+
+        var model = new Object();
+
+        model.pk = setPK;
+        model.position = Postion;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteOneTime", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsCompressXmlSettingOneTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
+
+    function callDeleteConfigMftsCompressXmlSettingAnyTime(setPK,Postion){
+
+        var model = new Object();
+
+        model.pk = setPK;
+        model.position = Postion;
+
+        var getJsonString = JSON.stringify(model);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteAnyTime", "ConfigMftsCompressXmlSetting")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+
+                data = $.parseJSON(resp)
+
+                var errorMessage = data.erroR_MESSAGE;
+
+                if(data.status == true){
+
+                    $('#modalUpdateConfigMftsCompressXmlSettingAnyTime').modal('hide');
+
+                    fnSweetAlert_SaveSuccess();
+
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+
+    }
 
 </script>
 
