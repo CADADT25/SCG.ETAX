@@ -266,6 +266,7 @@
     }
 
     function fnUpdateConfigMftsEmailSetting(){
+        
         if ($('#txtUpdateConfigMftsEmailSettingCompanyCode').val() != '' && $('#txtUpdateConfigMftsEmailSettingEmail').val() != '') {
             callConfigMftsEmailSettingUpdateController();
         }
@@ -538,18 +539,18 @@
         var model = new Object();
 
         model.ConfigMftsEmailSettingNo = $('#txtUpdateConfigMftsEmailSettingNo').val();
-        model.configMftsEmailSettingCompanyCode = $('#txtInsertConfigMftsEmailSettingCompanyCode').val();
+        model.configMftsEmailSettingCompanyCode = $('#txtUpdateConfigMftsEmailSettingCompanyCode').val();
         model.configMftsEmailSettingOperation = IsOperation;
-        model.configMftsEmailSettingEmail = $('#txtInsertConfigMftsEmailSettingEmail').val();
-        model.configMftsEmailSettingEmailTemplate = $('#ddlInsertConfigMftsEmailSettingEmailTemplate').val();
+        model.configMftsEmailSettingEmail = $('#txtUpdateConfigMftsEmailSettingEmail').val();
+        model.configMftsEmailSettingEmailTemplate = $('#ddlUpdateConfigMftsEmailSettingEmailTemplate').val();
         model.configMftsEmailSettingProtocol = IsOperation;
-        model.configMftsEmailSettingHost = $('#txtInsertConfigMftsEmailSettingHost').val();
-        model.configMftsEmailSettingPort = $('#txtInsertConfigMftsEmailSettingPort').val();
-        model.configMftsEmailSettingUsername = $('#txtInsertConfigMftsEmailSettingUsername').val();
-        model.configMftsEmailSettingPassword = $('#txtInsertConfigMftsEmailSettingPassword').val();
+        model.configMftsEmailSettingHost = $('#txtUpdateConfigMftsEmailSettingHost').val();
+        model.configMftsEmailSettingPort = $('#txtUpdateConfigMftsEmailSettingPort').val();
+        model.configMftsEmailSettingUsername = $('#txtUpdateConfigMftsEmailSettingUsername').val();
+        model.configMftsEmailSettingPassword = $('#txtUpdateConfigMftsEmailSettingPassword').val();
         model.configMftsEmailSettingOneTime = '';
         model.configMftsEmailSettingAnyTime = '';
-        model.configMftsEmailSettingApiKey = $('#txtInsertConfigMftsEmailSettingApiKey').val();
+        model.configMftsEmailSettingApiKey = $('#txtUpdateConfigMftsEmailSettingApiKey').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
