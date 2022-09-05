@@ -384,7 +384,14 @@ namespace SCG.CAD.ETAX.API.Services
                             }
                         }
 
-                        update.ConfigMftsCompressPrintSettingOneTime = setNewOneTime.Substring(1);
+                        if(setNewOneTime.Length > 0)
+                        {
+                            update.ConfigMftsCompressPrintSettingOneTime = setNewOneTime.Substring(1);
+                        }
+                        else
+                        {
+                            update.ConfigMftsCompressPrintSettingOneTime = setNewOneTime;
+                        }
 
                         _dbContext.SaveChanges();
 
@@ -433,7 +440,14 @@ namespace SCG.CAD.ETAX.API.Services
                             }
                         }
 
-                        update.ConfigMftsCompressPrintSettingAnyTime = setNewAnyTime.Substring(1);
+                        if (setNewAnyTime.Length > 0)
+                        {
+                            update.ConfigMftsCompressPrintSettingAnyTime = setNewAnyTime.Substring(1);
+                        }
+                        else
+                        {
+                            update.ConfigMftsCompressPrintSettingAnyTime = setNewAnyTime;
+                        }
 
                         _dbContext.SaveChanges();
 

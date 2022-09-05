@@ -16,7 +16,19 @@
         setTimeout(function(){
             RenderConfigMftsCompressPrintSetting(setCompanyCode);
         }, 1200);
+        
+        $("#txtConfigMftsCompressPrintSettingOneTime").flatpickr({
+            enableTime: true,
+            minDate: "today",
+            dateFormat: "d-m-Y H:i",
+        });
 
+
+         $("#txtConfigMftsCompressPrintSettingAnyTime").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+        });
     });
     
     $(window).on('load', function() {
@@ -456,7 +468,6 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-                console.log(data);
                 const myArray = data.ConfigMftsCompressPrintSettingOneTime.split("|");
 
                 var i = 0;
@@ -497,6 +508,8 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
+                
+                console.log(data);
                 const myArray = data.ConfigMftsCompressPrintSettingAnyTime.split("|");
 
                 var i = 0;
