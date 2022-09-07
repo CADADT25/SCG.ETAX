@@ -129,5 +129,51 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+
+        public async Task<JsonResult> UpdateOneTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsIndexGenerationSettingInput/UpdateOneTime", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> UpdateAnyTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsIndexGenerationSettingInput/UpdateAnyTime", httpContent));
+
+            return Json(task);
+        }
+
+
+        public async Task<JsonResult> DeleteOneTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsIndexGenerationSettingInput/DeleteOneTime", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> DeleteAnyTime(string jsonString)
+        {
+            Response res = new Response();
+
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/ConfigMftsIndexGenerationSettingInput/DeleteAnyTime", httpContent));
+
+            return Json(task);
+        }
+
     }
 }
