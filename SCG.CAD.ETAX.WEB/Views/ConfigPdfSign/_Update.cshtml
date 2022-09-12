@@ -1,3 +1,398 @@
 ﻿
 <script src="~/assets/validate/ConfigPdfSignValidate.js"></script>
 
+<!-- Basic tabs start -->
+<section id="basic-tabs-components">
+    <div class="row match-height">
+        
+        <div class="row" hidden>
+            <input type="text" id="txtUpdateConfigPdfSignNo" class="form-control">
+        </div>
+        <!-- Tabs with Icon starts -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    @*                    <h4 class="card-title">Tab with icon</h4>
+                    *@
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="homeIconUpdate-tab" data-toggle="tab" href="#homeIconUpdate" aria-controls="homeUpdate" role="tab" aria-selected="true"><i data-feather="home"></i> Mode</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profileIconUpdate-tab" data-toggle="tab" href="#profileIconUpdate" aria-controls="profileUpdate" role="tab" aria-selected="false"><i data-feather="tool"></i> Signature</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="aboutIconUpdate-tab" data-toggle="tab" href="#aboutIconUpdate" aria-controls="aboutUpdate" role="tab" aria-selected="false"><i data-feather="user"></i> Signature (Optional)</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="homeIconUpdate" aria-labelledby="homeIconUpdate-tab" role="tabpanel">
+
+                            <div class="row">
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Customer Code </label>
+                                        <input type="text" disabled id="txtUpdateConfigPdfSignCustomerCode" onkeyup="validateUpdateProductUnit();" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsBatch" onclick="onChangeBathUpdatePdfSign();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsBatch">Batch</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Input Type </label>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignInputType">
+                                            <option value="Folder" selected>Folder</option>
+                                            <option value="Ftp">Ftp</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Input Source </label>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignInputSource"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Input Path </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignInputPath" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Output Type </label>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignOutputType">
+                                            <option value="Folder" selected>Folder</option>
+                                            <option value="Ftp">Ftp</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Output Source </label>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignOutputSource"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Output Source </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignOutputPath" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> FTP Host </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignFtpHost" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> FTP Port </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignFtpPort" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> FTP Username </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignFtpUsername" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> FTP Password </label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignFtpPassword" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsOnline" onclick="onChangeOnlineUpdatePdfSign();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsOnline">Online</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-11 col-12">
+                                    <div class="form-group">
+                                        <label>Online Record Number</label>
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignOnlineRecordNumber" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4 col-12">
+                                </div>
+
+
+                                <div class="col-md-4 col-12">
+                                </div>
+
+
+                                <div class="col-md-4 col-12">
+                                </div>
+
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsActive" checked />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsActive">Is Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="tab-pane" id="profileIconUpdate" aria-labelledby="profileIconUpdate-tab" role="tabpanel">
+
+                            <div class="row">
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label>Appearance</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsDigitalSign" onclick="onChangeBathPdfSignDigitalSign();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsDigitalSign">Show Digital Sign</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-2 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsFont" onclick="onChangeBathPdfSignFont();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsFont">Font</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Font </label>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignFontName">
+                                            <option value="Arial" selected>Arial</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Font Size </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignFontSize" onkeyup="validateUpdateConfigPdfSign();" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-2 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Image</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Image </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignImage" class="form-control">
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label>Digital Sign Location</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-5 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Upper Left X </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignImagex" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Upper Left Y </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignImagey" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label>Page for Digital Sign</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImageFirst" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImageFirst">First Page</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImageLast" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImageLast">Last Page</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Specific Page</label>
+                                            <input type="text" width="50" id="txtUpdateConfigPdfSignImage" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="aboutIconUpdate" aria-labelledby="aboutIconUpdate-tab" role="tabpanel">
+
+                            <div class="row">
+
+                                <div class="col-md-12 col-12">
+
+                                    <div class="form-group">
+                                        <label>Page for Digital Sign</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+
+                                <div class="col-md-5 col-12">
+                                    <div class="form-group">
+                                        <label>Location (Optional) </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignLocation" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label> Reason (Optional) </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignReason" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-12">
+
+                                    <div class="form-group">
+                                        <label>Timestamp</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Timestamp</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-12">
+                                </div>
+
+                                 <div class="col-md-4 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> URL </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignUrl" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Username </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignUsername" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label><span class="text-danger">* </span> Password </label>
+                                        <input type="text" id="txtUpdateConfigPdfSignPassword" class="form-control">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tabs with Icon ends -->
+    </div>
+</section>
+<!-- Basic Tabs end -->
+

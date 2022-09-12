@@ -24,6 +24,19 @@
         $('#ddlUpdateConfigMftsIndexGenerationSettingOutputOutputSourceName').select2();
         $('#ddlUpdateConfigMftsIndexGenerationSettingOutputType').select2();
         $('#ddlUpdateConfigMftsIndexGenerationSettingOutputLogReceiveType').select2();
+        
+        $("#txtConfigMftsIndexGenerationSettingOutputOneTime").flatpickr({
+            enableTime: true,
+            minDate: "today",
+            dateFormat: "d-m-Y H:i",
+        });
+
+
+         $("#txtConfigMftsIndexGenerationSettingOutputAnyTime").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+        });
 
     });
 
@@ -645,7 +658,6 @@
             }
         });
     }
-    
     function callConfigMftsIndexGenerationSettingOutputUpdateOneTime(setPK){
 
         var model = new Object();
