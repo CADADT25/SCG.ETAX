@@ -126,7 +126,6 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
-
         public DateTime CheckRunAnyTime(string anytime)
         {
             DateTime result = new DateTime();
@@ -295,6 +294,28 @@ namespace SCG.CAD.ETAX.UTILITY
                 result = true;
             }
 
+            return result;
+        }
+
+        public int GetDelayTimeProgram(string batchnamedelaytime)
+        {
+            int result = 5 * 60 * 1000; // 5 minutes 
+            try
+            {
+                GetGlobalConfig();
+                var config = configGlobals.FirstOrDefault(x => x.ConfigGlobalName == batchnamedelaytime);
+                if (config != null)
+                {
+                    if (config.ConfigGlobalValue != null && !String.IsNullOrEmpty(config.ConfigGlobalValue))
+                    {
+                        result = Convert.ToInt32(config.ConfigGlobalValue) * 60 * 1000;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return result;
+            }
             return result;
         }
 

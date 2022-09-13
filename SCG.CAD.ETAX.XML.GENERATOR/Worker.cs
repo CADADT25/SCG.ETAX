@@ -19,23 +19,16 @@ namespace SCG.CAD.ETAX.XML.GENERATOR
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            int delaytime = 5 * 60 * 1000; // 5 minutes 
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLGENERATOR"))
                 {
                     //// call business layer
                     xMLGenerate.ProcessGenXMLFile();
-                    //var layer1 = pDFSign.GetAllPDFFile();
-
-                    //var layer2 = layer1;
-
-                    //while (!stoppingToken.IsCancellationRequested)
-                    //{
-                    //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    //    await Task.Delay(1000, stoppingToken);
-                    //}
                 }
-                await Task.Delay(100000, stoppingToken);
+                delaytime = logicToolHelper.GetDelayTimeProgram("DELAYRUNNINGTIMEXMLGENERATOR");
+                await Task.Delay(delaytime, stoppingToken);
             }
         }
     }

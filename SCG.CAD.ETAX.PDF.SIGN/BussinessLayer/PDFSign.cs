@@ -101,8 +101,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                 foreach (var config in configPDFSign)
                 {
-                    if (logicToolHelper.CheckRunTime(config.ConfigPdfsignNextTime))
-                    {
+                    //if (logicToolHelper.CheckRunTime(config.ConfigPdfsignNextTime))
+                    //{
 
                         var allfile = ReadPdfFile(config);
                         Console.WriteLine("End Read All PDFFile");
@@ -183,10 +183,10 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                             }
                         }
-                        nexttime = logicToolHelper.SetNextRunTime(config.ConfigPdfsignAnyTime, config.ConfigPdfsignOneTime, batchname, config.ConfigPdfsignNo);
-                        Console.WriteLine("Set NextTime : " + nexttime);
-                        log.InsertLog(pathlog, "Set NextTime : " + nexttime);
-                    }
+                        //nexttime = logicToolHelper.SetNextRunTime(config.ConfigPdfsignAnyTime, config.ConfigPdfsignOneTime, batchname, config.ConfigPdfsignNo);
+                        //Console.WriteLine("Set NextTime : " + nexttime);
+                        //log.InsertLog(pathlog, "Set NextTime : " + nexttime);
+                    //}
                 }
 
             }

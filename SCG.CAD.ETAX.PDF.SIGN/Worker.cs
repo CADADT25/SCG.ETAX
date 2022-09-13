@@ -17,13 +17,15 @@ namespace SCG.CAD.ETAX.PDF.SIGN
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            int delaytime = 5 * 60 * 1000; // 5 minutes 
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPDFSIGN"))
                 {
                     pDFSign.ProcessPdfSign();
                 }
-                await Task.Delay(100000, stoppingToken);
+                delaytime = logicToolHelper.GetDelayTimeProgram("DELAYRUNNINGTIMEPDFSIGN");
+                await Task.Delay(delaytime, stoppingToken);
             }
         }
     }
