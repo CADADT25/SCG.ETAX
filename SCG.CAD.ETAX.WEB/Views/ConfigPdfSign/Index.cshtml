@@ -65,6 +65,18 @@
                         value: data.dataSourceNo,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignOutputConvertSource");
+                    
+                $('<option>',
+                    {
+                        value: data.dataSourceName,
+                        text: data.dataSourceName
+                    }).html(data.dataSourceName).appendTo("#ddlUpdateConfigPdfSignInputSource");
+                    
+                $('<option>',
+                    {
+                        value: data.dataSourceName,
+                        text: data.dataSourceName
+                    }).html(data.dataSourceName).appendTo("#ddlUpdateConfigPdfSignOutputSource");
 
             });
 
@@ -326,18 +338,18 @@
             callConfigPdfSignInsertController();
         }
         else {
-            validateInsertConfigPdfSign();
+            //validateInsertConfigPdfSign();
 
             fnToastrInputDataFail();
         }
     }
 
     function fnUpdateConfigPdfSign(){
-        if ($('#txtUpdateConfigPdfSignCustomerCode').val() != '' && $('#txtUpdateConfigPdfSignInputSource').val() != '') {
+        if ($('#txtUpdateConfigPdfSignCustomerCode').val() != '') {
             callConfigPdfSignUpdateController();
         }
         else {
-            validateUpdateConfigPdfSign();
+            //validateUpdateConfigPdfSign();
 
             fnToastrInputDataFail();
         }
@@ -350,11 +362,13 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
+            
+            fnDropdownDataSource();
             callConfigPdfSignGetDetailController(getPK);
         });
     }
     function callEditConfigPdfSign(getPK){
+        fnDropdownDataSource();
         callConfigPdfSignGetDetailController(getPK);
     }
 
@@ -407,8 +421,6 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-                console.log('Mark......');
-                console.log(data);
                 document.getElementById('txtUpdateConfigPdfSignNo').value = data.ConfigPdfsignNo;
                 document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = data.ConfigPdfsignCompanyCode;
                 document.getElementById('txtUpdateConfigPdfSignInputPath').value = data.ConfigPdfsignInputPath;
@@ -429,8 +441,8 @@
                 
                 //$("#ddlUpdateConfigPdfSignInputType").select2().val(data.ConfigPdfsignInputType).trigger("change");        
                 //$("#ddlUpdateConfigPdfSignOutputType").select2().val(data.ConfigPdfsignOutputType).trigger("change");
-                $("#ddlUpdateConfigPdfSignInputType").select2().val(data.ConfigPdfsignInputType);        
-                $("#ddlUpdateConfigPdfSignOutputType").select2().val(data.ConfigPdfsignOutputType);
+                //$("#ddlUpdateConfigPdfSignInputType").select2().val(data.ConfigPdfsignInputType);        
+                //$("#ddlUpdateConfigPdfSignOutputType").select2().val(data.ConfigPdfsignOutputType);
                 document.getElementById('ddlUpdateConfigPdfSignFontName').value = data.ConfigPdfsignFontName;
                 document.getElementById('txtUpdateConfigPdfSignFontSize').value = data.ConfigPdfsignFontSize;
                 document.getElementById('txtUpdateConfigPdfSignImage').value = data.ConfigPdfsignImage;
@@ -441,6 +453,11 @@
                 document.getElementById('txtUpdateConfigPdfSignUrl').value = data.ConfigPdfsignTimestampUrl;
                 document.getElementById('txtUpdateConfigPdfSignUsername').value = data.ConfigPdfsignTimestampUserName;
                 document.getElementById('txtUpdateConfigPdfSignPassword').value = data.ConfigPdfsignTimestampPassword;
+
+                document.getElementById('txtUpdateConfigPdfSignFtpHost').value = data.ConfigPdfsignFtpHost;
+                document.getElementById('txtUpdateConfigPdfSignFtpPort').value = data.ConfigPdfsignFtpPort;
+                document.getElementById('txtUpdateConfigPdfSignFtpUsername').value = data.ConfigPdfsignFtpUserName;
+                document.getElementById('txtUpdateConfigPdfSignFtpPassword').value = data.ConfigPdfsignFtpPassword;
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateConfigPdfSignIsActive").checked = true;
@@ -572,6 +589,7 @@
 
         var IsActive = 1;
         var page = "first";
+        var IsTimeStamp = "";
 
         if($('#toggleUpdateConfigPdfSignIsActive').prop('checked')){
             IsActive = 1;
@@ -589,14 +607,21 @@
         else{
             page = $('#toggleUpdateConfigPdfSignIsImage').val();
         }
+        
+        if($('#toggleUpdateConfigPdfSignIsImage').prop('checked')){
+            IsTimeStamp = "1";
+        }
+        else{
+            IsTimeStamp = "0";
+        }
 
         var model = new Object();
 
         model.ConfigPdfSignNo = $('#txtUpdateConfigPdfSignNo').val();
         model.ConfigPdfsignCompanyCode = $('#txtUpdateConfigPdfSignCustomerCode').val();
-        model.ConfigPdfSignInputSource = $('#txtUpdateConfigPdfSignInputSource').val();
+        model.ConfigPdfSignInputSource = $('#ddlUpdateConfigPdfSignInputSource').val();
         model.ConfigPdfSignInputPath = $('#txtUpdateConfigPdfSignInputPath').val();
-        model.ConfigPdfSignOutputSource = $('#txtUpdateConfigPdfSignOutputSource').val();
+        model.ConfigPdfSignOutputSource = $('#ddlUpdateConfigPdfSignOutputSource').val();
         model.ConfigPdfSignOutputPath = $('#txtUpdateConfigPdfSignOutputPath').val();
         model.ConfigPdfSignOnlineRecordNumber = $('#txtUpdateConfigPdfSignOnlineRecordNumber').val();
         model.ConfigPdfsignInputType = $('#ddlUpdateConfigPdfSignInputType').val();
@@ -610,6 +635,7 @@
         model.ConfigPdfsignDsLocation = $('#txtUpdateConfigPdfSignLocation').val();
         model.ConfigPdfsignDsReason = $('#txtUpdateConfigPdfSignReason').val();
         model.ConfigPdfsignTimestampUrl = $('#txtUpdateConfigPdfSignUrl').val();
+        model.ConfigPdfsignWithTimeStamp = IsTimeStamp;
         model.ConfigPdfsignTimestampUserName = $('#txtUpdateConfigPdfSignUsername').val();
         model.ConfigPdfsignTimestampPassword = $('#txtUpdateConfigPdfSignPassword').val();
         model.ConfigPdfsignFtpHost = $('#txtUpdateConfigPdfSignFtpHost').val();
@@ -648,12 +674,6 @@
                     document.getElementById('toggleUpdateConfigPdfSignIsImageFirst').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImageLast').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImage').value = '';
-                    document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = '';
-                    document.getElementById('ddlUpdateConfigPdfSignInputSource').value = '';
-                    document.getElementById('txtUpdateConfigPdfSignInputPath').value = '';
-                    document.getElementById('ddlUpdateConfigPdfSignOutputSource').value = '';
-                    document.getElementById('txtUpdateConfigPdfSignOutputPath').value = '';
-                    document.getElementById('txtUpdateConfigPdfSignOnlineRecordNumber').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignInputType').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignOutputType').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignFontName').value = '';
@@ -755,6 +775,12 @@
 
             $.unblockUI();
         }, 500);
+    }
+    function onChangeBathPdfSignImage() {
+
+    }
+    function validateUpdateConfigPdfSign() {
+
     }
 
 

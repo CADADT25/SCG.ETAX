@@ -131,6 +131,21 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigPdfsignOneTime = param.ConfigPdfsignOneTime;
                         update.ConfigPdfsignAnyTime = param.ConfigPdfsignAnyTime;
                         update.ConfigPdfsignNextTime = param.ConfigPdfsignNextTime;
+
+                        update.ConfigPdfsignFtpHost = param.ConfigPdfsignFtpHost;
+                        update.ConfigPdfsignFtpPort = param.ConfigPdfsignFtpPort;
+                        update.ConfigPdfsignFtpUserName = param.ConfigPdfsignFtpUserName;
+                        update.ConfigPdfsignFtpPassword = param.ConfigPdfsignFtpPassword;
+                        update.ConfigPdfsignVisibleDs = param.ConfigPdfsignVisibleDs;
+                        update.ConfigPdfsignFontName = param.ConfigPdfsignFontName;
+                        update.ConfigPdfsignFontSize = param.ConfigPdfsignFontSize;
+                        update.ConfigPdfsignImage = param.ConfigPdfsignImage;
+                        update.ConfigPdfsignDsLocation = param.ConfigPdfsignDsLocation;
+                        update.ConfigPdfsignDsReason = param.ConfigPdfsignDsReason;
+                        update.ConfigPdfsignWithTimeStamp = param.ConfigPdfsignWithTimeStamp;
+                        update.ConfigPdfsignTimestampUrl = param.ConfigPdfsignTimestampUrl;
+                        update.ConfigPdfsignTimestampUserName = param.ConfigPdfsignTimestampUserName;
+                        update.ConfigPdfsignTimestampPassword = param.ConfigPdfsignTimestampPassword;
                       
 
                         update.UpdateBy = param.UpdateBy;
