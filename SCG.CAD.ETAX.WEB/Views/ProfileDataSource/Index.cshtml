@@ -205,10 +205,12 @@
                 $('#dataSourceStateUpdate').text(data.DataSourceName);
 
                 if(data.Isactive == 1){
-                    $('#toggleUpdateDataSource').bootstrapToggle('on');
+                    //$('#toggleUpdateDataSource').bootstrapToggle('on');
+                    document.getElementById("toggleUpdateDataSourceIsActive").checked = true;
                 }
                 else{
-                    $('#toggleUpdateDataSource').bootstrapToggle('off');
+                    //$('#toggleUpdateDataSource').bootstrapToggle('off');
+                    document.getElementById("toggleUpdateDataSourceIsActive").checked = false;
                 }
 
                 $("#modalUpdateDataSource").modal('show');
@@ -280,14 +282,11 @@
     function callDataSourceUpdateController(){
 
         var IsActive = 1;
-
-        var getToggle = $('#toggleUpdateDataSource-event').text();
-
-        if(getToggle.includes("true")){
+                
+        if($('#toggleUpdateDataSourceIsActive').prop('checked')){
             IsActive = 1;
         }
-        else
-        {
+        else{
             IsActive = 0;
         }
 
@@ -318,13 +317,13 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('txtUpdateDataSourceName').value = '';
+                 //   document.getElementById('txtUpdateDataSourceName').value = '';
 
-                    document.getElementById('txtUpdateDataSourceDescription').value = '';
+                 //   document.getElementById('txtUpdateDataSourceDescription').value = '';
 
-                    $("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
+                 //   //$("#modalUpdateDataSource").modal('hide').on('hidden.bs.modal', functionThatEndsUpDestroyingTheDOM);
 
-                 callDataSourceIndex();
+                 //callDataSourceIndex();
 
                 }
                 else{

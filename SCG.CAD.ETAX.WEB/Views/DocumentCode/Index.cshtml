@@ -432,6 +432,9 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-DocumentCode-create").load("@Url.Action("Index", "DocumentCode")");
+
+            $("#render-DocumentCode-update").empty();
+            $("#render-DocumentCode-update").load("@Url.Action("Index", "DocumentCode")");
             $.unblockUI();
         }, 500);
     }

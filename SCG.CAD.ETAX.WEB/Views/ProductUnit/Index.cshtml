@@ -89,11 +89,11 @@
                     }
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    data: "productUnitNo",
+                        width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditProductUnit(' + data +')" class="dt-center editor-edit text-center text-primary"><i class="pointer fas fa-pen"/></a>';
+                        }
                 }
                 //{
                 //    data: null,
@@ -111,8 +111,8 @@
             } );
         } ).draw();
 
-        EditProductUnit(table);
-        DeleteProductUnit(table);
+        //EditProductUnit(table);
+        //DeleteProductUnit(table);
     }
 
 
@@ -186,6 +186,9 @@
             callProductUnitGetDetailController(getPK);
         });
     }
+    function callEditProductUnit(getPK){
+            callProductUnitGetDetailController(getPK);
+    }
 
     function DeleteProductUnit(table){
 
@@ -241,7 +244,7 @@
                 document.getElementById('txtUpdateProductUnitSource').value = data.ErpSource;
                 document.getElementById('txtUpdateProductUnitErp').value = data.ProductUnitErp;
                 document.getElementById('txtUpdateProductUnitRd').value = data.ProductUnitRd;
-                document.getElementById('txtUpdatetProductUnitDescription').value = data.ProductUnitDescription;
+                document.getElementById('txtUpdateProductUnitDescription').value = data.ProductUnitDescription;
 
 
                 if(data.Isactive == 1){
@@ -331,7 +334,7 @@
         model.ErpSource = $('#txtUpdateProductUnitSource').val();
         model.ProductUnitErp = $('#txtUpdateProductUnitErp').val();
         model.ProductUnitRd = $('#txtUpdateProductUnitRd').val();
-        model.ProductUnitDescription = $('#txtUpdatetProductUnitDescription').val();
+        model.ProductUnitDescription = $('#txtUpdateProductUnitDescription').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -357,7 +360,7 @@
 
                     document.getElementById('txtUpdateProductUnitErp').value = '';
                     document.getElementById('txtUpdateProductUnitRd').value = '';
-                    document.getElementById('txtUpdatetProductUnitDescription').value = '';
+                    document.getElementById('txtUpdateProductUnitDescription').value = '';
 
                     $("#modalUpdateProductUnit").modal('hide');
 
@@ -433,6 +436,9 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-ProductUnit-create").load("@Url.Action("Index", "ProductUnit")");
+
+            $("#render-ProductUnit-update").empty();
+            $("#render-ProductUnit-update").load("@Url.Action("Index", "ProductUnit")");
             $.unblockUI();
         }, 500);
     }

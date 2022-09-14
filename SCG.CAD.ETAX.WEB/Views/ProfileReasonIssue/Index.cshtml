@@ -486,13 +486,11 @@
         setTimeout(function(){
             $.blockUI();
             $("#render-ProfileReasonIssue-create").load("@Url.Action("Index", "ProfileReasonIssue")");
+
+            $("#render-ProfileReasonIssue-update").empty();
+            $("#render-ProfileReasonIssue-update").load("@Url.Action("Index", "ProfileReasonIssue")");
             $.unblockUI();
         }, 500);
     }
-
-
-
-
-
 
 </script>
