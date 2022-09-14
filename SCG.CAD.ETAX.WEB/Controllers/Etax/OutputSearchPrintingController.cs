@@ -187,6 +187,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> DownloadZipFile(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
+            var task = await Task.Run(() => ApiHelper.PostURI("api/OutputSearchPrinting/DownloadZipFile", httpContent));
+
+            return Json(task);
+        }
     }
 }

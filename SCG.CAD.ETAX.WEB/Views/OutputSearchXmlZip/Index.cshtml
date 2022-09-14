@@ -5,15 +5,8 @@
 
 
 @await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Search.cshtml")
-<br />
-<br />
-<br />
 <div class="divider">
 </div>
-
-
-
-
 @await Html.PartialAsync("~/Views/OutputSearchXmlZip/_Content.cshtml")
 
 
@@ -129,6 +122,7 @@
                 {
                     data: "outputSearchXmlZipFullPath",
                     width: "10%",
+                    className: "text-center",
                     render: function (data, type, row) {
                         return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
@@ -145,18 +139,19 @@
                     width: "10%"
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-warning",
-                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    data: "outputSearchXmlZipNo",
+                    className: "text-center",
+                    width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                        }
                 }
             ]
         });
 
 
-        EditOutputSearchXmlZip(table);
-        DeleteOutputSearchXmlZip(table);
+        //EditOutputSearchXmlZip(table);
+        //DeleteOutputSearchXmlZip(table);
     }
 
 
@@ -170,6 +165,9 @@
 
             callOutputSearchXmlZipGetDetailController(getPK);
         });
+    }
+    function callEditOutputSearchXmlZip(getPK){
+       callOutputSearchXmlZipGetDetailController(getPK);
     }
 
 
@@ -324,6 +322,7 @@
                 {
                     data: "outputSearchXmlZipFullPath",
                     width: "10%",
+                    className: "text-center",
                     render: function (data, type, row) {
                         return'<a class="btn btn-primary btn-sm"> Download </a>';
                     }
@@ -340,11 +339,12 @@
                     width: "10%"
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-warning",
-                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    data: "outputSearchXmlZipNo",
+                    className: "text-center",
+                    width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                        }
                 }
                 
             ],

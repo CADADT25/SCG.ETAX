@@ -193,42 +193,70 @@
 
                 getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
 
-                if (!string.IsNullOrEmpty(getStatus))
-                {
-                    statusDownload = Convert.ToInt32(getStatus);
-                }
-                else
-                {
-                    statusDownload = 99;
-                }
+                //if (!string.IsNullOrEmpty(getStatus))
+                //{
+                //    statusDownload = Convert.ToInt32(getStatus);
+                //}
+                //else
+                //{
+                //    statusDownload = 99;
+                //}
 
-                var getArrayDate = obj.outPutSearchDate.Split("to");
 
-                if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                {
-                    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-                }
-                else
-                {
-                    getMinDate = DateTime.Now.AddDays(-30);
-                    getMaxDate = DateTime.Now.AddDays(30);
-                }
+                //if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                //{
+                //    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                //    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                //}
+                //else
+                //{
+                //    getMinDate = DateTime.Now.AddDays(-30);
+                //    getMaxDate = DateTime.Now.AddDays(30);
+                //}
 
                 if (obj != null)
                 {
+                    tran = _dbContext.outputSearchXmlZip.ToList();
 
-                    tran = _dbContext.outputSearchXmlZip.Where(
+                    if(obj.outPutSearchCompanyCode != null)
+                    {
+                        if(obj.outPutSearchCompanyCode.Count > 0)
+                        {
+                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
+                        }
+                    }
 
-                            x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
+                    if (!string.IsNullOrEmpty(getStatus))
+                    {
+                        statusDownload = Convert.ToInt32(getStatus);
+                        tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
+                    }
 
-                            obj.outPutSearchCompanyCode.Count > 0 ? ( obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+                    if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
+                    {
+                        tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
+                    }
 
-                            statusDownload == 99 ? ( x.OutputSearchXmlZipDowloadStatus != 1 && x.OutputSearchXmlZipDowloadStatus != 0  && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                    {
+                        var getArrayDate = obj.outPutSearchDate.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
 
-                            getDocType != "ALL" ? (obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper() && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDocType != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                    }
 
-                            ).ToList();
+                    //tran = _dbContext.outputSearchXmlZip.Where(
+
+                    //        x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
+
+                    //        obj.outPutSearchCompanyCode.Count > 0 ? ( obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+
+                    //        statusDownload == 99 ? ( x.OutputSearchXmlZipDowloadStatus != 1 && x.OutputSearchXmlZipDowloadStatus != 0  && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+
+                    //        getDocType != "ALL" ? (obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper() && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDocType != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+
+                    //        ).ToList();
 
                     if (tran.Count > 0)
                     {

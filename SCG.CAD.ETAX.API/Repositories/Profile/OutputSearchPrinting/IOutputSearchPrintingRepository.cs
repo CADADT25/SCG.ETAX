@@ -8,6 +8,7 @@
         Task<Response> UPDATE(OutputSearchPrinting param);
         Task<Response> DELETE(OutputSearchPrinting param);
         Task<Response> SEARCH(string JsonString);
+        Task<Response> DOWNLOADZIPFILE(OutputSearchPrinting param);
 
     }
 }

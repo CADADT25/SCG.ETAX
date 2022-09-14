@@ -195,40 +195,64 @@
 
                 getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchEmailStatus;
 
-                if (!string.IsNullOrEmpty(getStatus))
-                {
-                    statusDownload = Convert.ToInt32(getStatus);
-                }
-                else
-                {
-                    statusDownload = 99;
-                }
+                //if (!string.IsNullOrEmpty(getStatus))
+                //{
+                //    statusDownload = Convert.ToInt32(getStatus);
+                //}
+                //else
+                //{
+                //    statusDownload = 99;
+                //}
 
-                var getArrayDate = obj.outPutSearchEmailDate.Split("to");
 
-                if (!string.IsNullOrEmpty(obj.outPutSearchEmailDate))
-                {
-                    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-                }
-                else
-                {
-                    getMinDate = DateTime.Now.AddDays(-30);
-                    getMaxDate = DateTime.Now.AddDays(30);
-                }
+                //if (!string.IsNullOrEmpty(obj.outPutSearchEmailDate))
+                //{
+                //    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                //    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                //}
+                //else
+                //{
+                //    getMinDate = DateTime.Now.AddDays(-30);
+                //    getMaxDate = DateTime.Now.AddDays(30);
+                //}
 
                 if (obj != null)
                 {
 
-                    tran = _dbContext.outputSearchEmailSend.Where(
+                    //tran = _dbContext.outputSearchEmailSend.Where(
 
-                            x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
+                    //        x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
 
-                            obj.outPutSearchEmailCompanyCode.Count > 0 ? (obj.outPutSearchEmailCompanyCode.Contains(x.OutputSearchEmailSendCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
+                    //        obj.outPutSearchEmailCompanyCode.Count > 0 ? (obj.outPutSearchEmailCompanyCode.Contains(x.OutputSearchEmailSendCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
 
-                            statusDownload == 99 ? (x.OutputSearchEmailSendStatus != 1 && x.OutputSearchEmailSendStatus != 0 && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+                    //        statusDownload == 99 ? (x.OutputSearchEmailSendStatus != 1 && x.OutputSearchEmailSendStatus != 0 && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchEmailSendStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
 
-                            ).ToList();
+                    //        ).ToList();
+
+                    tran = _dbContext.outputSearchEmailSend.ToList();
+
+                    if(obj.outPutSearchEmailCompanyCode != null)
+                    {
+                        if(obj.outPutSearchEmailCompanyCode.Count > 0)
+                        {
+                            tran = tran.Where(x=> obj.outPutSearchEmailCompanyCode.Contains(x.OutputSearchEmailSendCompanyCode)).ToList();
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(getStatus))
+                    {
+                        statusDownload = Convert.ToInt32(getStatus);
+                        tran = tran.Where(x=> x.OutputSearchEmailSendStatus == statusDownload).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.outPutSearchEmailDate))
+                    {
+                        var getArrayDate = obj.outPutSearchEmailDate.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                    }
 
                     if (tran.Count > 0)
                     {

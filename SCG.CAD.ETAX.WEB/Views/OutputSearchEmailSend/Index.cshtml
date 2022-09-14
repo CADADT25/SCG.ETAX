@@ -87,18 +87,19 @@
                     }
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-warning",
-                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    data: "outputSearchEmailSendNo",
+                    className: "text-center",
+                    width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                        }
                 }
             ]
         });
 
 
-        EditOutputSearchEmailSend(table);
-        DeleteOutputSearchEmailSend(table);
+        //EditOutputSearchEmailSend(table);
+        //DeleteOutputSearchEmailSend(table);
     }
 
 
@@ -114,6 +115,9 @@
 
             callOutputSearchEmailSendGetDetailController(getPK);
         });
+    }
+    function callEditOutputSearchEmailSend(getPK){
+        callOutputSearchEmailSendGetDetailController(getPK);
     }
 
 
@@ -160,7 +164,12 @@
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
             success: function (response) {
-
+                //var bytes = new Uint8Array(response); 
+                //var blob = new Blob([response], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                //var link = document.createElement('a');
+                //link.href = window.URL.createObjectURL(blob);
+                //link.download = "scg-etax-OutputSearchEmailSend.csv";
+                //link.click();
                 var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
 
                 var downloadUrl = URL.createObjectURL(blob);
@@ -239,11 +248,12 @@
                     }
                 },
                 {
-                    data: null,
-                    className: "dt-center editor-edit text-center text-warning",
-                    defaultContent: '<i class="pointer fas fa-clock"/> </i>',
-                    orderable: false,
-                    width: "2%"
+                    data: "outputSearchEmailSendNo",
+                    className: "text-center",
+                    width: "2%",
+                        render: function (data, type, row) {
+                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                        }
                 }
                 
             ],
@@ -262,7 +272,6 @@
             $.unblockUI();
         }, 500);
     }
-
 
 </script>
 

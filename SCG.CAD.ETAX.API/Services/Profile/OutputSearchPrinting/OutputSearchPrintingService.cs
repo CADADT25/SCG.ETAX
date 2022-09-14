@@ -195,41 +195,66 @@
 
                 getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
 
-                if (!string.IsNullOrEmpty(getStatus))
-                {
-                    statusDownload = Convert.ToInt32(getStatus);
-                }
-                else
-                {
-                    statusDownload = 99;
-                }
+                //if (!string.IsNullOrEmpty(getStatus))
+                //{
+                //    statusDownload = Convert.ToInt32(getStatus);
+                //}
+                //else
+                //{
+                //    statusDownload = 99;
+                //}
 
-                var getArrayDate = obj.outPutSearchDate.Split("to");
 
-                if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                {
-                    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-                }
-                else
-                {
-                    getMinDate = DateTime.Now.AddDays(-30);
-                    getMaxDate = DateTime.Now.AddDays(30);
-                }
+                //if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                //{
+                //    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                //    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                //}
+                //else
+                //{
+                //    getMinDate = DateTime.Now.AddDays(-30);
+                //    getMaxDate = DateTime.Now.AddDays(30);
+                //}
 
 
                 if (obj != null)
                 {
 
-                    tran = _dbContext.outputSearchPrinting.Where(
+                    //tran = _dbContext.outputSearchPrinting.Where(
 
-                            x =>  x.CreateDate >= getMinDate.Date &&  x.CreateDate <= getMaxDate.Date && 
+                    //        x =>  x.CreateDate >= getMinDate.Date &&  x.CreateDate <= getMaxDate.Date && 
 
-                            obj.outPutSearchCompanyCode.Count > 0 ? obj.outPutSearchCompanyCode.Contains(x.OutputSearchPrintingCompanyCode) : ( x.OutputSearchPrintingCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date ) &&
+                    //        obj.outPutSearchCompanyCode.Count > 0 ? obj.outPutSearchCompanyCode.Contains(x.OutputSearchPrintingCompanyCode) : ( x.OutputSearchPrintingCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date ) &&
 
-                            statusDownload == 99 ? x.OutputSearchPrintingDowloadStatus != 99 :  ( x.OutputSearchPrintingDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
+                    //        statusDownload == 99 ? x.OutputSearchPrintingDowloadStatus != 99 :  ( x.OutputSearchPrintingDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
 
-                            ).ToList();
+                    //        ).ToList();
+                    tran = _dbContext.outputSearchPrinting.ToList();
+
+                    if (obj.outPutSearchCompanyCode != null)
+                    {
+                        if (obj.outPutSearchCompanyCode.Count > 0)
+                        {
+                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(getStatus))
+                    {
+                        statusDownload = Convert.ToInt32(getStatus);
+
+                        tran = tran.Where(x => x.OutputSearchPrintingDowloadStatus == statusDownload).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                    {
+                        var getArrayDate = obj.outPutSearchDate.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                        tran = tran.Where(x=> x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                    }
+
 
 
                     if (tran.Count > 0)
@@ -273,6 +298,80 @@
             return resp;
         }
 
+        public Response DOWNLOADZIPFILE(OutputSearchPrinting param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var data = _dbContext.outputSearchPrinting.Where(x => x.OutputSearchPrintingNo == param.OutputSearchPrintingNo).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        if (!String.IsNullOrEmpty(data.OutputSearchPrintingFullPath))
+                        {
+                            //string zipPath = data.OutputSearchPrintingFullPath;
+                            string zipPath = "D:\\sign.7z";
+
+                            //Read the File as Byte Array.
+                            byte[] bytes = File.ReadAllBytes(zipPath);
+
+                            //Convert File to Base64 string and send to Client.
+                            resp.OUTPUT_DATA =  Convert.ToBase64String(bytes, 0, bytes.Length);
+                            resp.MESSAGE = Path.GetFileName(data.OutputSearchPrintingFullPath);
+
+                            if (data.OutputSearchPrintingDowloadCount != null)
+                            {
+                                data.OutputSearchPrintingDowloadCount = data.OutputSearchPrintingDowloadCount + 1;
+                            }
+                            else
+                            {
+                                data.OutputSearchPrintingDowloadCount = 1;
+                            }
+                            data.OutputSearchPrintingDowloadStatus = 1;
+                            _dbContext.SaveChanges();
+
+                            SAVEHISTORY(param);
+                        }
+                        resp.STATUS = true;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public void SAVEHISTORY(OutputSearchPrinting param)
+        {
+            try
+            {
+                OutputSearchPrintingDowloadHistory insert = new OutputSearchPrintingDowloadHistory();
+                insert.Isactive = 1;
+                insert.OutputSearchPrintingDowloadHistoryTime = DateTime.Now;
+                insert.OutputSearchPrintingDowloadHistoryBy = param.UpdateBy;
+                insert.OutputSearchPrintingNo = param.OutputSearchPrintingNo;
+                insert.CreateBy = param.CreateBy;
+                insert.UpdateBy = param.UpdateBy;
+                insert.UpdateDate = DateTime.Now;
+                insert.CreateDate = DateTime.Now;
+
+                _dbContext.outputSearchPrintingDowloadHistory.Add(insert);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }
