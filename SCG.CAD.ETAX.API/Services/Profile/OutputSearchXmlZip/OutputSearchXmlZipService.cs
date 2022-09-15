@@ -299,6 +299,80 @@
             return resp;
         }
 
+        public Response DOWNLOADZIPFILE(OutputSearchXmlZip param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var data = _dbContext.outputSearchXmlZip.Where(x => x.OutputSearchXmlZipNo == param.OutputSearchXmlZipNo).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        if (!String.IsNullOrEmpty(data.OutputSearchXmlZipFullPath))
+                        {
+                            string zipPath = data.OutputSearchXmlZipFullPath;
+                            //string zipPath = "D:\\sign.7z";
+
+                            //Read the File as Byte Array.
+                            byte[] bytes = File.ReadAllBytes(zipPath);
+
+                            //Convert File to Base64 string and send to Client.
+                            resp.OUTPUT_DATA = Convert.ToBase64String(bytes, 0, bytes.Length);
+                            resp.MESSAGE = Path.GetFileName(data.OutputSearchXmlZipFullPath);
+
+                            if (data.OutputSearchXmlZipDowloadCount != null)
+                            {
+                                data.OutputSearchXmlZipDowloadCount = data.OutputSearchXmlZipDowloadCount + 1;
+                            }
+                            else
+                            {
+                                data.OutputSearchXmlZipDowloadCount = 1;
+                            }
+                            data.OutputSearchXmlZipDowloadStatus = 1;
+                            _dbContext.SaveChanges();
+
+                            SAVEHISTORY(param);
+                        }
+                        resp.STATUS = true;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public void SAVEHISTORY(OutputSearchXmlZip param)
+        {
+            try
+            {
+                OutputSearchXmlZipDowloadHistory insert = new OutputSearchXmlZipDowloadHistory();
+                insert.Isactive = 1;
+                insert.OutputSearchXmlZipDowloadHistoryTime = DateTime.Now;
+                insert.OutputSearchXmlZipDowloadHistoryBy = param.UpdateBy;
+                insert.OutputSearchXmlZipDowloadHistoryNo = param.OutputSearchXmlZipNo;
+                insert.CreateBy = param.CreateBy;
+                insert.UpdateBy = param.UpdateBy;
+                insert.UpdateDate = DateTime.Now;
+                insert.CreateDate = DateTime.Now;
+
+                _dbContext.outputSearchXmlZipDowloadHistory.Add(insert);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
     }

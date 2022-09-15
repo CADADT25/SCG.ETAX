@@ -295,6 +295,72 @@
             return resp;
         }
 
+        public Response DOWNLOADZIPFILE(OutputSearchEmailSend param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var data = _dbContext.outputSearchEmailSend.Where(x => x.OutputSearchEmailSendNo == param.OutputSearchEmailSendNo).FirstOrDefault();
+
+                    if (data != null)
+                    {
+                        if (!String.IsNullOrEmpty(data.OutputSearchEmailSendFileName))
+                        {
+                            //string zipPath = data.OutputSearchEmailSendFileName;
+                            string zipPath = "D:\\sign.7z";
+
+                            //Read the File as Byte Array.
+                            byte[] bytes = File.ReadAllBytes(zipPath);
+
+                            //Convert File to Base64 string and send to Client.
+                            resp.OUTPUT_DATA = Convert.ToBase64String(bytes, 0, bytes.Length);
+                            resp.MESSAGE = Path.GetFileName(data.OutputSearchEmailSendFileName);
+
+                            data.OutputSearchEmailSendStatus = 1;
+                            _dbContext.SaveChanges();
+
+                            SAVEHISTORY(param);
+                        }
+                        resp.STATUS = true;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public void SAVEHISTORY(OutputSearchEmailSend param)
+        {
+            try
+            {
+                OutputSearchEmailSendHistory insert = new OutputSearchEmailSendHistory();
+                insert.Isactive = 1;
+                insert.OutputSearchEmailSendHistoryTime = DateTime.Now;
+                insert.OutputSearchEmailSendHistoryBy = param.UpdateBy;
+                insert.OutputSearchEmailSendNo = param.OutputSearchEmailSendNo;
+                insert.CreateBy = param.CreateBy;
+                insert.UpdateBy = param.UpdateBy;
+                insert.UpdateDate = DateTime.Now;
+                insert.CreateDate = DateTime.Now;
+
+                _dbContext.outputSearchEmailSendHistory.Add(insert);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

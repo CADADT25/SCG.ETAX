@@ -8,6 +8,7 @@
         Task<Response> UPDATE(OutputSearchEmailSend param);
         Task<Response> DELETE(OutputSearchEmailSend param);
         Task<Response> SEARCH(string JsonString);
+        Task<Response> DOWNLOADZIPFILE(OutputSearchEmailSend param);
 
     }
 }

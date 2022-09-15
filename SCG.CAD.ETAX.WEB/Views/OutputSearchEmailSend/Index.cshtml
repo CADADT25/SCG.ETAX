@@ -75,7 +75,18 @@
                 },
                 {
                     data: "outputSearchEmailSendFileName",
-                    width: "10%"
+                    width: "10%",
+                        render: function (data, type, row) {
+                            return data.substr(data.lastIndexOf('\\') + 1);
+                        }
+                },
+                {
+                    data: "outputSearchEmailSendNo",
+                    className: "text-center",
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                    }
                 },
                 {
                     data: "outputSearchEmailSendStatus",
@@ -101,7 +112,6 @@
         //EditOutputSearchEmailSend(table);
         //DeleteOutputSearchEmailSend(table);
     }
-
 
     function EditOutputSearchEmailSend(table){
 
@@ -142,13 +152,35 @@
 
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "OutputSearchEmailSend")",
+            url: "@Url.Action("DetailHistory", "OutputSearchEmailSend")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
+                $('#appendSearchEmailSendHistory').empty();
+                $.each(result.data, function (i, slaveValue) {
+                            var date = new Date(slaveValue.outputSearchEmailSendHistoryTime).toDateString("dd/MM/yyyy HH:mm:ss");
+                            var textappend = "<li class='timeline-item'>";
+                            textappend = "<span class='timeline-point timeline-point-success'>";
+                            textappend += "<i class='fas fa-download text-success'></i>";
+                            textappend += "</span>";
+                            textappend += "<div class='timeline-event'>";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "<h6 class='mb-50'>" + slaveValue.outputSearchEmailSendHistoryBy + "</h6>";
+                            textappend += "<span class='timeline-event-time'>" + date + "</span>";
+                            textappend += "</div>";
+                            textappend += "<p>The file has been downloaded..</p>";
+                            textappend += "<hr />";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "</div>";
+                            textappend += "</div>";
+                            textappend += "</li>";
 
-                data = $.parseJSON(result)
-
+                            //var li = document.createElement('li');
+                            //var text = document.createTextNode(textappend);
+                            //li.innerHTML(textappend);
+                            //document.getElementById("appendSearchEmailSendHistory").appendChild(li);
+                            $('#appendSearchEmailSendHistory').append(textappend);
+                });
                 $("#modalUpdateOutputSearchEmailSend").modal('show');
 
             }
@@ -239,6 +271,14 @@
                     width: "10%"
                 },
                 {
+                    data: "outputSearchEmailSendNo",
+                    className: "text-center",
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                    }
+                },
+                {
                     data: "outputSearchEmailSendStatus",
                     width: "10%",
                     visible: false,
@@ -263,7 +303,65 @@
             
         }).ajax.reload();
     }
+    
+    function DownloadFile(getpk) {
+        
+        var model = new Object();
 
+        model.OutputSearchEmailSendNo = getpk;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 1;
+        var getJsonString = JSON.stringify(model);
+        
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DownloadZipFile", "OutputSearchEmailSend")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+                data = $.parseJSON(resp)
+                var errorMessage = data.erroR_MESSAGE;
+                if(data.status){
+                    console.log('Mark');
+                    console.log(data);
+                    //Convert Base64 string to Byte Array.
+                    var bytes = Base64ToBytes(data.outpuT_DATA);
+                    var fileName = data.message;
+                    //Convert Byte Array to BLOB.
+                    var blob = new Blob([bytes], { type: "application/octetstream" });
+ 
+                    //Check the Browser type and download the File.
+                    var isIE = false || !!document.documentMode;
+                    if (isIE) {
+                        window.navigator.msSaveBlob(blob, fileName);
+                    } else {
+                        var url = window.URL || window.webkitURL;
+                        link = url.createObjectURL(blob);
+                        var a = $("<a />");
+                        a.attr("download", fileName);
+                        a.attr("href", link);
+                        $("body").append(a);
+                        a[0].click();
+                        $("body").remove(a);
+                    }
+                }
+                else{
+                    fnSweetAlert_Error(errorMessage);
+                }
+            }
+        });
+    };
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
 
     function callOutputSearchEmailSendIndex() {
         setTimeout(function(){

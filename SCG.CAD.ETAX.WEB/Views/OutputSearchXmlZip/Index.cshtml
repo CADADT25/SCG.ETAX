@@ -124,7 +124,7 @@
                     width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return'<a class="btn btn-primary btn-sm"> Download </a>';
+                        return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
                     }
                 },
                 {
@@ -220,13 +220,36 @@
     function callOutputSearchXmlZipGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            url: "@Url.Action("DetailHistory", "OutputSearchXmlZip")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
+                $('#appendSearchXmlZipHistory').empty();
+                console.log(result);
+                $.each(result.data, function (i, slaveValue) {
+                            var date = new Date(slaveValue.outputSearchXmlZipDowloadHistoryTime).toDateString("dd/MM/yyyy HH:mm:ss");
+                            var textappend = "<li class='timeline-item'>";
+                            textappend = "<span class='timeline-point timeline-point-success'>";
+                            textappend += "<i class='fas fa-download text-success'></i>";
+                            textappend += "</span>";
+                            textappend += "<div class='timeline-event'>";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "<h6 class='mb-50'>" + slaveValue.outputSearchXmlZipDowloadHistoryBy + "</h6>";
+                            textappend += "<span class='timeline-event-time'>" + date + "</span>";
+                            textappend += "</div>";
+                            textappend += "<p>The file has been downloaded..</p>";
+                            textappend += "<hr />";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "</div>";
+                            textappend += "</div>";
+                            textappend += "</li>";
 
-                data = $.parseJSON(result)
-
+                            //var li = document.createElement('li');
+                            //var text = document.createTextNode(textappend);
+                            //li.innerHTML(textappend);
+                            //document.getElementById("appendSearchEmailSendHistory").appendChild(li);
+                            $('#appendSearchXmlZipHistory').append(textappend);
+                });
                 $("#modalUpdateOutputSearchXmlZip").modal('show');
 
             }
@@ -324,7 +347,7 @@
                     width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return'<a class="btn btn-primary btn-sm"> Download </a>';
+                        return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
                     }
                 },
                 {
@@ -357,7 +380,57 @@
     }
 
     // [end] Ajax call Controller
+    
+    function DownloadFile(getpk) {
+        
+        var model = new Object();
 
+        model.OutputSearchXmlZipNo = getpk;
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = 1;
+        var getJsonString = JSON.stringify(model);
+        
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DownloadZipFile", "OutputSearchXmlZip")",
+            data: { jsonString : getJsonString },
+            dataType: "text",
+            success: function (resp) {
+                data = $.parseJSON(resp)
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(data.outpuT_DATA);
+                var fileName = data.message;
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+ 
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileName);
+                } else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", fileName);
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            }
+        });
+    };
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
 
 
 

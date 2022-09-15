@@ -195,5 +195,24 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
+
+        public async Task<JsonResult> DetailHistory(int id)
+        {
+            List<OutputSearchPrintingDowloadHistory> tran = new List<OutputSearchPrintingDowloadHistory>();
+
+            var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchPrintingDowloadHistory/GetListAll"));
+
+            if (task.STATUS)
+            {
+
+                tran = JsonConvert.DeserializeObject<List<OutputSearchPrintingDowloadHistory>>(task.OUTPUT_DATA.ToString());
+                tran = tran.Where(x => x.OutputSearchPrintingNo == id).ToList();
+            }
+            else
+            {
+                ViewBag.Error = task.MESSAGE;
+            }
+            return Json(new { data = tran });
+        }
     }
 }

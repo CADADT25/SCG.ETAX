@@ -8,6 +8,8 @@
         Task<Response> UPDATE(OutputSearchXmlZip param);
         Task<Response> DELETE(OutputSearchXmlZip param);
         Task<Response> SEARCH(string JsonString);
+        Task<Response> DOWNLOADZIPFILE(OutputSearchXmlZip param);
+
 
     }
 }

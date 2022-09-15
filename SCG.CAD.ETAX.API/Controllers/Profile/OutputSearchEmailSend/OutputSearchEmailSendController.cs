@@ -71,6 +71,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        [Route("DownloadZipFile")]
+        public IActionResult DownloadZipFile(OutputSearchEmailSend param)
+        {
+            var result = repo.DOWNLOADZIPFILE(param).Result;
+
+            return Ok(result);
+        }
 
     }
 }

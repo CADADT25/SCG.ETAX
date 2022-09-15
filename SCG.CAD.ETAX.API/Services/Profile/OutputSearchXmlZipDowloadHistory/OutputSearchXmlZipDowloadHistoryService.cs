@@ -10,7 +10,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.outputSearchXmlZip.ToList();
+                var getList = _dbContext.outputSearchXmlZipDowloadHistory.ToList();
 
                 if (getList.Count > 0)
                 {

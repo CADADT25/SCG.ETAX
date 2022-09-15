@@ -201,14 +201,35 @@
     function callOutputSearchPrintingGetDetailController(getPK){
         $.ajax({
             type: "GET",
-            url: "@Url.Action("Detail", "OutputSearchPrinting")",
+            url: "@Url.Action("DetailHistory", "OutputSearchPrinting")",
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
 
-                data = $.parseJSON(result)
+                $('#appendSearchPrintingHistory').empty();
+                $.each(result.data, function (i, slaveValue) {
+                            var date = new Date(slaveValue.outputSearchPrintingDowloadHistoryTime).toDateString("dd/MM/yyyy HH:mm:ss");
+                            var textappend = "<li class='timeline-item'>";
+                            textappend = "<span class='timeline-point timeline-point-success'>";
+                            textappend += "<i class='fas fa-download text-success'></i>";
+                            textappend += "</span>";
+                            textappend += "<div class='timeline-event'>";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "<h6 class='mb-50'>" + slaveValue.outputSearchPrintingDowloadHistoryBy + "</h6>";
+                            textappend += "<span class='timeline-event-time'>" + date + "</span>";
+                            textappend += "</div>";
+                            textappend += "<p>The file has been downloaded..</p>";
+                            textappend += "<hr />";
+                            textappend += "<div class='d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1'>";
+                            textappend += "</div>";
+                            textappend += "</div>";
+                            textappend += "</li>";
 
+                            $('#appendSearchPrintingHistory').append(textappend);
+                });
                 $("#modalUpdateOutputSearchPrinting").modal('show');
+
+
 
             }
         });

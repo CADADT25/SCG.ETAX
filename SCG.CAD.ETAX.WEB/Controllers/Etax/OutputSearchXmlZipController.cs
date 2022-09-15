@@ -188,5 +188,32 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> DownloadZipFile(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/OutputSearchXmlZip/DownloadZipFile", httpContent));
+
+            return Json(task);
+        }
+
+        public async Task<JsonResult> DetailHistory(int id)
+        {
+            List<OutputSearchXmlZipDowloadHistory> tran = new List<OutputSearchXmlZipDowloadHistory>();
+
+            var task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZipDowloadHistory/GetListAll"));
+
+            if (task.STATUS)
+            {
+
+                tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZipDowloadHistory>>(task.OUTPUT_DATA.ToString());
+                tran = tran.Where(x => x.OutputSearchXmlZipNo == id).ToList();
+            }
+            else
+            {
+                ViewBag.Error = task.MESSAGE;
+            }
+            return Json(new { data = tran });
+        }
     }
 }

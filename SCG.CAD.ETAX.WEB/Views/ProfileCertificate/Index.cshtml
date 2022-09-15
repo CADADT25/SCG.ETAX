@@ -16,7 +16,7 @@
 
         //$("#txtUpdateProfileCertificateEndDate").flatpickr();
         
-        $('#ddlInsertProfileCertificatSerial').select2();
+        $('#ddlInsertProfileCertificateName').select2();
 
         var setCompanyCode = $("#companyCodeState").text();
 
@@ -31,12 +31,10 @@
         });
 
         
-        $('#ddlInsertProfileCertificatSerial').change(function() {
-            console.log('ddl');
-            console.log(dataCertificateMaster);
+        $('#ddlInsertProfileCertificateName').change(function() {
             $.each(dataCertificateMaster, function (i, data) {
-                if(data.certificateCertSerial == $('#ddlInsertProfileCertificatSerial').val()){
-                    document.getElementById('txtInsertProfileCertificateName').value = data.certificateName;
+                if(data.certificateCertSerial == $('#ddlInsertProfileCertificateName').val()){
+                    document.getElementById('txtInsertProfileCertificatSerial').value = data.certificateCertSerial;
                     document.getElementById('txtInsertProfileCertificateStartDate').value = data.certificateStartDate;
                     document.getElementById('txtInsertProfileCertificateEndDate').value = data.certificateEndDate;
                 }
@@ -117,14 +115,14 @@
                     data: "certificateEndDate",
                     width: "20%"
                 },
-                //{
-                //    data: "isactive",
-                //    width: "10%",
-                //    className: "text-center",
-                //    render: function (data, type, row) {
-                //        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
-                //    }
-                //},
+                {
+                    data: "isactive",
+                    width: "10%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        return (data == 1) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
@@ -156,7 +154,8 @@
 
     function fnInsertCancelProfileCertificate(){
 
-            document.getElementById('ddlInsertProfileCertificatSerial').value = '';
+            document.getElementById('ddlInsertProfileCertificateName').value = '';
+            document.getElementById('txtInsertProfileCertificatSerial').value = '';
             document.getElementById('txtInsertProfileCertificateStartDate').value = '';
             document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 
@@ -178,21 +177,19 @@
     
     function callModalInsertProfileCertificate(){
         
-        $('#ddlInsertProfileCertificatSerial').select2();
+        $('#ddlInsertProfileCertificateName').select2();
         $("#ddlUpdateProfileCompanyCertificate").empty();
         $("#modalCreateProfileCertificate").modal('show');
         
         sleep(1000);
         $.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
             $.each(data.data, function (i, slaveValue) {
-                $('select#ddlInsertProfileCertificatSerial').append(
+                $('select#ddlInsertProfileCertificateName').append(
                 $('<option></option>').val(slaveValue.certificateCertSerial).html(
-                 slaveValue.certificateCertSerial)
+                 slaveValue.certificateName)
                 );
             });
             dataCertificateMaster = data.data;
-            console.log('load');
-            console.log(dataCertificateMaster);
 
             //$("#ddlInsertProfileCertificatSerial").trigger('change');
         })
@@ -265,7 +262,7 @@
 
     function fnInsertProfileCertificate(){
 
-        if ($('#ddlInsertProfileCertificatSerial').val() != '')
+        if ($('#ddlInsertProfileCertificateName').val() != '')
         {
             callProfileCertificateInsertController();
         }
@@ -385,7 +382,7 @@
 
         var model = new Object();
         model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
-        model.CertificateCertSerial = $('#ddlInsertProfileCertificatSerial').val();
+        model.CertificateCertSerial = $('#txtInsertProfileCertificatSerial').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
@@ -411,7 +408,8 @@
 
                     fnSweetAlert_SaveSuccess();
 
-                    document.getElementById('ddlInsertProfileCertificatSerial').value = '';
+                    document.getElementById('ddlInsertProfileCertificateName').value = '';
+                    document.getElementById('txtInsertProfileCertificatSerial').value = '';
                     document.getElementById('txtInsertProfileCertificateStartDate').value = '';
                     document.getElementById('txtInsertProfileCertificateEndDate').value = '';
 

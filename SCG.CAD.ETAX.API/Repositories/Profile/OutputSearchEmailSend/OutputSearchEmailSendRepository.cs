@@ -119,5 +119,24 @@
             return await Task.FromResult(resp);
         }
 
+
+        public async Task<Response> DOWNLOADZIPFILE(OutputSearchEmailSend param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.DOWNLOADZIPFILE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
     }
 }
