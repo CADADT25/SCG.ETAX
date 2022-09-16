@@ -106,6 +106,12 @@
                     width: "10%"
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('YYYY-MM-DD')},
+                    width: "10%"
+                },
+                {
                     data: "outputSearchXmlZipFileName",
                     width: "20%",
                     render: function (data, type, row) {
@@ -131,12 +137,6 @@
                     data: "outputSearchXmlZipDowloadStatus",
                     width: "10%",
                     visible: false
-                },
-                {
-                    data: "createDate",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('YYYY-MM-DD')},
-                    width: "10%"
                 },
                 {
                     data: "outputSearchXmlZipNo",
@@ -227,7 +227,7 @@
                 $('#appendSearchXmlZipHistory').empty();
                 console.log(result);
                 $.each(result.data, function (i, slaveValue) {
-                            var date = new Date(slaveValue.outputSearchXmlZipDowloadHistoryTime).toDateString("dd/MM/yyyy HH:mm:ss");
+                            var date = moment(slaveValue.outputSearchXmlZipDowloadHistoryTime).format('DD/MM/YYYY HH:mm:ss');
                             var textappend = "<li class='timeline-item'>";
                             textappend = "<span class='timeline-point timeline-point-success'>";
                             textappend += "<i class='fas fa-download text-success'></i>";
@@ -258,10 +258,25 @@
 
 
     function callOutputSearchXmlZipExportController(){
+        
+        var getXmlSearchCompanyCode = $('#OutputSearchXmlZipCustomerCode').val();
+        var getXmlSearchDateBetween = $('#OutputSearchXmlZipDate').val();
+        var getXmlSearchDocType = $('#OutputSearchXmlZipDocType').val();
+        var getXmlSearchDownloadStatus = $('#OutputSearchXmlZipStatus').val();
+
+        var model = new Object();
+
+        model.outPutSearchCompanyCode = getXmlSearchCompanyCode;
+        model.outPutSearchDate = getXmlSearchDateBetween;
+        model.outPutSearchDocType = getXmlSearchDocType;
+        model.outPutSearchStatus = getXmlSearchDownloadStatus;
+
+        var JsonString = JSON.stringify(model);
+
         $.ajax({
             type: "GET",
             url: "@Url.Action("ExportToCsv", "OutputSearchXmlZip")",
-            //data: { id : getPK },
+            data: { jsonSearchString : JsonString },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
             success: function (response) {
@@ -329,6 +344,12 @@
                     width: "10%"
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('YYYY-MM-DD')},
+                    width: "10%"
+                },
+                {
                     data: "outputSearchXmlZipFileName",
                     width: "20%",
                     render: function (data, type, row) {
@@ -354,12 +375,6 @@
                     data: "outputSearchXmlZipDowloadStatus",
                     width: "10%",
                     visible: false
-                },
-                {
-                    data: "createDate",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('YYYY-MM-DD')},
-                    width: "10%"
                 },
                 {
                     data: "outputSearchXmlZipNo",

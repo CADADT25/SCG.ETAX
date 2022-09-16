@@ -66,7 +66,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
 
                             Console.WriteLine("Start Zip Company : " + data.CompanyCode);
                             log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
-                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".zip";
                             //var resultZipFile = Zipfile(data, zipName);
                             var resultZipfileMax3mb = ZipfileMax3mb(xmlFileModel);
                             Console.WriteLine("End CompanyCode : " + data.CompanyCode);
@@ -304,7 +304,7 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                         datatxmlfileupdate = new XmlFileDetail();
                         if (flagnewfile)
                         {
-                            zipName = dataFile.CompanyCode + "_" + doctype.DocumentType.ToUpper() + "_" + DateTime.Now.ToString("yyyyMM") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            zipName = dataFile.CompanyCode + "_" + doctype.DocumentType.ToUpper() + "_" + DateTime.Now.ToString("yyyyMM") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".zip";
                             flagnewfile = false;
                         }
 

@@ -64,6 +64,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {
@@ -79,7 +80,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(new { data = tran });
         }
 
-        public async Task<ActionResult> ExportToCsv()
+        public async Task<ActionResult> ExportToCsv(string jsonSearchString)
         {
             Response resp = new Response();
 
@@ -94,6 +95,46 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+
+                    outputSearchPrintingModel obj = new outputSearchPrintingModel();
+                    obj = JsonConvert.DeserializeObject<outputSearchPrintingModel>(jsonSearchString);
+                    if (obj != null)
+                    {
+                        DateTime getMinDate = new DateTime();
+                        DateTime getMaxDate = new DateTime();
+
+                        var getStatus = obj.outPutSearchStatus;
+
+                        int statusDownload = 99;
+
+                        getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
+
+                        tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+
+                        if (obj.outPutSearchCompanyCode != null)
+                        {
+                            if (obj.outPutSearchCompanyCode.Count > 0)
+                            {
+                                tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(getStatus))
+                        {
+                            statusDownload = Convert.ToInt32(getStatus);
+
+                            tran = tran.Where(x => x.OutputSearchPrintingDowloadStatus == statusDownload).ToList();
+                        }
+
+                        if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                        {
+                            var getArrayDate = obj.outPutSearchDate.Split("to");
+                            getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                            getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                            tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                        }
+                    }
 
                     if (tran.Count() > 0)
                     {
@@ -170,6 +211,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
 
                 }
                 else

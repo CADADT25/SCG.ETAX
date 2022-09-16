@@ -56,7 +56,7 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
                         {
                             Console.WriteLine("Start Zip Company : " + data.CompanyCode);
                             log.InsertLog(pathlog, "Start Zip Company : " + data.CompanyCode);
-                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".7z";
+                            zipName = data.CompanyCode + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".zip";
                             var resultZipFile = Zipfile(data, zipName);
 
                             Console.WriteLine("Insert Data OutputSearchPrinting Company : " + data.CompanyCode + " | ZipName : " + zipName);

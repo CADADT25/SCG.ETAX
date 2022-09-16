@@ -93,6 +93,12 @@
                     width: "10%"
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MMMM-YYYY')},
+                    width: "10%"
+                },
+                {
                     data: "outputSearchPrintingFileName",
                     width: "20%",
                     render: function (data, type, row) {
@@ -111,12 +117,6 @@
                     data: "outputSearchPrintingDowloadStatus",
                     width: "10%",
                     visible: false
-                },
-                {
-                    data: "createDate",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MMMM-YYYY')},
-                    width: "10%"
                 },
                 {
                     data: "outputSearchPrintingNo",
@@ -208,7 +208,7 @@
 
                 $('#appendSearchPrintingHistory').empty();
                 $.each(result.data, function (i, slaveValue) {
-                            var date = new Date(slaveValue.outputSearchPrintingDowloadHistoryTime).toDateString("dd/MM/yyyy HH:mm:ss");
+                            var date = moment(slaveValue.outputSearchPrintingDowloadHistoryTime).format('DD/MM/YYYY HH:mm:ss');
                             var textappend = "<li class='timeline-item'>";
                             textappend = "<span class='timeline-point timeline-point-success'>";
                             textappend += "<i class='fas fa-download text-success'></i>";
@@ -237,10 +237,21 @@
 
 
     function callOutputSearchPrintingExportController(){
+        
+        var getCompanyCode = $('#outputSearchPrintingCustomerCode').val();
+        var getDateBetween = $('#outputSearchPrintingDate').val();
+        var getPrintDownloadStatus = $('#outputSearchPrintingStatus').val();
+        var model = new Object();
+
+        model.outPutSearchCompanyCode = getCompanyCode;
+        model.outPutSearchDate = getDateBetween;
+        model.outPutSearchStatus = getPrintDownloadStatus;
+
+        var JsonString = JSON.stringify(model);
         $.ajax({
             type: "GET",
             url: "@Url.Action("ExportToCsv", "OutputSearchPrinting")",
-            //data: { id : getPK },
+            data: { jsonSearchString : JsonString },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
             success: function (response) {
@@ -307,6 +318,12 @@
                     width: "10%"
                 },
                 {
+                    data: "createDate",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MMMM-YYYY')},
+                    width: "10%"
+                },
+                {
                     data: "outputSearchPrintingFileName",
                     width: "20%",
                     render: function (data, type, row) {
@@ -325,12 +342,6 @@
                     data: "outputSearchPrintingDowloadStatus",
                     width: "10%",
                     visible: false
-                },
-                {
-                    data: "createDate",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MMMM-YYYY')},
-                    width: "10%"
                 },
                 {
                     data: "outputSearchPrintingNo",

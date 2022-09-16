@@ -64,6 +64,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.OrderBy(x=> x.OutputSearchXmlZipCompanyCode).ThenBy(x=> x.CreateDate).ToList();
                 }
                 else
                 {
@@ -79,10 +80,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(new { data = tran });
         }
 
-        public async Task<ActionResult> ExportToCsv()
+        public async Task<ActionResult> ExportToCsv(string jsonSearchString)
         {
             Response resp = new Response();
 
+            outputSearchXmlModel obj = new outputSearchXmlModel();
             List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
 
             var strBuilder = new StringBuilder();
@@ -94,6 +96,50 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
+
+                    obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(jsonSearchString);
+
+                    if (obj != null)
+                    {
+                        DateTime getMinDate = new DateTime();
+                        DateTime getMaxDate = new DateTime();
+
+                        var getDocType = obj.outPutSearchDocType.ToUpper();
+
+                        var getStatus = obj.outPutSearchStatus;
+
+                        int statusDownload = 99;
+
+                        getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
+
+                        if (obj.outPutSearchCompanyCode != null)
+                        {
+                            if (obj.outPutSearchCompanyCode.Count > 0)
+                            {
+                                tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(getStatus))
+                        {
+                            statusDownload = Convert.ToInt32(getStatus);
+                            tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
+                        }
+
+                        if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
+                        {
+                            tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
+                        }
+
+                        if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                        {
+                            var getArrayDate = obj.outPutSearchDate.Split("to");
+                            getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                            getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                            tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                        }
+                    }
 
                     if (tran.Count() > 0)
                     {
@@ -171,7 +217,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(task.OUTPUT_DATA.ToString());
-
+                    tran = tran.OrderBy(x => x.OutputSearchXmlZipCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {

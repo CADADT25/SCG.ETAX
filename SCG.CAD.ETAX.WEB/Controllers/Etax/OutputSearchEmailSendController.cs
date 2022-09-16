@@ -65,6 +65,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.OrderBy(x => x.OutputSearchEmailSendCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {
@@ -80,10 +81,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(new { data = tran });
         }
 
-        public async Task<ActionResult> ExportToCsv()
+        public async Task<ActionResult> ExportToCsv(string jsonSearchString)
         {
             Response resp = new Response();
 
+            outputSearchEmailModel obj = new outputSearchEmailModel();
             List<OutputSearchEmailSend> tran = new List<OutputSearchEmailSend>();
 
             var strBuilder = new StringBuilder();
@@ -95,6 +97,43 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+
+
+                    obj = JsonConvert.DeserializeObject<outputSearchEmailModel>(jsonSearchString);
+                    if (obj != null)
+                    {
+                        DateTime getMinDate = new DateTime();
+                        DateTime getMaxDate = new DateTime();
+
+                        var getStatus = obj.outPutSearchEmailStatus;
+
+                        int statusDownload = 99;
+
+                        getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchEmailStatus;
+
+                        if (obj.outPutSearchEmailCompanyCode != null)
+                        {
+                            if (obj.outPutSearchEmailCompanyCode.Count > 0)
+                            {
+                                tran = tran.Where(x => obj.outPutSearchEmailCompanyCode.Contains(x.OutputSearchEmailSendCompanyCode)).ToList();
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(getStatus))
+                        {
+                            statusDownload = Convert.ToInt32(getStatus);
+                            tran = tran.Where(x => x.OutputSearchEmailSendStatus == statusDownload).ToList();
+                        }
+
+                        if (!string.IsNullOrEmpty(obj.outPutSearchEmailDate))
+                        {
+                            var getArrayDate = obj.outPutSearchEmailDate.Split("to");
+                            getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                            getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                            tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                        }
+                    }
 
                     if (tran.Count() > 0)
                     {
@@ -175,6 +214,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.OrderBy(x => x.OutputSearchEmailSendCompanyCode).ThenBy(x => x.CreateDate).ToList();
 
                 }
                 else

@@ -308,8 +308,8 @@
                     {
                         if (!String.IsNullOrEmpty(data.OutputSearchEmailSendFileName))
                         {
-                            //string zipPath = data.OutputSearchEmailSendFileName;
-                            string zipPath = "D:\\sign.7z";
+                            string zipPath = data.OutputSearchEmailSendFileName;
+                            //string zipPath = "D:\\sign.7z";
 
                             //Read the File as Byte Array.
                             byte[] bytes = File.ReadAllBytes(zipPath);

@@ -311,8 +311,8 @@
                     {
                         if (!String.IsNullOrEmpty(data.OutputSearchPrintingFullPath))
                         {
-                            //string zipPath = data.OutputSearchPrintingFullPath;
-                            string zipPath = "D:\\sign.7z";
+                            string zipPath = data.OutputSearchPrintingFullPath;
+                            //string zipPath = "D:\\sign.7z";
 
                             //Read the File as Byte Array.
                             byte[] bytes = File.ReadAllBytes(zipPath);
