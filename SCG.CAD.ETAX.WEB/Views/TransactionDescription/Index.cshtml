@@ -2,7 +2,44 @@
     ViewData["Title"] = "Transaction Profile";
     Layout = null;
 }
+<style>
+    .hovertext {
+      position: relative;
+    }
+    .hovertext:before {
+      content: attr(data-hover);
+      visibility: hidden;
+      opacity: 0;
+      font-size: 14px;
+      /*width: 140px;*/
+      /*background-color: black;*/
+      /*color: #fff;*/
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px 0;
+      transition: opacity 1s ease-in-out;
 
+      position: absolute;
+      z-index: 1;
+      top: -5px;
+      right: 105%;
+    }
+
+    .hovertext:hover:before {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .hoversuccess{
+        color: green;
+    }
+    .hoverfail{
+        color: red;
+    }
+    .hoverwait{
+        color: yellow;
+    }
+</style>
 @await Html.PartialAsync("~/Views/transactionDescription/_Search.cshtml")
 
 
@@ -43,12 +80,13 @@
 
         var table = $("#tbTransactionMain").DataTable({
 
-            "scrollY": false,
+            //"scrollY": false,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
-            "pageLength": 10,
+            "pageLength": 5,
+            "scrollX": true,
 
             "ajax": {
                 url: "@Url.Action("List", "transactionDescription")",
@@ -87,71 +125,154 @@
                 },
                 {
                     data: "customerId",
-                    width: "5%",
-                    visible: false,
+                    width: "5%"
                 },
-
+                {
+                    data: "ic",
+                    width: "5%",
+                    render: function (data, type, row) {
+                        return (data == "1") ? 'IC' : 'O2C';
+                    }
+                },
+                {
+                    data: "docType",
+                    width: "5%"
+                },
+                {
+                    data: "sourceName",
+                    width: "5%"
+                },
+                {
+                    data: "billingDate",
+                    width: "15%",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MM-YYYY');
+                    }
+                },
+                {
+                    data: "processingDate",
+                    width: "15%",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MM-YYYY');
+                    }
+                },
+                {
+                    data: "createDate",
+                    width: "15%",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MM-YYYY');
+                    }
+                },
                 {
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 }
+                //{
+                //    data: "generateStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "xmlSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "pdfSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "printStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "emailSendStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "xmlCompressStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "pdfIndexingStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //}
             ],
-            select: {
-            style:    'os',
-            selector: 'td:first-child'
-        },
+            //select: {
+            //style:    'os',
+            //selector: 'td:first-child'
+        //},
         });
 
 
@@ -368,65 +489,139 @@
                 {
                     data: "customerId",
                     width: "5%",
-                    visible: false,
                 },
-
+                {
+                    data: "ic",
+                    width: "5%",
+                    render: function (data, type, row) {
+                        return (data == "1") ? 'IC' : 'O2C';
+                    }
+                },
+                {
+                    data: "docType",
+                    width: "5%",
+                },
+                {
+                    data: "sourceName",
+                    width: "5%",
+                },
+                {
+                    data: "billingDate",
+                    width: "5%",
+                },
+                {
+                    data: "processingDate",
+                    width: "5%",
+                },
+                {
+                    data: "createDate",
+                    width: "5%",
+                },
                 {
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 },
                 {
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
-                        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                        return fnCheckStatus(data);
                     }
                 }
+                //{
+                //    data: "generateStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "xmlSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "pdfSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "printStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "emailSendStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "xmlCompressStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //},
+                //{
+                //    data: "pdfIndexingStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return (data == "Successful") ? '<i class="text-success fas fa-paper-plane" />' :
+                //        data == "Failed" ? '<i class="text-danger fas fa-circle-exclamation"/>' : '<i class="text-warning fas fa-clock" />';
+                //    }
+                //}
             ],
 
             select: {
@@ -440,6 +635,18 @@
 
         //RenderTransaction(JsonString);
 
+    }
+    
+    function fnCheckStatus(status){
+        if (status == "Successful"){
+            return '<div class="text-success text-center icon-wrapper hovertext hoversuccess" data-hover="Successful"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>';
+        }
+        else if (status == "Failed"){
+            return '<div class="text-danger text-center icon-wrapper hovertext hoverfail" data-hover="Failed"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>';
+        }
+        else{
+            return '<div class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
+        }
     }
     
     //function fnGetValueCheckbox(thisObj) {
