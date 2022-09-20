@@ -51,7 +51,7 @@ namespace SCG.CAD.ETAX.UTILITY
             Task<Response> res;
             try
             {
-                res = transactionDescriptionController.Update(jsonString);
+                res = transactionDescriptionController.UpdateList(jsonString);
                 if (res.Result.MESSAGE == "Updated Success.")
                 {
                     return true;

@@ -110,6 +110,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 GetConfig();
                 foreach (var billno in listbillno)
                 {
+                    dataTran = new TransactionDescription();
                     dataTran = PrepareDataUpdate(billno, updateby);
                     if (dataTran != null)
                     {
@@ -118,7 +119,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 }
                 if (listdataTran.Count > 0)
                 {
-                    json = JsonSerializer.Serialize(dataTran);
+                    json = JsonSerializer.Serialize(listdataTran);
                     result = adminToolHelper.UpdateTransaction(json);
                 }
 

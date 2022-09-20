@@ -243,6 +243,29 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> ResetStatusIndexing(List<TransactionDescription> listData,string updateby)
+        {
+            UTILITY.AdminTool.ResetIndexing resetIndexing = new UTILITY.AdminTool.ResetIndexing();
+            Response res = new Response();
+            List<string> listbillno = new List<string>();
+            try
+            {
+                if(listData.Count > 0)
+                {
+                    listbillno = listData.Select(x => x.BillingNumber).ToList();
+                    var result = resetIndexing.ResetStatusXMLZipByMutipleRecords(listbillno, updateby);
+                    res.STATUS = result;
+                    res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
 
     }
 }
