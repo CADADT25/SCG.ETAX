@@ -15,7 +15,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
         AdminToolHelper adminToolHelper = new AdminToolHelper();
 
-        public bool ResetStatusXMLZipByRecord(string billno, string updateby)
+        public bool ResetStatusIndexingByRecord(string billno, string updateby)
         {
             bool result = false;
             TransactionDescription transactionDescription = new TransactionDescription();
@@ -53,7 +53,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             return result;
         }
 
-        public bool ResetStatusXMLZipByMutipleRecords(List<string> listbillno, string updateby)
+        public bool ResetStatusIndexingByMutipleRecords(List<string> listbillno, string updateby)
         {
             bool result = false;
             TransactionDescription transactionDescription = new TransactionDescription();

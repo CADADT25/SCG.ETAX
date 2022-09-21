@@ -253,9 +253,138 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if(listData.Count > 0)
                 {
                     listbillno = listData.Select(x => x.BillingNumber).ToList();
+                    var result = resetIndexing.ResetStatusIndexingByMutipleRecords(listbillno, updateby);
+                    res.STATUS = result;
+                    res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> ResetStatusXMLZip(List<TransactionDescription> listData, string updateby)
+        {
+            UTILITY.AdminTool.ResetXMLZip resetIndexing = new UTILITY.AdminTool.ResetXMLZip();
+            Response res = new Response();
+            List<string> listbillno = new List<string>();
+            try
+            {
+                if (listData.Count > 0)
+                {
+                    listbillno = listData.Select(x => x.BillingNumber).ToList();
                     var result = resetIndexing.ResetStatusXMLZipByMutipleRecords(listbillno, updateby);
                     res.STATUS = result;
                     res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> ResetStatusPrintZip(List<TransactionDescription> listData, string updateby)
+        {
+            UTILITY.AdminTool.ResetPrintZip resetIndexing = new UTILITY.AdminTool.ResetPrintZip();
+            Response res = new Response();
+            List<string> listbillno = new List<string>();
+            try
+            {
+                if (listData.Count > 0)
+                {
+                    listbillno = listData.Select(x => x.BillingNumber).ToList();
+                    var result = resetIndexing.ResetStatusPrintZipByMutipleRecords(listbillno, updateby);
+                    res.STATUS = result;
+                    res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> SyncStatusPDFSign(List<TransactionDescription> listData, string updateby)
+        {
+            UTILITY.AdminTool.UpdatePDFSign resetIndexing = new UTILITY.AdminTool.UpdatePDFSign();
+            Response res = new Response();
+            List<string> listbillno = new List<string>();
+            try
+            {
+                if (listData.Count > 0)
+                {
+                    listbillno = listData.Select(x => x.BillingNumber).ToList();
+                    var result = resetIndexing.UpdatePDFSignStatusByMutipleRecords(listbillno, updateby);
+                    res.STATUS = result;
+                    res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> ResendEmail(List<TransactionDescription> listData, string updateby)
+        {
+            UTILITY.AdminTool.UpdateXMLSign resetIndexing = new UTILITY.AdminTool.UpdateXMLSign();
+            Response res = new Response();
+            List<string> listbillno = new List<string>();
+            try
+            {
+                if (listData.Count > 0)
+                {
+                    listbillno = listData.Select(x => x.BillingNumber).ToList();
+                    var result = resetIndexing.UpdateXMLSignStatusByMutipleRecords(listbillno, updateby);
+                    res.STATUS = result;
+                    res.ERROR_MESSAGE = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> SyncStatusXMLSign(List<TransactionDescription> listData, string updateby)
+        {
+            UTILITY.AdminTool.UpdateXMLSign resetIndexing = new UTILITY.AdminTool.UpdateXMLSign();
+            Response res = new Response();
+            try
+            {
+                if (listData.Count > 0)
+                {
+                    foreach(var item in listData)
+                    {
+                        var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/SendEmail?billno=" + item.BillingNumber + "&updateby=" + updateby));
+
+                        if (task.STATUS)
+                        {
+                            res.STATUS = true;
+                            //tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+
+                        }
+                        else
+                        {
+                            res.ERROR_MESSAGE = "Failed";
+                            if (!string.IsNullOrEmpty(task.MESSAGE))
+                            {
+                                res.ERROR_MESSAGE = task.MESSAGE;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)

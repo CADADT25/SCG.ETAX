@@ -538,50 +538,226 @@
         }
     }
 
-    function fnGetCheckbox(){
-        var table = $('#tbTransactionMain').DataTable();
-        var data = table.rows( function ( idx, data, node ) {
-        return $(node).find('.dt-checkboxes:input[type="checkbox"]').prop('checked');
-        }).data().toArray();
+    //function fnGetCheckbox(){
+    //    var table = $('#tbTransactionMain').DataTable();
+    //    var data = table.rows( function ( idx, data, node ) {
+    //    return $(node).find('.dt-checkboxes:input[type="checkbox"]').prop('checked');
+    //    }).data().toArray();
         
-        return data;
-    }
+    //    return data;
+    //}
 
-    function fnResetStatusIndexing(){
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Reset Status Indexing',
-                confirmButtonClass: 'btn btn-primary',
-                cancelButtonClass: 'btn btn-danger ml-1',
-                buttonsStyling: false,
-                }).then(function (result) {
-                    if (result) {
-                        data = fnGetCheckbox();
-                        var updateby = $("#leftSideEmail").text();
+    //function fnResetStatusIndexing(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Reset Status Indexing',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
                         
-                        $.ajax({
-                            type: "POST",
-                            url: "@Url.Action("ResetStatusIndexing", "transactionDescription")",
-                            data: { listData : data, updateby : updateby },
-                            dataType: "json",
-                            success: function (result) {
-                                    if(result.status){
-                                        fnSweetAlert_SaveSuccess();
-                                        callTransactionDescriptionIndex();
-                                    }
-                                    else{
-                                        fnSweetAlert_Error(result.erroR_MESSAGE);
-                                    }
-                            }
-                        });
-                    }
-                })
-    }
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("ResetStatusIndexing", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
+    
+    //function fnResetStatusXMLZip(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Reset Status XML zip',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
+                        
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("ResetStatusXMLZip", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
+    //function fnResetStatusPrintZip(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Reset Status Print zip',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
+                        
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("ResetStatusPrintZip", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
+    //function fnSyncStatusXMLSign(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Sync Status XML Sign',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
+                        
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("SyncStatusXMLSign", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
+    //function fnSyncStatusPDFSign(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Sync Status PDF Sign',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
+                        
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("SyncStatusPDFSign", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
+    //function fnResendEmail(){
+    //        Swal.fire({
+    //            title: 'Are you sure?',
+    //            text: "You won't be able to revert this!",
+    //            type: 'warning',
+    //            showCancelButton: true,
+    //            confirmButtonColor: '#3085d6',
+    //            cancelButtonColor: '#d33',
+    //            confirmButtonText: 'Yes, Resend Email',
+    //            confirmButtonClass: 'btn btn-primary',
+    //            cancelButtonClass: 'btn btn-danger ml-1',
+    //            buttonsStyling: false,
+    //            }).then(function (result) {
+    //                if (result) {
+    //                    data = fnGetCheckbox();
+    //                    var updateby = $("#leftSideEmail").text();
+                        
+    //                    $.ajax({
+    //                        type: "POST",
+    //                        url: "@Url.Action("ResendEmail", "transactionDescription")",
+    //                        data: { listData : data, updateby : updateby },
+    //                        dataType: "json",
+    //                        success: function (result) {
+    //                                if(result.status){
+    //                                    fnSweetAlert_SaveSuccess();
+    //                                    callTransactionDescriptionIndex();
+    //                                }
+    //                                else{
+    //                                    fnSweetAlert_Error(result.erroR_MESSAGE);
+    //                                }
+    //                        }
+    //                    });
+    //                }
+    //            })
+    //}
 
     
     function callTransactionDescriptionIndex() {
