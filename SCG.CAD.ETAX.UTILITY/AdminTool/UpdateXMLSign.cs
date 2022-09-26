@@ -110,17 +110,20 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 GetConfig();
                 foreach (var billno in listbillno)
                 {
-                    dataTran = new TransactionDescription();
-                    dataTran = PrepareDataUpdate(billno, updateby);
-                    if (dataTran != null)
+                    if (!string.IsNullOrEmpty(billno))
                     {
-                        listdataTran.Add(dataTran);
+                        dataTran = new TransactionDescription();
+                        dataTran = PrepareDataUpdate(billno, updateby);
+                        if (dataTran != null)
+                        {
+                            listdataTran.Add(dataTran);
+                        }
                     }
                 }
                 if (listdataTran.Count > 0)
                 {
                     json = JsonSerializer.Serialize(listdataTran);
-                    result = adminToolHelper.UpdateTransaction(json);
+                    result = adminToolHelper.UpdateListTransaction(json);
                 }
 
             }
@@ -150,31 +153,43 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 {
                     config = configXmlSign.FirstOrDefault(x => x.ConfigXmlsignCompanycode == transactionDescription[0].CompanyCode);
                     files = adminToolHelper.GetFileInFolder(config.ConfigXmlsignOutputPath + "//Success", filetype);
-                    foreach (var file in files)
+                    var found = files.Where(x => x.ToString().Contains(billno)).ToList();
+                    if (found.Count > 0)
                     {
-                        filename = Path.GetFileName(file).Replace(filetype, "");
-                        if (file.IndexOf('_') > -1)
-                        {
-                            billnofile = filename.Substring(8, (filename.IndexOf('_')) - 8);
-                        }
-                        else
-                        {
-                            billnofile = filename.Substring(8);
-                        }
-
-                        if (billno == billnofile)
-                        {
-                            transactionDescription[0].XmlSignDateTime = DateTime.Now;
-                            transactionDescription[0].XmlSignDetail = "XML was signed completely";
-                            transactionDescription[0].XmlSignStatus = "Successful";
-                            transactionDescription[0].UpdateBy = updateby;
-                            transactionDescription[0].UpdateDate = DateTime.Now;
-                            transactionDescription[0].XmlSignLocation = file;
-                            dataTran = transactionDescription[0];
-                            break;
-                        }
-
+                        transactionDescription[0].XmlSignDateTime = DateTime.Now;
+                        transactionDescription[0].XmlSignDetail = "XML was signed completely";
+                        transactionDescription[0].XmlSignStatus = "Successful";
+                        transactionDescription[0].UpdateBy = updateby;
+                        transactionDescription[0].UpdateDate = DateTime.Now;
+                        transactionDescription[0].XmlSignLocation = found.ToString();
+                        dataTran = transactionDescription[0];
                     }
+
+                    //foreach (var file in files)
+                    //{
+                    //    filename = Path.GetFileName(file).Replace(filetype, "");
+                    //    if (file.IndexOf('_') > -1)
+                    //    {
+                    //        billnofile = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                    //    }
+                    //    else
+                    //    {
+                    //        billnofile = filename.Substring(8);
+                    //    }
+
+                    //    if (billno == billnofile)
+                    //    {
+                    //        transactionDescription[0].XmlSignDateTime = DateTime.Now;
+                    //        transactionDescription[0].XmlSignDetail = "XML was signed completely";
+                    //        transactionDescription[0].XmlSignStatus = "Successful";
+                    //        transactionDescription[0].UpdateBy = updateby;
+                    //        transactionDescription[0].UpdateDate = DateTime.Now;
+                    //        transactionDescription[0].XmlSignLocation = file;
+                    //        dataTran = transactionDescription[0];
+                    //        break;
+                    //    }
+
+                    //}
                 }
             }
             catch (Exception ex)

@@ -314,17 +314,33 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
         public async Task<JsonResult> SyncStatusPDFSign(List<TransactionDescription> listData, string updateby)
         {
-            UTILITY.AdminTool.UpdatePDFSign resetIndexing = new UTILITY.AdminTool.UpdatePDFSign();
             Response res = new Response();
-            List<string> listbillno = new List<string>();
+            string listbill = "";
             try
             {
                 if (listData.Count > 0)
                 {
-                    listbillno = listData.Select(x => x.BillingNumber).ToList();
-                    var result = resetIndexing.UpdatePDFSignStatusByMutipleRecords(listbillno, updateby);
-                    res.STATUS = result;
-                    res.ERROR_MESSAGE = "Failed";
+                    foreach (var item in listData)
+                    {
+                        listbill = listbill + "|" + item.BillingNumber;
+                    }
+
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/SyncStatusPDFSign?listbillno=" + listbill + "&updateby=" + updateby));
+
+                    if (task.STATUS)
+                    {
+                        res.STATUS = true;
+                        //tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+
+                    }
+                    else
+                    {
+                        res.ERROR_MESSAGE = "Failed";
+                        if (!string.IsNullOrEmpty(task.MESSAGE))
+                        {
+                            res.ERROR_MESSAGE = task.MESSAGE;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -344,10 +360,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 if (listData.Count > 0)
                 {
-                    listbillno = listData.Select(x => x.BillingNumber).ToList();
-                    var result = resetIndexing.UpdateXMLSignStatusByMutipleRecords(listbillno, updateby);
-                    res.STATUS = result;
-                    res.ERROR_MESSAGE = "Failed";
+                    foreach (var item in listData)
+                    {
+                        var task = await Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmail?billno=" + item.BillingNumber + "&updateby=" + updateby));
+
+                    }
+
+                    res.STATUS = true;
+
                 }
             }
             catch (Exception ex)
@@ -360,29 +380,31 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
         public async Task<JsonResult> SyncStatusXMLSign(List<TransactionDescription> listData, string updateby)
         {
-            UTILITY.AdminTool.UpdateXMLSign resetIndexing = new UTILITY.AdminTool.UpdateXMLSign();
             Response res = new Response();
+            string listbill = "";
             try
             {
                 if (listData.Count > 0)
                 {
-                    foreach(var item in listData)
+                    foreach (var item in listData)
                     {
-                        var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/SendEmail?billno=" + item.BillingNumber + "&updateby=" + updateby));
+                        listbill = listbill + "|" + item.BillingNumber;
+                    }
 
-                        if (task.STATUS)
-                        {
-                            res.STATUS = true;
-                            //tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/SyncStatusXMLSign?listbillno=" + listbill + "&updateby=" + updateby));
 
-                        }
-                        else
+                    if (task.STATUS)
+                    {
+                        res.STATUS = true;
+                        //tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+
+                    }
+                    else
+                    {
+                        res.ERROR_MESSAGE = "Failed";
+                        if (!string.IsNullOrEmpty(task.MESSAGE))
                         {
-                            res.ERROR_MESSAGE = "Failed";
-                            if (!string.IsNullOrEmpty(task.MESSAGE))
-                            {
-                                res.ERROR_MESSAGE = task.MESSAGE;
-                            }
+                            res.ERROR_MESSAGE = task.MESSAGE;
                         }
                     }
                 }

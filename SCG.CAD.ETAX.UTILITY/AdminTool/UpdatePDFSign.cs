@@ -32,10 +32,10 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             try
             {
                 GetConfig();
-                foreach(var item in configPdfSign)
+                foreach (var item in configPdfSign)
                 {
                     files = adminToolHelper.GetFileInFolder(item.ConfigPdfsignOutputPath + "//Success", filetype);
-                    foreach(var file in files)
+                    foreach (var file in files)
                     {
                         filename = Path.GetFileName(file).Replace(filetype, "");
                         if (file.IndexOf('_') > -1)
@@ -48,7 +48,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         }
 
                         transactionDescription = adminToolHelper.GetBillingTransaction(billno);
-                        if(transactionDescription.Count > 0)
+                        if (transactionDescription.Count > 0)
                         {
                             dataTran = transactionDescription.FirstOrDefault(x => x.PdfSignStatus == "Waiting");
                         }
@@ -73,7 +73,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
 
                         }
 
-                        if(dataTran != null)
+                        if (dataTran != null)
                         {
                             dataTran.PdfSignDateTime = DateTime.Now;
                             dataTran.PdfSignDetail = "PDF was signed completely";
@@ -105,7 +105,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             {
                 GetConfig();
                 dataTran = PrepareDataUpdate(billno, updateby);
-                if(dataTran != null)
+                if (dataTran != null)
                 {
                     json = JsonSerializer.Serialize(dataTran);
                     result = adminToolHelper.UpdateTransaction(json);
@@ -130,19 +130,22 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 GetConfig();
                 foreach (var billno in listbillno)
                 {
-                    dataTran = new TransactionDescription();
-                    dataTran = PrepareDataUpdate(billno, updateby);
-                    if (dataTran != null)
+                    if (!string.IsNullOrEmpty(billno))
                     {
-                        listdataTran.Add(dataTran);
+                        dataTran = new TransactionDescription();
+                        dataTran = PrepareDataUpdate(billno, updateby);
+                        if (dataTran != null)
+                        {
+                            listdataTran.Add(dataTran);
+                        }
                     }
                 }
-                if(listdataTran.Count > 0)
+                if (listdataTran.Count > 0)
                 {
                     json = JsonSerializer.Serialize(listdataTran);
-                    result = adminToolHelper.UpdateTransaction(json);
+                    result = adminToolHelper.UpdateListTransaction(json);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -167,30 +170,30 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 {
                     config = configPdfSign.FirstOrDefault(x => x.ConfigPdfsignCompanyCode == transactionDescription[0].CompanyCode);
                     files = adminToolHelper.GetFileInFolder(config.ConfigPdfsignOutputPath + "//Success", filetype);
-                    foreach (var file in files)
+                    var found = files.Where(x => x.ToString().Contains(billno)).ToList();
+                    if (found.Count > 0)
                     {
-                        filename = Path.GetFileName(file).Replace(filetype, "");
-                        if (file.IndexOf('_') > -1)
-                        {
-                            billnofile = filename.Substring(8, (filename.IndexOf('_')) - 8);
-                        }
-                        else
-                        {
-                            billnofile = filename.Substring(8);
-                        }
+                        //filename = Path.GetFileName(file).Replace(filetype, "");
+                        //if (file.IndexOf('_') > -1)
+                        //{
+                        //    billnofile = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                        //}
+                        //else
+                        //{
+                        //    billnofile = filename.Substring(8);
+                        //}
 
-                        if (billno == billnofile)
-                        {
-                            transactionDescription[0].PdfSignDateTime = DateTime.Now;
-                            transactionDescription[0].PdfSignDetail = "PDF was signed completely";
-                            transactionDescription[0].PdfSignStatus = "Successful";
-                            transactionDescription[0].UpdateBy = updateby;
-                            transactionDescription[0].UpdateDate = DateTime.Now;
-                            transactionDescription[0].PdfSignLocation = file;
-                            dataTran = transactionDescription[0];
-                            break;
-                        }
-
+                        //if (billno == billnofile)
+                        //{
+                        transactionDescription[0].PdfSignDateTime = DateTime.Now;
+                        transactionDescription[0].PdfSignDetail = "PDF was signed completely";
+                        transactionDescription[0].PdfSignStatus = "Successful";
+                        transactionDescription[0].UpdateBy = updateby;
+                        transactionDescription[0].UpdateDate = DateTime.Now;
+                        transactionDescription[0].PdfSignLocation = found[0].ToString();
+                        dataTran = transactionDescription[0];
+                        //    break;
+                        //}
                     }
                 }
             }

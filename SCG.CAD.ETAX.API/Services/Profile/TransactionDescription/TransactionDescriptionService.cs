@@ -1,5 +1,7 @@
 ﻿
 
+using SCG.CAD.ETAX.UTILITY.AdminTool;
+
 namespace SCG.CAD.ETAX.API.Services
 {
     public class TransactionDescriptionService
@@ -431,6 +433,50 @@ namespace SCG.CAD.ETAX.API.Services
                 }
 
 
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response SYNCSTATUSPDFSIGN(string listbillno, string updateby)
+        {
+            Response resp = new Response();
+            UpdatePDFSign updatePDFSign = new UpdatePDFSign();
+            try
+            {
+                List<string> billno = new List<string>();
+                billno = listbillno.Split("|").ToList();
+                if(billno.Count > 0)
+                {
+                    resp.STATUS = updatePDFSign.UpdatePDFSignStatusByMutipleRecords(billno, updateby);
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response SYNCSTATUSXMLSIGN(string listbillno, string updateby)
+        {
+            Response resp = new Response();
+            UpdateXMLSign updateXMLSign = new UpdateXMLSign();
+            try
+            {
+                List<string> billno = new List<string>();
+                billno = listbillno.Split("|").ToList();
+                if (billno.Count > 0)
+                {
+                    resp.STATUS = updateXMLSign.UpdateXMLSignStatusByMutipleRecords(billno, updateby);
+                }
             }
             catch (Exception ex)
             {

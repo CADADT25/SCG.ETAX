@@ -86,5 +86,22 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("SyncStatusPDFSign")]
+        public IActionResult SyncStatusPDFSign(string listbillno, string updateby)
+        {
+            var result = repo.SYNCSTATUSPDFSIGN(listbillno, updateby).Result;
+
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("SyncStatusXMLSign")]
+        public IActionResult SyncStatusXMLSign(string listbillno, string updateby)
+        {
+            var result = repo.SYNCSTATUSXMLSIGN(listbillno, updateby).Result;
+
+            return Ok(result);
+        }
     }
 }

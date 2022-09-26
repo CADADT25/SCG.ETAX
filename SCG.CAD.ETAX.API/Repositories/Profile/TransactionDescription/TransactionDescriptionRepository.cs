@@ -155,6 +155,42 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> SYNCSTATUSPDFSIGN(string listbillno, string updateby)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.SYNCSTATUSPDFSIGN(listbillno, updateby);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+        public async Task<Response> SYNCSTATUSXMLSIGN(string listbillno, string updateby)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.SYNCSTATUSXMLSIGN(listbillno, updateby);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
 
     }
