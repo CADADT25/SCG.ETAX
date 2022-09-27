@@ -13,7 +13,7 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.SendEmail
             repo = new SendEmailRepository();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("SendEmail")]
         public IActionResult SendEmail(string billno, string updateby)
         {

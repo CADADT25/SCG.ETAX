@@ -45,7 +45,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     subjectemail = profileEmailTemplate.EmailSubject.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);
                     configEmail = configMftsEmailSettings.FirstOrDefault(x => x.ConfigMftsEmailSettingCompanyCode == transactionDescription[0].CompanyCode);
 
-                    result = SendEmailbyCompany(transactionDescription[0], configEmail, profileCustomer, subjectemail, profileCompany);
+                    result = SendEmailbyCompany(transactionDescription[0], configEmail, profileCustomer, subjectemail, profileCompany, updateby);
                 }
 
 
@@ -75,7 +75,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         }
 
 
-        public bool SendEmailbyCompany(TransactionDescription dataTran, ConfigMftsEmailSetting config, ProfileCustomer profileemailCustomer, string subjectemail, ProfileCompany profileCompany)
+        public bool SendEmailbyCompany(TransactionDescription dataTran, ConfigMftsEmailSetting config, ProfileCustomer profileemailCustomer, string subjectemail, ProfileCompany profileCompany, string sendby)
         {
             bool result = false;
             var document = "";
@@ -94,6 +94,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     //var smtpHost = config.ConfigMftsEmailSettingHost;
                     //var smtpPort = config.ConfigMftsEmailSettingPort;
                     //var toEmailAddress = config.ConfigMftsEmailSettingEmail;
+                    //var fromEmailAddress = sendby;
                     var fromEmailAddress = "etaxadm@scg.com";
                     var fromEmailPassword = "Thai2020";
                     var smtpHost = "outmail.scg.co.th";
