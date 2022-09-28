@@ -12,7 +12,8 @@
      $(document).ready(function () {
 
         RenderProfileCustomer();
-
+        //$("#ddlUpdateEmailType").select2();
+        //$("#ddlUpdateEmailTemplate").select2();
     });
 
     $(window).on('load', function() {
@@ -205,7 +206,7 @@
 
         var table = $("#tbProfileCustomerMain").DataTable({
 
-            "scrollY": false,
+            //"scrollY": false,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
@@ -334,7 +335,7 @@
         }
         else {
             fnToastrInputDataFail();
-            validateUpdateProfileCustomer();
+            //validateUpdateProfileCustomer();
         }
     }
 
@@ -410,12 +411,11 @@
                 fnDropdownProfileCustomerCompanyCode();
 
                 data = $.parseJSON(result)
-
                 document.getElementById('txtUpdateCustomerProfileNo').value = data.CustomerProfileNo;
                 document.getElementById('txtUpdateCustomerId').value = data.CustomerId;
 
-                $('#ddlUpdateCompanyCode').empty().append($("<option/>").val(""+data.CompanyCode+"").text(""+data.CompanyCode+""))
-                .val(""+data.CompanyCode+"").trigger("change");
+                //$('#ddlUpdateCompanyCode').empty().append($("<option/>").val(""+data.CompanyCode+"").text(""+data.CompanyCode+""))
+                //.val(""+data.CompanyCode+"").trigger("change");
 
                 document.getElementById('txtUpdateNumberOfCopies').value = data.NumberOfCopies;
 
@@ -530,12 +530,17 @@
                 document.getElementById('txtUpdateCustomerEmail').value = data.CustomerEmail;
                 document.getElementById('txtUpdateCustomerCCEmail').value = data.CustomerCcemail;
 
-                $('#ddlUpdateEmailType').empty().append($("<option/>").val(""+data.EmailType+"").text(""+data.EmailType+""))
-                .val(""+data.EmailType+"").trigger("change");
+                //$('#ddlUpdateEmailType').empty().append($("<option/>").val(""+data.EmailType+"").text(""+data.EmailType+""))
+                //.val(""+data.EmailType+"").trigger("change");
 
-                $('#ddlUpdateEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
-                .val(""+data.EmailTemplateNo+"").trigger("change");
-
+                //$('#ddlUpdateEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
+                //.val(""+data.EmailTemplateNo+"").trigger("change");
+                
+                setTimeout(function(){                
+                    $('#ddlUpdateCompanyCode').val(data.CompanyCode).trigger('change');
+                    $('#ddlUpdateEmailType').val(data.EmailType).trigger('change');
+                    $('#ddlUpdateEmailTemplate').val(data.EmailTemplateNo).trigger('change');
+                }, 1000);
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateProfileCustomer").checked = true;

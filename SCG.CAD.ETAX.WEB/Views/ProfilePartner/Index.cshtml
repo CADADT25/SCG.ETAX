@@ -57,6 +57,9 @@
     }
 
     function fnDropdownProfilePartnerSaleOrg(companyCode) {
+        
+        $("#ddlInsertProfilePartnerSaleOrg").empty();
+        $("#ddlUpdateProfilePartnerSaleOrg").empty();
 
         $('<option>',
         {
@@ -67,9 +70,9 @@
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlInsertProfilePartnerSaleOrg");
+                        value: data.sellOrgCode,
+                        text: data.sellOrgCode
+                    }).html(data.sellOrgCode).appendTo("#ddlInsertProfilePartnerSaleOrg");
             });
         })
 
@@ -77,9 +80,9 @@
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlUpdateProfilePartnerSaleOrg");
+                        value: data.sellOrgCode,
+                        text: data.sellOrgCode
+                    }).html(data.sellOrgCode).appendTo("#ddlUpdateProfilePartnerSaleOrg");
             });
         })
     }
@@ -143,6 +146,15 @@
 
     function onChangeDdlUpdatePartnerSaleOrg(){
 
+        $('#ddlUpdateProfilePartnerSaleOrg').empty();
+
+        var getCompanyCode = $('#ddlUpdateProfilePartnerCompanyCode').val();
+
+        fnDropdownProfilePartnerSaleOrg(getCompanyCode);
+
+    }
+    function onChangeDdlInsertPartnerSaleOrg(){
+
         $('#ddlInsertProfilePartnerSaleOrg').empty();
 
         var getCompanyCode = $('#ddlInsertProfilePartnerCompanyCode').val();
@@ -151,7 +163,7 @@
 
     }
 
-
+             
     function onChangeInsertProfilePartnerPrint(){
 
         if(document.getElementById("toggleInsertProfilePartnerPrint").checked){
@@ -244,7 +256,7 @@
 
         var table = $("#tbProfilePartnerMain").DataTable({
 
-            "scrollY": false,
+            //"scrollY": false,
             "processing": true, 
             "serverSide": false, 
             "filter": true, 
@@ -319,7 +331,7 @@
 
 
         EditProfilePartner(table);
-        DeleteProfilePartner(table);
+        //DeleteProfilePartner(table);
     }
 
     function fnInsertCancelProfilePartner(){
@@ -344,6 +356,7 @@
         $("#ddlInsertProfilePartnerEmailType").empty();
         $("#ddlInsertProfilePartnerEmailTemplate").empty();
         $("#ddlInsertProfilePartnerCompanyCode").empty();
+        $("#ddlInsertProfilePartnerSaleOrg").empty();
 
         fnDropdownProfilePartnerEmailType();
         fnDropdownProfilePartnerEmailTemplate();
@@ -409,7 +422,6 @@
         fnDropdownProfilePartnerEmailType();
         fnDropdownProfilePartnerEmailTemplate();
         fnDropdownProfilePartnerCompanyCode();
-        
             
         $.ajax({
             type: "GET",
@@ -423,21 +435,20 @@
                 document.getElementById('txtUpdateProfilePartnerNo').value = data.PartnerProfileNo;
                 document.getElementById('txtUpdateProfilePartnerCustomerId').value = data.CustomerId;
 
-                
-                $('#ddlUpdateProfilePartnerCompanyCode').empty() 
-                .append($("<option/>")
-                    .val(""+data.CompanyCode+"")
-                    .text(""+data.CompanyCode+""))
-                .val(""+data.CompanyCode+"")
-                .trigger("change");
+                //$('#ddlUpdateProfilePartnerCompanyCode').empty() 
+                //.append($("<option/>")
+                //    .val(""+data.CompanyCode+"")
+                //    .text(""+data.CompanyCode+""))
+                //.val(""+data.CompanyCode+"")
+                //.trigger("change");
 
 
-                $('#ddlUpdateProfilePartnerSaleOrg').empty() 
-                .append($("<option/>")
-                    .val(""+data.SellOrg+"")
-                    .text(""+data.SellOrg+""))
-                .val(""+data.SellOrg+"")
-                .trigger("change");
+                //$('#ddlUpdateProfilePartnerSaleOrg').empty() 
+                //.append($("<option/>")
+                //    .val(""+data.SellOrg+"")
+                //    .text(""+data.SellOrg+""))
+                //.val(""+data.SellOrg+"")
+                //.trigger("change");
 
 
                 document.getElementById('txtUpdateProfilePartnerSoldTo').value = data.SoldToCode;
@@ -560,13 +571,22 @@
                 document.getElementById('txtUpdateProfilePartnerCustomerEmail').value = data.SoldToEmail;
                 document.getElementById('txtUpdateProfilePartnerCustomerCCEmail').value = data.SoldToCcemail;
 
+                //$('#ddlUpdateProfilePartnerEmailType').empty().append($("<option/>").val(""+data.PartnerEmailType+"").text(""+data.PartnerEmailType+""))
+                //.val(""+data.PartnerEmailType+"").trigger("change");
 
-                $('#ddlUpdateProfilePartnerEmailType').empty().append($("<option/>").val(""+data.PartnerEmailType+"").text(""+data.PartnerEmailType+""))
-                .val(""+data.PartnerEmailType+"").trigger("change");
+                //$('#ddlUpdateProfilePartnerEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
+                //.val(""+data.EmailTemplateNo+"").trigger("change");
+                console.log(data);
+                setTimeout(function(){                
+                    $('#ddlUpdateProfilePartnerCompanyCode').val(data.CompanyCode).trigger('change');
+                    $('#ddlUpdateProfilePartnerEmailType').val(data.PartnerEmailType).trigger('change');
+                    $('#ddlUpdateProfilePartnerEmailTemplate').val(data.EmailTemplateNo).trigger('change');
+                }, 1000);
 
-                $('#ddlUpdateProfilePartnerEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
-                .val(""+data.EmailTemplateNo+"").trigger("change");
-
+                setTimeout(function(){   
+                    console.log($('#ddlUpdateProfilePartnerSaleOrg').val());
+                    $('#ddlUpdateProfilePartnerSaleOrg').val(data.SellOrg).trigger('change');
+                }, 5000);
 
 
                 if(data.Isactive == 1){
@@ -575,8 +595,10 @@
                 else{
                     document.getElementById("toggleUpdateProfilePartner").checked = false;
                 }
-
-                $("#modalUpdateProfilePartner").modal('show');
+                
+                setTimeout(function(){   
+                    $("#modalUpdateProfilePartner").modal('show');
+                }, 1000);
             }
         });
 
