@@ -362,11 +362,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     foreach (var item in listData)
                     {
-                        var task = await Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmail?billno=" + item.BillingNumber + "&updateby=" + updateby));
+                        res = await Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmail?billno=" + item.BillingNumber + "&updateby=" + updateby));
 
                     }
 
-                    res.STATUS = true;
+                    //res.STATUS = true;
 
                 }
             }

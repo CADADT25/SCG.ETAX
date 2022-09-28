@@ -1,4 +1,5 @@
-﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System.Net;
 using System.Net.Mail;
@@ -22,8 +23,9 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
         List<RdDocument> rdDocuments = new List<RdDocument>();
 
-        public bool ResendEmailAgain(string billno, string updateby)
+        public Response ResendEmailAgain(string billno, string updateby)
         {
+            Response res = new Response();
             bool result = false;
             string subjectemail = "";
 
@@ -47,14 +49,15 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
 
                     result = SendEmailbyCompany(transactionDescription[0], configEmail, profileCustomer, subjectemail, profileCompany, updateby);
                 }
-
+                res.STATUS = result;
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                res.STATUS = false;
+                res.ERROR_MESSAGE = ex.Message;
             }
-            return result;
+            return res;
         }
 
         public void GetDataFromDataBase(string billno)

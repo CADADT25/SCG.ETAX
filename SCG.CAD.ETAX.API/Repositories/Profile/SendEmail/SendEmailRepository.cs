@@ -11,9 +11,8 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.SendEmail
 
             try
             {
-                var result = resendEmail.ResendEmailAgain(billno, updateby);
+                resp = resendEmail.ResendEmailAgain(billno, updateby);
                 
-                resp.STATUS = result;
             }
             catch (Exception ex)
             {
