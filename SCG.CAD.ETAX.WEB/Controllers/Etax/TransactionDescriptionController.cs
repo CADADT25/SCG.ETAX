@@ -417,6 +417,48 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(res);
         }
+        public async Task<JsonResult> DownloadFile(string TransactionNo, string Type)
+        {
+            string pathFile = "";
+
+            List<TransactionDescription> tran = new List<TransactionDescription>();
+
+            Response resp = new Response();
+
+            var result = "";
+            var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/GetDetail?id= " + TransactionNo + " "));
+
+            if (task.STATUS)
+            {
+
+                tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+                if(tran.Count > 0)
+                {
+                    if (Type.Equals("PDF", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        pathFile = tran[0].PdfSignLocation;
+                    }
+                    else
+                    {
+                        pathFile = tran[0].XmlSignLocation;
+                    }
+
+                    task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/DownloadFile?pathfile=" + pathFile + ""));
+                }
+                else
+                {
+                    task.STATUS = false;
+                }
+
+            }
+            else
+            {
+                task.STATUS = false;
+                ViewBag.Error = task.MESSAGE;
+            }
+
+            return Json(task);
+        }
 
     }
 }

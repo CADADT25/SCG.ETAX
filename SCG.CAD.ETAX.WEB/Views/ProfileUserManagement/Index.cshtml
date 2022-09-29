@@ -97,6 +97,33 @@
 
     }
 
+    function callModalInsertProfileUserManagement(){
+        fnDropdownGroupRole();
+        $("#contentPartial").load("@Url.Action("_Create", "ProfileUserManagement")");
+    }
+
+    
+    function fnDropdownGroupRole() {
+
+        $("#ddlInsertRoleGroup").empty();
+        $('<option>',
+        {
+            value: 0,
+        }).html("--- Select Group ---").appendTo("#ddlInsertRoleGroup");
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserGroup")", function (data) {
+            console.log(data);
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.profileUserGroupNo,
+                        text: data.profileUserGroupName
+                    }).html(data.profileUserGroupName).appendTo("#ddlInsertRoleGroup");
+            });
+        })
+    }
+
+
     function EditProfileUserManagement(table){
 
         $('#tbProfileUserManagementMain').on('click', 'td.editor-edit', function () {

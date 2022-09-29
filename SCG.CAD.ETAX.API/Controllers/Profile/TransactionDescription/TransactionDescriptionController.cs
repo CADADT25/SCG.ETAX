@@ -103,5 +103,13 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpGet]
+        [Route("DownloadFile")]
+        public IActionResult DownloadFile(string pathfile)
+        {
+            var result = repo.DOWNLOADFILE(pathfile).Result;
+
+            return Ok(result);
+        }
     }
 }

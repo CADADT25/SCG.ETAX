@@ -373,7 +373,7 @@ namespace SCG.CAD.ETAX.API.Services
                 {
                     tran = _dbContext.transactionDescription.ToList();
 
-                    if(!string.IsNullOrEmpty(obj.tranSearchBillingNo))
+                    if (!string.IsNullOrEmpty(obj.tranSearchBillingNo))
                     {
                         tran = tran.Where(x => x.BillingNumber.Contains(obj.tranSearchBillingNo)).ToList();
                     }
@@ -517,7 +517,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 List<string> billno = new List<string>();
                 billno = listbillno.Split("|").ToList();
-                if(billno.Count > 0)
+                if (billno.Count > 0)
                 {
                     resp.STATUS = updatePDFSign.UpdatePDFSignStatusByMutipleRecords(billno, updateby);
                 }
@@ -548,6 +548,45 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+
+        public Response DOWNLOADFILE(string path)
+        {
+            Response resp = new Response();
+            try
+            {
+                if (!String.IsNullOrEmpty(path))
+                {
+                    if (File.Exists(path))
+                    {
+                        string zipPath = path;
+                        //string zipPath = "D:\\sign.7z";
+
+                        //Read the File as Byte Array.
+                        byte[] bytes = File.ReadAllBytes(zipPath);
+
+                        //Convert File to Base64 string and send to Client.
+                        resp.OUTPUT_DATA = Convert.ToBase64String(bytes, 0, bytes.Length);
+                        resp.MESSAGE = Path.GetFileName(path);
+                        resp.STATUS = true;
+
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "File Not Exists";
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;

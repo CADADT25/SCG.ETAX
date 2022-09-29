@@ -236,7 +236,15 @@
             success: function (result) {
 
                 data = $.parseJSON(result);
-
+                if(typeof data.OutputMailTransactionNo != 'undefined'){
+                    fnCallOutputSearchEmailDetail(data.OutputMailTransactionNo);
+                }
+                if(typeof data.OutputPdfTransactionNo != 'undefined'){
+                    fnCallOutputSearchPrintingDetail(data.OutputPdfTransactionNo);
+                }
+                if(typeof data.OutputXmlTransactionNo != 'undefined'){
+                    fnCallOutputSearchXmlZipDetail(data.OutputXmlTransactionNo);
+                }
 
                 // Billing Date format
                 var billingDate = new Date(data.BillingDate);
@@ -286,10 +294,17 @@
                 $('#txtViewTransactionDecriptionXmlSignDetail').text(data.XmlSignDetail);
                 $('#txtViewTransactionDecriptionXmlSignStatus').text(data.XmlSignStatus);
                 $('#txtViewTransactionDecriptionXmlSignDateTime').text(data.XmlSignDateTime);
+                if(data.XmlSignStatus == "Successful"){
+                    $('#downloadxmlfile').append("<a onclick='DownloadFileXML(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                }
 
                 $('#txtViewTransactionDecriptionPdfSignDetail').text(data.PdfSignDetail);
                 $('#txtViewTransactionDecriptionPdfSignStatus').text(data.PdfSignStatus);
                 $('#txtViewTransactionDecriptionPdfSignDateTime').text(data.PdfSignDateTime);
+                
+                if(data.PdfSignStatus == "Successful"){
+                    $('#downloadpdffile').append("<a onclick='DownloadFilePDF(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                }
 
                 $('#txtViewTransactionDecriptionPrintDetail').text(data.PrintDetail);
                 $('#txtViewTransactionDecriptionPrintStatus').text(data.PrintStatus);
@@ -298,6 +313,9 @@
                 $('#txtViewTransactionDecriptionEmailSendDetail').text(data.EmailSendDetail);
                 $('#txtViewTransactionDecriptionEmailSendStatus').text(data.EmailSendStatus);
                 $('#txtViewTransactionDecriptionEmailSendDateTime').text(data.EmailSendDateTime);
+                                    
+                $('#resendemail').append("<a onclick='fnDetailResendEmail()' class='btn btn-primary btn-sm'> Resend Email </a>");
+
 
                 $('#txtViewTransactionDecriptionXmlCompressDetail').text(data.XmlCompressDetail);
                 $('#txtViewTransactionDecriptionXmlCompressStatus').text(data.XmlCompressStatus);
@@ -746,6 +764,16 @@
                 })
     }
     function fnResendEmail(){
+        fnsendEmail(fnGetCheckbox());
+    }
+    function fnDetailResendEmail(){
+        var listdata = new Array();
+        data.BillingNumber = $('#txtViewTransactionDecriptionBillingNo').text();
+        listdata.push(data);
+
+        fnsendEmail(listdata);
+    }
+    function fnsendEmail(data){
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -759,7 +787,6 @@
                 buttonsStyling: false,
                 }).then(function (result) {
                     if (result) {
-                        data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
                         
                         $.ajax({
@@ -778,6 +805,101 @@
                         });
                     }
                 })
+    }
+    function DownloadFilePDF(transactionno) {
+         DownloadFile(transactionno,"PDF");
+    };
+    function DownloadFileXML(transactionno) {
+         DownloadFile(transactionno,"XML");
+    };
+    function DownloadFile(transactionno,filetype) {
+                
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DownloadFile", "transactionDescription")",
+            data: { TransactionNo : transactionno, Type : filetype},
+            dataType: "text",
+            success: function (resp) {
+                data = $.parseJSON(resp)
+                console.log('Mark');
+                console.log(data);
+                //Convert Base64 string to Byte Array.
+                var bytes = Base64ToBytes(data.outpuT_DATA);
+                var fileName = data.message;
+                //Convert Byte Array to BLOB.
+                var blob = new Blob([bytes], { type: "application/octetstream" });
+ 
+                    //Check the Browser type and download the File.
+                    var isIE = false || !!document.documentMode;
+                    if (isIE) {
+                        window.navigator.msSaveBlob(blob, fileName);
+                    } else {
+                        var url = window.URL || window.webkitURL;
+                        link = url.createObjectURL(blob);
+                        var a = $("<a />");
+                        a.attr("download", fileName);
+                        a.attr("href", link);
+                        $("body").append(a);
+                        a[0].click();
+                        $("body").remove(a);
+                    }
+            }
+        });
+    };
+    function Base64ToBytes(base64) {
+        var s = window.atob(base64);
+        var bytes = new Uint8Array(s.length);
+        for (var i = 0; i < s.length; i++) {
+            bytes[i] = s.charCodeAt(i);
+        }
+        return bytes;
+    };
+    
+    function fnCallOutputSearchEmailDetail(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchEmailSend")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchEmailSendTo != 'undefined') {
+                    $('#txtViewTransactionDecriptionEmailSendTo').text("EmailTo : " + data.OutputSearchEmailSendTo);
+                }
+
+                if(typeof data.OutputSearchEmailSendCC != 'undefined') {
+                    $('#txtViewTransactionDecriptionEmailSendCC').text("EmailCC : " + data.OutputSearchEmailSendCC);
+                }
+            }
+        });
+    }
+    function fnCallOutputSearchPrintingDetail(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchPrinting")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchPrintingFullPath != 'undefined') {
+                    $('#txtViewTransactionDecriptionPdfIndexingPath').text("Path : " + data.OutputSearchPrintingFullPath);
+                }
+            }
+        });
+    }
+    function fnCallOutputSearchXmlZipDetail(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchXmlZipFullPath != 'undefined') {
+                    $('#txtViewTransactionDecriptionXmlCompressPath').text("Path : " + data.OutputSearchXmlZipFullPath);
+                }
+            }
+        });
     }
 
     
