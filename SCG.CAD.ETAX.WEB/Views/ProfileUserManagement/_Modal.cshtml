@@ -2,21 +2,18 @@
     Layout = null;
 }
 
-<script src="~/assets/validate/ProfileUserGroupValidate.js"></script>
-
-
-<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileUserGroup" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreateProfileUser" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create</h5>
-                <button type="button" class="close" onclick="fnInsertCancelProfileUserGroup();" aria-label="Close">
+                <button type="button" class="close" onclick="fnInsertCancelProfileUser();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
-                @await Html.PartialAsync("~/Views/ProfileUserGroup/_Create.cshtml")
+                @await Html.PartialAsync("~/Views/ProfileUserManagement/_Create.cshtml")
 
             </div>
             <div class="modal-footer bg-whitesmoke">
@@ -28,25 +25,25 @@
 </div>
 
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileUserGroup" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdateProfileUser" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Update</h5>
-                <button type="button" class="close" onclick="fnUpdateCancelProfileUserGroup();" aria-label="Close">
+                <button type="button" class="close" onclick="fnUpdateCancelProfileUser();" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
 
-                @await Html.PartialAsync("~/Views/ProfileUserGroup/_Update.cshtml")
+                @await Html.PartialAsync("~/Views/ProfileUserManagement/_Update.cshtml")
 
 
             </div>
             <div class="modal-footer bg-whitesmoke">
-                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileUserGroup();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileUserGroup();">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="fnUpdateCancelProfileUser();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUpdateProfileUser();">Save changes</button>
             </div>
         </div>
     </div>

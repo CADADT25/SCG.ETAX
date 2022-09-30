@@ -295,6 +295,7 @@
                 $('#txtViewTransactionDecriptionXmlSignStatus').text(data.XmlSignStatus);
                 $('#txtViewTransactionDecriptionXmlSignDateTime').text(data.XmlSignDateTime);
                 if(data.XmlSignStatus == "Successful"){
+                    $('#downloadxmlfile').empty();
                     $('#downloadxmlfile').append("<a onclick='DownloadFileXML(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
                 }
 
@@ -303,6 +304,7 @@
                 $('#txtViewTransactionDecriptionPdfSignDateTime').text(data.PdfSignDateTime);
                 
                 if(data.PdfSignStatus == "Successful"){
+                    $('#downloadpdffile').empty();
                     $('#downloadpdffile').append("<a onclick='DownloadFilePDF(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
                 }
 
@@ -313,7 +315,8 @@
                 $('#txtViewTransactionDecriptionEmailSendDetail').text(data.EmailSendDetail);
                 $('#txtViewTransactionDecriptionEmailSendStatus').text(data.EmailSendStatus);
                 $('#txtViewTransactionDecriptionEmailSendDateTime').text(data.EmailSendDateTime);
-                                    
+                              
+                $('#resendemail').empty();      
                 $('#resendemail').append("<a onclick='fnDetailResendEmail()' class='btn btn-primary btn-sm'> Resend Email </a>");
 
 
@@ -865,10 +868,14 @@
                 data = $.parseJSON(result);
                 if(typeof data.OutputSearchEmailSendTo != 'undefined') {
                     $('#txtViewTransactionDecriptionEmailSendTo').text("EmailTo : " + data.OutputSearchEmailSendTo);
+                }else{
+                    $('#txtViewTransactionDecriptionEmailSendTo').text("EmailTo : ");
                 }
 
                 if(typeof data.OutputSearchEmailSendCC != 'undefined') {
                     $('#txtViewTransactionDecriptionEmailSendCC').text("EmailCC : " + data.OutputSearchEmailSendCC);
+                }else{
+                    $('#txtViewTransactionDecriptionEmailSendCC').text("EmailCC : ");
                 }
             }
         });
@@ -883,6 +890,8 @@
                 data = $.parseJSON(result);
                 if(typeof data.OutputSearchPrintingFullPath != 'undefined') {
                     $('#txtViewTransactionDecriptionPdfIndexingPath').text("Path : " + data.OutputSearchPrintingFullPath);
+                }else{
+                    $('#txtViewTransactionDecriptionPdfIndexingPath').text("Path : ");
                 }
             }
         });
@@ -897,6 +906,8 @@
                 data = $.parseJSON(result);
                 if(typeof data.OutputSearchXmlZipFullPath != 'undefined') {
                     $('#txtViewTransactionDecriptionXmlCompressPath').text("Path : " + data.OutputSearchXmlZipFullPath);
+                }else{
+                    $('#txtViewTransactionDecriptionXmlCompressPath').text("Path : ");
                 }
             }
         });

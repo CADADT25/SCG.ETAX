@@ -10,6 +10,11 @@
 <script type="text/javascript">
 
      $(document).ready(function () {
+         
+        $('#ddlInsertRoleGroup').select2();
+        $('#ddlUpdateRoleGroup').select2();
+        $('#ddlInsertUserLevel').select2();
+        $('#ddlUpdateUserLevel').select2();
 
         RenderProfileUserManagement();
 
@@ -65,7 +70,10 @@
                 },
                 {
                     data: "passwordExpire",
-                    width: "10%"
+                    width: "10%",
+                    render: function(data, type, row, meta) {
+                            return moment(data).format('DD-MM-YYYY');
+                    }
                 },
                 {
                     data: "accountStatus",
@@ -99,26 +107,73 @@
 
     function callModalInsertProfileUserManagement(){
         fnDropdownGroupRole();
-        $("#contentPartial").load("@Url.Action("_Create", "ProfileUserManagement")");
+        fnDropdownUserLevel();
+        $("#modalCreateProfileUser").modal('show');
     }
+    
+    function fnInsertCancelProfileUser(){
 
+        document.getElementById('txtInsertProfileUserManagementEmail').value = '';
+        document.getElementById('txtInsertProfileUserManagementName').value = '';
+        document.getElementById('txtInsertProfileUserManagementLastName').value = '';
+        document.getElementById('txtInsertProfileUserManagementPassword').value = '';
+        document.getElementById('txtInsertProfileUserManagementComfirmPassword').value = '';
+        document.getElementById('ddlInsertRoleGroup').value = '';
+        document.getElementById('ddlInsertUserLevel').value = '';
+        document.getElementById('txtInsertstatus').value = '';
+
+        $("#modalCreateProfileUser").modal('hide');
+    }
+    function fnUpdateCancelProfileUser(){
+
+        document.getElementById('txtUpdateProfileUserManagementEmail').value = '';
+        document.getElementById('txtUpdateProfileUserManagementName').value = '';
+        document.getElementById('txtUpdateProfileUserManagementLastName').value = '';
+        document.getElementById('txtUpdateProfileUserManagementPassword').value = '';
+        document.getElementById('txtUpdateProfileUserManagementComfirmPassword').value = '';
+        document.getElementById('ddlUpdateRoleGroup').value = '';
+        document.getElementById('ddlUpdateUserLevel').value = '';
+        document.getElementById('txtUpdatestatus').value = '';
+
+        $("#modalUpdateProfileUser").modal('hide');
+    }
     
     function fnDropdownGroupRole() {
-
-        $("#ddlInsertRoleGroup").empty();
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Group ---").appendTo("#ddlInsertRoleGroup");
-
+        $('#ddlInsertRoleGroup').empty();
+        $('#ddlUpdateRoleGroup').empty();
         $.getJSON("@Url.Action("DropDownList", "ProfileUserGroup")", function (data) {
-            console.log(data);
             $.each(data, function (i, data) {
                 $('<option>',
                     {
                         value: data.profileUserGroupNo,
                         text: data.profileUserGroupName
-                    }).html(data.profileUserGroupName).appendTo("#ddlInsertRoleGroup");
+                    }).html(data.profileUserRoleName).appendTo("#ddlInsertRoleGroup");
+                    
+                $('<option>',
+                    {
+                        value: data.profileUserGroupNo,
+                        text: data.profileUserGroupName
+                    }).html(data.profileUserRoleName).appendTo("#ddlUpdateRoleGroup");
+            });
+        })
+
+    }
+    function fnDropdownUserLevel() {
+        $('#ddlInsertUserLevel').empty();
+        $('#ddlUpdateUserLevel').empty();
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserRole")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.profileUserRoleNo,
+                        text: data.profileUserRoleName
+                    }).html(data.profileUserRoleName).appendTo("#ddlInsertUserLevel");
+                
+                $('<option>',
+                    {
+                        value: data.profileUserRoleNo,
+                        text: data.profileUserRoleName
+                    }).html(data.profileUserRoleName).appendTo("#ddlUpdateUserLevel");
             });
         })
     }
@@ -131,8 +186,10 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
-            $("#contentPartial").load("@Url.Action("_Update", "ProfileUserManagement")");
+            
+            fnDropdownGroupRole();
+            fnDropdownUserLevel();
+            $("#modalUpdateProfileUser").modal('show');
 
             callProfileUserManagementGetDetailController(getPK);
 
@@ -148,6 +205,45 @@
                 type: "GET",
                 url: "@Url.Action("Detail", "ProfileUserManagement")",
                 data: { id : getPK },
+                //contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function (result) {
+
+                    data = $.parseJSON(result)
+
+                    $('#UserProfileEmail').text(data.UserEmail);
+
+                    document.getElementById('txtUpdateProfileUserManagementEmail').value = data.UserEmail;
+                    document.getElementById('txtUpdateProfileUserManagementName').value = data.FirstName;
+                    document.getElementById('txtUpdateProfileUserManagementLastName').value = data.LastName;
+
+                }
+            });
+
+        }
+
+    function fnInsertProfileUser(){
+        
+        var model = new Object();
+
+        model.userEmail = $('#txtInsertProfileUserManagementEmail').val();
+        model.userPassword = $('#txtInsertProfileUserManagementPassword').val();
+        model.firstName = $('#txtInsertProfileUserManagementName').val();
+        model.lastName = $('#txtInsertProfileUserManagementLastName').val();
+        model.GroupId = $('#ddlInsertRoleGroup').val();
+        model.LevelId = $('#ddlInsertUserLevel').val();
+        model.CreateBy = $("#leftSideEmail").text();
+        model.CreateDate = new Date();
+        model.UpdateBy = $("#leftSideEmail").text();
+        model.UpdateDate = new Date();
+        model.Isactive = $('#txtInsertstatus').val();
+
+        var getJsonString = JSON.stringify(model);
+        console.log(getJsonString);
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Insert", "ProfileUserManagement")",
+                data: { jsonString : getJsonString },
                 //contentType: 'application/json; charset=utf-8',
                 dataType: "json",
                 success: function (result) {
