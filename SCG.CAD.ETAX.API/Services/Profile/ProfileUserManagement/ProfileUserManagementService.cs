@@ -72,6 +72,9 @@
             {
                 using (_dbContext)
                 {
+                    param.DomainName = "@" + param.UserEmail.Substring(param.UserEmail.IndexOf('@') + 1);
+                    param.PasswordRegister = dtNow;
+                    param.PasswordExpire = dtNow.AddYears(1);
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -103,16 +106,17 @@
 
                     if (update != null)
                     {
-                        update.UserEmail = param.UserEmail;
-                        update.UserPassword = param.UserPassword;
-                        update.DomainName = param.DomainName;
+                        //update.UserEmail = param.UserEmail;
+                        //update.UserPassword = param.UserPassword;
+                        //update.DomainName = param.DomainName;
                         update.FirstName = param.FirstName;
                         update.LastName = param.LastName;
                         update.GroupId = param.GroupId;
-                        update.PasswordRegister = param.PasswordRegister;
-                        update.PasswordExpire = param.PasswordExpire;
-                        update.AttempLogin = param.AttempLogin;
-                        update.AttempLast = param.AttempLast;
+                        update.LevelId = param.LevelId;
+                        //update.PasswordRegister = param.PasswordRegister;
+                        //update.PasswordExpire = param.PasswordExpire;
+                        //update.AttempLogin = param.AttempLogin;
+                        //update.AttempLast = param.AttempLast;
                         update.AccountStatus = param.AccountStatus;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

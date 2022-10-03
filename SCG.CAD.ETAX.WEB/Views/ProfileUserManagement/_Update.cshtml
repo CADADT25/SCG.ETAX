@@ -15,7 +15,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="username">Email</label>
-                                    <input type="email" class="form-control" id="txtUpdateProfileUserManagementEmail" value="" />
+                                    <input disabled type="email" class="form-control" id="txtUpdateProfileUserManagementEmail" value="" />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -30,13 +30,13 @@
                                     <input type="text" class="form-control" id="txtUpdateProfileUserManagementLastName"  />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" hidden>
                                 <div class="form-group">
                                     <label for="txtUpdateProfileUserManagementPassword">Password</label>
                                     <input type="password" class="form-control" id="txtUpdateProfileUserManagementPassword" value=""  />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" hidden>
                                 <div class="form-group">
                                     <label for="txtUpdateProfileUserManagementComfirmPassword">Comfirm Password</label>
                                     <input type="password" class="form-control" id="txtUpdateProfileUserManagementComfirmPassword" value=""  />
@@ -61,7 +61,7 @@
                                     <label for="status">Status</label>
                                     <select class="form-control" id="txtUpdatestatus">
                                         <option value="1">Active</option>
-                                        <option value="0">Blocked</option>
+                                        <option value="2">Blocked</option>
                                         <option value="0">Deactivated</option>
                                     </select>
                                 </div>

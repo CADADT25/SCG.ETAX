@@ -9,10 +9,11 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public int UserNo { get; set; }
         public string UserEmail { get; set; } = null!;
         public string UserPassword { get; set; } = null!;
-        public string DomainName { get; set; } = null!;
+        public string? DomainName { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
-        public string GroupId { get; set; } = null!;
+        public int? LevelId { get; set; }
+        public string? GroupId { get; set; }
         public DateTime? PasswordRegister { get; set; }
         public DateTime? PasswordExpire { get; set; }
         public string? AttempLogin { get; set; }

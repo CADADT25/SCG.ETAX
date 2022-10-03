@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa>Customer Id</label>
-                <input type="text" id="txtInsertCustomerId" maxlength="20" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                <input type="text" id="txtInsertCustomerId" maxlength="20" onkeydown="validateInsertProfileCustomer();" class="form-control">
             </div>
         </div>
 
@@ -41,7 +41,7 @@
         <div class="col-md-11 col-12">
             <div class="form-group hidden" id="grpInsertNumberOfCopies">
                 <label><spa class="text-danger">* </spa>Number of copies</label>
-                <input type="number" id="txtInsertNumberOfCopies" value="0" onkeyup="validateInsertProfileCustomer();" class="form-control">
+                <input type="number" id="txtInsertNumberOfCopies" value="0" onkeyup="validateInsertProfileCustomer();" onkeypress="validateInputNumberOnly(event);" class="form-control">
             </div>
         </div>
 

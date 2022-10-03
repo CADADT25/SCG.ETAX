@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileCertificate> ProfileCertificates { get; set; } = null!;
+        public virtual DbSet<ProfileUserManagement> ProfileUserManagements { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,31 +29,24 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileCertificate>(entity =>
+            modelBuilder.Entity<ProfileUserManagement>(entity =>
             {
-                entity.HasKey(e => e.CertificateNo);
+                entity.HasKey(e => e.UserNo)
+                    .HasName("PK_authenUserProfile");
 
-                entity.ToTable("profileCertificate");
+                entity.ToTable("profileUserManagement");
 
-                entity.Property(e => e.CertificateNo).HasColumnName("certificateNo");
+                entity.Property(e => e.UserNo).HasColumnName("userNo");
 
-                entity.Property(e => e.CertificateCertSerial).HasColumnName("certificateCertSerial");
+                entity.Property(e => e.AccountStatus).HasColumnName("accountStatus");
 
-                entity.Property(e => e.CertificateCompanyCode).HasColumnName("certificateCompanyCode");
+                entity.Property(e => e.AttempLast)
+                    .HasColumnType("datetime")
+                    .HasColumnName("attempLast");
 
-                entity.Property(e => e.CertificateEndDate).HasColumnName("certificateEndDate");
-
-                entity.Property(e => e.CertificateHsmname).HasColumnName("certificateHSMName");
-
-                entity.Property(e => e.CertificateHsmserial).HasColumnName("certificateHSMSerial");
-
-                entity.Property(e => e.CertificateKeyAlias).HasColumnName("certificateKeyAlias");
-
-                entity.Property(e => e.CertificateName).HasColumnName("certificateName");
-
-                entity.Property(e => e.CertificateSlotPassword).HasColumnName("certificateSlotPassword");
-
-                entity.Property(e => e.CertificateStartDate).HasColumnName("certificateStartDate");
+                entity.Property(e => e.AttempLogin)
+                    .HasMaxLength(150)
+                    .HasColumnName("attempLogin");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -63,7 +56,27 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.DomainName)
+                    .HasMaxLength(150)
+                    .HasColumnName("domainName");
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(150)
+                    .HasColumnName("firstName");
+
+                entity.Property(e => e.GroupId).HasMaxLength(150);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(150)
+                    .HasColumnName("lastName");
+
+                entity.Property(e => e.PasswordExpire)
+                    .HasColumnType("datetime")
+                    .HasColumnName("passwordExpire");
+
+                entity.Property(e => e.PasswordRegister)
+                    .HasColumnType("datetime")
+                    .HasColumnName("passwordRegister");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
@@ -72,6 +85,14 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
+
+                entity.Property(e => e.UserEmail)
+                    .HasMaxLength(150)
+                    .HasColumnName("userEmail");
+
+                entity.Property(e => e.UserPassword)
+                    .HasMaxLength(150)
+                    .HasColumnName("userPassword");
             });
 
             OnModelCreatingPartial(modelBuilder);

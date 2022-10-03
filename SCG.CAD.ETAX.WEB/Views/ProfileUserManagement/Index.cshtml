@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
      $(document).ready(function () {
-         
+
         $('#ddlInsertRoleGroup').select2();
         $('#ddlUpdateRoleGroup').select2();
         $('#ddlInsertUserLevel').select2();
@@ -110,7 +110,7 @@
         fnDropdownUserLevel();
         $("#modalCreateProfileUser").modal('show');
     }
-    
+
     function fnInsertCancelProfileUser(){
 
         document.getElementById('txtInsertProfileUserManagementEmail').value = '';
@@ -137,7 +137,7 @@
 
         $("#modalUpdateProfileUser").modal('hide');
     }
-    
+
     function fnDropdownGroupRole() {
         $('#ddlInsertRoleGroup').empty();
         $('#ddlUpdateRoleGroup').empty();
@@ -148,7 +148,7 @@
                         value: data.profileUserGroupNo,
                         text: data.profileUserGroupName
                     }).html(data.profileUserRoleName).appendTo("#ddlInsertRoleGroup");
-                    
+
                 $('<option>',
                     {
                         value: data.profileUserGroupNo,
@@ -168,7 +168,7 @@
                         value: data.profileUserRoleNo,
                         text: data.profileUserRoleName
                     }).html(data.profileUserRoleName).appendTo("#ddlInsertUserLevel");
-                
+
                 $('<option>',
                     {
                         value: data.profileUserRoleNo,
@@ -186,7 +186,7 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            
+
             fnDropdownGroupRole();
             fnDropdownUserLevel();
             $("#modalUpdateProfileUser").modal('show');
@@ -210,55 +210,116 @@
                 success: function (result) {
 
                     data = $.parseJSON(result)
-
                     $('#UserProfileEmail').text(data.UserEmail);
-
+                    document.getElementById('txtUpdateCustomerProfileNo').value = data.UserNo;
                     document.getElementById('txtUpdateProfileUserManagementEmail').value = data.UserEmail;
                     document.getElementById('txtUpdateProfileUserManagementName').value = data.FirstName;
                     document.getElementById('txtUpdateProfileUserManagementLastName').value = data.LastName;
 
+                    setTimeout(function(){
+                        $('#ddlUpdateUserLevel').val(data.LevelId).trigger('change');
+                        $('#ddlUpdateRoleGroup').val(data.GroupId.split(',')).trigger('change');
+                        $('#txtUpdatestatus').val(data.AccountStatus).trigger('change');
+                        document.getElementById('txtUpdateProfileUserManagementPassword').value = data.UserPassword;
+                        document.getElementById('txtUpdateProfileUserManagementComfirmPassword').value = data.UserPassword;
+                    }, 1000);
                 }
             });
 
         }
 
     function fnInsertProfileUser(){
-        
-        var model = new Object();
 
-        model.userEmail = $('#txtInsertProfileUserManagementEmail').val();
-        model.userPassword = $('#txtInsertProfileUserManagementPassword').val();
-        model.firstName = $('#txtInsertProfileUserManagementName').val();
-        model.lastName = $('#txtInsertProfileUserManagementLastName').val();
-        model.GroupId = $('#ddlInsertRoleGroup').val();
-        model.LevelId = $('#ddlInsertUserLevel').val();
-        model.CreateBy = $("#leftSideEmail").text();
-        model.CreateDate = new Date();
-        model.UpdateBy = $("#leftSideEmail").text();
-        model.UpdateDate = new Date();
-        model.Isactive = $('#txtInsertstatus').val();
+        var password1 = $('#txtInsertProfileUserManagementPassword').val();
+        var password2 = $('#txtInsertProfileUserManagementComfirmPassword').val();
 
-        var getJsonString = JSON.stringify(model);
-        console.log(getJsonString);
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("Insert", "ProfileUserManagement")",
-                data: { jsonString : getJsonString },
-                //contentType: 'application/json; charset=utf-8',
-                dataType: "json",
-                success: function (result) {
+        if (password1 == password2) {
 
-                    data = $.parseJSON(result)
+            var model = new Object();
 
-                    $('#UserProfileEmail').text(data.UserEmail);
+            model.userEmail = $('#txtInsertProfileUserManagementEmail').val();
+            model.userPassword = $('#txtInsertProfileUserManagementPassword').val();
+            model.firstName = $('#txtInsertProfileUserManagementName').val();
+            model.lastName = $('#txtInsertProfileUserManagementLastName').val();
+            model.GroupId = $('#ddlInsertRoleGroup').val().toString();
+            model.LevelId = $('#ddlInsertUserLevel').val();
+            model.CreateBy = $("#leftSideEmail").text();
+            model.CreateDate = new Date();
+            model.UpdateBy = $("#leftSideEmail").text();
+            model.UpdateDate = new Date();
+            model.accountStatus = $('#txtInsertstatus').val();
 
-                    document.getElementById('txtUpdateProfileUserManagementEmail').value = data.UserEmail;
-                    document.getElementById('txtUpdateProfileUserManagementName').value = data.FirstName;
-                    document.getElementById('txtUpdateProfileUserManagementLastName').value = data.LastName;
+            var getJsonString = JSON.stringify(model);
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("Insert", "ProfileUserManagement")",
+                    data: { jsonString : getJsonString },
+                    dataType: "text",
+                    success: function (result) {
+                        data = $.parseJSON(result);
+                        var errorMessage = data.erroR_MESSAGE;
+                        if(data.status == true){
 
+                            fnInsertCancelProfileUser();
+                            fnSweetAlert_SaveSuccess();
+                            callProfileUserManagementIndex();
+                        }
+                        else{
+                            fnSweetAlert_Error(errorMessage);
+                        }
+                    }
+                });
+                }else{
+                    fnSweetAlert_Error("Password Not Match");
                 }
-            });
+        }
 
+    function fnUpdateProfileUser(){
+        //var password1 = $('#txtUpdateProfileUserManagementPassword').val();
+        //let password2 = $('#txtUpdateProfileUserManagementComfirmPassword').val();
+
+        //console.log(password1);
+        //console.log(password2);
+        //if (password1 != password2) {
+        //   fnSweetAlert_Error("Password Not Match");
+        //}
+        //else {
+            var model = new Object();
+
+            model.userNo = $('#txtUpdateCustomerProfileNo').val();
+            model.userEmail = $('#txtUpdateProfileUserManagementEmail').val();
+            model.userPassword = $('#txtUpdateProfileUserManagementComfirmPassword').val();
+            model.firstName = $('#txtUpdateProfileUserManagementName').val();
+            model.lastName = $('#txtUpdateProfileUserManagementLastName').val();
+            model.GroupId = $('#ddlUpdateRoleGroup').val().toString();
+            model.LevelId = $('#ddlUpdateUserLevel').val();
+            model.CreateBy = $("#leftSideEmail").text();
+            model.CreateDate = new Date();
+            model.UpdateBy = $("#leftSideEmail").text();
+            model.UpdateDate = new Date();
+            model.accountStatus = $('#txtUpdatestatus').val();
+
+            var getJsonString = JSON.stringify(model);
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("Update", "ProfileUserManagement")",
+                    data: { jsonString : getJsonString },
+                    dataType: "text",
+                    success: function (result) {
+                        data = $.parseJSON(result);
+                        var errorMessage = data.erroR_MESSAGE;
+                        if(data.status == true){
+
+                            fnUpdateCancelProfileUser();
+                            fnSweetAlert_SaveSuccess();
+                            callProfileUserManagementIndex();
+                        }
+                        else{
+                            fnSweetAlert_Error(errorMessage);
+                        }
+                    }
+                });
+        //}
         }
 
 
@@ -267,6 +328,7 @@
         setTimeout(function(){
             $.blockUI();
             $("#contentPartial").load("@Url.Action("Index", "ProfileUserManagement")");
+
             $.unblockUI();
         }, 500);
     }
