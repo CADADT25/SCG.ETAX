@@ -14,11 +14,31 @@
                 <input type="text" id="txtInsertProfileUserGroupDescription" onkeyup="validateInsertProfileUserGroup();" class="form-control">
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="txtInsertProfileUserGroupStatus">
+                    <option value="1">Active</option>
+                    <option value="0">Deactivated</option>
+                </select>
+            </div>
+        </div>
 
         <div class="col-12">
-            <div class="form-group">
+            @*<div class="form-group">
                 <label><span class="text-danger">* </span>Role</label>
                 <select class="select2 form-control" id="txtInsertProfileUserGroupRoleId" multiple></select>
+                </div>*@
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-hover-animation" id="tbConfigControlMenu">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">ShowMenu</th>
+                            <th class="text-center">PK Key</th>
+                            <th style="width: 80%;">Menu</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>

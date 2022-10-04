@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileUserManagement> ProfileUserManagements { get; set; } = null!;
+        public virtual DbSet<ProfileUserGroup> ProfileUserGroups { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,24 +29,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileUserManagement>(entity =>
+            modelBuilder.Entity<ProfileUserGroup>(entity =>
             {
-                entity.HasKey(e => e.UserNo)
-                    .HasName("PK_authenUserProfile");
+                entity.HasKey(e => e.ProfileUserGroupNo);
 
-                entity.ToTable("profileUserManagement");
+                entity.ToTable("profileUserGroup");
 
-                entity.Property(e => e.UserNo).HasColumnName("userNo");
-
-                entity.Property(e => e.AccountStatus).HasColumnName("accountStatus");
-
-                entity.Property(e => e.AttempLast)
-                    .HasColumnType("datetime")
-                    .HasColumnName("attempLast");
-
-                entity.Property(e => e.AttempLogin)
-                    .HasMaxLength(150)
-                    .HasColumnName("attempLogin");
+                entity.Property(e => e.ProfileUserGroupNo).HasColumnName("profileUserGroupNo");
 
                 entity.Property(e => e.CreateBy)
                     .HasMaxLength(100)
@@ -56,27 +45,21 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.DomainName)
-                    .HasMaxLength(150)
-                    .HasColumnName("domainName");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.FirstName)
-                    .HasMaxLength(150)
-                    .HasColumnName("firstName");
+                entity.Property(e => e.ProfileControlMenu)
+                    .HasMaxLength(1000)
+                    .HasColumnName("profileControlMenu");
 
-                entity.Property(e => e.GroupId).HasMaxLength(150);
+                entity.Property(e => e.ProfileUserGroupDescription)
+                    .HasMaxLength(500)
+                    .HasColumnName("profileUserGroupDescription");
 
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(150)
-                    .HasColumnName("lastName");
-
-                entity.Property(e => e.PasswordExpire)
-                    .HasColumnType("datetime")
-                    .HasColumnName("passwordExpire");
-
-                entity.Property(e => e.PasswordRegister)
-                    .HasColumnType("datetime")
-                    .HasColumnName("passwordRegister");
+                entity.Property(e => e.ProfileUserGroupName)
+                    .HasMaxLength(100)
+                    .HasColumnName("profileUserGroupName");
 
                 entity.Property(e => e.UpdateBy)
                     .HasMaxLength(100)
@@ -85,14 +68,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateDate");
-
-                entity.Property(e => e.UserEmail)
-                    .HasMaxLength(150)
-                    .HasColumnName("userEmail");
-
-                entity.Property(e => e.UserPassword)
-                    .HasMaxLength(150)
-                    .HasColumnName("userPassword");
             });
 
             OnModelCreatingPartial(modelBuilder);

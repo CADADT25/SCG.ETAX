@@ -84,7 +84,7 @@
                     }
                     else
                     {
-
+                        param.ProfileControlMenu = CheckMainMenu(param.ProfileControlMenu);
                         param.CreateDate = dtNow;
                         param.UpdateDate = dtNow;
 
@@ -119,7 +119,7 @@
                     {
                         update.ProfileUserGroupName = param.ProfileUserGroupName;
                         update.ProfileUserGroupDescription = param.ProfileUserGroupDescription;
-                        update.ProfileUserRoleId = param.ProfileUserRoleId;
+                        update.ProfileControlMenu = CheckMainMenu(param.ProfileControlMenu);
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
@@ -178,6 +178,39 @@
             return resp;
         }
 
+        public string CheckMainMenu(string profileControlMenu)
+        {
+            string result = "";
+            var listmenu = profileControlMenu.Split(",");
+            List<string> newlistmenu = new List<string>();
+            var checkmainmenu = _dbContext.configControlMenu.ToList();
+            foreach (var item in listmenu)
+            {
+                var datamenu = checkmainmenu.FirstOrDefault(x => x.ConfigControlMenuNo == Convert.ToInt32(item));
+                if (datamenu != null)
+                {
+                    newlistmenu.Add(item);
+                    if (datamenu.ConfigControlMenuValue.Length > 1)
+                    {
+                        var mainmenu = checkmainmenu.FirstOrDefault(x => x.ConfigControlMenuValue.Equals(datamenu.ConfigControlMenuValue.Substring(0, 1)));
+                        if (mainmenu != null)
+                        {
+                            newlistmenu.Add(mainmenu.ConfigControlMenuNo.ToString());
+                        }
+                    }
+                }
+            }
 
+            if(newlistmenu.Count > 0)
+            {
+                newlistmenu = newlistmenu.Distinct().ToList();
+                foreach(var item in newlistmenu)
+                {
+                    result = result + "," + item;
+                }
+                result = result.Substring(1);
+            }
+            return result;
+        }
     }
 }
