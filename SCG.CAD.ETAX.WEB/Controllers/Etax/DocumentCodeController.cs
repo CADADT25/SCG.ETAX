@@ -4,6 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class DocumentCodeController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

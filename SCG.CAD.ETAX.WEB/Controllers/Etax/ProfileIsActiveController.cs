@@ -4,8 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ProfileIsActiveController : Controller
     {
-
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

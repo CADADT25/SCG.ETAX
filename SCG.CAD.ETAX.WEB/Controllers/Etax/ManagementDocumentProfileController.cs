@@ -4,6 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
     public class ManagementDocumentProfileController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

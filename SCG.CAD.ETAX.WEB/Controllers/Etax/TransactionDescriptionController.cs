@@ -4,8 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class TransactionDescriptionController : Controller
     {
-
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

@@ -7,8 +7,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ProfileSellerController : Controller
     {
-
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

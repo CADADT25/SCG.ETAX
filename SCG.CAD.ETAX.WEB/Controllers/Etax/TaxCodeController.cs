@@ -2,6 +2,7 @@
 {
     public class TaxCodeController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

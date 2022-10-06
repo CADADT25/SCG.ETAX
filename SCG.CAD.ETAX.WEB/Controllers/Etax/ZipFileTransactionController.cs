@@ -4,8 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
     public class ZipFileTransactionController : Controller
     {
-
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

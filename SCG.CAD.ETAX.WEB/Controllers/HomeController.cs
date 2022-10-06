@@ -14,16 +14,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             _logger = logger;
         }
 
+        [SessionExpire]
         public IActionResult Index(string Username, bool CurrentLogin, int LogOut)
         {
-
             AuthenticationModel authenticationModel = new AuthenticationModel();
 
             authenticationModel.username = Username;
             authenticationModel.authenticated = CurrentLogin;
 
             AuthGuard authGuard = new AuthGuard();
-
+            ViewData["userEmail"] = Username;
             if (LogOut == 0)
             {
                 if (authGuard.OnAuthentication(authenticationModel) == 1)
@@ -55,6 +55,40 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public async Task<JsonResult> GetMenu(string user)
+        {
+            List<ConfigControlMenu> tran = new List<ConfigControlMenu>();
+
+            Response resp = new Response();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/Authentication/GetMenu?Username= " + user + " "));
+
+                if (task.STATUS)
+                {
+
+                    tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
+
+                    result = JsonConvert.SerializeObject(tran);
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return Json(result);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

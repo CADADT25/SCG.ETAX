@@ -23,5 +23,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("GetMenu")]
+        public IActionResult GetMenu(string Username)
+        {
+            var result = repo.GET_MENU(Username).Result;
+
+            return Ok(result);
+        }
     }
 }

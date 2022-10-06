@@ -4,6 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ProfileUserRoleController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

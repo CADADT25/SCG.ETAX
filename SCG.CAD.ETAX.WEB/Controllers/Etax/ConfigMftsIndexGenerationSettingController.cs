@@ -5,7 +5,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ConfigMftsIndexGenerationSettingController : Controller
     {
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

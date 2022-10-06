@@ -214,7 +214,6 @@
 
             var getJsonString = JSON.stringify(model);
 
-
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("GetLogin", "AuthSinIn")",
@@ -227,6 +226,7 @@
                     data = $.parseJSON(result);
 
                     if(data.UrlRedirect != ""){
+                        $('#leftSideEmail').val("Test.com");
                         window.location.href= data.UrlRedirect;
 
                     }else{

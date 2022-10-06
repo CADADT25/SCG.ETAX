@@ -2,6 +2,7 @@
 {
     public class CancelZipHeaderController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

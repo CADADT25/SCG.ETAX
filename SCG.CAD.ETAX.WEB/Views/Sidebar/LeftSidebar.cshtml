@@ -38,16 +38,16 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class=" nav-item">
-                <a class="d-flex align-items-center" href="index.html"><i data-feather="home"></i><span class="menu-title text-truncate">Dashboards</span><span class="badge badge-light-warning badge-pill ml-auto mr-1">2</span></a>
+            <li class=" nav-item" id="li-Dashboards" hidden>
+                <a class="d-flex align-items-center" href="index.html"><i data-feather="home"></i><span class="menu-title text-truncate">Dashboards</span>@*<span class="badge badge-light-warning badge-pill ml-auto mr-1">2</span>*@</a>
                 <ul class="menu-content">
-                    <li>
+                    <li id="li-UserDashboard" hidden>
                         <a class="d-flex align-items-center" href="#">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate">User Dashboard</span>
                         </a>
                     </li>
-                    <li>
+                    <li id="li-OperationSupportDashboard" hidden>
                         <a class="d-flex align-items-center" href="#">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate">Operation Support Dashboard</span>
@@ -61,14 +61,14 @@
                 </li>
             *@
 
-            <li class="nav-item" id="li-InboxManagement">
+            <li class="nav-item" id="li-InboxManagement" hidden>
                 <a class="d-flex align-items-center" id="btn-InboxManagement">
                     <i data-feather="file"></i>
                     <span class="menu-title text-truncate">eTax Inbox</span>
                 </a>
             </li>
 
-            <li class="nav-item" id="li-btnCallPageTransactionDescription">
+            <li class="nav-item" id="li-btnCallPageTransactionDescription" hidden>
                 <a class="d-flex align-items-center" id="btn-btnCallPageTransactionDescription">
                     <i data-feather="file"></i>
                     <span class="menu-title text-truncate">E-tax Transaction</span>
@@ -76,25 +76,25 @@
             </li>
 
 
-            <li class="nav-item">
+            <li class="nav-item" id="li-OutputSearch" hidden>
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">Output Search</span></a>
                 <ul class="menu-content">
 
-                    <li class="nav-item" id="li-OutputPrintingSearch">
+                    <li class="nav-item" id="li-OutputPrintingSearch" hidden>
                         <a class="d-flex align-items-center" id="btn-OutputPrintingSearch">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Printing Search</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-OutputXmlSearch">
+                    <li class="nav-item" id="li-OutputXmlSearch" hidden>
                         <a class="d-flex align-items-center" id="btn-OutputXmlSearch">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">XML Zip Search</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-OutputSearchEmailSend">
+                    <li class="nav-item" id="li-OutputSearchEmailSend" hidden>
                         <a class="d-flex align-items-center" id="btn-OutputSearchEmailSend">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">eMail Search</span>
@@ -104,7 +104,7 @@
                 </ul>
             </li>
 
-            <li class="nav-item" id="li-ManagementCustomer">
+            <li class="nav-item" id="li-ManagementCustomer" hidden>
                 <a class="d-flex align-items-center" id="btn-ManagementCustomer">
                     <i data-feather="file"></i>
                     <span class="menu-title text-truncate">Customer Profile</span>
@@ -112,25 +112,25 @@
             </li>
 
 
-            <li class="nav-item">
+            <li class="nav-item" id="li-UserManagement" hidden>
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">User Management</span></a>
                 <ul class="menu-content">
 
-                    <li class="nav-item" id="li-ProfileUserManagement">
+                    <li class="nav-item" id="li-ProfileUserManagement" hidden>
                         <a class="d-flex align-items-center" id="btn-ProfileUserManagement">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">User Profile</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-ProfileUserGroup">
+                    <li class="nav-item" id="li-ProfileUserGroup" hidden>
                         <a class="d-flex align-items-center" id="btn-ProfileUserGroup">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">User Group</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-ProfileUserRole">
+                    <li class="nav-item" id="li-ProfileUserRole" hidden>
                         <a class="d-flex align-items-center" id="btn-ProfileUserRole">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">User Role</span>
@@ -139,18 +139,18 @@
                 </ul>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" id="li-Administrator" hidden>
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">Administrator</span></a>
                 <ul class="menu-content">
 
-                    <li class="nav-item" id="li-ManagementCompanyProfile">
+                    <li class="nav-item" id="li-ManagementCompanyProfile" hidden>
                         <a class="d-flex align-items-center" id="btn-ManagementCompanyProfile">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Company Profile</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-ManagementDocumentProfile">
+                    <li class="nav-item" id="li-ManagementDocumentProfile" hidden>
                         <a class="d-flex align-items-center" id="btn-ManagementDocumentProfile">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Data Source Profile</span>
@@ -162,22 +162,22 @@
 
 
 
-            <li class=" nav-item">
+            <li class=" nav-item" id="li-Configuration" hidden>
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">Configuration</span></a>
                 <ul class="menu-content">
-                    <li>
+                    <li id="li-Globalconfig" hidden>
                         <a class="d-flex align-items-center" href="#">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate">Global config</span>
                         </a>
                         <ul class="menu-content">
-                            <li class="nav-item" id="li-ConfigGlobal">
+                            <li class="nav-item" id="li-ConfigGlobal" hidden>
                                 <a class="d-flex align-items-center" id="btn-ConfigGlobal">
                                     <i data-feather="file"></i>
                                     <span class="menu-title text-truncate">Config Global</span>
                                 </a>
                             </li>
-                            <li class="nav-item" id="li-ConfigGlobalCategory">
+                            <li class="nav-item" id="li-ConfigGlobalCategory" hidden>
                                 <a class="d-flex align-items-center" id="btn-ConfigGlobalCategory">
                                     <i data-feather="file"></i>
                                     <span class="menu-title text-truncate">Config Global Category</span>
@@ -186,19 +186,19 @@
                         </ul>
                     </li>
 
-                    <li>
+                    <li id="li-Emailconfig" hidden>
                         <a class="d-flex align-items-center" href="#">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate">Email config</span>
                         </a>
                         <ul class="menu-content">
-                            <li class="nav-item" id="li-ProfileEmailTemplate">
+                            <li class="nav-item" id="li-ProfileEmailTemplate" hidden>
                                 <a class="d-flex align-items-center" id="btn-ProfileEmailTemplate">
                                     <i data-feather="file"></i>
                                     <span class="menu-title text-truncate">Template</span>
                                 </a>
                             </li>
-                            <li class="nav-item" id="li-ProfileEmailType">
+                            <li class="nav-item" id="li-ProfileEmailType" hidden>
                                 <a class="d-flex align-items-center" id="btn-ProfileEmailType">
                                     <i data-feather="file"></i>
                                     <span class="menu-title text-truncate">Email type</span>
@@ -207,14 +207,14 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item" id="li-ConfigControlMenu">
+                    <li class="nav-item" id="li-ConfigControlMenu" hidden>
                         <a class="d-flex align-items-center" id="btn-ConfigControlMenu">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Config Control Menu</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-ConfigControlFunction">
+                    <li class="nav-item" id="li-ConfigControlFunction" hidden>
                         <a class="d-flex align-items-center" id="btn-ConfigControlFunction">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Config Control Function</span>
@@ -226,32 +226,32 @@
             </li>
 
 
-            <li class="nav-item">
+            <li class="nav-item" id="li-Log" hidden>
                 <a class="d-flex align-items-center" href="#"><i data-feather="menu"></i><span class="menu-title text-truncate">Log</span></a>
                 <ul class="menu-content">
 
-                    <li class="nav-item" id="li-">
+                    <li class="nav-item" id="li-LogTEXTreceivebatch" hidden>
                         <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Log TEXT receive batch</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-">
+                    <li class="nav-item" id="li-LogPDFreceivebatch" hidden>
                         <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Log PDF receive batch</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-">
+                    <li class="nav-item" id="li-LogDMSsenttoSAP" hidden>
                         <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Log DMS sent to SAP</span>
                         </a>
                     </li>
 
-                    <li class="nav-item" id="li-">
+                    <li class="nav-item" id="li-LogDMSreceivetoSAP" hidden>
                         <a class="d-flex align-items-center" id="btn-">
                             <i data-feather="file"></i>
                             <span class="menu-title text-truncate">Log DMS receive to SAP</span>
@@ -266,7 +266,8 @@
 
 
             <li class=" navigation-header">
-                <label id="leftSideEmail">cadvpnap14@scg.com</label><i data-feather="more-horizontal"></i>
+                @*<label id="leftSideEmail">cadvpnap14@scg.com</label><i data-feather="more-horizontal"></i>*@
+                <label id="leftSideEmail">@ViewBag.userEmail</label><i data-feather="more-horizontal"></i>
             </li>
 
             <li class="nav-item" id="li-">
@@ -281,14 +282,8 @@
     </div>
 </div>
 
-<script>
-
-    //$(document).ready(function () {
-
-    //    alert('123');
-
-    //});
-
+<script type="text/javascript">
+    
 
 </script>
 

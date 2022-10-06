@@ -4,8 +4,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ZipFileConfigController : Controller
     {
-
-
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

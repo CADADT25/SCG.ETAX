@@ -2,6 +2,7 @@
 {
     public class RdDocumentController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

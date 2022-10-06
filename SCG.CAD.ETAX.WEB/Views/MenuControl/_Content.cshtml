@@ -3,7 +3,134 @@
 }
 
 <script>
+     $(document).ready(function () {
 
+        callUserMenu();
+
+    });
+
+    function callUserMenu(){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetMenu", "Home")",
+            data: { user : $("#leftSideEmail").text() },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result)
+
+                $.each(data, function (i, data) {
+                    console.log(data);
+                    console.log(data.ConfigControlMenuNo);
+                    if(data.ConfigControlMenuNo == 1){
+                        $('#li-Dashboards').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 2){
+                        $('#li-UserDashboard').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 3){
+                        $('#li-OperationSupportDashboard').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 4){
+                        $('#li-InboxManagement').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 5){
+                        $('#li-btnCallPageTransactionDescription').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 6){
+                        $('#li-OutputSearch').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 7){
+                        $('#li-OutputPrintingSearch').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 8){
+                        $('#li-OutputXmlSearch').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 9){
+                        $('#li-OutputSearchEmailSend').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 10){
+                        $('#li-ManagementCustomer').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 11){
+                        $('#li-UserManagement').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 12){
+                        $('#li-ProfileUserManagement').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 13){
+                        $('#li-ProfileUserGroup').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 14){
+                        $('#li-ProfileUserRole').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 15){
+                        $('#li-Administrator').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 16){
+                        $('#li-ManagementCompanyProfile').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 17){
+                        $('#li-ManagementDocumentProfile').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 18){
+                        $('#li-Configuration').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 19){
+                        $('#li-Globalconfig').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 20){
+                        $('#li-ConfigGlobal').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 21){
+                        $('#li-ConfigGlobalCategory').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 22){
+                        $('#li-Emailconfig').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 23){
+                        $('#li-ProfileEmailTemplate').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 24){
+                        $('#li-ProfileEmailType').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 25){
+                        $('#li-ConfigControlMenu').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 26){
+                        $('#li-ConfigControlFunction').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 27){
+                        $('#li-Log').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 28){
+                        $('#li-LogTEXTreceivebatch').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 29){
+                        $('#li-LogPDFreceivebatch').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 30){
+                        $('#li-LogDMSsenttoSAP').removeAttr('hidden');
+                    }
+                    if(data.ConfigControlMenuNo == 31){
+                        $('#li-LogDMSreceivetoSAP').removeAttr('hidden');
+                    }
+
+                });
+                //document.getElementById('txtUpdateProfileUserGroupNo').value = data.ProfileUserGroupNo;
+                //document.getElementById('txtUpdateProfileUserGroupName').value = data.ProfileUserGroupName;
+                //document.getElementById('txtUpdateProfileUserGroupDescription').value = data.ProfileUserGroupDescription;
+
+                //setTimeout(function(){
+                //    $('#txtUpdateProfileUserGroupStatus').val(data.Isactive).trigger('change');
+                //}, 1000);
+
+                //callProfileUserRoleUpdate(data.ProfileControlMenu);
+                //$("#modalUpdateProfileUserGroup").modal('show');
+            }
+        });
+    }
 
     $("#btn-CallPageProductUnit").click(function () {
 
@@ -870,7 +997,7 @@
 
         $.unblockUI();
     });
-    
+
     $("#btn-btnCallPageTransactionDescription").click(function () {
         $.blockUI();
 
@@ -959,7 +1086,7 @@
 
 
 
-    
+
     $("#btn-OutputXmlSearch").click(function () {
         $.blockUI();
 
@@ -1004,7 +1131,7 @@
     });
 
 
-    
+
     $("#btn-OutputSearchEmailSend").click(function () {
         $.blockUI();
 
@@ -1048,7 +1175,7 @@
         $.unblockUI();
     });
 
-    
+
     $("#btn-ConfigGlobal").click(function () {
         $.blockUI();
 
@@ -1092,7 +1219,7 @@
         $.unblockUI();
     });
 
-    
+
     $("#btn-ConfigGlobalCategory").click(function () {
         $.blockUI();
 
@@ -1137,7 +1264,7 @@
     });
 
 
-    
+
     $("#btn-ProfileEmailType").click(function () {
         $.blockUI();
 
@@ -1226,7 +1353,7 @@
     });
 
 
-    
+
     $("#btn-ProfileUserRole").click(function () {
         $.blockUI();
 
@@ -1401,7 +1528,7 @@
     });
 
 
-    
+
     $("#btn-ProfileUserManagement").click(function () {
 
         $.blockUI();
@@ -1447,7 +1574,7 @@
     });
 
 
-    
+
     $("#btn-InboxManagement").click(function () {
 
         $.blockUI();

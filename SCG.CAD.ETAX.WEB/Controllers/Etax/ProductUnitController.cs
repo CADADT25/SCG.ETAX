@@ -9,6 +9,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class ProductUnitController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             return View();

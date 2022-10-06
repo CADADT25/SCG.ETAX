@@ -1,4 +1,6 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using System.Text;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class ProfileUserManagementService
     {
@@ -75,6 +77,7 @@
                     param.DomainName = "@" + param.UserEmail.Substring(param.UserEmail.IndexOf('@') + 1);
                     param.PasswordRegister = dtNow;
                     param.PasswordExpire = dtNow.AddYears(1);
+                    param.UserPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(param.UserPassword));
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
