@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.UTILITY.Authentication;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
@@ -7,7 +8,23 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         [SessionExpire]
         public IActionResult Index()
         {
-            return View();
+            Permission permission = new Permission();
+            string pageindex = "555";
+            if (!permission.CheckPremissionPage(HttpContext.Session.GetString("premissionMenu"), pageindex))
+            {
+                HttpContext.Session.SetInt32("checkpermissionpage", 0);
+                //return new RedirectResult("~/AuthSinIn/Index");
+                //return View("~/Home/index.cshtml");
+                return View("~/Views/Home/index.cshtml");
+                //return RedirectToAction("Index", "Home");
+                //return new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "Home" }));
+                //return new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "AuthSinIn" }));
+                //return;
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult _Content()

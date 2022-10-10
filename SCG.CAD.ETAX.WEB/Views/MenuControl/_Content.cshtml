@@ -21,8 +21,6 @@
                 data = $.parseJSON(result)
 
                 $.each(data, function (i, data) {
-                    console.log(data);
-                    console.log(data.ConfigControlMenuNo);
                     if(data.ConfigControlMenuNo == 1){
                         $('#li-Dashboards').removeAttr('hidden');
                     }

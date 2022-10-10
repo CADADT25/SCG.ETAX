@@ -15,6 +15,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
 
         [SessionExpire]
+        [PermissionAttribute]
         public IActionResult Index(string Username, bool CurrentLogin, int LogOut)
         {
             AuthenticationModel authenticationModel = new AuthenticationModel();
@@ -24,6 +25,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             AuthGuard authGuard = new AuthGuard();
             ViewData["userEmail"] = Username;
+
             if (LogOut == 0)
             {
                 if (authGuard.OnAuthentication(authenticationModel) == 1)
@@ -75,7 +77,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
 
                     result = JsonConvert.SerializeObject(tran);
-
+                    var menu = string.Join(",", tran.Select(x => x.ConfigControlMenuNo).ToList());
+                    HttpContext.Session.SetString("premissionMenu", menu); 
                 }
                 else
                 {
