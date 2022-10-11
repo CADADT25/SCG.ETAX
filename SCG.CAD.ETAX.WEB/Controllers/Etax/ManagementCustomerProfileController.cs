@@ -13,7 +13,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             if (!permission.CheckPremissionPage(HttpContext.Session.GetString("premissionMenu"), pageindex))
             {
                 HttpContext.Session.SetInt32("checkpermissionpage", 0);
-                return View("~/Views/Home/index.cshtml");
+                string pathredirect = Url.Action("Index", "Home");
+                return new RedirectResult(pathredirect);
             }
             return View();
         }

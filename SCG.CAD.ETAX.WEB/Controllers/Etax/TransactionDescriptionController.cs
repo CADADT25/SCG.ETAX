@@ -9,17 +9,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         public IActionResult Index()
         {
             Permission permission = new Permission();
-            string pageindex = "555";
+            string pageindex = "5";
             if (!permission.CheckPremissionPage(HttpContext.Session.GetString("premissionMenu"), pageindex))
             {
                 HttpContext.Session.SetInt32("checkpermissionpage", 0);
-                //return new RedirectResult("~/AuthSinIn/Index");
-                //return View("~/Home/index.cshtml");
-                return View("~/Views/Home/index.cshtml");
-                //return RedirectToAction("Index", "Home");
-                //return new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "Home" }));
-                //return new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "AuthSinIn" }));
-                //return;
+                string pathredirect = Url.Action("Index", "Home");
+                return new RedirectResult(pathredirect);
             }
             else
             {

@@ -64,7 +64,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
 
                 //homeController.currentLogin = true;
 
-                string pathredirect = Url.Action("Index", "Home", new { Username = _authenticationModel.username, CurrentLogin = _authenticationModel.authenticated });
+                string pathredirect = Url.Action("IndexCheckLogin", "Home", new { Username = _authenticationModel.username, CurrentLogin = _authenticationModel.authenticated });
 
 
                 return new RedirectResult(pathredirect);
@@ -135,7 +135,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
                 HttpContext.Session.Clear();
                 HttpContext.Session.SetInt32("checkpermissionpage", 1);
                 HttpContext.Session.SetInt32("islogin", 1);
-                string pathredirect = Url.Action("Index", "Home", new { Username = oMycustomclassname.username, CurrentLogin = oMycustomclassname.authenticated });
+                string pathredirect = Url.Action("IndexCheckLogin", "Home", new { Username = oMycustomclassname.username, CurrentLogin = oMycustomclassname.authenticated });
 
                 authenticationModel.username = oMycustomclassname.username;
                 authenticationModel.authenticated = oMycustomclassname.authenticated;

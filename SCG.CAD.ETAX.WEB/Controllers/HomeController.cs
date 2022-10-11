@@ -15,8 +15,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
 
         [SessionExpire]
-        [PermissionAttribute]
-        public IActionResult Index(string Username, bool CurrentLogin, int LogOut)
+        //[PermissionAttribute]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [SessionExpire]
+        public IActionResult IndexCheckLogin(string Username, bool CurrentLogin, int LogOut)
         {
             AuthenticationModel authenticationModel = new AuthenticationModel();
 
@@ -32,7 +38,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     if (CurrentLogin == true)
                     {
-                        return View();
+                        return View("~/Views/Home/index.cshtml");
                     }
                     else
                     {
@@ -92,6 +98,17 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
             return Json(result);
+        }
+
+        public async Task<bool> CheckPermission()
+        {
+            bool result = false;
+            if (HttpContext.Session.GetInt32("checkpermissionpage") == 1)
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

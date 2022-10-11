@@ -3,11 +3,26 @@
 }
 
 <script>
+    var url = $("#RedirectTo").val();
      $(document).ready(function () {
 
         callUserMenu();
-
+        callCheckPermission();
     });
+
+    
+    function callCheckPermission(){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("CheckPermission", "Home")",
+            success: function (result) {
+                if(!result){
+                    location.href = url;
+                }
+            }
+        });
+    }
 
     function callUserMenu(){
 
