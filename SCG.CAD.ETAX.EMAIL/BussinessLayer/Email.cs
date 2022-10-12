@@ -264,11 +264,12 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     //var smtpHost = config.ConfigMftsEmailSettingHost;
                     //var smtpPort = config.ConfigMftsEmailSettingPort;
                     //var toEmailAddress = config.ConfigMftsEmailSettingEmail;
+                    //var ccEmailAddress = config.ConfigMftsEmailSettingEmail;
                     var fromEmailAddress = "etaxadm@scg.com";
                     var fromEmailPassword = "Thai2020";
                     var smtpHost = "outmail.scg.co.th";
                     var smtpPort = "25";
-                    var toEmailAddress = "cadadt25@scg.com";
+                    //var toEmailAddress = "cadadt25@scg.com";
 
                     string body = templateemail.EmailBody;
                     body = body.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);
@@ -322,11 +323,11 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                     message.From = new MailAddress(fromEmailAddress);
                     if (!string.IsNullOrEmpty(profileemailCustomer.CustomerEmail))
                     {
-                        message.To.Add(new MailAddress(toEmailAddress));
+                        message.To.Add(new MailAddress(profileemailCustomer.CustomerEmail));
                     }
                     if (!string.IsNullOrEmpty(profileemailCustomer.CustomerCcemail))
                     {
-                        message.CC.Add(new MailAddress(toEmailAddress));
+                        message.CC.Add(new MailAddress(profileemailCustomer.CustomerCcemail));
                     }
                     message.Subject = subjectemail;
                     message.IsBodyHtml = true;
