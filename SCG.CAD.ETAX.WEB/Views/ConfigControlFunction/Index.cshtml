@@ -29,7 +29,7 @@
             "pageLength": 10,
 
             "ajax": {
-                url: "@Url.Action("List", "ConfigControlFunction")",
+                url: "@Url.Action("List", "ConfigControlMenu")",
                 type: "POST",
                 datatype: "json"
             },
@@ -38,7 +38,7 @@
             "columns": [
 
                 {
-                    data: "configControlFunctionNo",
+                    data: "configControlMenuNo",
                     className: "text-center",
                     width: "5%",
                     visible: false
@@ -51,13 +51,13 @@
                     }
                 },
                 {
-                    data: "configControlFunctionPage",
+                    data: "configControlMenuName",
                     width: "50%"
                 },
                 {
                     data: null,
                     className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-eye"/>',
+                    defaultContent: '<i class="pointer fas fa-pen"/>',
                     orderable: false,
                     width: "2%"
                 }

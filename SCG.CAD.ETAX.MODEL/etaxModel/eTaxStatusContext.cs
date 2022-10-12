@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigControlFunction> ConfigControlFunctions { get; set; } = null!;
+        public virtual DbSet<ConfigFunction> ConfigFunctions { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,37 +29,30 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigControlFunction>(entity =>
+            modelBuilder.Entity<ConfigFunction>(entity =>
             {
-                entity.HasKey(e => e.ConfigControlFunctionNo)
-                    .HasName("PK_configFunctionControl");
+                entity.HasKey(e => e.ConfigFunctionNo);
 
-                entity.ToTable("configControlFunction");
+                entity.ToTable("configFunction");
 
-                entity.Property(e => e.ConfigControlFunctionNo).HasColumnName("configControlFunctionNo");
+                entity.Property(e => e.ConfigFunctionNo).HasColumnName("configFunctionNo");
 
-                entity.Property(e => e.ConfigControlFunctionName)
-                    .HasMaxLength(100)
-                    .HasColumnName("configControlFunctionName");
-
-                entity.Property(e => e.ConfigControlFunctionPage)
-                    .HasMaxLength(100)
-                    .HasColumnName("configControlFunctionPage");
-
-                entity.Property(e => e.ConfigControlFunctionRole)
-                    .HasMaxLength(1000)
-                    .HasColumnName("configControlFunctionRole");
+                entity.Property(e => e.ConfigFunctionName)
+                    .HasMaxLength(50)
+                    .HasColumnName("configFunctionName");
 
                 entity.Property(e => e.CreateBy)
-                    .HasMaxLength(100)
+                    .HasMaxLength(50)
                     .HasColumnName("createBy");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
                 entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(100)
+                    .HasMaxLength(50)
                     .HasColumnName("updateBy");
 
                 entity.Property(e => e.UpdateDate)

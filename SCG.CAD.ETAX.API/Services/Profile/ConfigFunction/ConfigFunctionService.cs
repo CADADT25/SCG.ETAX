@@ -1,8 +1,8 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿
+namespace SCG.CAD.ETAX.API.Services
 {
-    public class ConfigControlFunctionService
+    public class ConfigFunctionService
     {
-
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
@@ -11,7 +11,7 @@
             Response resp = new Response();
             try
             {
-                var getList = _dbContext.configControlFunction.ToList();
+                var getList = _dbContext.configFunction.ToList();
 
                 if (getList.Count > 0)
                 {
@@ -42,7 +42,7 @@
 
             try
             {
-                var getList = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionNo == id).ToList();
+                var getList = _dbContext.configFunction.Where(x => x.ConfigFunctionNo == id).ToList();
 
                 if (getList.Count > 0)
                 {
@@ -66,36 +66,36 @@
             return resp;
         }
 
-        public Response INSERT(ConfigControlFunction param)
+        public Response INSERT(ConfigFunction param)
         {
             Response resp = new Response();
             try
             {
-                //using (_dbContext)
-                //{
-                //    var getDuplicate = _dbContext.configControlFunction.ToList();
+                using (_dbContext)
+                {
+                    var getDuplicate = _dbContext.configFunction.ToList();
 
-                //    if (getDuplicate.Count > 0)
-                //    {
-                //        resp.STATUS = false;
-                //        resp.ERROR_MESSAGE = "Can't insert because data is duplicate.";
-                //    }
-                //    else
-                //    {
+                    if (getDuplicate.Count > 0)
+                    {
+                        resp.STATUS = false;
+                        resp.ERROR_MESSAGE = "Can't insert because data is duplicate.";
+                    }
+                    else
+                    {
 
-                //        //param.ConfigControlFunctionName = param.ConfigControlFunctionName.ToUpper();
+                        //param.ConfigControlFunctionName = param.ConfigControlFunctionName.ToUpper();
 
-                //        param.CreateDate = dtNow;
-                //        param.UpdateDate = dtNow;
+                        param.CreateDate = dtNow;
+                        param.UpdateDate = dtNow;
 
-                //        _dbContext.configControlFunction.Add(param);
-                //        _dbContext.SaveChanges();
+                        _dbContext.configFunction.Add(param);
+                        _dbContext.SaveChanges();
 
 
-                //        resp.STATUS = true;
-                //        resp.MESSAGE = "Insert success.";
-                //    }
-                //}
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Insert success.";
+                    }
+                }
                 resp.STATUS = true;
                 resp.MESSAGE = "Insert success.";
             }
@@ -108,14 +108,14 @@
             return resp;
         }
 
-        public Response UPDATE(ConfigControlFunction param)
+        public Response UPDATE(ConfigFunction param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionNo == param.ConfigControlFunctionNo).FirstOrDefault();
+                    var update = _dbContext.configFunction.Where(x => x.ConfigFunctionNo == param.ConfigFunctionNo).FirstOrDefault();
 
                     if (update != null)
                     {
@@ -145,18 +145,18 @@
             return resp;
         }
 
-        public Response DELETE(ConfigControlFunction param)
+        public Response DELETE(ConfigFunction param)
         {
             Response resp = new Response();
             try
             {
                 using (_dbContext)
                 {
-                    var delete = _dbContext.configControlFunction.Find(param.ConfigControlFunctionNo);
+                    var delete = _dbContext.configFunction.Find(param.ConfigFunctionNo);
 
                     if (delete != null)
                     {
-                        _dbContext.configControlFunction.Remove(delete);
+                        _dbContext.configFunction.Remove(delete);
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;
@@ -177,6 +177,5 @@
             }
             return resp;
         }
-
     }
 }

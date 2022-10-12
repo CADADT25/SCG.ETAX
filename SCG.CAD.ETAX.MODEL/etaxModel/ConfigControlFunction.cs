@@ -7,12 +7,13 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     {
         [Key]
         public int ConfigControlFunctionNo { get; set; }
-        public string? ConfigControlFunctionPage { get; set; }
-        public string? ConfigControlFunctionName { get; set; }
+        public int? ConfigControlFunctionMenuNo { get; set; }
+        public int? ConfigControlNo { get; set; }
         public string? ConfigControlFunctionRole { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
+        public int? Isactive { get; set; }
     }
 }
