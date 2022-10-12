@@ -28,9 +28,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             authenticationModel.username = Username;
             authenticationModel.authenticated = CurrentLogin;
-
+            string fullname = HttpContext.Session.GetString("userName").ToUpper() + " " + HttpContext.Session.GetString("userLastname").Substring(0, 1).ToUpper() + ".";
+            string initialsname = HttpContext.Session.GetString("userName").Substring(0, 1).ToUpper() + HttpContext.Session.GetString("userLastname").Substring(0, 1).ToUpper();
             AuthGuard authGuard = new AuthGuard();
             ViewData["userEmail"] = Username;
+            ViewData["userFullname"] = fullname;
+            ViewData["userInitialsName"] = initialsname;
 
             if (LogOut == 0)
             {

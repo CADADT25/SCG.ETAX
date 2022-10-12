@@ -135,6 +135,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
                 HttpContext.Session.Clear();
                 HttpContext.Session.SetInt32("checkpermissionpage", 1);
                 HttpContext.Session.SetInt32("islogin", 1);
+                HttpContext.Session.SetString("userName", tran[0].FirstName);
+                HttpContext.Session.SetString("userLastname", tran[0].LastName);
                 string pathredirect = Url.Action("IndexCheckLogin", "Home", new { Username = oMycustomclassname.username, CurrentLogin = oMycustomclassname.authenticated });
 
                 authenticationModel.username = oMycustomclassname.username;
