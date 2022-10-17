@@ -9,10 +9,10 @@
 
 <script type="text/javascript">
 
+    var DropdownUserLevel = null;   
+    var htmlDropdownUserLevel = "";   
      $(document).ready(function () {
-
         RenderConfigControlFunction();
-
     });
 
 
@@ -127,32 +127,81 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
-            callConfigControlFunctionGetDetailController(getPK);
+            var menuname = data[Object.keys(data)[1]];
+            fnDropdownUserLevel();
+            setTimeout(function(){
+                callConfigControlFunctionGetDetailController(getPK, menuname);
+            }, 1000);
 
         });
     }
 
 
-    function callConfigControlFunctionGetDetailController(getPK){
+    function callConfigControlFunctionGetDetailController(getPK, menuname){
+                
+       document.getElementById('txtUpdateFunctionName').value = menuname;
+       console.log('1');
+       console.log(htmlDropdownUserLevel);
+        var table = $("#tbConfigFunction").DataTable({
+            //"scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "bPaginate": false, //hide pagination
+            "bFilter": false, //hide Search bar
+            "bInfo": false, // hide showing entries
+            "destroy" : true,
 
-        document.getElementById('txtUpdateFunctionName').value = '';
-
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("Detail", "ConfigControlFunction")",
-            data: { id : getPK },
-            dataType: "json",
-            success: function (result) {
-
-                data = $.parseJSON(result)
-
-                document.getElementById('txtUpdateFunctionNo').value = data.ConfigControlFunctionNo;
-                document.getElementById('txtUpdateFunctionName').value = data.ConfigControlFunctionName;
-
-                $("#modalUpdateConfigControlFunction").modal('show');
-            }
+            "ajax": {
+                url: "@Url.Action("Detail", "ConfigControlFunction")",
+                type: "POST",
+                datatype: "json"
+            },
+            "columns": [
+                {
+                    data: "configFunctionNo",
+                    className: "text-center",
+                    width: "5%",
+                    visible: false
+                },
+                {
+                    data: "configFunctionName",
+                    width: "5%"
+                },
+                {
+                    data: "configFunctionGroupRole",
+                    width: "85%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        //return '<select class="select2 form-control" id="tranSearchStatus" multiple><option value="" disabled hidden>--- Select your item ---</option></select>';
+                        return htmlDropdownUserLevel;
+                    }
+                },
+                {
+                    data: "configFunctionActive",
+                    width: "5%",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        if(data){
+                            return '<input type="checkbox" class="dt-checkboxes" checked>';
+                        }else{
+                            return '<input type="checkbox" class="dt-checkboxes">';
+                        }
+                    }
+                }
+                //{
+                //    data: "ConfigFunctionActive",
+                //    className: "dt-center editor-edit text-center text-primary",
+                //    defaultContent: '<i class="pointer fas fa-pen"/>',
+                //    orderable: false,
+                //    width: "2%"
+                //}
+            ]
         });
+        
+        $(".permissionselect2").select2();
+        $("#modalUpdateConfigControlFunction").modal('show');
     }
 
     function callConfigControlFunctionInsertController(){
@@ -236,6 +285,22 @@
             }
         });
     }
+
+    function fnDropdownUserLevel() {
+        htmlDropdownUserLevel = "";
+        
+        var html = '<select class="select2 form-control permissionselect2" multiple>';
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserRole")", function (data) {
+          $.each(data, function (i, data) {
+              html += '<option value="' + data.profileUserRoleNo + '">' + data.profileUserRoleName + '</option>';
+          });
+          
+          html += '</select>';
+          htmlDropdownUserLevel = html;
+        })
+        
+    }
+
 
     function callConfigControlFunctionIndex() {
         setTimeout(function(){

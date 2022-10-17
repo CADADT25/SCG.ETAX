@@ -42,7 +42,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         public async Task<JsonResult> Detail(int id)
         {
-            List<ConfigControlFunction> tran = new List<ConfigControlFunction>();
+            List<ConfigControlFunction> tranConfigControlFunction = new List<ConfigControlFunction>();
+            List<ConfigFunction> tranConfigFunction = new List<ConfigFunction>();
+            List<PermissionFunction> listPermissionFunction = new List<PermissionFunction>();
+            PermissionFunction permissionFunction = new PermissionFunction();
+            ConfigControlFunction configControlFunction = new ConfigControlFunction();
 
             Response resp = new Response();
 
@@ -50,20 +54,51 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigControlFunction/GetDetail?id= " + id + " "));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigControlFunction/GetListAll"));
 
                 if (task.STATUS)
                 {
-
-                    tran = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(task.OUTPUT_DATA.ToString());
-
-                    result = JsonConvert.SerializeObject(tran[0]);
-
+                    tranConfigControlFunction = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(task.OUTPUT_DATA.ToString());
+                    if(tranConfigControlFunction.Count > 0)
+                    {
+                        tranConfigControlFunction = tranConfigControlFunction.Where(x => x.ConfigControlFunctionMenuNo == id).ToList(); ;
+                    }
                 }
-                else
+
+                task = await Task.Run(() => ApiHelper.GetURI("api/ConfigFunction/GetListAll"));
+
+                if (task.STATUS)
                 {
-                    ViewBag.Error = task.MESSAGE;
+                    tranConfigFunction = JsonConvert.DeserializeObject<List<ConfigFunction>>(task.OUTPUT_DATA.ToString());
                 }
+
+                if(tranConfigFunction.Count > 0)
+                {
+                    tranConfigFunction = tranConfigFunction.OrderBy(x => x.ConfigFunctionNo).ToList();
+                    foreach (var item in tranConfigFunction)
+                    {
+                        permissionFunction = new PermissionFunction();
+                        permissionFunction.ConfigFunctionNo = item.ConfigFunctionNo.ToString();
+                        permissionFunction.ConfigFunctionName = item.ConfigFunctionName;
+
+                        permissionFunction.ConfigFunctionActive = false;
+                        configControlFunction = tranConfigControlFunction.FirstOrDefault(x => x.ConfigControlNo == item.ConfigFunctionNo);
+                        if(configControlFunction != null)
+                        {
+                            permissionFunction.ConfigFunctionGroupRole = configControlFunction.ConfigControlFunctionRole;
+                            if(configControlFunction.Isactive == 1)
+                            {
+                                permissionFunction.ConfigFunctionActive = true;
+                            }
+                        }
+
+                        listPermissionFunction.Add(permissionFunction);
+                    }
+                }
+
+                //result = JsonConvert.SerializeObject(listPermissionFunction);
+
+
             }
 
             catch (Exception ex)
@@ -71,7 +106,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 Console.WriteLine(ex.InnerException);
             }
 
-            return Json(result);
+            return Json(new { data = listPermissionFunction });
         }
 
         public async Task<JsonResult> List()
@@ -135,5 +170,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+        public class PermissionFunction
+        {
+            public string ConfigFunctionNo { get; set; }
+            public string ConfigFunctionName { get; set; }
+            public string ConfigFunctionGroupRole { get; set; }
+            public bool ConfigFunctionActive { get; set; }
+        }
     }
 }
