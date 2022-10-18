@@ -44,6 +44,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             List<ConfigControlFunction> tranConfigControlFunction = new List<ConfigControlFunction>();
             List<ConfigFunction> tranConfigFunction = new List<ConfigFunction>();
+            List<ProfileUserRole> tranProfileUserRole = new List<ProfileUserRole>();
+            ProfileUserRole profileRole = new ProfileUserRole();
+            List<ProfileUserRole> profileUserRole = new List<ProfileUserRole>();
             List<PermissionFunction> listPermissionFunction = new List<PermissionFunction>();
             PermissionFunction permissionFunction = new PermissionFunction();
             ConfigControlFunction configControlFunction = new ConfigControlFunction();
@@ -72,6 +75,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     tranConfigFunction = JsonConvert.DeserializeObject<List<ConfigFunction>>(task.OUTPUT_DATA.ToString());
                 }
 
+                task = await Task.Run(() => ApiHelper.GetURI("api/ProfileUserRole/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tranProfileUserRole = JsonConvert.DeserializeObject<List<ProfileUserRole>>(task.OUTPUT_DATA.ToString());
+                }
+
                 if(tranConfigFunction.Count > 0)
                 {
                     tranConfigFunction = tranConfigFunction.OrderBy(x => x.ConfigFunctionNo).ToList();
@@ -85,8 +95,23 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         configControlFunction = tranConfigControlFunction.FirstOrDefault(x => x.ConfigControlNo == item.ConfigFunctionNo);
                         if(configControlFunction != null)
                         {
-                            permissionFunction.ConfigFunctionGroupRole = configControlFunction.ConfigControlFunctionRole;
-                            if(configControlFunction.Isactive == 1)
+                            if(configControlFunction.ConfigControlFunctionRole != null)
+                            {
+                                profileUserRole = new List<ProfileUserRole>();
+                                profileRole = new ProfileUserRole();
+                                var listrole = configControlFunction.ConfigControlFunctionRole.Split(',').ToList();
+                                foreach (var itemrole in listrole)
+                                {
+                                    profileRole = tranProfileUserRole.FirstOrDefault(x => x.ProfileUserRoleNo.ToString() == itemrole);
+                                    if(profileRole != null)
+                                    {
+                                        profileUserRole.Add(profileRole);
+                                    }
+                                }
+                                permissionFunction.ConfigFunctionGroupRole = string.Join(",", profileUserRole.Select(x=> x.ProfileUserRoleName).ToList());
+                                permissionFunction.ConfigFunctionGroupRoleNo = configControlFunction.ConfigControlFunctionRole;
+                            }
+                            if (configControlFunction.Isactive == 1)
                             {
                                 permissionFunction.ConfigFunctionActive = true;
                             }
@@ -95,12 +120,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         listPermissionFunction.Add(permissionFunction);
                     }
                 }
-
-                //result = JsonConvert.SerializeObject(listPermissionFunction);
-
-
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.InnerException);
@@ -174,6 +194,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             public string ConfigFunctionNo { get; set; }
             public string ConfigFunctionName { get; set; }
+            public string ConfigFunctionGroupRoleNo { get; set; }
             public string ConfigFunctionGroupRole { get; set; }
             public bool ConfigFunctionActive { get; set; }
         }

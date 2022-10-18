@@ -275,51 +275,41 @@
         }
 
     function fnUpdateProfileUser(){
-        //var password1 = $('#txtUpdateProfileUserManagementPassword').val();
-        //let password2 = $('#txtUpdateProfileUserManagementComfirmPassword').val();
+      var model = new Object();
 
-        //console.log(password1);
-        //console.log(password2);
-        //if (password1 != password2) {
-        //   fnSweetAlert_Error("Password Not Match");
-        //}
-        //else {
-            var model = new Object();
+      model.userNo = $('#txtUpdateCustomerProfileNo').val();
+      model.userEmail = $('#txtUpdateProfileUserManagementEmail').val();
+      model.userPassword = $('#txtUpdateProfileUserManagementComfirmPassword').val();
+      model.firstName = $('#txtUpdateProfileUserManagementName').val();
+      model.lastName = $('#txtUpdateProfileUserManagementLastName').val();
+      model.GroupId = $('#ddlUpdateRoleGroup').val().toString();
+      model.LevelId = $('#ddlUpdateUserLevel').val();
+      model.CreateBy = $("#leftSideEmail").text();
+      model.CreateDate = new Date();
+      model.UpdateBy = $("#leftSideEmail").text();
+      model.UpdateDate = new Date();
+      model.accountStatus = $('#txtUpdatestatus').val();
 
-            model.userNo = $('#txtUpdateCustomerProfileNo').val();
-            model.userEmail = $('#txtUpdateProfileUserManagementEmail').val();
-            model.userPassword = $('#txtUpdateProfileUserManagementComfirmPassword').val();
-            model.firstName = $('#txtUpdateProfileUserManagementName').val();
-            model.lastName = $('#txtUpdateProfileUserManagementLastName').val();
-            model.GroupId = $('#ddlUpdateRoleGroup').val().toString();
-            model.LevelId = $('#ddlUpdateUserLevel').val();
-            model.CreateBy = $("#leftSideEmail").text();
-            model.CreateDate = new Date();
-            model.UpdateBy = $("#leftSideEmail").text();
-            model.UpdateDate = new Date();
-            model.accountStatus = $('#txtUpdatestatus').val();
+      var getJsonString = JSON.stringify(model);
+          $.ajax({
+              type: "GET",
+              url: "@Url.Action("Update", "ProfileUserManagement")",
+              data: { jsonString : getJsonString },
+              dataType: "text",
+              success: function (result) {
+                  data = $.parseJSON(result);
+                  var errorMessage = data.erroR_MESSAGE;
+                  if(data.status == true){
 
-            var getJsonString = JSON.stringify(model);
-                $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("Update", "ProfileUserManagement")",
-                    data: { jsonString : getJsonString },
-                    dataType: "text",
-                    success: function (result) {
-                        data = $.parseJSON(result);
-                        var errorMessage = data.erroR_MESSAGE;
-                        if(data.status == true){
-
-                            fnUpdateCancelProfileUser();
-                            fnSweetAlert_SaveSuccess();
-                            callProfileUserManagementIndex();
-                        }
-                        else{
-                            fnSweetAlert_Error(errorMessage);
-                        }
-                    }
-                });
-        //}
+                      fnUpdateCancelProfileUser();
+                      fnSweetAlert_SaveSuccess();
+                      callProfileUserManagementIndex();
+                  }
+                  else{
+                      fnSweetAlert_Error(errorMessage);
+                  }
+              }
+          });
         }
 
 

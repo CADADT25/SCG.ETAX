@@ -9,9 +9,8 @@
 
 <script type="text/javascript">
 
-    var DropdownUserLevel = null;   
-    var htmlDropdownUserLevel = "";   
      $(document).ready(function () {
+        $("#ddlFunctionUserLevel").select2();
         RenderConfigControlFunction();
     });
 
@@ -83,7 +82,7 @@
     }
 
     function fnUpdateCancelConfigControlFunction(){
-
+        fnClearEditFunction();
         document.getElementById('txtUpdateFunctionName').value = '';
         $("#modalUpdateConfigControlFunction").modal('hide');
     }
@@ -129,6 +128,7 @@
             var getPK = data[Object.keys(data)[0]];
             var menuname = data[Object.keys(data)[1]];
             fnDropdownUserLevel();
+            fnClearEditFunction();
             setTimeout(function(){
                 callConfigControlFunctionGetDetailController(getPK, menuname);
             }, 1000);
@@ -138,10 +138,9 @@
 
 
     function callConfigControlFunctionGetDetailController(getPK, menuname){
-                
+
        document.getElementById('txtUpdateFunctionName').value = menuname;
-       console.log('1');
-       console.log(htmlDropdownUserLevel);
+       document.getElementById('txtUpdateFunctionMenuNo').value = getPK;
         var table = $("#tbConfigFunction").DataTable({
             //"scrollY": false,
             "processing": true, // for show progress bar
@@ -156,6 +155,7 @@
             "ajax": {
                 url: "@Url.Action("Detail", "ConfigControlFunction")",
                 type: "POST",
+                data: { id : getPK },
                 datatype: "json"
             },
             "columns": [
@@ -170,37 +170,35 @@
                     width: "5%"
                 },
                 {
+                    data: "configFunctionGroupRoleNo",
+                    width: "5%",
+                    visible: false
+                },
+                {
                     data: "configFunctionGroupRole",
                     width: "85%",
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        //return '<select class="select2 form-control" id="tranSearchStatus" multiple><option value="" disabled hidden>--- Select your item ---</option></select>';
-                        return htmlDropdownUserLevel;
-                    }
+                    className: "text-center"
                 },
                 {
                     data: "configFunctionActive",
                     width: "5%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        if(data){
-                            return '<input type="checkbox" class="dt-checkboxes" checked>';
-                        }else{
-                            return '<input type="checkbox" class="dt-checkboxes">';
-                        }
+                        return (data) ? '<i class="text-success fas fa-check"/>' : '<i class="text-danger fas fa-ban"/>';
+                    }
+                },
+                {
+                    data: "configFunctionNo",
+                    width: "2%",
+                    render: function (data, type, row) {
+                        return "<a onclick='callEditConfigFunction(" + row['configFunctionNo'] + ",\"" + row['configFunctionName'] + "\",\"" + row['configFunctionGroupRoleNo'] + "\"," + row['configFunctionActive'] + ")' class='dt-center editor-edit text-center text-primary'><i class='pointer fas fa-pen'/></a>";
+                        //return'<a class="dt-center editor-edit text-center text-primary button1"><i class="pointer fas fa-pen"/></a>';
                     }
                 }
-                //{
-                //    data: "ConfigFunctionActive",
-                //    className: "dt-center editor-edit text-center text-primary",
-                //    defaultContent: '<i class="pointer fas fa-pen"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
-        
-        $(".permissionselect2").select2();
+
+        //EditFunction(table);
         $("#modalUpdateConfigControlFunction").modal('show');
     }
 
@@ -287,20 +285,76 @@
     }
 
     function fnDropdownUserLevel() {
-        htmlDropdownUserLevel = "";
-        
-        var html = '<select class="select2 form-control permissionselect2" multiple>';
+        $('#ddlFunctionUserLevel').empty();
         $.getJSON("@Url.Action("DropDownList", "ProfileUserRole")", function (data) {
-          $.each(data, function (i, data) {
-              html += '<option value="' + data.profileUserRoleNo + '">' + data.profileUserRoleName + '</option>';
-          });
-          
-          html += '</select>';
-          htmlDropdownUserLevel = html;
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.profileUserRoleNo,
+                        text: data.profileUserRoleName
+                    }).html(data.profileUserRoleName).appendTo("#ddlFunctionUserLevel");
+            });
         })
-        
     }
 
+    function callEditConfigFunction(functionNo, functionName, functionLevel, functionActive){
+
+        document.getElementById('txtFunctionNo').value = functionNo;
+        document.getElementById('txtFunctionName').value = functionName;
+
+        if(functionActive){
+            $('#txtFunctionstatus').val("1").trigger('change');
+        }else{
+            $('#txtFunctionstatus').val("0").trigger('change');
+        }
+
+        if(functionLevel != null){
+            $('#ddlFunctionUserLevel').val(functionLevel.split(',')).trigger('change');
+        }
+
+        $('#updateFunction').removeAttr('hidden');
+    }
+    function fnEditFunction(){
+
+        var model = new Object();
+
+            model.configControlFunctionMenuNo = $('#txtUpdateFunctionMenuNo').val();
+            model.configControlNo = $('#txtFunctionNo').val();
+            model.configControlFunctionRole = $('#ddlFunctionUserLevel').val().toString();
+            model.createBy = $("#leftSideEmail").text();
+            model.createDate = new Date();
+            model.updateBy = $("#leftSideEmail").text();
+            model.updateDate = new Date();
+            model.isactive = $('#txtFunctionstatus').val();
+
+            var getJsonString = JSON.stringify(model);
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("Update", "ConfigControlFunction")",
+                    data: { jsonString : getJsonString },
+                    dataType: "text",
+                    success: function (result) {
+                        data = $.parseJSON(result);
+                        var errorMessage = data.erroR_MESSAGE;
+                        if(data.status == true){
+
+                            fnClearEditFunction();
+                            $('#tbConfigFunction').DataTable().ajax.reload();
+                            fnSweetAlert_SaveSuccess();
+                        }
+                        else{
+                            fnSweetAlert_Error(errorMessage);
+                        }
+                    }
+                });
+    }
+    function fnClearEditFunction(){
+        $('#ddlFunctionUserLevel').val("").trigger('change');
+        $('#txtFunctionstatus').val("0").trigger('change');
+        document.getElementById('txtFunctionName').value = "";
+        document.getElementById('txtFunctionNo').value = "";
+        $('#updateFunction').attr("hidden", true);
+    }
 
     function callConfigControlFunctionIndex() {
         setTimeout(function(){

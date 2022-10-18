@@ -115,25 +115,25 @@
             {
                 using (_dbContext)
                 {
-                    var update = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionNo == param.ConfigControlFunctionNo).FirstOrDefault();
+                    var update = _dbContext.configControlFunction.Where(x => x.ConfigControlFunctionMenuNo == param.ConfigControlFunctionMenuNo && x.ConfigControlNo == param.ConfigControlNo).FirstOrDefault();
 
                     if (update != null)
                     {
-
-
+                        update.ConfigControlFunctionRole = param.ConfigControlFunctionRole;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
-
-                        _dbContext.SaveChanges();
+                        update.Isactive = param.Isactive;
 
                         resp.STATUS = true;
                         resp.MESSAGE = "Updated Success.";
                     }
                     else
                     {
-                        resp.STATUS = false;
-                        resp.ERROR_MESSAGE = "Can't update because data not found.";
+                        _dbContext.configControlFunction.Add(param);
+                        resp.STATUS = true;
+                        resp.ERROR_MESSAGE = "Insert success.";
                     }
+                    _dbContext.SaveChanges();
                 }
             }
             catch (Exception ex)
