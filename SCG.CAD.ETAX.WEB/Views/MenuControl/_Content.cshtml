@@ -8,6 +8,7 @@
 
         callUserMenu();
         callCheckPermission();
+        callGetControlPermissionAsync();
     });
 
     
@@ -20,6 +21,16 @@
                 if(!result){
                     location.href = url;
                 }
+            }
+        });
+    }
+    function callGetControlPermissionAsync(){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetControlPermissionAsync", "Home")",
+            success: function (result) {
+                //
             }
         });
     }

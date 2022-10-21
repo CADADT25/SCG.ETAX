@@ -132,11 +132,18 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
 
             if (resp.STATUS == true)
             {
+                var userlevel = tran[0].LevelId;
+
+                if(userlevel == null)
+                {
+                    userlevel = 0;
+                }
                 HttpContext.Session.Clear();
                 HttpContext.Session.SetInt32("checkpermissionpage", 1);
                 HttpContext.Session.SetInt32("islogin", 1);
                 HttpContext.Session.SetString("userName", tran[0].FirstName);
                 HttpContext.Session.SetString("userLastname", tran[0].LastName);
+                HttpContext.Session.SetInt32("userLevel", Convert.ToInt32(userlevel));
                 string pathredirect = Url.Action("IndexCheckLogin", "Home", new { Username = oMycustomclassname.username, CurrentLogin = oMycustomclassname.authenticated });
 
                 authenticationModel.username = oMycustomclassname.username;

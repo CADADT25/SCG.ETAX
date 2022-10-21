@@ -58,8 +58,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 return new RedirectResult("~/AuthSinIn/Index");
             }
 
-
-
             //return View();
         }
 
@@ -112,6 +110,41 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
             return result;
+        }
+
+        public async Task<bool> GetControlPermissionAsync()
+        {
+            List<ConfigControlFunction> tran = new List<ConfigControlFunction>();
+
+            Response resp = new Response();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigControlFunction/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    var userlevel = HttpContext.Session.GetInt32("userLevel").ToString();
+
+                    tran = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(task.OUTPUT_DATA.ToString());
+
+                    //tran = tran.Where(x=> x.ConfigControlFunctionRole.Contains(userlevel)).ToList();
+
+                    HttpContext.Session.SetString("controlPermission", JsonConvert.SerializeObject(tran));
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
