@@ -19,7 +19,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             else
             {
                 var menuindex = 5;
-                var userLevel = HttpContext.Session.GetString("userLevel");
+                var userLevel = HttpContext.Session.GetInt32("userLevel").ToString();
                 var configControl = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(HttpContext.Session.GetString("controlPermission"));
 
                 ViewData["showCREATE"] = permission.CheckControlAction(configControl,1, userLevel, menuindex);

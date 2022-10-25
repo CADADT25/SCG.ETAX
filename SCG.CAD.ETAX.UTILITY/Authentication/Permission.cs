@@ -15,14 +15,17 @@ namespace SCG.CAD.ETAX.UTILITY.Authentication
 
             try
             {
-                var liststring = premission.Split(',');
-                foreach(var item in liststring)
+                if (!string.IsNullOrEmpty(premission))
                 {
-                    //if (pageindex == item)
-                    //{
-                    //    result = true;
-                    //    break;
-                    //}
+                    var liststring = premission.Split(',');
+                    foreach (var item in liststring)
+                    {
+                        if (menuindex == item)
+                        {
+                            result = true;
+                            break;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
