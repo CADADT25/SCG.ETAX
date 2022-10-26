@@ -2,40 +2,45 @@
     Layout = null;
 }
 
-
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-end align-items-center">
-                @*<a id="btnCallModalCreateOutputSearchPrinting" onclick="callModalInsertOutputSearchPrinting();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Create New
-                    </a>*@
-                &nbsp;&nbsp;
-                <a id="btnExportOutputSearchPrinting" onclick="ExportOutputSearchPrinting()" class="pointer btn btn-icon icon-left text-white btn-success">
-                    <i class="fas fa-file-export"></i> Export (.csv)
-                </a>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-hover-animation" id="tbOutputSearchPrintingMain">
-                        <thead>
-                            <tr>
-                                @*<th class="text-center">PK Key</th>
-                                <th class="text-center">No</th>*@
-                                <th>Company</th>
-                                <th>Zip Date</th>
-                                <th>File name</th>
-                                <th>Download</th>
-                                <th>DownloadStatus</th>
-                                <th>History</th>
-                            </tr>
-                        </thead>
-                    </table>
+@if (ViewBag.showVIEW == true)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                @if (ViewBag.showEXPORT == true)
+                {
+                    <div class="card-header d-flex justify-content-end align-items-center">
+                        @*<a id="btnCallModalCreateOutputSearchPrinting" onclick="callModalInsertOutputSearchPrinting();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                            <i class="fas fa-plus"></i> Create New
+                            </a>*@
+                        &nbsp;&nbsp;
+                        <a id="btnExportOutputSearchPrinting" onclick="ExportOutputSearchPrinting()" class="pointer btn btn-icon icon-left text-white btn-success">
+                            <i class="fas fa-file-export"></i> Export (.csv)
+                        </a>
+                    </div>
+                }
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-hover-animation" id="tbOutputSearchPrintingMain">
+                            <thead>
+                                <tr>
+                                    @*<th class="text-center">PK Key</th>
+                                        <th class="text-center">No</th>*@
+                                    <th>Company</th>
+                                    <th>Zip Date</th>
+                                    <th>File name</th>
+                                    <th>Download</th>
+                                    <th>DownloadStatus</th>
+                                    <th>History</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 
 

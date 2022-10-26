@@ -85,7 +85,11 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
                     }
                 },
                 {
@@ -286,7 +290,12 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }else{
+                            return '';
+                        }
                     }
                 },
                 {

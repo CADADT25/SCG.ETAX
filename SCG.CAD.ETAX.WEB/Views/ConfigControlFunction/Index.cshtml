@@ -191,8 +191,10 @@
                     data: "configFunctionNo",
                     width: "2%",
                     render: function (data, type, row) {
-                        return "<a onclick='callEditConfigFunction(" + row['configFunctionNo'] + ",\"" + row['configFunctionName'] + "\",\"" + row['configFunctionGroupRoleNo'] + "\"," + row['configFunctionActive'] + ")' class='dt-center editor-edit text-center text-primary'><i class='pointer fas fa-pen'/></a>";
-                        //return'<a class="dt-center editor-edit text-center text-primary button1"><i class="pointer fas fa-pen"/></a>';
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return "<a onclick='callEditConfigFunction(" + row['configFunctionNo'] + ",\"" + row['configFunctionName'] + "\",\"" + row['configFunctionGroupRoleNo'] + "\"," + row['configFunctionActive'] + ")' class='dt-center editor-edit text-center text-primary'><i class='pointer fas fa-pen'/></a>";
+                        }
+                        return '';
                     }
                 }
             ]

@@ -130,7 +130,11 @@
                     width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
                     }
                 },
                 {
@@ -172,7 +176,7 @@
 
 
     function fnCallFullFilePathXml(PK){
-        
+
         $('#modalGetOutputSearchXmlFullPath').modal('show');
 
         $('#fullPathXmlGetFillName').empty();
@@ -203,7 +207,7 @@
     function fnTimelineCancelOutputSearchXmlZip(){
 
         $("#modalUpdateOutputSearchXmlZip").modal('hide');
-    } 
+    }
 
     function ExportOutputSearchXmlZip(){
 
@@ -258,7 +262,7 @@
 
 
     function callOutputSearchXmlZipExportController(){
-        
+
         var getXmlSearchCompanyCode = $('#OutputSearchXmlZipCustomerCode').val();
         var getXmlSearchDateBetween = $('#OutputSearchXmlZipDate').val();
         var getXmlSearchDocType = $('#OutputSearchXmlZipDocType').val();
@@ -338,7 +342,7 @@
                 },
                 "columns": [
 
-                    
+
                 {
                     data: "outputSearchXmlZipCompanyCode",
                     width: "10%"
@@ -368,7 +372,11 @@
                     width: "10%",
                     className: "text-center",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchXmlZipNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
                     }
                 },
                 {
@@ -384,20 +392,20 @@
                             return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
-                
+
             ],
 
 
              destroy : true
-            
+
         }).ajax.reload();
 
     }
 
     // [end] Ajax call Controller
-    
+
     function DownloadFile(getpk) {
-        
+
         var model = new Object();
 
         model.OutputSearchXmlZipNo = getpk;
@@ -407,7 +415,7 @@
         model.UpdateDate = new Date();
         model.Isactive = 1;
         var getJsonString = JSON.stringify(model);
-        
+
         $.ajax({
             type: "POST",
             url: "@Url.Action("DownloadZipFile", "OutputSearchXmlZip")",
@@ -420,7 +428,7 @@
                 var fileName = data.message;
                 //Convert Byte Array to BLOB.
                 var blob = new Blob([bytes], { type: "application/octetstream" });
- 
+
                 //Check the Browser type and download the File.
                 var isIE = false || !!document.documentMode;
                 if (isIE) {

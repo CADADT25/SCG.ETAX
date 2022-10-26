@@ -102,8 +102,19 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/>',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }

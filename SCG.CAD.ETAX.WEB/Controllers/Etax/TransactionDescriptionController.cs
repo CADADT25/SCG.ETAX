@@ -28,6 +28,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showEXPORT"] = permission.CheckControlAction(configControl,4, userLevel, menuindex);
                 ViewData["showDOWNLOAD"] = permission.CheckControlAction(configControl,5, userLevel, menuindex);
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl,6, userLevel, menuindex);
+                ViewData["showSEARCH"] = permission.CheckControlAction(configControl,7, userLevel, menuindex);
+                ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl,8, userLevel, menuindex);
 
                 return View();
             }

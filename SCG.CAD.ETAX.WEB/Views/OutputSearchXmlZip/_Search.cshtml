@@ -1,73 +1,75 @@
-﻿<section id="faq-tabs">
-    <!-- vertical tab pill -->
+﻿@if (ViewBag.showSEARCH == true)
+{
+    <section id="faq-tabs">
+        <!-- vertical tab pill -->
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <!-- pill tabs tab content -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <!-- pill tabs tab content -->
             <div class="tab-content">
-                <!-- payment panel -->
+                    <!-- payment panel -->
                 <div role="tabpanel" class="tab-pane active" id="faq-payment" aria-labelledby="payment" aria-expanded="true">
 
-                    <!-- frequent answer and question  collapse  -->
+                        <!-- frequent answer and question  collapse  -->
                     <div class="collapse-margin collapse-icon mt-2" id="faq-payment-qna">
 
-                        <div class="card">
-                            <div class="card-header" id="paymentTwo" data-toggle="collapse" role="button" data-target="#faq-payment-two" aria-expanded="true" aria-controls="faq-payment-two">
-                                <span class="lead collapse-title">Search</span>
-                            </div>
-                            <div id="faq-payment-two" class="collapse show" aria-labelledby="paymentTwo" data-parent="#faq-payment-qna">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Company Code</label>
-                                                <select class="select2 form-control" id="OutputSearchXmlZipCustomerCode" multiple>
-                                                    <option value="All">-- All -- </option>
-                                                </select>
+                            <div class="card">
+                                <div class="card-header" id="paymentTwo" data-toggle="collapse" role="button" data-target="#faq-payment-two" aria-expanded="true" aria-controls="faq-payment-two">
+                                    <span class="lead collapse-title">Search</span>
+                                </div>
+                                <div id="faq-payment-two" class="collapse show" aria-labelledby="paymentTwo" data-parent="#faq-payment-qna">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Company Code</label>
+                                                    <select class="select2 form-control" id="OutputSearchXmlZipCustomerCode" multiple>
+                                                        <option value="All">-- All -- </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Printing Xml Date </label>
+                                                    <input type="text" id="OutputSearchXmlZipDate" class="form-control flatpickr-date-time" placeholder="DD-MM-YYYY">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Document Type</label>
+                                                    <select class="select2 form-control" id="OutputSearchXmlZipDocType">
+                                                        <option value="All">-- All -- </option>
+                                                        <option value="CREDITNOTE">-- CREDITNOTE -- </option>
+                                                        <option value="DEBITNOTE">-- DEBITNOTE -- </option>
+                                                        <option value="TAXINVOICE">-- TAXINVOICE -- </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Download status</label>
+                                                    <select class="select2 form-control" id="OutputSearchXmlZipStatus">
+                                                        <option value="All">-- All -- </option>
+                                                        <option value="1">-- Downloaded -- </option>
+                                                        <option value="0">-- No downloads -- </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Printing Xml Date </label>
-                                                <input type="text" id="OutputSearchXmlZipDate" class="form-control flatpickr-date-time" placeholder="DD-MM-YYYY">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <a class="btn btn-primary btn-block" onclick="fnSearchOutputSearchXmlZip();"> Search </a>
+
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Document Type</label>
-                                                <select class="select2 form-control" id="OutputSearchXmlZipDocType">
-                                                    <option value="All">-- All -- </option>
-                                                    <option value="CREDITNOTE">-- CREDITNOTE -- </option>
-                                                    <option value="DEBITNOTE">-- DEBITNOTE -- </option>
-                                                    <option value="TAXINVOICE">-- TAXINVOICE -- </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Download status</label>
-                                                <select class="select2 form-control" id="OutputSearchXmlZipStatus">
-                                                    <option value="All">-- All -- </option>
-                                                    <option value="1">-- Downloaded -- </option>
-                                                    <option value="0">-- No downloads -- </option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
-
-                                     <div class="row">
-                                        <div class="col-sm-8">
-
-                                        </div>
-
-                                        <div class="col-sm-4">
-                                            <a class="btn btn-primary btn-block" onclick="fnSearchOutputSearchXmlZip();"> Search </a>
-
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -75,5 +77,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
