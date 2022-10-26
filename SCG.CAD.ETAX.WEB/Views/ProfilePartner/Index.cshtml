@@ -587,7 +587,6 @@
 
                 //$('#ddlUpdateProfilePartnerEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
                 //.val(""+data.EmailTemplateNo+"").trigger("change");
-                console.log(data);
                 setTimeout(function(){                
                     $('#ddlUpdateProfilePartnerCompanyCode').val(data.CompanyCode).trigger('change');
                     $('#ddlUpdateProfilePartnerEmailType').val(data.PartnerEmailType).trigger('change');
@@ -595,7 +594,6 @@
                 }, 1000);
 
                 setTimeout(function(){   
-                    console.log($('#ddlUpdateProfilePartnerSaleOrg').val());
                     $('#ddlUpdateProfilePartnerSaleOrg').val(data.SellOrg).trigger('change');
                 }, 5000);
 

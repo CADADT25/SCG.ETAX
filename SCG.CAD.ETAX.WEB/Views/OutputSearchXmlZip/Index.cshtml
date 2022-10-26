@@ -229,7 +229,6 @@
             dataType: "json",
             success: function (result) {
                 $('#appendSearchXmlZipHistory').empty();
-                console.log(result);
                 $.each(result.data, function (i, slaveValue) {
                             var date = moment(slaveValue.outputSearchXmlZipDowloadHistoryTime).format('DD/MM/YYYY HH:mm:ss');
                             var textappend = "<li class='timeline-item'>";

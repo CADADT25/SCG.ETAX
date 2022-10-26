@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigFunction> ConfigFunctions { get; set; } = null!;
+        public virtual DbSet<ProfileUserGroup> ProfileUserGroups { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,30 +29,44 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigFunction>(entity =>
+            modelBuilder.Entity<ProfileUserGroup>(entity =>
             {
-                entity.HasKey(e => e.ConfigFunctionNo);
+                entity.HasKey(e => e.ProfileUserGroupNo);
 
-                entity.ToTable("configFunction");
+                entity.ToTable("profileUserGroup");
 
-                entity.Property(e => e.ConfigFunctionNo).HasColumnName("configFunctionNo");
-
-                entity.Property(e => e.ConfigFunctionName)
-                    .HasMaxLength(50)
-                    .HasColumnName("configFunctionName");
+                entity.Property(e => e.ProfileUserGroupNo).HasColumnName("profileUserGroupNo");
 
                 entity.Property(e => e.CreateBy)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .HasColumnName("createBy");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Isactive).HasColumnName("isactive");
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ProfileCompanyCode)
+                    .HasMaxLength(1000)
+                    .HasColumnName("profileCompanyCode");
+
+                entity.Property(e => e.ProfileControlMenu)
+                    .HasMaxLength(1000)
+                    .HasColumnName("profileControlMenu");
+
+                entity.Property(e => e.ProfileUserGroupDescription)
+                    .HasMaxLength(500)
+                    .HasColumnName("profileUserGroupDescription");
+
+                entity.Property(e => e.ProfileUserGroupName)
+                    .HasMaxLength(100)
+                    .HasColumnName("profileUserGroupName");
 
                 entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .HasColumnName("updateBy");
 
                 entity.Property(e => e.UpdateDate)

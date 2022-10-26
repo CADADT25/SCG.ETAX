@@ -345,8 +345,6 @@
                 data = $.parseJSON(resp)
                 var errorMessage = data.erroR_MESSAGE;
                 if(data.status){
-                    console.log('Mark');
-                    console.log(data);
                     //Convert Base64 string to Byte Array.
                     var bytes = Base64ToBytes(data.outpuT_DATA);
                     var fileName = data.message;

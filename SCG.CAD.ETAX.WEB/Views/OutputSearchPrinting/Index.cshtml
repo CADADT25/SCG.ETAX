@@ -154,8 +154,6 @@
     }
 
     function fnCallFullFilePathPrinting(PK){
-        console.log('Mark');
-        console.log(PK);
         $('#modalGetOutputSearchPrintingFullPath').modal('show');
 
         $('#fullPathPrintingGetFillName').empty();
@@ -386,8 +384,6 @@
             dataType: "text",
             success: function (resp) {
                 data = $.parseJSON(resp)
-                console.log('Mark');
-                console.log(data);
                 //Convert Base64 string to Byte Array.
                 var bytes = Base64ToBytes(data.outpuT_DATA);
                 var fileName = data.message;

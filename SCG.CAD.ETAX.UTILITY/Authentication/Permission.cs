@@ -18,14 +18,18 @@ namespace SCG.CAD.ETAX.UTILITY.Authentication
                 if (!string.IsNullOrEmpty(premission))
                 {
                     var liststring = premission.Split(',');
-                    foreach (var item in liststring)
+                    if(liststring.Where(x=> x == menuindex).ToList().Count > 0)
                     {
-                        if (menuindex == item)
-                        {
-                            result = true;
-                            break;
-                        }
+                        result = true;
                     }
+                    //foreach (var item in liststring)
+                    //{
+                    //    if (menuindex == item)
+                    //    {
+                    //        result = true;
+                    //        break;
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
@@ -40,7 +44,7 @@ namespace SCG.CAD.ETAX.UTILITY.Authentication
             bool result = true;
             try
             {
-                userlevel = userlevel + ",";
+                userlevel = "," + userlevel + ",";
                 var checkcontrol = listcontrol.Where(x => x.ConfigControlFunctionMenuNo == menuindex && x.ConfigControlNo == controlindex).ToList();
                 if(checkcontrol.Count > 0)
                 {
