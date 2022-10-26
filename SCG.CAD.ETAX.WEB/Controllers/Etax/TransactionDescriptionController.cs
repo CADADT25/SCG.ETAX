@@ -30,7 +30,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl,6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl,7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl,8, userLevel, menuindex);
-
+                var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                ViewData["companycode"] = comcode;
                 return View();
             }
         }
@@ -109,6 +110,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+                    if (string.IsNullOrEmpty(transactionSearchJson))
+                    {
+                        var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                        tran = tran.Where(x => comcode.Contains(x.CompanyCode)).ToList();
+                    }
                 }
                 else
                 {

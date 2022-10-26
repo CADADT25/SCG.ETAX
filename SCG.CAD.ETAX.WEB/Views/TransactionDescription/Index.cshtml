@@ -346,15 +346,15 @@
 
     function fnDropdownTransactionSearchCompanyCode() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#tranSearchCompanyCode");
-            });
-        })
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#tranSearchCompanyCode");
+        //    });
+        //})
     }
 
     function fnDropdownTransactionSearchDocumentType() {

@@ -82,10 +82,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
+                    //var comcode = JsonConvert.DeserializeObject<List<string>>(task.CODE.ToString());
 
                     result = JsonConvert.SerializeObject(tran);
                     var menu = string.Join(",", tran.Select(x => x.ConfigControlMenuNo).ToList());
                     HttpContext.Session.SetString("premissionMenu", menu); 
+                    HttpContext.Session.SetString("premissionComCode", task.CODE.ToString()); 
                 }
                 else
                 {
