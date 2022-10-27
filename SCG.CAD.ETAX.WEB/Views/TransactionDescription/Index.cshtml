@@ -921,4 +921,98 @@
             $.unblockUI();
         }, 500);
     }
+
+    //Add to cart
+    function fnAddToCart(){
+        var datas = fnGetCheckbox();
+        if(datas.length == 0){
+            fnSweetAlert_WarningAddCart();
+        }else{
+            Swal.fire({
+                title: 'Are you sure to add a cart?',
+            //text: "" + datas,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            confirmButtonClass: 'btn btn-primary',
+            cancelButtonClass: 'btn btn-danger ml-1',
+            buttonsStyling: false,
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    //console.log(datas);
+                    var models = [];
+                    datas.forEach(obj=>{
+                        var model = new Object();
+
+                        model.TransactionNo = obj.transactionNo;
+                        model.BillingNumber = obj.billingNumber;
+                        model.CompanyCode = obj.companyCode;
+
+                        model.CreateBy = $("#leftSideEmail").text();
+                        model.CreateDate = new Date();
+                        model.UpdateBy = $("#leftSideEmail").text();
+                        model.UpdateDate = new Date();
+                        models.push(model);
+                    });
+                    //console.log(models);
+                    var getJsonString = JSON.stringify(models);
+                    //console.log(getJsonString);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("AddToCart", "Request")",
+                        data: { jsonString: getJsonString },
+                        dataType: "text",
+                        success: function (res) {
+                            var ret = $.parseJSON(res);
+                            if(ret.status){
+                                fnSweetAlert_Success();
+                            }
+                            else{
+                                fnSweetAlert_Error(ret.erroR_MESSAGE);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+    }
+
+    //function addToCart(){
+    //    var datas = fnGetCheckbox();
+    //    console.log(datas);
+
+    //    var models = [];
+    //    datas.forEach(obj=>{
+    //        var model = new Object();
+
+    //        model.TransactionNo = obj.transactionNo;
+    //        model.BillingNumber = obj.billingNumber;
+    //        model.CompanyCode = obj.companyCode;
+
+    //        model.CreateBy = $("#leftSideEmail").text();
+    //        model.CreateDate = new Date();
+    //        model.UpdateBy = $("#leftSideEmail").text();
+    //        model.UpdateDate = new Date();
+    //        models.push(model);
+    //    });
+    //    console.log(models);
+
+    //    var getJsonString = JSON.stringify(models);
+       
+    //    console.log(getJsonString);
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "@Url.Action("AddToCart", "Request")",
+    //        data: { jsonString: getJsonString },
+    //        dataType: "text",
+    //        success: function (result) {
+    //            data = $.parseJSON(result);
+    //             console.log(data);
+    //        }
+    //    });
+    //}
 </script>
