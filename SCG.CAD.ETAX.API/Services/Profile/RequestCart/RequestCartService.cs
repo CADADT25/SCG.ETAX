@@ -1,9 +1,46 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class RequestCartService
     {
         readonly DatabaseContext _dbContext = new();
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+        public Response SEARCH(RequestCartSearchModel req)
+        {
+            Response resp = new Response();
+
+
+            List<RequestCart> cart = new List<RequestCart>();
+
+            DateTime getMinDate = new DateTime();
+            DateTime getMaxDate = new DateTime();
+
+            try
+            {
+                if (req != null)
+                {
+                    if (!string.IsNullOrEmpty(req.CreateBy))
+                    {
+                        cart = _dbContext.requestCart.Where(x => x.CreateBy.ToLower() == req.CreateBy.ToLower()).ToList();
+                    }
+                }
+
+                resp.STATUS = true;
+                resp.MESSAGE = "Get data success. ";
+                resp.OUTPUT_DATA = cart;
+
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
         public Response GET_LIST()
         {
             Response resp = new Response();

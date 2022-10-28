@@ -12,6 +12,15 @@ namespace SCG.CAD.ETAX.API.Controllers
             repo = new RequestCartRepository();
         }
 
+        [HttpPost]
+        [Route("Search")]
+        public IActionResult Search(RequestCartSearchModel req)
+        {
+            var result = repo.SEARCH(req).Result;
+
+            return Ok(result);
+        }
+
         [HttpGet]
         [Route("GetListAll")]
         public IActionResult GetListAll()

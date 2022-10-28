@@ -961,12 +961,13 @@
                     //console.log(getJsonString);
                     $.ajax({
                         type: "POST",
-                        url: "@Url.Action("AddToCart", "Request")",
+                        url: "@Url.Action("AddToCart", "RequestCart")",
                         data: { jsonString: getJsonString },
                         dataType: "text",
                         success: function (res) {
                             var ret = $.parseJSON(res);
                             if(ret.status){
+                                fnRenderTopCart();
                                 fnSweetAlert_Success();
                             }
                             else{
@@ -979,40 +980,4 @@
         }
         
     }
-
-    //function addToCart(){
-    //    var datas = fnGetCheckbox();
-    //    console.log(datas);
-
-    //    var models = [];
-    //    datas.forEach(obj=>{
-    //        var model = new Object();
-
-    //        model.TransactionNo = obj.transactionNo;
-    //        model.BillingNumber = obj.billingNumber;
-    //        model.CompanyCode = obj.companyCode;
-
-    //        model.CreateBy = $("#leftSideEmail").text();
-    //        model.CreateDate = new Date();
-    //        model.UpdateBy = $("#leftSideEmail").text();
-    //        model.UpdateDate = new Date();
-    //        models.push(model);
-    //    });
-    //    console.log(models);
-
-    //    var getJsonString = JSON.stringify(models);
-       
-    //    console.log(getJsonString);
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "@Url.Action("AddToCart", "Request")",
-    //        data: { jsonString: getJsonString },
-    //        dataType: "text",
-    //        success: function (result) {
-    //            data = $.parseJSON(result);
-    //             console.log(data);
-    //        }
-    //    });
-    //}
 </script>

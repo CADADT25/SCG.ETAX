@@ -3,6 +3,23 @@
     public class RequestCartRepository : IRequestCartRepository
     {
         RequestCartService service = new RequestCartService();
+        public async Task<Response> SEARCH(RequestCartSearchModel req)
+        {
+            Response resp = new Response();
+            try
+            {
+                var result = service.SEARCH(req);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
         public async Task<Response> GET_LIST()
         {
             Response resp = new Response();

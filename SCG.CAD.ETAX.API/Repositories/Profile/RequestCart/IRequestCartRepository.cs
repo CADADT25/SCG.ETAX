@@ -2,6 +2,7 @@
 {
     public interface IRequestCartRepository
     {
+        Task<Response> SEARCH(RequestCartSearchModel req);
         Task<Response> GET_LIST();
         Task<Response> INSERT(RequestCart param);
         Task<Response> INSERT(List<RequestCart> param);
