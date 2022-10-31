@@ -40,7 +40,7 @@ function fnSweetAlert_Error(error) {
     });
 }
 
-function fnSweetAlert_WarningAddCart() {
+function fnSweetAlert_WarningSelectItem() {
     Swal.fire({
         title: 'Warning',
         text: 'Please select item.',

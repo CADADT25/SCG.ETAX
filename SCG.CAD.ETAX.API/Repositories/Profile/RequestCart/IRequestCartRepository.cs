@@ -3,10 +3,12 @@
     public interface IRequestCartRepository
     {
         Task<Response> SEARCH(RequestCartSearchModel req);
+        Task<Response> SEARCH_FULL_DATA(RequestCartSearchModel req);
         Task<Response> GET_LIST();
         Task<Response> INSERT(RequestCart param);
         Task<Response> INSERT(List<RequestCart> param);
         Task<Response> UPDATE(RequestCart param);
         Task<Response> DELETE(RequestCart param);
+        Task<Response> DELETE(List<RequestCart> param);
     }
 }

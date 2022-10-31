@@ -926,7 +926,7 @@
     function fnAddToCart(){
         var datas = fnGetCheckbox();
         if(datas.length == 0){
-            fnSweetAlert_WarningAddCart();
+            fnSweetAlert_WarningSelectItem();
         }else{
             Swal.fire({
                 title: 'Are you sure to add a cart?',

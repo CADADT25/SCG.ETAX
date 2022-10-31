@@ -5,7 +5,7 @@
 @model SCG.CAD.ETAX.MODEL.etaxModel.ManageRequestCartModel
 
 <style>
-  
+
 </style>
 
 
@@ -15,7 +15,35 @@
             <div class="card-header d-flex justify-content-end align-items-center">
             </div>
             <div class="card-body">
-                <div class="mb-0 table-responsive" id="sectionTransactionDescription">
+                <div class="row">
+                    <div class="col-xl-6 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Action</label>
+                            <select class="select2 form-control" id="cartSelectAction">
+                                <option value="" hidden>--- Please select action ---</option>
+                                <option value="delete">Delete</option>
+                                <option value="undelete">Undelete</option>
+                                <option value="unzip">Unzip</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop">Select Manager</label>
+                            <select class="select2 form-control" id="cartSelectManager">
+                                <option value="" hidden>--- Please select manager ---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop" style="color:transparent">Multi Delete</label>
+                            <br />
+                            <a class="btn btn-primary btn-block" onclick="fnMultiDeleteCart();"> Multi Delete </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-0 table-responsive">
                     <table class="table table-striped table-hover-animation table-hover" id="tbCartMain" style="font-size:12px;padding-bottom:15px;">
                         <thead style="font-size:10px">
                             <tr>
@@ -27,7 +55,8 @@
                                 <th style="font-size:10px">IC/O2C</th>
                                 <th style="font-size:10px">Document Type</th>
                                 <th style="font-size:10px">Data Source</th>
-                                <th style="font-size:10px;white-space:nowrap">Billing Date</th>
+                                <th style="font-size:10px">Action</th>
+                                @* <th style="font-size:10px;white-space:nowrap">Billing Date</th>
                                 <th style="font-size:10px;white-space:nowrap">Processing Date</th>
                                 <th style="font-size:10px;white-space:nowrap">Create Date</th>
                                 <th style="font-size:10px">XML Gen</th>
@@ -36,7 +65,7 @@
                                 <th style="font-size:10px">Print</th>
                                 <th style="font-size:10px">Email</th>
                                 <th style="font-size:10px">XML</th>
-                                <th style="font-size:10px">Indexing</th>
+                                <th style="font-size:10px">Indexing</th>*@
                             </tr>
                         </thead>
                     </table>
@@ -49,9 +78,146 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        RenderTransaction();
+        $('#cartSelectAction').select2();
+        $('#cartSelectManager').select2();
+
+        fnDropdownCartSearchManager();
+        fnRenderCartList();
     });
-    function RenderTransaction() {
+
+    function fnDropdownCartSearchManager() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyNameEn
+                    }).html(data.companyCode).appendTo("#cartSelectManager");
+            });
+        })
+    }
+
+    function fnDeleteCart(id) {
+        Swal.fire({
+            title: 'Are you sure to delete?',
+            //text: "" + datas,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            confirmButtonClass: 'btn btn-primary',
+            cancelButtonClass: 'btn btn-danger ml-1',
+            buttonsStyling: false,
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                var model = new Object();
+                model.TransactionNo = 0;
+                model.BillingNumber = "xx";
+                model.CompanyCode = "xx";
+
+                model.CreateBy = $("#leftSideEmail").text();
+                model.CreateDate = new Date();
+                model.UpdateBy = $("#leftSideEmail").text();
+                model.UpdateDate = new Date();
+                model.Id = id;
+                var getJsonString = JSON.stringify(model);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteCart", "RequestCart")",
+                    data: { jsonString: getJsonString },
+                    dataType: "text",
+                    success: function (res) {
+                        var ret = $.parseJSON(res);
+                        if (ret.status) {
+                            fnClearRenderCartList();
+                            fnRenderCartList();
+                            fnRenderTopCart();
+                            fnSweetAlert_Success();
+                        }
+                        else {
+                            fnSweetAlert_Error(ret.erroR_MESSAGE);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function fnMultiDeleteCart() {
+        var datas = fnGetCartCheckbox();
+        if (datas.length == 0) {
+            fnSweetAlert_WarningSelectItem();
+        } else {
+            Swal.fire({
+                title: 'Are you sure to delete?',
+                //text: "" + datas,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    var models = [];
+                    datas.forEach(obj => {
+                        var model = new Object();
+                        model.Id = obj.id;
+                        model.TransactionNo = obj.transactionNo;
+                        model.BillingNumber = obj.billingNumber;
+                        model.CompanyCode = obj.companyCode;
+
+                        model.CreateBy = $("#leftSideEmail").text();
+                        model.CreateDate = new Date();
+                        model.UpdateBy = $("#leftSideEmail").text();
+                        model.UpdateDate = new Date();
+                        models.push(model);
+                    });
+                    var getJsonString = JSON.stringify(models);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("MultiDeleteCart", "RequestCart")",
+                        data: { jsonString: getJsonString },
+                        dataType: "text",
+                        success: function (res) {
+                            var ret = $.parseJSON(res);
+                            if (ret.status) {
+                                fnClearRenderCartList();
+                                fnRenderCartList();
+                                fnRenderTopCart();
+                                fnSweetAlert_Success();
+                            }
+                            else {
+                                fnSweetAlert_Error(ret.erroR_MESSAGE);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function fnGetCartCheckbox() {
+        var table = $('#tbCartMain').DataTable();
+        var data = table.rows(function (idx, data, node) {
+            return $(node).find('.cart-checkboxes:input[type="checkbox"]').prop('checked');
+        }).data().toArray();
+
+        return data;
+    }
+
+    function fnClearRenderCartList(){
+        var table = $('#tbCartMain').DataTable();
+ 
+        table.clear().draw();
+        table.destroy();
+    }
+
+    function fnRenderCartList() {
 
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -66,7 +232,7 @@
             "scrollX": true,
 
             "ajax": {
-                url: "@Url.Action("List", "transactionDescription")",
+                url: "@Url.Action("List", "RequestCart")",
                 type: "POST",
                 datatype: "json"
             },
@@ -77,7 +243,7 @@
                 {
                     width: "2%",
                     render: function (data, type, full, meta) {
-                        return '<input type="checkbox" class="dt-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                        return '<input type="checkbox" class="cart-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';
                     }
                 },
 
@@ -85,14 +251,16 @@
                     data: "billingNumber",
                     width: "10%",
                     render: function (data, type, row) {
-                        return ' ' + data.substr(0, 100) + ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] + ');"> <i class="fas fa-eye text-primary"> </i> </a>';
+                        //return ' ' + data.substr(0, 100) + ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] + ');"> <i class="fas fa-eye text-primary"> </i> </a>';
+                        return ' ' + data.substr(0, 100);
                     }
                 },
                 {
                     data: "postingYear",
                     width: "5%",
                     render: function (data, type, row) {
-                        return ' ' + data.substr(0, 100) + ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                        //return ' ' + data.substr(0, 100) + ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                        return ' ' + data.substr(0, 100);
                     }
                 },
                 {
@@ -119,78 +287,85 @@
                     width: "5%"
                 },
                 {
-                    data: "billingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function (data, type, row, meta) {
-                        return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "processingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function (data, type, row, meta) {
-                        return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "createDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function (data, type, row, meta) {
-                        return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "generateStatus",
+                    data: "id",
                     width: "2%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "xmlSignStatus",
-                    width: "3%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "pdfSignStatus",
-                    width: "3%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "printStatus",
-                    width: "3%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "emailSendStatus",
-                    width: "3%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "xmlCompressStatus",
-                    width: "3%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
-                    }
-                },
-                {
-                    data: "pdfIndexingStatus",
-                    width: "2%",
-                    render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return '<a onclick="fnDeleteCart(' + data + ');" class="dropdown-item"><svg data-v-9a6e255c="" xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline data-v-9a6e255c="" points="3 6 5 6 21 6"></polyline><path data-v-9a6e255c="" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span data-v-9a6e255c="" class="align-middle ml-50">Delete</span></a>';
                     }
                 }
+                //{
+                //    data: "billingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function (data, type, row, meta) {
+                //        return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "processingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function (data, type, row, meta) {
+                //        return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "createDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function (data, type, row, meta) {
+                //        return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "generateStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "xmlSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "pdfSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "printStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "emailSendStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "xmlCompressStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //},
+                //{
+                //    data: "pdfIndexingStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data);
+                //    }
+                //}
             ]
         });
     }
@@ -206,4 +381,7 @@
             return '<div class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
         }
     }
+
+
+
 </script>

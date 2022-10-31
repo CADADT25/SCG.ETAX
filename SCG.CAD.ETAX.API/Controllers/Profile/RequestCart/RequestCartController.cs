@@ -20,6 +20,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        [Route("SearchFull")]
+        public IActionResult SearchFull(RequestCartSearchModel req)
+        {
+            var result = repo.SEARCH_FULL_DATA(req).Result;
+
+            return Ok(result);
+        }
 
         [HttpGet]
         [Route("GetListAll")]
@@ -59,6 +67,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         [HttpPost]
         [Route("Delete")]
         public IActionResult Delete(RequestCart param)
+        {
+            var result = repo.DELETE(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("MultiDelete")]
+        public IActionResult MultiDelete(List<RequestCart> param)
         {
             var result = repo.DELETE(param).Result;
 
