@@ -92,21 +92,25 @@
                         return '';
                     }
                 },
-                {
-                    data: "outputSearchEmailSendStatus",
-                    width: "10%",
-                    visible: false,
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
-                    }
-                },
+                //{
+                //    data: "outputSearchEmailSendStatus",
+                //    width: "10%",
+                //    visible: false,
+                //    className: "text-center",
+                //    render: function (data, type, row) {
+                //        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                //    }
+                //},
                 {
                     data: "outputSearchEmailSendNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchEmailSendStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
             ]
@@ -298,21 +302,24 @@
                         }
                     }
                 },
-                {
-                    data: "outputSearchEmailSendStatus",
-                    width: "10%",
-                    visible: false,
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
-                    }
-                },
+                //{
+                //    data: "outputSearchEmailSendStatus",
+                //    width: "10%",
+                //    visible: false,
+                //    className: "text-center",
+                //    render: function (data, type, row) {
+                //        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                //    }
+                //},
                 {
                     data: "outputSearchEmailSendNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchEmailSendStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
                         }
                 }
                 

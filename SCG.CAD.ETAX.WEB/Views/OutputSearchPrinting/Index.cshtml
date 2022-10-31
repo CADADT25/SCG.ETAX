@@ -118,16 +118,15 @@
                     }
                 },
                 {
-                    data: "outputSearchPrintingDowloadStatus",
-                    width: "10%",
-                    visible: false
-                },
-                {
                     data: "outputSearchPrintingNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchPrintingDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
             ]
@@ -344,16 +343,15 @@
                     }
                 },
                 {
-                    data: "outputSearchPrintingDowloadStatus",
-                    width: "10%",
-                    visible: false
-                },
-                {
                     data: "outputSearchPrintingNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchPrintingDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
                 

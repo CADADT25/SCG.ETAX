@@ -137,17 +137,20 @@
                         return '';
                     }
                 },
-                {
-                    data: "outputSearchXmlZipDowloadStatus",
-                    width: "10%",
-                    visible: false
-                },
+                //{
+                //    data: "outputSearchXmlZipDowloadStatus",
+                //    width: "10%",
+                //    visible: false
+                //},
                 {
                     data: "outputSearchXmlZipNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchXmlZipDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
                         }
                 }
             ]
@@ -388,7 +391,11 @@
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchXmlZipDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchXmlZip(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
 
