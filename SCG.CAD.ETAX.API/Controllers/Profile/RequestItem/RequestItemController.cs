@@ -22,6 +22,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpPost]
+        [Route("GetListByStatus")]
+        public IActionResult GetListByStatus(List<string> param)
+        {
+            var result = repo.GET_LIST_BY_STATUS(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
         [Route("Insert")]
         public IActionResult Insert(RequestItem param)
         {

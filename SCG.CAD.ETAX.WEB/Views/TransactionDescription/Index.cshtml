@@ -942,6 +942,7 @@
             }).then(function (result) {
                 if (result.isConfirmed) {
                     //console.log(datas);
+                    $.blockUI();
                     var models = [];
                     datas.forEach(obj=>{
                         var model = new Object();
@@ -973,6 +974,7 @@
                             else{
                                 fnSweetAlert_Error(ret.erroR_MESSAGE);
                             }
+                            $.unblockUI();
                         }
                     });
                 }

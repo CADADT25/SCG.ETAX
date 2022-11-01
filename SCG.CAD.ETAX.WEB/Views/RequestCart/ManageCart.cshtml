@@ -19,7 +19,7 @@
                     <div class="col-xl-6 col-md-6 col-12 mb-1">
                         <div class="form-group">
                             <label for="helpInputTop">Select Action</label>
-                            <select class="select2 form-control" id="cartSelectAction">
+                            <select class="select2 form-control" id="cartSelectAction" onchange="onChangeAction(this)">
                                 <option value="" hidden>--- Please select action ---</option>
                                 <option value="delete">Delete</option>
                                 <option value="undelete">Undelete</option>
@@ -30,7 +30,7 @@
                     <div class="col-xl-6 col-md-6 col-12 mb-1">
                         <div class="form-group">
                             <label for="helpInputTop">Select Manager</label>
-                            <select class="select2 form-control" id="cartSelectManager">
+                            <select class="select2 form-control" id="cartSelectManager" onchange="onChangeSearchManager(this)">
                                 <option value="" hidden>--- Please select manager ---</option>
                             </select>
                         </div>
@@ -40,6 +40,13 @@
                             <label for="helpInputTop" style="color:transparent">Multi Delete</label>
                             <br />
                             <a class="btn btn-primary btn-block" onclick="fnMultiDeleteCart();"> Multi Delete </a>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 col-12 mb-1">
+                        <div class="form-group">
+                            <label for="helpInputTop" style="color:transparent">Submit Request</label>
+                            <br />
+                            <a class="btn btn-primary btn-block" onclick="fnSubmitRequest();"> Submit Request </a>
                         </div>
                     </div>
                 </div>
@@ -83,19 +90,43 @@
 
         fnDropdownCartSearchManager();
         fnRenderCartList();
+        fnDefaultValueAction();
     });
 
     function fnDropdownCartSearchManager() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserManagement")", function (data) {
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyNameEn
+                        value: data.userEmail,
+                        text: data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')'
                     }).html(data.companyCode).appendTo("#cartSelectManager");
             });
+            fnDefaultValueManager();
         })
+    }
+
+    function onChangeSearchManager(self){
+         var value = self.value;
+         localStorage.setItem("cartManager", value);
+    }
+
+    function onChangeAction(self) {
+        var value = self.value;
+        localStorage.setItem("cartAction", value);
+    }
+
+    function fnDefaultValueManager(){
+        if (localStorage.getItem("cartManager") != null && localStorage.getItem("cartManager") != "") {
+            $("#cartSelectManager").select2().val(localStorage.getItem("cartManager")).trigger("change");
+        }
+    }
+
+    function fnDefaultValueAction(){
+        if (localStorage.getItem("cartAction") != null && localStorage.getItem("cartAction") != "") {
+            $("#cartSelectAction").select2().val(localStorage.getItem("cartAction")).trigger("change");
+        }
     }
 
     function fnDeleteCart(id) {
@@ -123,6 +154,7 @@
                 model.UpdateDate = new Date();
                 model.Id = id;
                 var getJsonString = JSON.stringify(model);
+                $.blockUI();
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("DeleteCart", "RequestCart")",
@@ -139,6 +171,7 @@
                         else {
                             fnSweetAlert_Error(ret.erroR_MESSAGE);
                         }
+                        $.unblockUI();
                     }
                 });
             }
@@ -177,6 +210,7 @@
                         model.UpdateDate = new Date();
                         models.push(model);
                     });
+                    $.blockUI();
                     var getJsonString = JSON.stringify(models);
                     $.ajax({
                         type: "POST",
@@ -194,11 +228,110 @@
                             else {
                                 fnSweetAlert_Error(ret.erroR_MESSAGE);
                             }
+                            $.unblockUI();
                         }
                     });
                 }
             });
         }
+    }
+
+    function fnResetlocalStorageValue(){
+        localStorage.setItem("cartManager", "");
+        localStorage.setItem("cartAction", "");
+    }
+
+    function fnSubmitRequest(){
+        if ($('#tbCartMain').DataTable().data().count() == 0){
+            Swal.fire({
+                title: 'Warning',
+                text: 'Data not found in your cart.',
+                    icon: 'warning',
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    }
+                });
+        }else{
+            var getManager = $('#cartSelectManager').val();
+            var getAction = $('#cartSelectAction').val();
+            var error = false;
+            var errorMsg = '';
+            if (getManager == "" || getManager == 'undefined') {
+                error = true;
+                errorMsg = ' Manager';
+            }
+            if (getAction == "" || getAction == 'undefined') {
+                if (error) {
+                    errorMsg = errorMsg + ' and Action';
+                } else {
+                    errorMsg = ' Action';
+                }
+                error = true;
+            }
+            if (error) {
+                Swal.fire({
+                    title: 'Warning',
+                    text: 'Please select' + errorMsg,
+                    icon: 'warning',
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Are you sure to Submit?',
+                    //text: "" + datas,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    confirmButtonClass: 'btn btn-primary',
+                    cancelButtonClass: 'btn btn-danger ml-1',
+                    buttonsStyling: false,
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        //var models = [];
+                        //datas.forEach(obj => {
+                        //    var model = new Object();
+                        //    model.Id = obj.id;
+                        //    model.TransactionNo = obj.transactionNo;
+                        //    model.BillingNumber = obj.billingNumber;
+                        //    model.CompanyCode = obj.companyCode;
+
+                        //    model.CreateBy = $("#leftSideEmail").text();
+                        //    model.CreateDate = new Date();
+                        //    model.UpdateBy = $("#leftSideEmail").text();
+                        //    model.UpdateDate = new Date();
+                        //    models.push(model);
+                        //});
+                        //var getJsonString = JSON.stringify(models);
+                        $.blockUI();
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("SubmitRequest", "RequestCart")",
+                            data: { action: getAction, manager: getManager },
+                            dataType: "text",
+                            success: function (res) {
+                                var ret = $.parseJSON(res);
+                                if (ret.status) {
+                                    fnClearRenderCartList();
+                                    fnRenderCartList();
+                                    fnRenderTopCart();
+                                    fnSweetAlert_Success();
+                                    fnResetlocalStorageValue();
+                                }
+                                else {
+                                    fnSweetAlert_Error(ret.message);
+                                }
+                                $.unblockUI();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        
     }
 
     function fnGetCartCheckbox() {

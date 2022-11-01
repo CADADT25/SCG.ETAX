@@ -72,6 +72,7 @@
                     if (update != null)
                     {
                         update.RequestNo = param.RequestNo;
+                        update.RequestAction = param.RequestAction;
                         update.StatusCode = param.StatusCode;
                         update.CompanyCode = param.CompanyCode;
                         update.Manager = param.Manager;
@@ -133,6 +134,76 @@
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
+        }
+        public Response SUBMIT_REQUEST(RequestDataModel param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var companys = param.RequestCartList.Select(t => t.CompanyCode).Distinct().ToList();
+                    foreach(var comCode in companys)
+                    {
+                        var dataList = param.RequestCartList.Where(t => t.CompanyCode == comCode).ToList();
+                        var request = new Request();
+                        request.Id = Guid.NewGuid();
+                        request.RequestNo = GetRunningNo();
+                        request.RequestAction = param.Action;
+                        request.StatusCode = "wait_manager";
+                        request.CompanyCode = comCode;
+                        request.Manager = param.Manager;
+                        request.CreateDate = dtNow;
+                        request.CreateBy = param.UserBy;
+                        request.UpdateDate = dtNow;
+                        request.UpdateBy = param.UserBy;
+                        _dbContext.request.Add(request);
+                        var history = new RequestHistory();
+                        history.Id = Guid.NewGuid();
+                        history.RequestId = request.Id;
+                        history.Action = "submit";
+                        history.CreateDate = dtNow;
+                        history.CreateBy = param.UserBy;
+                        history.UpdateDate = dtNow;
+                        history.UpdateBy = param.UserBy;
+                        _dbContext.requestHistory.Add(history);
+                        foreach (var item in dataList)
+                        {
+                            var requestItem = new RequestItem();
+                            requestItem.Id = Guid.NewGuid();
+                            requestItem.RequestId = request.Id;
+                            requestItem.TransactionNo = item.TransactionNo;
+                            requestItem.BillingNumber = item.BillingNumber;
+                            requestItem.CreateDate = dtNow;
+                            requestItem.CreateBy = param.UserBy;
+                            requestItem.UpdateDate = dtNow;
+                            requestItem.UpdateBy = param.UserBy;
+                            _dbContext.requestItem.Add(requestItem);
+
+                            var delete = _dbContext.requestCart.Find(item.Id);
+                            if (delete != null)
+                            {
+                                _dbContext.requestCart.Remove(delete);
+                            }
+                        }
+                    }
+                    _dbContext.SaveChanges();
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Submit request success.";
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Submit faild.";
+                resp.INNER_EXCEPTION = ex.Message;
+            }
+            return resp;
+        }
+
+        private string GetRunningNo()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmss");
         }
 
     }

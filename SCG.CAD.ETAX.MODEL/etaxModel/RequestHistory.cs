@@ -6,8 +6,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     public partial class RequestHistory
     {
         [Key]
-        public int Id { get; set; }
-        public int RequestId { get; set; }
+        public Guid Id { get; set; }
+        public Guid RequestId { get; set; }
         public string Action { get; set; } = null!;
         public string? Reason { get; set; }
         public string CreateBy { get; set; } = null!;

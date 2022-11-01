@@ -4,6 +4,34 @@
     {
         readonly DatabaseContext _dbContext = new();
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+        public Response GET_LIST_BY_STATUS(List<string> param)
+        {
+            Response resp = new Response();
+            try
+            {
+                var retData = new List<RequestItem>();
+                var requests = _dbContext.request.Where(t => param.Contains(t.StatusCode)).ToList();
+                if(requests.Count > 0)
+                {
+                    var requestIds = requests.Select(t => t.Id).ToList();
+                    var getList = _dbContext.requestItem.Where(t => requestIds.Contains(t.RequestId)).ToList();
+                    if (getList.Count > 0)
+                    {
+                        resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                        retData = getList;
+                    }
+                }
+                resp.STATUS = true;
+                resp.OUTPUT_DATA = retData;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }  
         public Response GET_LIST()
         {
             Response resp = new Response();

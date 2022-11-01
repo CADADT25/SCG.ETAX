@@ -74,5 +74,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> SUBMIT_REQUEST(RequestDataModel param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.SUBMIT_REQUEST(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
     }
 }

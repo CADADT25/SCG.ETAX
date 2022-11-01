@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.AspNetCore.Mvc;
 using SCG.CAD.ETAX.UTILITY.Authentication;
 using System.Threading.Tasks;
 
@@ -71,7 +72,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             Response resp = new Response();
 
-            List<RequestCartDataModel> tran = new List<RequestCartDataModel>();
+            List<RequestCartDataModel> data = new List<RequestCartDataModel>();
 
             try
             {
@@ -82,7 +83,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (res.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<RequestCartDataModel>>(res.OUTPUT_DATA.ToString());
+                    data = JsonConvert.DeserializeObject<List<RequestCartDataModel>>(res.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -95,7 +96,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
 
-            return Json(new { data = tran });
+            return Json(new { data = data });
         }
 
         public async Task<JsonResult> AddToCart(string jsonString)
@@ -128,5 +129,125 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
+
+        public async Task<JsonResult> SubmitRequest(string action, string manager)
+        {
+            Response res = new Response();
+            try
+            {
+                var req = new RequestCartSearchModel() { CreateBy = HttpContext.Session.GetString("userMail") };
+
+                var httpContentRequestCart = new StringContent(JsonConvert.SerializeObject(req), Encoding.UTF8, "application/json");
+                var resRequestCart = Task.Run(() => ApiHelper.PostURI("api/RequestCart/SearchFull", httpContentRequestCart)).Result;
+                var dataRequestCart = new List<RequestCartDataModel>();
+                if (resRequestCart.STATUS)
+                {
+                    dataRequestCart = JsonConvert.DeserializeObject<List<RequestCartDataModel>>(resRequestCart.OUTPUT_DATA.ToString());
+                }
+                string errorMsg = ValidateBeforSubmitRequest(action, manager, dataRequestCart);
+                if (string.IsNullOrEmpty(errorMsg))
+                {
+                    res.STATUS = true;
+                    // Submit request here
+                    var submitRequest = new RequestDataModel();
+                    submitRequest.RequestCartList = dataRequestCart;
+                    submitRequest.Action = action;
+                    submitRequest.Manager = manager;
+                    submitRequest.UserBy = HttpContext.Session.GetString("userMail");
+                    var httpContentSubmitRequest = new StringContent(JsonConvert.SerializeObject(submitRequest), Encoding.UTF8, "application/json");
+                    res = await Task.Run(() => ApiHelper.PostURI("api/Request/SubmitRequest", httpContentSubmitRequest));
+
+                }
+                else
+                {
+                    res.STATUS = false;
+                    res.MESSAGE = errorMsg;
+                }
+
+            }
+            catch(Exception ex)
+            {
+                res.STATUS = false;
+                res.MESSAGE = ex.Message;
+            }
+            
+
+            return Json(res);
+        }
+
+        private string ValidateBeforSubmitRequest(string action, string manager, List<RequestCartDataModel> dataRequestCart)
+        {
+            string errorMsg = "";
+            if (string.IsNullOrEmpty(action))
+            {
+                errorMsg = SetError(errorMsg, "Please select action.");
+            }
+            if (string.IsNullOrEmpty(manager))
+            {
+                errorMsg = SetError(errorMsg, "Please select manager.");
+            }
+            
+
+            if (dataRequestCart.Count() == 0)
+            {
+                errorMsg = SetError(errorMsg, "Data not found in your cart.");
+            }
+            var requestStatus = new List<string>() { "wait_manager", "wait_officer" };
+            var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
+            var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
+            var dataRequestItem = new List<RequestItem>();
+            if (resRequestItem.STATUS)
+            {
+                dataRequestItem = JsonConvert.DeserializeObject<List<RequestItem>>(resRequestItem.OUTPUT_DATA.ToString());
+            }
+            if (dataRequestItem != null)
+            {
+                if (dataRequestItem.Count() > 0)
+                {
+                    foreach (var item in dataRequestCart)
+                    {
+                        var obj = dataRequestItem.Where(t => t.TransactionNo == item.TransactionNo).FirstOrDefault();
+                        if (obj != null)
+                        {
+                            errorMsg = SetError(errorMsg, "Billing number " + obj.BillingNumber + " duplicates another request.");
+                        }
+                    }
+                }
+            }
+            // delete
+            if (action == "delete")
+            {
+
+            }
+            // undelete
+            else if (action == "undelete")
+            {
+
+            }
+            // unzip
+            else if(action == "unzip")
+            {
+
+            }
+            else
+            {
+                errorMsg = SetError(errorMsg, "Unknown action.");
+            }
+
+            return errorMsg;
+        }
+
+        private string SetError(string msg, string str)
+        {
+            if (!string.IsNullOrEmpty(msg))
+            {
+                return msg + " <br> " + str;
+            }
+            else
+            {
+                return str;
+            }
+        }
+
     }
 }
