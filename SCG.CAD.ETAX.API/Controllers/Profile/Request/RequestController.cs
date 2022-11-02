@@ -21,6 +21,15 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("GetRequest")]
+        public IActionResult GetRequest(string requestNo)
+        {
+            var result = repo.GET_REQUEST(requestNo).Result;
+
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("Insert")]
         public IActionResult Insert(Request param)

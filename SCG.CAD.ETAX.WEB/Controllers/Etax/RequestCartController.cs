@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SCG.CAD.ETAX.UTILITY.Authentication;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
@@ -156,6 +157,20 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     submitRequest.UserBy = HttpContext.Session.GetString("userMail");
                     var httpContentSubmitRequest = new StringContent(JsonConvert.SerializeObject(submitRequest), Encoding.UTF8, "application/json");
                     res = await Task.Run(() => ApiHelper.PostURI("api/Request/SubmitRequest", httpContentSubmitRequest));
+                    if (res.STATUS)
+                    {
+                        if (res.OUTPUT_DATA != null)
+                        {
+                            var reqNos = JsonConvert.DeserializeObject<List<string>>(res.OUTPUT_DATA.ToString());
+                            // Send mail to Manager
+                            foreach (var item in reqNos)
+                            {
+                                await Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + item + "&action=submit"));
+
+                            }
+                        }
+
+                    }
 
                 }
                 else
@@ -165,12 +180,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 res.STATUS = false;
                 res.MESSAGE = ex.Message;
             }
-            
+
 
             return Json(res);
         }
@@ -186,12 +201,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 errorMsg = SetError(errorMsg, "Please select manager.");
             }
-            
+            if (action != "delete" && action != "undelete" && action != "unzip")
+            {
+                errorMsg = SetError(errorMsg, "Unknown action.");
+            }
 
             if (dataRequestCart.Count() == 0)
             {
                 errorMsg = SetError(errorMsg, "Data not found in your cart.");
             }
+
             var requestStatus = new List<string>() { "wait_manager", "wait_officer" };
             var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
             var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
@@ -200,39 +219,58 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 dataRequestItem = JsonConvert.DeserializeObject<List<RequestItem>>(resRequestItem.OUTPUT_DATA.ToString());
             }
-            if (dataRequestItem != null)
+
+            foreach (var item in dataRequestCart)
             {
-                if (dataRequestItem.Count() > 0)
+                if (dataRequestItem != null)
                 {
-                    foreach (var item in dataRequestCart)
+                    if (dataRequestItem.Count() > 0)
                     {
                         var obj = dataRequestItem.Where(t => t.TransactionNo == item.TransactionNo).FirstOrDefault();
                         if (obj != null)
                         {
-                            errorMsg = SetError(errorMsg, "Billing number " + obj.BillingNumber + " duplicates another request.");
+                            errorMsg = SetError(errorMsg, "Billing No. " + obj.BillingNumber + " duplicates another request.");
                         }
                     }
                 }
+                // delete
+                if (action == "delete")
+                {
+                    if(item.XmlCompressStatus == "Successful")
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                    }
+                    if(item.Isactive != 1)
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                    }
+                }
+                // undelete
+                else if (action == "undelete")
+                {
+                    if (item.Isactive == 1)
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
+                    }
+                }
+                // unzip
+                else if (action == "unzip")
+                {
+                    if (item.XmlCompressStatus != "Successful")
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
+                    }
+                    if (item.Isactive != 1)
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                    }
+                    if (item.SentRevenueDepartment == 1)
+                    {
+                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                    }
+                }
             }
-            // delete
-            if (action == "delete")
-            {
 
-            }
-            // undelete
-            else if (action == "undelete")
-            {
-
-            }
-            // unzip
-            else if(action == "unzip")
-            {
-
-            }
-            else
-            {
-                errorMsg = SetError(errorMsg, "Unknown action.");
-            }
 
             return errorMsg;
         }

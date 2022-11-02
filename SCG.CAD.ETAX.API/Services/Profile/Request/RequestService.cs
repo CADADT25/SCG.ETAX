@@ -32,6 +32,34 @@
             }
             return resp;
         }
+        public Response GET_REQUEST(string requestNo)
+        {
+            Response resp = new Response();
+            try
+            {
+                var getList = _dbContext.request.Where(t => t.RequestNo == requestNo).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
         public Response INSERT(Request param)
         {
@@ -140,10 +168,11 @@
             Response resp = new Response();
             try
             {
+                var reqNos = new List<string>();
                 using (_dbContext)
                 {
                     var companys = param.RequestCartList.Select(t => t.CompanyCode).Distinct().ToList();
-                    foreach(var comCode in companys)
+                    foreach (var comCode in companys)
                     {
                         var dataList = param.RequestCartList.Where(t => t.CompanyCode == comCode).ToList();
                         var request = new Request();
@@ -157,6 +186,7 @@
                         request.CreateBy = param.UserBy;
                         request.UpdateDate = dtNow;
                         request.UpdateBy = param.UserBy;
+                        reqNos.Add(request.RequestNo);
                         _dbContext.request.Add(request);
                         var history = new RequestHistory();
                         history.Id = Guid.NewGuid();
@@ -190,6 +220,7 @@
                     _dbContext.SaveChanges();
                     resp.STATUS = true;
                     resp.MESSAGE = "Submit request success.";
+                    resp.OUTPUT_DATA = reqNos;
                 }
             }
             catch (Exception ex)
@@ -203,7 +234,7 @@
 
         private string GetRunningNo()
         {
-            return DateTime.Now.ToString("yyyyMMddHHmmss");
+            return "REQ" + DateTime.Now.ToString("yyyyMMddHHmmss");
         }
 
     }

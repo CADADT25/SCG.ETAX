@@ -21,5 +21,14 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.SendEmail
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("SendEmailRequestByAction")]
+        public IActionResult SendEmailRequestByAction(string requestNo, string action)
+        {
+            var result = repo.RequestActionEmail(requestNo, action).Result;
+
+            return Ok(result);
+        }
     }
 }

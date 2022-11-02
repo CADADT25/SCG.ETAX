@@ -20,6 +20,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_REQUEST(string requestNo)
+        {
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_REQUEST(requestNo);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
         public async Task<Response> INSERT(Request param)
         {
             Response resp = new Response();

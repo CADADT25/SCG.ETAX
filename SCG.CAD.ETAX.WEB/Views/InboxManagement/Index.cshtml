@@ -19,18 +19,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="MyApproval-tab" data-toggle="tab" href="#MyApproval" aria-controls="profile" role="tab" aria-selected="false">
-                                <i class="fas fa-home"></i> My Approval
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" id="InProgress-tab" data-toggle="tab" href="#InProgress" aria-controls="about" role="tab" aria-selected="false">
                                 <i class="fas fa-home"></i> In Progress
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="Complete-tab" data-toggle="tab" href="#Complete" aria-controls="about" role="tab" aria-selected="false">
-                                <i class="fas fa-home"></i> Complete
                             </a>
                         </li>
                         <li class="nav-item">
@@ -43,14 +33,8 @@
                         <div class="tab-pane active" id="Todo" aria-labelledby="Todo-tab" role="tabpanel">
                             @await Html.PartialAsync("~/Views/InboxTodo/Index.cshtml")
                         </div>
-                        <div class="tab-pane" id="MyApproval" aria-labelledby="MyApproval-tab" role="tabpanel">
-                            @await Html.PartialAsync("~/Views/InboxMyApproval/Index.cshtml")
-                        </div>
                         <div class="tab-pane" id="InProgress" aria-labelledby="InProgress-tab" role="tabpanel">
                             @await Html.PartialAsync("~/Views/InboxInprogress/Index.cshtml")
-                        </div>
-                        <div class="tab-pane" id="Complete" aria-labelledby="Complete-tab" role="tabpanel">
-                            @await Html.PartialAsync("~/Views/InboxComplete/Index.cshtml")
                         </div>
                         <div class="tab-pane" id="All" aria-labelledby="All-tab" role="tabpanel">
                             @await Html.PartialAsync("~/Views/InboxAll/Index.cshtml")
@@ -62,3 +46,28 @@
         <!-- Tabs with Icon ends -->
     </div>
 </section>
+
+<script type="text/javascript">
+    function fnCheckStatus(status) {
+        if (status == "wait_manager") {
+            return 'Wait Manager';
+        }
+        if (status == "wait_officer") {
+            return 'Wait Officer';
+        }
+        return status;
+    }
+
+    function fnCheckAction(act) {
+        if (act == "delete") {
+            return 'Delete';
+        }
+        if (act == "undelete") {
+            return 'Undelete';
+        }
+        if (act == "unzip") {
+            return 'Unzip';
+        }
+        return act;
+    }
+</script>

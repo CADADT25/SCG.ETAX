@@ -12,6 +12,7 @@ namespace SCG.CAD.ETAX.UTILITY
     public class AdminToolHelper
     {
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        UtilityRequestController requestController = new UtilityRequestController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
 
         public List<TransactionDescription> GetBillingTransaction(string billno)
@@ -107,6 +108,25 @@ namespace SCG.CAD.ETAX.UTILITY
                 throw ex;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get Request by RequestNumber
+        /// </summary>
+        /// <param name="requestNo"></param>
+        /// <returns></returns>
+        public List<Request> GetRequest(string requestNo)
+        {
+            List<Request> req = new List<Request>();
+            try
+            {
+                req = requestController.GetRequest(requestNo).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return req;
         }
     }
 }
