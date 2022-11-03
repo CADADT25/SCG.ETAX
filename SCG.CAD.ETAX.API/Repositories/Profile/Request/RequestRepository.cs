@@ -37,6 +37,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_REQUEST_ITEM_TRANSACTION(string requestNo)
+        {
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_REQUEST_ITEM_TRANSACTION(requestNo);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
         public async Task<Response> INSERT(Request param)
         {
             Response resp = new Response();

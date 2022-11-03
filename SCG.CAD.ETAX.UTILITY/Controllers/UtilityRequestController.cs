@@ -33,6 +33,33 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
             return req;
         }
-       
+
+        public async Task<List<TransactionDescription>> GetRequestItemTransaction(string requestNo)
+        {
+            Response resp = new Response();
+
+            List<TransactionDescription> req = new List<TransactionDescription>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/Request/GetRequestItemTransaction?requestNo=" + requestNo));
+
+                if (task.STATUS)
+                {
+                    req = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+            return req;
+        }
+
     }
 }

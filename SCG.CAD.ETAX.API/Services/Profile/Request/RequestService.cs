@@ -1,9 +1,15 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using SCG.CAD.ETAX.UTILITY;
+using System.Reflection;
+
+namespace SCG.CAD.ETAX.API.Services
 {
-    public class RequestService
+    public class RequestService : DatabaseExecuteController
     {
         readonly DatabaseContext _dbContext = new();
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+
+        sqlRequest sqlFactory = new sqlRequest();
         public Response GET_LIST()
         {
             Response resp = new Response();
@@ -49,6 +55,45 @@
                 {
                     resp.STATUS = false;
                     resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+        public Response GET_REQUEST_ITEM_TRANSACTION(string requestNo)
+        {
+            Response resp = new Response();
+            try
+            {
+                string sql = sqlFactory.GET_REQUEST_ITEM_TRANSACTION(requestNo);
+
+                var resultData = base.SearchBySql(sql);
+                if (resultData.StatusOnDb)
+                {
+                   
+                    if(resultData.ResultOnDb.Rows.Count >0)
+                    {
+                        var dataList = new List<TransactionDescription>();
+                        dataList = UtilityHelper.ConvertDataTableToModel<TransactionDescription>(resultData.ResultOnDb);
+                        resp.STATUS = true;
+                        resp.OUTPUT_DATA = dataList;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found.";
+                    }
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = resultData.MessageOnDb;
                 }
 
             }
@@ -177,7 +222,7 @@
                         var dataList = param.RequestCartList.Where(t => t.CompanyCode == comCode).ToList();
                         var request = new Request();
                         request.Id = Guid.NewGuid();
-                        request.RequestNo = GetRunningNo();
+                        request.RequestNo = GetRunningNo(comCode);
                         request.RequestAction = param.Action;
                         request.StatusCode = "wait_manager";
                         request.CompanyCode = comCode;
@@ -232,9 +277,33 @@
             return resp;
         }
 
-        private string GetRunningNo()
+        public string GetRunningNo(string company)
         {
-            return "REQ" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            try
+            {
+                string sql = sqlFactory.GET_REQUEST_RUNNING();
+
+                var resultData = base.SearchBySql(sql);
+                if (resultData.StatusOnDb)
+                {
+                    string ret = "REQ" + DateTime.Now.ToString("yyyy", new System.Globalization.CultureInfo("en-US")) + company;
+                    string running = resultData.ResultOnDb.Rows[0]["number"].ToString();
+                    while (running.Length < 4)
+                    {
+                        running = "0" + running;
+                    }
+                    return ret + running;
+                }
+                else
+                {
+                    throw new Exception(resultData.MessageOnDb);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
     }

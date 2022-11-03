@@ -128,5 +128,24 @@ namespace SCG.CAD.ETAX.UTILITY
             }
             return req;
         }
+
+        /// <summary>
+        /// Get RequestItem Transaction
+        /// </summary>
+        /// <param name="requestNo"></param>
+        /// <returns></returns>
+        public List<TransactionDescription> GetRequestItemTransaction(string requestNo)
+        {
+            List<TransactionDescription> req = new List<TransactionDescription>();
+            try
+            {
+                req = requestController.GetRequestItemTransaction(requestNo).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return req;
+        }
     }
 }

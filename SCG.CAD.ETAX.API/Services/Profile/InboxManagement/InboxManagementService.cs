@@ -6,7 +6,6 @@ namespace SCG.CAD.ETAX.API.Services
     {
         readonly DatabaseContext _dbContext = new();
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
-
         public Response SEARCH_TODO(InboxSearchModel search)
         {
             Response resp = new Response();
@@ -14,12 +13,30 @@ namespace SCG.CAD.ETAX.API.Services
             var users = new List<ProfileUserManagement>();
             try
             {
-                // get userGroup com
-                var companyGroupList = new List<string>();
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == search.EmailUser);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.profileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach(var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
                 var requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == "wait_manager")
                                                         ||
-                                                        (companyGroupList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == "wait_officer")
+                                                        (companyCodeList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == "wait_officer")
                                                     ).ToList();
                 if (!string.IsNullOrEmpty(search.RequestNo))
                 {
@@ -39,8 +56,8 @@ namespace SCG.CAD.ETAX.API.Services
                         requestList = requestList.Where(t => search.RequestAction.Contains(t.RequestAction)).ToList();
                     }
                 }
-                var managers = requestList.Where(t=>t.Manager != null).Select(t => t.Manager).Distinct().ToList();
-                var requesters = requestList.Where(t=>t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
+                var managers = requestList.Where(t => t.Manager != null).Select(t => t.Manager).Distinct().ToList();
+                var requesters = requestList.Where(t => t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
                 if (managers.Count() > 0)
                 {
                     users.AddRange(_dbContext.profileUserManagement.Where(t => managers.Contains(t.UserEmail)).ToList());
@@ -89,7 +106,7 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
-        
+
         public Response SEARCH_INPROGRESS(InboxSearchModel search)
         {
             Response resp = new Response();
@@ -97,7 +114,6 @@ namespace SCG.CAD.ETAX.API.Services
             var users = new List<ProfileUserManagement>();
             try
             {
-                var companyGroupList = new List<string>();
                 var requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser && t.StatusCode != "wait_manager" && t.StatusCode != "reject" && t.StatusCode != "compleate" && t.StatusCode != "cancel")
                                                         ||
@@ -121,8 +137,8 @@ namespace SCG.CAD.ETAX.API.Services
                         requestList = requestList.Where(t => search.RequestAction.Contains(t.RequestAction)).ToList();
                     }
                 }
-                var managers = requestList.Where(t=>t.Manager != null).Select(t => t.Manager).Distinct().ToList();
-                var requesters = requestList.Where(t=>t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
+                var managers = requestList.Where(t => t.Manager != null).Select(t => t.Manager).Distinct().ToList();
+                var requesters = requestList.Where(t => t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
                 if (managers.Count() > 0)
                 {
                     users.AddRange(_dbContext.profileUserManagement.Where(t => managers.Contains(t.UserEmail)).ToList());
@@ -171,7 +187,7 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
-        
+
         public Response SEARCH_ALL(InboxSearchModel search)
         {
             Response resp = new Response();
@@ -179,14 +195,32 @@ namespace SCG.CAD.ETAX.API.Services
             var users = new List<ProfileUserManagement>();
             try
             {
-                // get userGroup com
-                var companyGroupList = new List<string>();
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == search.EmailUser);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.profileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach (var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
                 var requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser)
                                                         ||
                                                         (t.CreateBy == search.EmailUser)
                                                         ||
-                                                        (companyGroupList.Contains(t.CompanyCode))
+                                                        (companyCodeList.Contains(t.CompanyCode))
                                                     ).ToList();
                 if (!string.IsNullOrEmpty(search.RequestNo))
                 {
@@ -206,8 +240,8 @@ namespace SCG.CAD.ETAX.API.Services
                         requestList = requestList.Where(t => search.RequestAction.Contains(t.RequestAction)).ToList();
                     }
                 }
-                var managers = requestList.Where(t=>t.Manager != null).Select(t => t.Manager).Distinct().ToList();
-                var requesters = requestList.Where(t=>t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
+                var managers = requestList.Where(t => t.Manager != null).Select(t => t.Manager).Distinct().ToList();
+                var requesters = requestList.Where(t => t.CreateBy != null).Select(t => t.CreateBy).Distinct().ToList();
                 if (managers.Count() > 0)
                 {
                     users.AddRange(_dbContext.profileUserManagement.Where(t => managers.Contains(t.UserEmail)).ToList());

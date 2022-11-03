@@ -322,6 +322,9 @@
                                     fnResetlocalStorageValue();
                                 }
                                 else {
+                                    fnClearRenderCartList();
+                                    fnRenderCartList();
+                                    fnRenderTopCart();
                                     fnSweetAlert_Error(ret.message);
                                 }
                                 $.unblockUI();

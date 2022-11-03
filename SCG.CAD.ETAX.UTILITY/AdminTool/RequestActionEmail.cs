@@ -17,26 +17,28 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
 
 
         List<ProfileCustomer> profileCustomers = new List<ProfileCustomer>();
-        List<Request> request = new List<Request>();
+
         List<ProfileEmailType> profileEmailType = new List<ProfileEmailType>();
         List<ProfileEmailTemplate> profileEmailTemplates = new List<ProfileEmailTemplate>();
         List<ProfileCompany> profileCompanies = new List<ProfileCompany>();
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
-        List<RdDocument> rdDocuments = new List<RdDocument>();
 
         public Response SendEmail(string requestNo, string action)
         {
             Response res = new Response();
+            ProfileEmailTemplate profileEmailTemplate = new ProfileEmailTemplate();
+            ConfigMftsEmailSetting configEmail = new ConfigMftsEmailSetting();
             bool result = false;
             string subjectemail = "";
-
-            ProfileEmailTemplate profileEmailTemplate = new ProfileEmailTemplate();
-            ProfileCompany profileCompany = new ProfileCompany();
-            ConfigMftsEmailSetting configEmail = new ConfigMftsEmailSetting();
+            string toName = "";
+            string toEmail = "cadadt02@scg.com";
+            string ccEmail = "";
             int emailType = 0;
             try
             {
-                GetDataFromDataBase(requestNo);
+                GetDataFromDataBase();
+                var request = adminToolHelper.GetRequest(requestNo);
+                var dataTables = adminToolHelper.GetRequestItemTransaction(requestNo);
                 if (request != null && request.Count > 0)
                 {
 
@@ -45,22 +47,25 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     if (action == "submit")
                     {
                         profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", request[0].RequestAction);
+                        subjectemail = subjectemail.Replace("#$RequestNo$#", request[0].RequestNo);
                     }
-                    else if (action == "manager_approve")
+                    else if (action == "reject" && string.IsNullOrEmpty(request[0].OfficerBy))
                     {
-                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "manager_approve");
+                        //manager reject
+                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "reject");
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request[0].RequestNo);
                     }
-                    else if (action == "officer_approve")
+                    else if (action == "reject" && !string.IsNullOrEmpty(request[0].OfficerBy))
                     {
-                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "officer_approve");
+                        //officer reject
+                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "reject");
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request[0].RequestNo);
                     }
 
-
-                    profileCompany = profileCompanies.FirstOrDefault(x => x.CompanyCode == request[0].CompanyCode) ?? new ProfileCompany();
-                    subjectemail = profileEmailTemplate.EmailSubject.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);
                     configEmail = configMftsEmailSettings.FirstOrDefault(x => x.ConfigMftsEmailSettingCompanyCode == request[0].CompanyCode);
 
-                    result = SendEmailbyCompany(request[0], configEmail, subjectemail, profileCompany);
+                    result = SendEmailbyCompany(configEmail, profileEmailTemplate, request[0], subjectemail, dataTables, toName, toEmail, ccEmail);
                 }
                 res.STATUS = result;
 
@@ -73,14 +78,12 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             return res;
         }
 
-        public void GetDataFromDataBase(string requestNo)
+        public void GetDataFromDataBase()
         {
             try
             {
-                request = adminToolHelper.GetRequest(requestNo);
                 profileEmailType = profileEmailTypeController.List().Result;
                 profileEmailTemplates = profileEmailTemplateController.List().Result;
-                profileCompanies = profileCompanyController.List().Result;
                 configMftsEmailSettings = configMftsEmailSettingController.List().Result;
             }
             catch (Exception ex)
@@ -90,110 +93,97 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         }
 
 
-        public bool SendEmailbyCompany(Request dataTran, ConfigMftsEmailSetting config, string subjectemail, ProfileCompany profileCompany)
+        public bool SendEmailbyCompany(ConfigMftsEmailSetting config, ProfileEmailTemplate templateemail, Request data, string subjectemail, List<TransactionDescription> dataList, string toName, string toEmail, string ccEmail)
         {
             bool result = false;
             var document = "";
-            string customerid = "";
-            string customername = "";
-            //try
-            //{
-            //    customerid = dataTran.CustomerId;
-            //    customername = dataTran.CustomerName;
-
-            //    var templateemail = profileEmailType.FirstOrDefault(x => x.EmailTemplateNo.ToString() == profileemailCustomer.EmailTemplateNo);
-            //    if (templateemail != null)
-            //    {
-            //        var fromEmailAddress = "etaxadm@scg.com";
-            //        var fromEmailPassword = "Thai2020";
-            //        var smtpHost = "outmail.scg.co.th";
-            //        var smtpPort = "25";
-            //        var toEmailAddress = "cadadt25@scg.com";
-
-            //        string body = templateemail.EmailBody;
-            //        body = body.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);
-            //        body = body.Replace("[CUSTOMER-COMPANY-NAME]", customername);
-            //        body = body.Replace("[CUSTOMER-COMPANY-CODE]", customerid);
-            //        body = body.Replace("[DATE]", DateTime.Now.ToString("dd-MM-yyyy"));
-
-            //        document = "<table class='MsoNormalTable' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100.0%;mso-cellspacing:0in;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>";
-            //        document += "<tbody>";
-
-            //        document += "<tr>";
-            //        document += "<td width='10%' style='width:10.0%;padding:.75pt .75pt .75pt .75pt'></td>";
-            //        document += "<td width='20%' style='width:20.0%;padding:.75pt .75pt .75pt .75pt'>";
-            //        document += "<p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>" + GetDocType(dataTran.DocType ?? "") + "</span><o:p></o:p></p>";
-            //        document += "</td>";
-            //        document += "<td width='5%' style='width:5.0%;padding:.75pt .75pt .75pt .75pt'>";
-            //        document += "<p class='MsoNormal'><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif'>เลขที่:</span><span lang='TH' style='font-family:&quot;Angsana New&quot;,serif;mso-ascii-font-family:&quot;Times New Roman&quot;;";
-            //        document += "mso-hansi-font-family:&quot;Times New Roman&quot;'> </span><o:p></o:p></p>";
-            //        document += "</td>";
-            //        document += "<td style='padding:.75pt .75pt .75pt .75pt'>";
-            //        document += "<p class='MsoNormal'>" + dataTran.BillingNumber + "<o:p></o:p></p>";
-            //        document += "</td>";
-            //        document += "</tr>";
-
-            //        document += "</tbody>";
-            //        document += "</table>";
-
-            //        body = body.Replace("[FILE-NAME]", document);
-
-            //        MailMessage message = new MailMessage();
-
-
-            //        message.From = new MailAddress(fromEmailAddress);
-            //        if (!string.IsNullOrEmpty(profileemailCustomer.CustomerEmail))
-            //        {
-            //            message.To.Add(new MailAddress(toEmailAddress));
-            //        }
-            //        if (!string.IsNullOrEmpty(profileemailCustomer.CustomerCcemail))
-            //        {
-            //            message.CC.Add(new MailAddress(toEmailAddress));
-            //        }
-            //        message.Subject = subjectemail;
-            //        message.IsBodyHtml = true;
-            //        message.Body = body;
-
-            //        message.Attachments.Add(new Attachment(dataTran.PdfSignLocation)
-            //        {
-            //            Name = RenameFileName(dataTran.CompanyCode, dataTran.BillingNumber)
-            //        });
-
-            //        try
-            //        {
-            //            using (var client = new SmtpClient())
-            //            {
-            //                client.Host = smtpHost;
-            //                client.EnableSsl = false;
-            //                client.UseDefaultCredentials = false;
-            //                client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
-            //                client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
-            //                client.Send(message);
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            throw ex;
-            //        }
-            //        result = true;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-            return result;
-        }
-
-        public string GetDocType(string doccode)
-        {
-            string result = "";
             try
             {
-                var rdcode = rdDocuments.FirstOrDefault(x => x.RdDocumentCode == doccode);
-                if (rdcode != null)
+                if (templateemail != null)
                 {
-                    result = rdcode.RdDocumentNameTh ?? "";
+                    var fromEmailAddress = "etaxadm@scg.com";
+                    var fromEmailPassword = "Thai2020";
+                    var smtpHost = "outmail.scg.co.th";
+                    var smtpPort = "25";
+                    //var toEmailAddress = "cadadt02@scg.com";
+
+                    string body = templateemail.EmailBody;
+                    body = body.Replace("#$DearName$#", toName);
+                    body = body.Replace("#$RequestNo$#", data.RequestNo);
+                    body = body.Replace("#$Action$#", data.RequestAction);
+                    body = body.Replace("#$RequestDate$#", data.CreateDate.ToString("dd-MM-yyyy"));
+                    body = body.Replace("#$RequestBy$#", toName);
+                    body = body.Replace("#$UrlApprove$#", "https://stackoverflow.com/questions/23789745/create-outlook-email-in-c-sharp-with-anchor-tag-in-body-that-has-a-target");
+                    body = body.Replace("#$UrlReject$#", toName);
+                    body = body.Replace("#$UrlEtaxApp$#", toName);
+
+                    document = "<table class=\"table\">";
+                    document += "<thead>";
+                    document += "<tr>";
+                    document += "<th>#</th>";
+                    document += "<th>Billing No</th>";
+                    document += "<th>Posting year</th>";
+                    document += "<th>Company</th>";
+                    document += "<th>Customer</th>";
+                    document += "<th>IC/O2C</th>";
+                    document += "<th>Document Type</th>";
+                    document += "<th>Data Source</th>";
+                    document += "</tr>";
+                    document += "</thead>";
+
+                    document += "<tbody>";
+                    int running = 1;
+                    foreach (var item in dataList)
+                    {
+                        var ic = item.Ic == 1 ? "IC" : "O2C";
+                        document += "<tr>";
+                        document += "<td>" + running.ToString() + "</td>";
+                        document += "<td>" + item.BillingNumber + "</td>";
+                        document += "<td>" + item.PostingYear + "</td>";
+                        document += "<td>" + item.CompanyCode + "</td>";
+                        document += "<td>" + item.CustomerName + "</td>";
+                        document += "<td>" + ic + "</td>";
+                        document += "<td>" + item.DocType + "</td>";
+                        document += "<td>" + item.SourceName + "</td>";
+                        document += "</tr>";
+                        running += 1;
+                    }
+
+                    document += "</tbody>";
+                    document += "</table>";
+
+                    body = body.Replace("#$DataTable$#", document);
+
+                    MailMessage message = new MailMessage();
+
+
+                    message.From = new MailAddress(fromEmailAddress);
+                    message.To.Add(new MailAddress(toEmail));
+                    if (!string.IsNullOrEmpty(ccEmail))
+                    {
+                        message.CC.Add(new MailAddress(ccEmail));
+                    }
+                    message.Subject = subjectemail;
+                    message.IsBodyHtml = true;
+                    message.Body = body;
+
+                    try
+                    {
+                        using (var client = new SmtpClient())
+                        {
+                            client.Host = smtpHost;
+                            client.EnableSsl = false;
+                            client.UseDefaultCredentials = false;
+                            client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
+                            client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
+                            client.Send(message);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    result = true;
                 }
             }
             catch (Exception ex)
@@ -203,18 +193,5 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             return result;
         }
 
-        public string RenameFileName(string comcode, string billno)
-        {
-            string filename = "";
-            try
-            {
-                filename = comcode + "_" + DateTime.Now.ToString("yyyy") + "_" + billno + ".pdf";
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return filename;
-        }
     }
 }
