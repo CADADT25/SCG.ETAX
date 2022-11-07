@@ -1695,6 +1695,49 @@
         $.unblockUI();
     }
 
+    function fnRenderViewRequest(reqNo) {
+
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "Request", new {requestNo = "xxx"})".replace("xxx", reqNo));
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+        $("#li-btnCallPageProfileCompany").removeClass("active");
+        $("#li-btnCallPageProfileSeller").removeClass("active");
+        $("#li-ManagementCompanyProfile").removeClass("active");
+        $("#li-ManagementDocumentProfile").removeClass("active");
+        $("#li-ManagementCustomer").removeClass("active");
+        $("#li-btnCallPageTransactionDescription").removeClass("active");
+        $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+        $("#li-OutputSearchEmailSend").removeClass("active");
+        $("#li-ConfigGlobal").removeClass("active");
+        $("#li-ConfigGlobalCategory").removeClass("active");
+        $("#li-ProfileEmailType").removeClass("active");
+        $("#li-ProfileEmailTemplate").removeClass("active");
+        $("#li-ProfileUserRole").removeClass("active");
+        $("#li-ConfigControlMenu").removeClass("active");
+        $("#li-ConfigControlFunction").removeClass("active");
+        $("#li-ProfileUserGroup").removeClass("active");
+        $("#li-ProfileUserManagement").removeClass("active");
+        $("#li-InboxManagement").addClass("active");
+
+        $.unblockUI();
+    }
+
     function fnRenderTopCart(){
         $("#cartOnNav").load("@Url.Action("Index", "RequestCart")");
     }

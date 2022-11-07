@@ -114,7 +114,10 @@
                 },
                 {
                     data: "requestNo",
-                    width: "10%"
+                    width: "10%",
+                    render: function (data, type, row) {
+                        return '<span onclick="fnRenderViewRequest(\'' + data + '\')">' + data + '</span>';
+                    }
                 },
                 {
                     data: "companyCode",

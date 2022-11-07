@@ -74,6 +74,7 @@
                         update.RequestId = param.RequestId;
                         update.Action = param.Action;
                         update.Reason = param.Reason;
+                        update.SendEmail = param.SendEmail;
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

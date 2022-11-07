@@ -115,9 +115,9 @@ namespace SCG.CAD.ETAX.UTILITY
         /// </summary>
         /// <param name="requestNo"></param>
         /// <returns></returns>
-        public List<Request> GetRequest(string requestNo)
+        public RequestRelateDataModel GetRequest(string requestNo)
         {
-            List<Request> req = new List<Request>();
+            RequestRelateDataModel req = new RequestRelateDataModel();
             try
             {
                 req = requestController.GetRequest(requestNo).Result;
@@ -146,6 +146,23 @@ namespace SCG.CAD.ETAX.UTILITY
                 throw ex;
             }
             return req;
+        }
+        public bool UpdateRequestHistory(string jsonString)
+        {
+            Task<Response> res;
+            try
+            {
+                res = requestController.UpdateRequestHistory(jsonString);
+                if (res.Result.MESSAGE == "Updated Success.")
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
         }
     }
 }

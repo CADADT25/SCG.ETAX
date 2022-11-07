@@ -4,7 +4,7 @@
 }
 
 <section id="basic-tabs-components">
-    <div class="row match-height">
+    <div class="row">
         <!-- Tabs with Icon starts -->
         <div class="col-xl-12 col-lg-12">
             <div class="card">
@@ -19,12 +19,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="InProgress-tab" data-toggle="tab" href="#InProgress" aria-controls="about" role="tab" aria-selected="false">
+                            <a class="nav-link" id="InProgress-tab" data-toggle="tab" onclick="fnSearchInprogress()" href="#InProgress" aria-controls="about" role="tab" aria-selected="false">
                                 <i class="fas fa-home"></i> In Progress
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="All-tab" data-toggle="tab" href="#All" aria-controls="about" role="tab" aria-selected="false">
+                            <a class="nav-link" id="All-tab" data-toggle="tab" href="#All" onclick="fnSearchAll()" aria-controls="about" role="tab" aria-selected="false">
                                 <i class="fas fa-home"></i> All
                             </a>
                         </li>

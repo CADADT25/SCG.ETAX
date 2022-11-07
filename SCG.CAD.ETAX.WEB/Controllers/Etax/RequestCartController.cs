@@ -165,7 +165,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             // Send mail to Manager
                             foreach (var item in reqNos)
                             {
-                                await Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + item + "&action=submit"));
+                                Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + item + "&action=submit"));
 
                             }
                         }

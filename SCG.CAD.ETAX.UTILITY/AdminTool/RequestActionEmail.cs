@@ -1,4 +1,5 @@
-﻿using SCG.CAD.ETAX.MODEL;
+﻿using Newtonsoft.Json;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System.Net;
@@ -28,10 +29,10 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             Response res = new Response();
             ProfileEmailTemplate profileEmailTemplate = new ProfileEmailTemplate();
             ConfigMftsEmailSetting configEmail = new ConfigMftsEmailSetting();
-            bool result = false;
+            res.STATUS = false;
             string subjectemail = "";
             string toName = "";
-            string toEmail = "cadadt02@scg.com";
+            string toEmail = "";
             string ccEmail = "";
             int emailType = 0;
             try
@@ -39,7 +40,8 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                 GetDataFromDataBase();
                 var request = adminToolHelper.GetRequest(requestNo);
                 var dataTables = adminToolHelper.GetRequestItemTransaction(requestNo);
-                if (request != null && request.Count > 0)
+                dataTables = dataTables.OrderBy(t => t.BillingNumber).ToList();
+                if (request != null)
                 {
 
                     emailType = profileEmailType.FirstOrDefault(x => x.EmailTypeCode == "request").EmailTypeNo;
@@ -47,27 +49,43 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     if (action == "submit")
                     {
                         profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
-                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", request[0].RequestAction);
-                        subjectemail = subjectemail.Replace("#$RequestNo$#", request[0].RequestNo);
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", request.RequestAction);
+                        subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
+                        toEmail = request.ManagerEmail;
+                        toName = request.ManagerName;
                     }
-                    else if (action == "reject" && string.IsNullOrEmpty(request[0].OfficerBy))
+                    else if (action == "reject" && string.IsNullOrEmpty(request.OfficerEmail))
                     {
                         //manager reject
                         profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "reject");
-                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request[0].RequestNo);
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request.RequestNo);
+                        toEmail = request.RequesterEmail;
+                        toName = request.RequesterName;
                     }
-                    else if (action == "reject" && !string.IsNullOrEmpty(request[0].OfficerBy))
+                    else if (action == "reject" && !string.IsNullOrEmpty(request.OfficerEmail))
                     {
                         //officer reject
                         profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "reject");
-                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request[0].RequestNo);
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$RequestNo$#", request.RequestNo);
+                        toEmail = request.RequesterEmail;
+                        ccEmail = request.ManagerEmail;
+                        toName = request.RequesterName;
                     }
 
-                    configEmail = configMftsEmailSettings.FirstOrDefault(x => x.ConfigMftsEmailSettingCompanyCode == request[0].CompanyCode);
-
-                    result = SendEmailbyCompany(configEmail, profileEmailTemplate, request[0], subjectemail, dataTables, toName, toEmail, ccEmail);
+                    configEmail = configMftsEmailSettings.FirstOrDefault(x => x.ConfigMftsEmailSettingCompanyCode == request.CompanyCode);
+                    toEmail = "cadadt02@scg.com";
+                    if (!string.IsNullOrEmpty(ccEmail))
+                        ccEmail = "cadadt02@scg.com";
+                    res.STATUS = SendEmailbyCompany(configEmail, profileEmailTemplate, request, subjectemail, dataTables, toName, toEmail, ccEmail);
+                    if (res.STATUS)
+                    {
+                        var history = request.RequestHistorys.OrderByDescending(t => t.CreateDate).FirstOrDefault();
+                        history.SendEmail = true;
+                        var jsonString = JsonConvert.SerializeObject(history);
+                        adminToolHelper.UpdateRequestHistory(jsonString);
+                    }
                 }
-                res.STATUS = result;
+                
 
             }
             catch (Exception ex)
@@ -93,7 +111,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         }
 
 
-        public bool SendEmailbyCompany(ConfigMftsEmailSetting config, ProfileEmailTemplate templateemail, Request data, string subjectemail, List<TransactionDescription> dataList, string toName, string toEmail, string ccEmail)
+        public bool SendEmailbyCompany(ConfigMftsEmailSetting config, ProfileEmailTemplate templateemail, RequestRelateDataModel data, string subjectemail, List<TransactionDescription> dataList, string toName, string toEmail, string ccEmail)
         {
             bool result = false;
             var document = "";
@@ -111,11 +129,11 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     body = body.Replace("#$DearName$#", toName);
                     body = body.Replace("#$RequestNo$#", data.RequestNo);
                     body = body.Replace("#$Action$#", data.RequestAction);
-                    body = body.Replace("#$RequestDate$#", data.CreateDate.ToString("dd-MM-yyyy"));
-                    body = body.Replace("#$RequestBy$#", toName);
-                    body = body.Replace("#$UrlApprove$#", "https://stackoverflow.com/questions/23789745/create-outlook-email-in-c-sharp-with-anchor-tag-in-body-that-has-a-target");
-                    body = body.Replace("#$UrlReject$#", toName);
-                    body = body.Replace("#$UrlEtaxApp$#", toName);
+                    body = body.Replace("#$RequestDate$#", data.RequestDate.ToString("dd-MM-yyyy"));
+                    body = body.Replace("#$RequestBy$#", data.RequesterName);
+                    body = body.Replace("#$UrlApprove$#", "https://stackoverflow.com");
+                    body = body.Replace("#$UrlReject$#", "https://stackoverflow.com");
+                    body = body.Replace("#$UrlEtaxApp$#", "https://stackoverflow.com");
 
                     document = "<table class=\"table\">";
                     document += "<thead>";

@@ -7,11 +7,11 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
     public class UtilityRequestController
     {
-        public async Task<List<Request>> GetRequest(string requestNo)
+        public async Task<RequestRelateDataModel> GetRequest(string requestNo)
         {
             Response resp = new Response();
 
-            List<Request> req = new List<Request>();
+            RequestRelateDataModel req = new RequestRelateDataModel();
 
             try
             {
@@ -19,7 +19,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
                 if (task.STATUS)
                 {
-                    req = JsonConvert.DeserializeObject<List<Request>>(task.OUTPUT_DATA.ToString());
+                    req = JsonConvert.DeserializeObject<RequestRelateDataModel>(task.OUTPUT_DATA.ToString());
                 }
                 else
                 {
@@ -59,6 +59,15 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
 
             return req;
+        }
+
+        public async Task<Response> UpdateRequestHistory(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/RequestHistory/Update", httpContent));
+
+            return task;
         }
 
     }

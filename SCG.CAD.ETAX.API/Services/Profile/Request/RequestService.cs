@@ -41,21 +41,38 @@ namespace SCG.CAD.ETAX.API.Services
         public Response GET_REQUEST(string requestNo)
         {
             Response resp = new Response();
+            var requestRelate = new RequestRelateDataModel();
             try
             {
-                var getList = _dbContext.request.Where(t => t.RequestNo == requestNo).ToList();
+                var requestData = _dbContext.request.Where(t => t.RequestNo == requestNo).FirstOrDefault();
 
-                if (getList.Count > 0)
+                var requester = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.CreateBy).FirstOrDefault();
+                var manager = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.Manager).FirstOrDefault();
+                ProfileUserManagement officer = null;
+                if (!string.IsNullOrEmpty(requestData.OfficerBy))
                 {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
-                    resp.OUTPUT_DATA = getList;
+                    officer = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.OfficerBy).FirstOrDefault();
                 }
-                else
+
+                requestRelate = new RequestRelateDataModel()
                 {
-                    resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
-                }
+                    RequestId = requestData.Id,
+                    RequestAction = requestData.RequestAction,
+                    RequestDate = requestData.CreateDate,
+                    RequesterEmail = requestData.CreateBy,
+                    RequesterName = requester.FirstName + " " + requester.LastName,
+                    RequestNo = requestData.RequestNo,
+                    CompanyCode = requestData.CompanyCode,
+                    StatusCode = requestData.StatusCode,
+                    ManagerEmail = requestData.Manager,
+                    ManagerName = manager.FirstName + " " + manager.LastName,
+                    OfficerEmail = requestData.OfficerBy ?? "",
+                    OfficerName = officer != null ? officer.FirstName + " " + officer.LastName : "",
+                    RequestHistorys = _dbContext.requestHistory.Where(t => t.RequestId == requestData.Id).ToList()
+                };
+
+                resp.STATUS = true;
+                resp.OUTPUT_DATA = requestRelate;
 
             }
             catch (Exception ex)
@@ -76,8 +93,8 @@ namespace SCG.CAD.ETAX.API.Services
                 var resultData = base.SearchBySql(sql);
                 if (resultData.StatusOnDb)
                 {
-                   
-                    if(resultData.ResultOnDb.Rows.Count >0)
+
+                    if (resultData.ResultOnDb.Rows.Count > 0)
                     {
                         var dataList = new List<TransactionDescription>();
                         dataList = UtilityHelper.ConvertDataTableToModel<TransactionDescription>(resultData.ResultOnDb);

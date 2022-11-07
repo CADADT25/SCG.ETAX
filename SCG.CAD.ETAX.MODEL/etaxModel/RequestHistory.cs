@@ -10,6 +10,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public Guid RequestId { get; set; }
         public string Action { get; set; } = null!;
         public string? Reason { get; set; }
+        public bool SendEmail { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;
