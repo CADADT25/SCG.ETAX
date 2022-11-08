@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.API.Services
             Response resp = new Response();
             var inboxs = new List<InboxModelData>();
             var users = new List<ProfileUserManagement>();
+            var requestList = new List<Request>();
             try
             {
                 var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == search.EmailUser);
@@ -33,11 +34,21 @@ namespace SCG.CAD.ETAX.API.Services
                         }
                     }
                 }
-                var requestList = _dbContext.request.Where(t =>
+
+                if(profileuser.LevelId == 5)
+                {
+                    requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == "wait_manager")
                                                         ||
                                                         (companyCodeList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == "wait_officer")
                                                     ).ToList();
+                }
+                else
+                {
+                    requestList = _dbContext.request.Where(t =>
+                                                       (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == "wait_manager")
+                                                   ).ToList();
+                }
                 if (!string.IsNullOrEmpty(search.RequestNo))
                 {
                     requestList = requestList.Where(t => t.RequestNo.Contains(search.RequestNo)).ToList();
@@ -115,9 +126,9 @@ namespace SCG.CAD.ETAX.API.Services
             try
             {
                 var requestList = _dbContext.request.Where(t =>
-                                                        (t.Manager == search.EmailUser && t.StatusCode != "wait_manager" && t.StatusCode != "reject" && t.StatusCode != "compleate" && t.StatusCode != "cancel")
+                                                        (t.Manager == search.EmailUser && t.StatusCode != "wait_manager" && t.StatusCode != "reject" && t.StatusCode != "complete" && t.StatusCode != "cancel")
                                                         ||
-                                                        (t.CreateBy == search.EmailUser && t.StatusCode != "reject" && t.StatusCode != "compleate" && t.StatusCode != "cancel")
+                                                        (t.CreateBy == search.EmailUser && t.StatusCode != "reject" && t.StatusCode != "complete" && t.StatusCode != "cancel")
                                                     ).ToList();
                 if (!string.IsNullOrEmpty(search.RequestNo))
                 {

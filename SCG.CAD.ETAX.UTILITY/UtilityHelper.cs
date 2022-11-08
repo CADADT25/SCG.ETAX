@@ -35,7 +35,7 @@ namespace SCG.CAD.ETAX.UTILITY
                         {
                             pro.SetValue(obj, dr[column.ColumnName], null);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
@@ -47,6 +47,67 @@ namespace SCG.CAD.ETAX.UTILITY
                 }
             }
             return obj;
+        }
+
+        public static string SetError(string msg, string str)
+        {
+            if (!string.IsNullOrEmpty(msg))
+            {
+                return msg + " <br> " + str;
+            }
+            else
+            {
+                return str;
+            }
+        }
+
+        public static string GetStatusName(string statusCode)
+        {
+            if (!string.IsNullOrEmpty(statusCode))
+            {
+                if (statusCode.ToLower() == "wait_manager")
+                {
+                    return "Wait Manager";
+                }
+                if (statusCode.ToLower() == "wait_officer")
+                {
+                    return "Wait Officer";
+                }
+                if (statusCode.ToLower() == "reject")
+                {
+                    return "Reject";
+                }
+                if (statusCode.ToLower() == "complete")
+                {
+                    return "Complete";
+                }
+                if (statusCode.ToLower() == "cancel")
+                {
+                    return "Cancel";
+                }
+            }
+            return statusCode;
+        }
+
+        public static string GetActionName(string actionCode)
+        {
+            if (!string.IsNullOrEmpty(actionCode))
+            {
+                if (actionCode.ToLower() == "delete")
+                {
+                    return "Delete";
+                }
+                if (actionCode.ToLower() == "undelete")
+                {
+                    return "Undelete";
+                }
+                if (actionCode.ToLower() == "unzip")
+                {
+                    return "Unzip";
+                }
+                
+            }
+            return actionCode;
         }
     }
 }

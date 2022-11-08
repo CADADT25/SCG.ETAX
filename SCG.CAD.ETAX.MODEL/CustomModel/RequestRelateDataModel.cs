@@ -27,5 +27,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime RequestDate { get; set; }
         public List<RequestHistory> RequestHistorys { get; set; }
         public List<RequestItem> RequestItems { get; set; }
+        public string TempUser { get; set; }
+        public bool IsManager { get; set; }
+        public bool IsOfficer { get; set; }
+        public bool IsAuth { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using System.Reflection;
 
@@ -253,7 +254,7 @@ namespace SCG.CAD.ETAX.API.Services
                         var history = new RequestHistory();
                         history.Id = Guid.NewGuid();
                         history.RequestId = request.Id;
-                        history.Action = "submit";
+                        history.Action = "Submit";
                         history.CreateDate = dtNow;
                         history.CreateBy = param.UserBy;
                         history.UpdateDate = dtNow;
@@ -289,6 +290,116 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Submit faild.";
+                resp.INNER_EXCEPTION = ex.Message;
+            }
+            return resp;
+        }
+        public Response Action(RequestActionDataModel param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    List<string> outputXmlTransactionNos = new List<string>();
+                    var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
+                    if (param.Action == "manager_approve")
+                    {
+                        request.StatusCode = "wait_officer";
+                        request.ManagerAction = true;
+                    }
+                    else if (param.Action == "manager_reject")
+                    {
+                        request.StatusCode = "reject";
+                        request.ManagerAction = true;
+                    }
+                    else if (param.Action == "officer_approve")
+                    {
+                        request.StatusCode = "complete";
+                        request.OfficerBy = param.User;
+                        // Clear Data
+                        if (request.RequestAction == "delete")
+                        {
+                            var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
+                            var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
+                            var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
+                            foreach(var tran in transactions)
+                            {
+                                tran.Isactive = 0;
+                                _dbContext.Entry(tran).State = EntityState.Modified;
+                            }
+                            
+                        }
+                        else if (request.RequestAction == "undelete")
+                        {
+                            var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
+                            var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
+                            var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
+                            foreach (var tran in transactions)
+                            {
+                                tran.Isactive = 1;
+                                _dbContext.Entry(tran).State = EntityState.Modified;
+                            }
+                        }
+                        else if (request.RequestAction == "unzip")
+                        {
+                            var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
+                            var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
+                            var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
+                            foreach (var tran in transactions)
+                            {
+                                tran.XmlCompressStatus = "Waiting";
+                                if(tran.OutputXmlTransactionNo != null)
+                                {
+                                    var transactions2 = _dbContext.transactionDescription.Where(t => t.OutputXmlTransactionNo == tran.OutputXmlTransactionNo && t.TransactionNo != tran.TransactionNo).ToList();
+                                    foreach(var tran2 in transactions2)
+                                    {
+                                        tran2.XmlCompressStatus = "Waiting";
+                                        tran2.OutputXmlTransactionNo = null;
+                                        _dbContext.Entry(tran2).State = EntityState.Modified;
+                                    }
+                                    var outputxml = _dbContext.outputSearchXmlZip.Where(t => t.OutputSearchXmlZipNo == int.Parse(tran.OutputXmlTransactionNo)).FirstOrDefault();
+                                    if(outputxml!= null)
+                                    {
+                                        outputxml.Isactive = 0;
+                                        _dbContext.Entry(outputxml).State = EntityState.Modified;
+                                        outputXmlTransactionNos.Add(tran.OutputXmlTransactionNo);
+                                    }
+                                    
+                                    tran.OutputXmlTransactionNo = null;
+                                }
+                                _dbContext.Entry(tran).State = EntityState.Modified;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        request.StatusCode = "reject";
+                        request.OfficerBy = param.User;
+                    }
+                    request.UpdateDate = dtNow;
+                    request.UpdateBy = param.User;
+
+                    var history = new RequestHistory();
+                    history.Id = Guid.NewGuid();
+                    history.RequestId = param.RequestId;
+                    history.Action = param.Action.Contains("approve") ? "Approve" : "Reject";
+                    history.CreateDate = dtNow;
+                    history.CreateBy = param.User;
+                    history.UpdateDate = dtNow;
+                    history.UpdateBy = param.User;
+                    _dbContext.requestHistory.Add(history);
+
+                    _dbContext.SaveChanges();
+                    resp.STATUS = true;
+                    resp.MESSAGE = "success.";
+                    resp.OUTPUT_DATA = outputXmlTransactionNos;
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Action faild.";
                 resp.INNER_EXCEPTION = ex.Message;
             }
             return resp;

@@ -9,5 +9,6 @@
         Task<Response> UPDATE(Request param);
         Task<Response> DELETE(Request param);
         Task<Response> SUBMIT_REQUEST(RequestDataModel param);
+        Task<Response> Action(RequestActionDataModel param);
     }
 }

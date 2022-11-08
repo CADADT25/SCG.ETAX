@@ -48,12 +48,23 @@
 </section>
 
 <script type="text/javascript">
+
+    function fnViewHistory(id){
+
+    }
+
     function fnCheckStatus(status) {
         if (status == "wait_manager") {
             return 'Wait Manager';
         }
         if (status == "wait_officer") {
             return 'Wait Officer';
+        }
+        if (status == "complete") {
+            return 'Complete';
+        }
+        if (status == "reject") {
+            return 'Reject';
         }
         return status;
     }

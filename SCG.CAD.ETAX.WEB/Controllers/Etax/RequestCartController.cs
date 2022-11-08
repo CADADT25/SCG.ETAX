@@ -195,20 +195,20 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             string errorMsg = "";
             if (string.IsNullOrEmpty(action))
             {
-                errorMsg = SetError(errorMsg, "Please select action.");
+                errorMsg = UtilityHelper.SetError(errorMsg, "Please select action.");
             }
             if (string.IsNullOrEmpty(manager))
             {
-                errorMsg = SetError(errorMsg, "Please select manager.");
+                errorMsg = UtilityHelper.SetError(errorMsg, "Please select manager.");
             }
             if (action != "delete" && action != "undelete" && action != "unzip")
             {
-                errorMsg = SetError(errorMsg, "Unknown action.");
+                errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
 
             if (dataRequestCart.Count() == 0)
             {
-                errorMsg = SetError(errorMsg, "Data not found in your cart.");
+                errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
             }
 
             var requestStatus = new List<string>() { "wait_manager", "wait_officer" };
@@ -229,7 +229,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         var obj = dataRequestItem.Where(t => t.TransactionNo == item.TransactionNo).FirstOrDefault();
                         if (obj != null)
                         {
-                            errorMsg = SetError(errorMsg, "Billing No. " + obj.BillingNumber + " duplicates another request.");
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + obj.BillingNumber + " duplicates another request.");
                         }
                     }
                 }
@@ -238,11 +238,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     if(item.XmlCompressStatus == "Successful")
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
                     }
                     if(item.Isactive != 1)
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
                     }
                 }
                 // undelete
@@ -250,7 +250,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     if (item.Isactive == 1)
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
                     }
                 }
                 // unzip
@@ -258,15 +258,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     if (item.XmlCompressStatus != "Successful")
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
                     }
                     if (item.Isactive != 1)
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
                     }
                     if (item.SentRevenueDepartment == 1)
                     {
-                        errorMsg = SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
                     }
                 }
             }
@@ -274,18 +274,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return errorMsg;
         }
-
-        private string SetError(string msg, string str)
-        {
-            if (!string.IsNullOrEmpty(msg))
-            {
-                return msg + " <br> " + str;
-            }
-            else
-            {
-                return str;
-            }
-        }
+ 
 
     }
 }

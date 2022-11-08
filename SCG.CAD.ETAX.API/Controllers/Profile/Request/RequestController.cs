@@ -74,5 +74,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("Action")]
+        public IActionResult Action(RequestActionDataModel param)
+        {
+            var result = repo.Action(param).Result;
+
+            return Ok(result);
+        }
     }
 }

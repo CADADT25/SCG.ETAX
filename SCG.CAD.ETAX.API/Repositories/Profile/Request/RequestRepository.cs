@@ -126,5 +126,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> Action(RequestActionDataModel param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.Action(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
     }
 }
