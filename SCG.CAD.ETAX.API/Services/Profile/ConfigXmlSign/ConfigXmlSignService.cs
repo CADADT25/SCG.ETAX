@@ -124,6 +124,7 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigXmlsignInputPath = param.ConfigXmlsignInputPath;
                         update.ConfigXmlsignOutputSource = param.ConfigXmlsignOutputSource;
                         update.ConfigXmlsignOutputPath = param.ConfigXmlsignOutputPath;
+                        update.ConfigXmlsignOutputConvertSource = param.ConfigXmlsignOutputConvertSource;
                         update.ConfigXmlsignOutputConvertPath = param.ConfigXmlsignOutputConvertPath;
                         update.ConfigXmlsignHsmSerial = param.ConfigXmlsignHsmSerial;
                         update.ConfigXmlsignCertificateSerial = param.ConfigXmlsignCertificateSerial;

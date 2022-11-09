@@ -14,6 +14,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
             RenderConfigMftsIndexGenerationSettingInput(setCompanyCode);
         }, 1200);
 
@@ -226,7 +227,7 @@
         }
 
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').value = setCompanyCode;
-        fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
+        //fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
         $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('show');
     }
 
@@ -260,7 +261,7 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
+            //fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
             callConfigMftsIndexGenerationSettingInputGetDetailController(getPK);
         });
     }
@@ -318,16 +319,22 @@
                 document.getElementById('txtUpdateConfigMftsIndexGenerationSettingInputNo').value = data.ConfigMftsIndexGenerationSettingInputNo;
                 document.getElementById('txtUpdateConfigMftsIndexGenerationSettingInputCompanyCode').value = data.ConfigMftsIndexGenerationSettingInputCompanyCode;
 
-                $("#ddlUpdateConfigMftsIndexGenerationSettingInputSourceName").select2("val", data.ConfigMftsIndexGenerationSettingInputSourceName);
-                $("#ddlUpdateConfigMftsIndexGenerationSettingInputOutputSourceName").select2("val", data.ConfigMftsIndexGenerationSettingInputSourceNameOut);
-                $("#ddlUpdateConfigMftsIndexGenerationSettingInputOCType").select2("val", data.ConfigMftsIndexGenerationSettingInputOcType);
-
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateConfigMftsIndexGenerationSettingInputIsActive").checked = true;
                 }
                 else{
                     document.getElementById("toggleUpdateConfigMftsIndexGenerationSettingInputIsActive").checked = false;
                 }
+                
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsIndexGenerationSettingInputSourceName').val(data.ConfigMftsIndexGenerationSettingInputSourceName).trigger('change');
+                }, 1000);
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsIndexGenerationSettingInputOutputSourceName').val(data.ConfigMftsIndexGenerationSettingInputSourceNameOut).trigger('change');
+                }, 1000);
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').val(data.ConfigMftsIndexGenerationSettingInputOcType).trigger('change');
+                }, 1000);
 
                 $("#modalUpdateConfigMftsIndexGenerationSettingInput").modal('show');
 
