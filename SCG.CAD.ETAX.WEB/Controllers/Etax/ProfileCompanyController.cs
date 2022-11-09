@@ -7,6 +7,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         [SessionExpire]
         public IActionResult Index()
         {
+            var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+            ViewData["companycode"] = comcode;
             return View();
         }
 
@@ -82,9 +84,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.OrderBy(x => x.CompanyCode).ToList();
+                    tran = tran.Where(x => comcode.Contains(x.CompanyCode)).OrderBy(x => x.CompanyCode).ToList();
                 }
                 else
                 {

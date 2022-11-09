@@ -18,7 +18,11 @@
                                                 <div class="form-group">
                                                     <label>Customer Code</label>
                                                     <select class="select2 form-control" id="OutputSearchEmailSendCustomerCode" multiple>
-                                                        <option value="All">-- All -- </option>
+                                                        @*<option value="All">-- All -- </option>*@
+                                                        @foreach (var item in ViewBag.companycode)
+                                                        {
+                                                            <option value="@item">@item</option>
+                                                        }
                                                     </select>
                                                 </div>
                                             </div>

@@ -33,15 +33,15 @@
 
     function fnDropdownOutputSearchEmailSendCompanyCode() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#OutputSearchEmailSendCustomerCode");
-            });
-        })
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#OutputSearchEmailSendCustomerCode");
+        //    });
+        //})
     }
 
 

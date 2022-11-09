@@ -35,26 +35,43 @@
         {
             value: 0,
         }).html("--- Select Company Code ---").appendTo("#ddlInsertCompanyCode");
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        
+        $.getJSON("@Url.Action("DropDownList", "ProfileCustomer")", function (data) {
+            console.log(data);
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
-            });
-        })
+                        value: data,
+                        text: data
+                    }).html(data).appendTo("#ddlInsertCompanyCode");
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
+                        value: data,
+                        text: data
                     }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
             });
         })
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
+        //    });
+        //})
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
+        //    });
+        //})
     }
 
     function fnDropdownProfileCustomerEmailType() {

@@ -30,7 +30,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
-
+                var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                ViewData["companycode"] = comcode;
                 return View();
             }
         }
@@ -88,8 +89,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
-                    tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
+                    tran = tran.Where(x=> comcode.Contains(x.OutputSearchPrintingCompanyCode)).OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {
@@ -119,8 +121,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
-
+                    tran = tran.Where(x => comcode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
                     outputSearchPrintingModel obj = new outputSearchPrintingModel();
                     obj = JsonConvert.DeserializeObject<outputSearchPrintingModel>(jsonSearchString);
                     if (obj != null)
@@ -234,8 +237,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
-
+                    outputSearchPrintingModel obj = new outputSearchPrintingModel();
+                    obj = JsonConvert.DeserializeObject<outputSearchPrintingModel>(jsonSearchString);
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+
+                    if (obj.outPutSearchCompanyCode == null || obj.outPutSearchCompanyCode.Count == 0)
+                    {
+                        var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                        tran = tran.Where(x=> comcode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
+                    }
                     tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
 
                 }

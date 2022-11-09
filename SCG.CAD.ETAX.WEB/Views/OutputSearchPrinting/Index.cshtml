@@ -34,15 +34,15 @@
 
     function fnDropdownOutputSearchPrintingCompanyCode() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#outputSearchPrintingCustomerCode");
-            });
-        })
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#outputSearchPrintingCustomerCode");
+        //    });
+        //})
     }
 
     function fnSearchOutputDataPrinting(){

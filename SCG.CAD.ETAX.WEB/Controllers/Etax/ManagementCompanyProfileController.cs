@@ -31,6 +31,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
 
+                var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                ViewData["companycode"] = comcode;
                 return View();
             }
         }

@@ -30,6 +30,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+                var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                ViewData["companycode"] = comcode;
 
                 return View();
             }
@@ -88,8 +90,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+
                     tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
-                    tran = tran.OrderBy(x => x.OutputSearchEmailSendCompanyCode).ThenBy(x => x.CreateDate).ToList();
+                    tran = tran.Where(x=> comcode.Contains(x.OutputSearchEmailSendCompanyCode)).OrderBy(x => x.OutputSearchEmailSendCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {
@@ -120,8 +124,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
-                    tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
 
+                    tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.Where(x => comcode.Contains(x.OutputSearchEmailSendCompanyCode)).ToList();
 
                     obj = JsonConvert.DeserializeObject<outputSearchEmailModel>(jsonSearchString);
                     if (obj != null)
@@ -236,8 +242,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                    outputSearchEmailModel obj = new outputSearchEmailModel();
+                    obj = JsonConvert.DeserializeObject<outputSearchEmailModel>(jsonSearchString);
 
                     tran = JsonConvert.DeserializeObject<List<OutputSearchEmailSend>>(task.OUTPUT_DATA.ToString());
+
+                    if(obj.outPutSearchEmailCompanyCode == null || obj.outPutSearchEmailCompanyCode.Count == 0)
+                    {
+                        tran = tran.Where(x => comcode.Contains(x.OutputSearchEmailSendCompanyCode)).ToList();
+                    }
                     tran = tran.OrderBy(x => x.OutputSearchEmailSendCompanyCode).ThenBy(x => x.CreateDate).ToList();
 
                 }
