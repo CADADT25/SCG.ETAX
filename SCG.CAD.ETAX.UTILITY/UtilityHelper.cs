@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,62 @@ namespace SCG.CAD.ETAX.UTILITY
 {
     public class UtilityHelper
     {
+        public static string EncryptString(string plainText, string key = "")
+        {
+            if (string.IsNullOrEmpty(key))
+                key = "C5A8E9AD259043C2AE4758AEB5A67E2C";
+            byte[] iv = new byte[16];
+            byte[] array;
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
+                        {
+                            streamWriter.Write(plainText);
+                        }
+
+                        array = memoryStream.ToArray();
+                    }
+                }
+            }
+
+            return Convert.ToBase64String(array);
+        }
+
+        public static string DecryptString(string cipherText, string key = "")
+        {
+            if (string.IsNullOrEmpty(key))
+                key = "C5A8E9AD259043C2AE4758AEB5A67E2C";
+            byte[] iv = new byte[16];
+            byte[] buffer = Convert.FromBase64String(cipherText);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream memoryStream = new MemoryStream(buffer))
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
+                        {
+                            return streamReader.ReadToEnd();
+                        }
+                    }
+                }
+            }
+        }
         public static List<T> ConvertDataTableToModel<T>(DataTable dt)
         {
             List<T> data = new List<T>();
@@ -105,9 +162,29 @@ namespace SCG.CAD.ETAX.UTILITY
                 {
                     return "Unzip";
                 }
-                
+
             }
             return actionCode;
+        }
+        public static string EncodeSpecialChar(string str)
+        {
+            if (!string.IsNullOrEmpty(str))
+            {
+                str = str.Replace("+", "pmpPluSpmp");
+                str = str.Replace("&", "pmpAnDpmp");
+                str = str.Replace("#", "pmpCharPpmp");
+            }
+            return str;
+        }
+        public static string DecodeSpecialChar(string str)
+        {
+            if (!string.IsNullOrEmpty(str))
+            {
+                str = str.Replace("pmpPluSpmp", "+");
+                str = str.Replace("pmpAnDpmp", "&");
+                str = str.Replace("pmpCharPpmp", "#");
+            }
+            return str;
         }
     }
 }

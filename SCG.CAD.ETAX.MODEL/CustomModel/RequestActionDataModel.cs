@@ -11,5 +11,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public Guid RequestId { get; set; }
         public string Action { get; set; }
         public string User { get; set; }
+        public string? Reason { get; set; }
     }
 }

@@ -1,6 +1,8 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Net.Http;
 
@@ -56,7 +58,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> Action(string jsonString, string action, string status)
+        public async Task<JsonResult> Action(string jsonString, string action, string status, string reason)
         {
             Response ret = new Response();
             string requestNo = jsonString;
@@ -140,7 +142,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (string.IsNullOrEmpty(errorMsg))
                 {
-                    var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = userEmail };
+                    var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = userEmail, Reason = reason };
                     if (action == "manager_reject" || action == "officer_reject")
                     {
                         // Action here
@@ -269,5 +271,137 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return errorMsg;
         }
 
+        public IActionResult ByEmail(string token)
+        {
+            try
+            {
+                var decode = UtilityHelper.DecodeSpecialChar(token);
+                var strData = UtilityHelper.DecryptString(decode);
+                var dataArr = strData.Split(";");
+                ViewBag.RequestNo = dataArr[0];
+                ViewBag.Action = dataArr[1] == "approve" ? "Approve" : "Reject";
+                string action = dataArr[1] == "approve" ? "manager_approve" : "manager_reject";
+                ViewBag.UserEmail = dataArr[2];
+                ViewBag.User = dataArr[3];
+                ViewBag.Status = "Success";
+                ViewBag.Message = "The request has been " + ViewBag.Action;
+
+
+                // permission
+                var permissionModel = new RequestPermissionDataModel();
+                var permisRes = Task.Run(() => ApiHelper.GetURI("api/RequestPermission/GetRolesCompanys?user=" + dataArr[2])).Result;
+                if (permisRes.STATUS)
+                {
+                    permissionModel = JsonConvert.DeserializeObject<RequestPermissionDataModel>(permisRes.OUTPUT_DATA.ToString());
+                }
+                // request
+                var requestModel = new RequestRelateDataModel();
+                var res = Task.Run(() => ApiHelper.GetURI("api/Request/GetRequest?requestNo=" + dataArr[0])).Result;
+
+                if (res.STATUS)
+                {
+                    requestModel = JsonConvert.DeserializeObject<RequestRelateDataModel>(res.OUTPUT_DATA.ToString());
+                }
+                // check permission
+                if (dataArr[2] == requestModel.ManagerEmail)
+                {
+                    requestModel.IsManager = true;
+                }
+                if (permissionModel.Level == 5)
+                {
+                    requestModel.IsOfficer = true;
+                }
+                if (requestModel.StatusCode == "wait_manager")
+                {
+                    if (dataArr[2] == requestModel.ManagerEmail)
+                    {
+                        requestModel.IsAuth = true;
+                    }
+                }
+               
+
+                string errorMsg = "";
+                // check permission
+                // check permission
+                if (!requestModel.IsAuth)
+                {
+                    errorMsg = UtilityHelper.SetError(errorMsg, "You are not authorized.");
+                }
+                if (requestModel.StatusCode != "wait_manager")
+                {
+                    errorMsg = UtilityHelper.SetError(errorMsg, "Request status invalid.");
+                }
+
+
+                if (string.IsNullOrEmpty(errorMsg))
+                {
+                    var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = dataArr[2], Reason = "Action by email" };
+                    if (action == "manager_reject" || action == "officer_reject")
+                    {
+                        // Action here
+                        var httpActionRequest = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+                        var actRes = Task.Run(() => ApiHelper.PostURI("api/Request/Action", httpActionRequest)).Result;
+                        if (actRes.STATUS)
+                        {
+                             
+                            //Send mail
+                            Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + requestModel.RequestNo + "&action=reject"));
+                        }
+                        else
+                        {
+                            ViewBag.Status = "Fail";
+                            ViewBag.Message = actRes.MESSAGE ?? actRes.INNER_EXCEPTION;
+                        }
+                    }
+                    else
+                    {
+                        //item
+                        var data = new List<TransactionDescription>();
+                        var task = Task.Run(() => ApiHelper.GetURI("api/Request/GetRequestItemTransaction?requestNo=" + requestModel.RequestNo)).Result;
+                        if (task.STATUS)
+                        {
+                            data = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
+                        }
+
+                        //Verify
+                        errorMsg = ValidateBeforSubmitRequest(requestModel.RequestAction, data);
+                        if (string.IsNullOrEmpty(errorMsg))
+                        {
+                            //Action here
+                            var httpActionRequest = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+                            var actRes = Task.Run(() => ApiHelper.PostURI("api/Request/Action", httpActionRequest)).Result;
+                            if (actRes.STATUS)
+                            {
+                                ViewBag.Status = "Success";
+                                ViewBag.Message = "The request has been " + ViewBag.Action;
+                            }
+                            else
+                            {
+                                ViewBag.Status = "Fail";
+                                ViewBag.Message = actRes.MESSAGE ?? actRes.INNER_EXCEPTION;
+                            }
+
+                        }
+                        else
+                        {
+                            ViewBag.Status = "Fail";
+                            ViewBag.Message = errorMsg;
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.Status = "Fail";
+                    ViewBag.Message = errorMsg;
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Status = "Fail";
+                ViewBag.Message = ex.Message.ToString();
+            }
+
+            return View("Index");
+        }
     }
 }

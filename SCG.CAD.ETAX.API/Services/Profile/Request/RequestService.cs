@@ -326,6 +326,9 @@ namespace SCG.CAD.ETAX.API.Services
                             foreach(var tran in transactions)
                             {
                                 tran.Isactive = 0;
+                                tran.CancelBilling = 0;
+                                tran.UpdateBy = param.User;
+                                tran.UpdateDate = dtNow;
                                 _dbContext.Entry(tran).State = EntityState.Modified;
                             }
                             
@@ -338,6 +341,9 @@ namespace SCG.CAD.ETAX.API.Services
                             foreach (var tran in transactions)
                             {
                                 tran.Isactive = 1;
+                                tran.CancelBilling = null;
+                                tran.UpdateBy = param.User;
+                                tran.UpdateDate = dtNow;
                                 _dbContext.Entry(tran).State = EntityState.Modified;
                             }
                         }
@@ -356,18 +362,24 @@ namespace SCG.CAD.ETAX.API.Services
                                     {
                                         tran2.XmlCompressStatus = "Waiting";
                                         tran2.OutputXmlTransactionNo = null;
+                                        tran2.UpdateBy = param.User;
+                                        tran2.UpdateDate = dtNow;
                                         _dbContext.Entry(tran2).State = EntityState.Modified;
                                     }
                                     var outputxml = _dbContext.outputSearchXmlZip.Where(t => t.OutputSearchXmlZipNo == int.Parse(tran.OutputXmlTransactionNo)).FirstOrDefault();
                                     if(outputxml!= null)
                                     {
                                         outputxml.Isactive = 0;
+                                        outputxml.UpdateBy = param.User;
+                                        outputxml.UpdateDate = dtNow;
                                         _dbContext.Entry(outputxml).State = EntityState.Modified;
                                         outputXmlTransactionNos.Add(tran.OutputXmlTransactionNo);
                                     }
                                     
                                     tran.OutputXmlTransactionNo = null;
                                 }
+                                tran.UpdateBy = param.User;
+                                tran.UpdateDate = dtNow;
                                 _dbContext.Entry(tran).State = EntityState.Modified;
                             }
                         }
@@ -384,6 +396,7 @@ namespace SCG.CAD.ETAX.API.Services
                     history.Id = Guid.NewGuid();
                     history.RequestId = param.RequestId;
                     history.Action = param.Action.Contains("approve") ? "Approve" : "Reject";
+                    history.Reason = param.Reason;
                     history.CreateDate = dtNow;
                     history.CreateBy = param.User;
                     history.UpdateDate = dtNow;

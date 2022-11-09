@@ -63,6 +63,52 @@
             </div>
         </div>
     }
+    else if (Model.StatusCode == "reject")
+    {
+        if(Model.OfficerEmail != null && Model.OfficerEmail != ""){
+            <div id="steps">
+                <div class="step done" data-desc="Submit">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+                <div class="step done" data-desc="Wait Manager">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+                <div class="step done" data-desc="Wait Officer">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+                <div class="step reject" data-desc="Reject">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+        }else{
+            <div id="steps">
+            <div class="step done" data-desc="Submit">
+                <div class="icon-wrapper" style="margin-top: -5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+            </div>
+            <div class="step done" data-desc="Wait Manager">
+                <div class="icon-wrapper" style="margin-top: -5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+            </div>
+                <div class="step reject" data-desc="Reject">
+                <div class="icon-wrapper" style="margin-top: -5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+            </div>
+        </div>
+        }
+        
+    }
 
 </div>
 
@@ -116,6 +162,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="tab-content">
@@ -184,14 +231,51 @@
     </div>
 </div>
 
-
+<div class="vertical-modal-ex">
+    <!-- Modal -->
+    <div class="modal fade" id="reason" tabindex="-1" aria-labelledby="reasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reasonTitle">Reason</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating mb-0">
+                                <textarea  data-length="20" class="form-control char-textarea" id="textarea-reason" rows="3" placeholder="reason..." style="height: 100px"></textarea>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="fnViewReasonClose()" class="btn btn-primary " data-bs-dismiss="modal">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
+    var r_no = "";
+    var r_act = "";
+    var r_sta = "";
+    var r_txt = "";
     $(document).ready(function () {
         fnSearchRequestItem();
         fnSearchRequestHistory();
     });
+
+    function fnViewReasonOpen() {
+        $("#reason").modal('show');
+    }
+    function fnViewReasonClose() {
+        $("#reason").modal('hide');
+        fnActionRequest(r_no, r_act, r_sta, r_txt);
+    }
+
     function fnSearchRequestHistory() {
         var table = $('#tbHistoryMain').DataTable();
         table.clear().draw();
@@ -401,7 +485,7 @@
             return '<div class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
         }
     }
-
+  
     function fnClickAction(no, act, sta) {
         var re_act = "";
         if (sta == "wait_manager") {
@@ -409,10 +493,16 @@
         } else if (sta == "wait_officer") {
             re_act = "officer_" + act;
         }
-        fnActionRequest(no, re_act, sta, act);
+        r_no = no;
+        r_act = re_act;
+        r_sta = sta;
+        r_txt = act;
+        fnViewReasonOpen();
+        //fnActionRequest(no, re_act, sta, act);
     }
 
     function fnActionRequest(no, act, sta, txt) {
+        var txt_reason = $("#textarea-reason").val();
         Swal.fire({
             title: 'Are you sure to ' + txt + '?',
             //text: "" + datas,
@@ -430,7 +520,7 @@
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Action", "RequestAction")",
-                    data: { jsonString: no, action: act, status: sta },
+                    data: { jsonString: no, action: act, status: sta, reason: txt_reason },
                     dataType: "text",
                     success: function (res) {
                         var ret = $.parseJSON(res);

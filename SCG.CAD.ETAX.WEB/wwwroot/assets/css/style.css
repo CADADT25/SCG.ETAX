@@ -84,7 +84,15 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
         .step.done:before {
             background-color: #58bb58;
         }
+    .step.reject {
+        background-color: red;
+        border-color: red;
+        color: white;
+    }
 
+        .step.reject:before {
+            background-color: red;
+        }
 /*.progresses {
 	display: flex;
 	align-items: center;

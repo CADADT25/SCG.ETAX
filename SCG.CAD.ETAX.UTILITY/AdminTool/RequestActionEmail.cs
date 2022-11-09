@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
@@ -85,7 +86,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         adminToolHelper.UpdateRequestHistory(jsonString);
                     }
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -131,9 +132,13 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     body = body.Replace("#$Action$#", data.RequestAction);
                     body = body.Replace("#$RequestDate$#", data.RequestDate.ToString("dd-MM-yyyy"));
                     body = body.Replace("#$RequestBy$#", data.RequesterName);
-                    body = body.Replace("#$UrlApprove$#", "https://stackoverflow.com");
-                    body = body.Replace("#$UrlReject$#", "https://stackoverflow.com");
-                    body = body.Replace("#$UrlEtaxApp$#", "https://stackoverflow.com");
+                    var urlWeb = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("WebConfig")["WebBaseAddress"] ?? "";
+                    var urlApprove = urlWeb + "RequestAction/ByEmail?token=" + UtilityHelper.EncodeSpecialChar(UtilityHelper.EncryptString(data.RequestNo + ";approve;" + data.ManagerEmail + ";" + data.ManagerName));
+                    var urlReject = urlWeb + "RequestAction/ByEmail?token=" + UtilityHelper.EncodeSpecialChar(UtilityHelper.EncryptString(data.RequestNo + ";reject;" + data.ManagerEmail + ";" + data.ManagerName));
+
+                    body = body.Replace("#$UrlApprove$#", urlApprove);
+                    body = body.Replace("#$UrlReject$#", urlReject);
+                    body = body.Replace("#$UrlEtaxApp$#", new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("WebConfig")["UrlEtaxAppforEmail"] ?? "");
 
                     document = "<table class=\"table\">";
                     document += "<thead>";
