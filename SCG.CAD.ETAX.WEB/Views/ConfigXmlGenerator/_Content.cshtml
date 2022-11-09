@@ -6,13 +6,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateConfigXmlGenerator" onclick="callModalInsertConfigXmlGenerator();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Create New
-                </a>
+                @if (ViewBag.showCREATE == true)
+                {
+                    <a id="btnCallModalCreateConfigXmlGenerator" onclick="callModalInsertConfigXmlGenerator();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                        <i class="fas fa-plus"></i> Create New
+                    </a>
+                }
                 &nbsp;&nbsp;
-@*                <a id="btnExportConfigXmlGenerator" onclick="ExportConfigXmlGenerator()" class="pointer btn btn-icon icon-left text-white btn-success">
+                @*                <a id="btnExportConfigXmlGenerator" onclick="ExportConfigXmlGenerator()" class="pointer btn btn-icon icon-left text-white btn-success">
                     <i class="fas fa-file-export"></i> Export (.csv)
-                </a>*@
+                    </a>*@
             </div>
             <div class="card-body">
                 <div class="table-responsive">

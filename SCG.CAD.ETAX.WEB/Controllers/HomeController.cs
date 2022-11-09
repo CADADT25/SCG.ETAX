@@ -82,10 +82,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
+                    //var comcode = JsonConvert.DeserializeObject<List<string>>(task.CODE.ToString());
 
                     result = JsonConvert.SerializeObject(tran);
                     var menu = string.Join(",", tran.Select(x => x.ConfigControlMenuNo).ToList());
                     HttpContext.Session.SetString("premissionMenu", menu); 
+                    HttpContext.Session.SetString("premissionComCode", task.CODE.ToString()); 
                 }
                 else
                 {
@@ -130,7 +132,8 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                     tran = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.Where(x=> !string.IsNullOrEmpty(x.ConfigControlFunctionRole) && x.ConfigControlFunctionRole.Contains(userlevel)).ToList();
+                    tran = tran.Where(x=> x.Isactive == 1).ToList();
+                    //tran = tran.Where(x=> !string.IsNullOrEmpty(x.ConfigControlFunctionRole) && x.ConfigControlFunctionRole.Contains(userlevel)).ToList();
 
                     HttpContext.Session.SetString("controlPermission", JsonConvert.SerializeObject(tran));
                 }

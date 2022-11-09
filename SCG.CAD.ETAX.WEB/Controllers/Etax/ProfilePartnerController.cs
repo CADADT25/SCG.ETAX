@@ -77,7 +77,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+
                     tran = JsonConvert.DeserializeObject<List<ProfilePartner>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.Where(x => comcode.Contains(x.CompanyCode)).ToList();
                 }
                 else
                 {

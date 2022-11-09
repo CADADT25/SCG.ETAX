@@ -16,7 +16,23 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 string pathredirect = Url.Action("Index", "Home");
                 return new RedirectResult(pathredirect);
             }
-            return View();
+            else
+            {
+                var menuindex = 10;
+                var userLevel = HttpContext.Session.GetInt32("userLevel").ToString();
+                var configControl = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(HttpContext.Session.GetString("controlPermission"));
+
+                ViewData["showCREATE"] = permission.CheckControlAction(configControl, 1, userLevel, menuindex);
+                ViewData["showUPDATE"] = permission.CheckControlAction(configControl, 2, userLevel, menuindex);
+                ViewData["showDELETE"] = permission.CheckControlAction(configControl, 3, userLevel, menuindex);
+                ViewData["showEXPORT"] = permission.CheckControlAction(configControl, 4, userLevel, menuindex);
+                ViewData["showDOWNLOAD"] = permission.CheckControlAction(configControl, 5, userLevel, menuindex);
+                ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
+                ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
+                ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+
+                return View();
+            }
         }
 
         public IActionResult _Content()

@@ -119,7 +119,7 @@
 
                     if (update != null)
                     {
-                        update.ConfigControlFunctionRole = param.ConfigControlFunctionRole;
+                        update.ConfigControlFunctionRole = "," + param.ConfigControlFunctionRole + ",";
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;

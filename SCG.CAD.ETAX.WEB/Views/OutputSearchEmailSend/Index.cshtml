@@ -33,15 +33,15 @@
 
     function fnDropdownOutputSearchEmailSendCompanyCode() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#OutputSearchEmailSendCustomerCode");
-            });
-        })
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#OutputSearchEmailSendCustomerCode");
+        //    });
+        //})
     }
 
 
@@ -85,24 +85,32 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
                     }
                 },
-                {
-                    data: "outputSearchEmailSendStatus",
-                    width: "10%",
-                    visible: false,
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
-                    }
-                },
+                //{
+                //    data: "outputSearchEmailSendStatus",
+                //    width: "10%",
+                //    visible: false,
+                //    className: "text-center",
+                //    render: function (data, type, row) {
+                //        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                //    }
+                //},
                 {
                     data: "outputSearchEmailSendNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchEmailSendStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
             ]
@@ -286,24 +294,32 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE')
+                        {
+                            return'<a onclick="DownloadFile(' + row['outputSearchEmailSendNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }else{
+                            return '';
+                        }
                     }
                 },
-                {
-                    data: "outputSearchEmailSendStatus",
-                    width: "10%",
-                    visible: false,
-                    className: "text-center",
-                    render: function (data, type, row) {
-                        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
-                    }
-                },
+                //{
+                //    data: "outputSearchEmailSendStatus",
+                //    width: "10%",
+                //    visible: false,
+                //    className: "text-center",
+                //    render: function (data, type, row) {
+                //        return (data == 1) ? '<i class="text-success fas fa-paper-plane"/>' : '<i class="text-warning fas fa-paper-plane"/>';
+                //    }
+                //},
                 {
                     data: "outputSearchEmailSendNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchEmailSendStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchEmailSend(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
                         }
                 }
                 
@@ -336,8 +352,6 @@
                 data = $.parseJSON(resp)
                 var errorMessage = data.erroR_MESSAGE;
                 if(data.status){
-                    console.log('Mark');
-                    console.log(data);
                     //Convert Base64 string to Byte Array.
                     var bytes = Base64ToBytes(data.outpuT_DATA);
                     var fileName = data.message;

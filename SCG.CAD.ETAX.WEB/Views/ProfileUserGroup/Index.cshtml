@@ -10,11 +10,35 @@
 <script type="text/javascript">
 
      $(document).ready(function () {
-
+         
+        $('#ddlInsertProfileUserGroupCompanyCode').select2();
+        $('#ddlUpdateProfileUserGroupCompanyCode').select2();
+        fnDropdownCompanyCode();
         RenderProfileUserGroup();
 
     });
 
+    function fnDropdownCompanyCode() {
+        
+        $('#ddlInsertProfileUserGroupCompanyCode').empty();
+        $('#ddlUpdateProfileUserGroupCompanyCode').empty();
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#ddlInsertProfileUserGroupCompanyCode");
+
+                $('<option>',
+                    {
+                        value: data.companyCode,
+                        text: data.companyCode
+                    }).html(data.companyCode).appendTo("#ddlUpdateProfileUserGroupCompanyCode");
+            });
+        })
+    }
 
     function callProfileUserRoleInsert() {
         
@@ -143,8 +167,19 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/>',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }
@@ -165,7 +200,7 @@
 
         document.getElementById('txtInsertProfileUserGroupName').value = '';
         document.getElementById('txtInsertProfileUserGroupDescription').value = '';
-
+        document.getElementById('ddlInsertProfileUserGroupCompanyCode').value = '';
         $("#modalCreateProfileUserGroup").modal('hide');
     }
 
@@ -174,12 +209,12 @@
         document.getElementById('txtUpdateProfileUserGroupNo').value = '';
         document.getElementById('txtUpdateProfileUserGroupName').value = '';
         document.getElementById('txtUpdateProfileUserGroupDescription').value = '';
-
+        document.getElementById('ddlUpdateProfileUserGroupCompanyCode').value = '';
         $("#modalUpdateProfileUserGroup").modal('hide');
     }
 
     function callModalInsertProfileUserGroup(){
-
+        
         callProfileUserRoleInsert();
 
         document.getElementById('txtInsertProfileUserGroupName').value = '';
@@ -233,6 +268,7 @@
        
         document.getElementById('txtUpdateProfileUserGroupName').value = '';
         document.getElementById('txtUpdateProfileUserGroupDescription').value = '';
+        document.getElementById('ddlUpdateProfileUserGroupCompanyCode').value = '';
 
         $.ajax({
             type: "GET",
@@ -242,13 +278,13 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-                console.log(data);
                 document.getElementById('txtUpdateProfileUserGroupNo').value = data.ProfileUserGroupNo;
                 document.getElementById('txtUpdateProfileUserGroupName').value = data.ProfileUserGroupName;
                 document.getElementById('txtUpdateProfileUserGroupDescription').value = data.ProfileUserGroupDescription;
                 
                 setTimeout(function(){
                     $('#txtUpdateProfileUserGroupStatus').val(data.Isactive).trigger('change');
+                    $('#ddlUpdateProfileUserGroupCompanyCode').val(data.ProfileCompanyCode.split(',')).trigger('change');
                 }, 1000);
 
                 callProfileUserRoleUpdate(data.ProfileControlMenu);
@@ -265,6 +301,7 @@
         model.ProfileUserGroupDescription = $('#txtInsertProfileUserGroupDescription').val();
         model.isactive = $('#txtInsertProfileUserGroupStatus').val();
         model.ProfileControlMenu = fnGetCheckboxInsert();
+        model.ProfileCompanyCode = $('#txtInsertProfileUserGroupStatus').val().toString();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -308,7 +345,7 @@
         model.ProfileUserGroupDescription = $('#txtUpdateProfileUserGroupDescription').val();
         model.isactive = $('#txtInsertProfileUserGroupStatus').val();
         model.ProfileControlMenu = fnGetCheckboxUpdate();
-        
+        model.ProfileCompanyCode = $('#ddlUpdateProfileUserGroupCompanyCode').val().toString();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -348,7 +385,6 @@
         var data = table.rows( function ( idx, data, node ) {
         return $(node).find('.dt-checkboxes:input[type="checkbox"]').prop('checked');
         }).data().toArray();
-        console.log(data);
         var menu = [];
         $.each(data, function (i, data) {
                 menu.push(data.configControlMenuNo);
@@ -361,7 +397,6 @@
         var data = table.rows( function ( idx, data, node ) {
         return $(node).find('.dt-checkboxes:input[type="checkbox"]').prop('checked');
         }).data().toArray();
-        console.log(data);
         var menu = [];
         $.each(data, function (i, data) {
                 menu.push(data.configControlMenuNo);

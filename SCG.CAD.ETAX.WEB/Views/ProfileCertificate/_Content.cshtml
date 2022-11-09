@@ -6,13 +6,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateProfileCertificate" onclick="callModalInsertProfileCertificate();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Add New Certificate
-                </a>
+                @if (ViewBag.showCREATE == true)
+                {
+                    <a id="btnCallModalCreateProfileCertificate" onclick="callModalInsertProfileCertificate();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                        <i class="fas fa-plus"></i> Add New Certificate
+                    </a>
+                }
                 &nbsp;&nbsp;
-@*                <a id="btnExportData" onclick="ExportProfileCertificate()" class="pointer btn btn-icon icon-left text-white btn-success">
+                @*                <a id="btnExportData" onclick="ExportProfileCertificate()" class="pointer btn btn-icon icon-left text-white btn-success">
                     <i class="fas fa-file-export"></i> Export (.csv)
-                </a>*@
+                    </a>*@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -24,8 +27,8 @@
                                 <th>CertName</th>
                                 <th>CertSerial</th>
                                 @*<th>Data</th>
-                                <th>Serial</th>
-                                <th>KeyAlias</th>*@
+                                    <th>Serial</th>
+                                    <th>KeyAlias</th>*@
                                 @*<th>Start</th>*@
                                 <th>End</th>
                                 <th>ISACTIVE</th>

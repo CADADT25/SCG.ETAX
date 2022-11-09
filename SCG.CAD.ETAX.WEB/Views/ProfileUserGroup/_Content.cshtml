@@ -1,33 +1,36 @@
 ﻿@{
     Layout = null;
 }
+@if (ViewBag.showVIEW == true)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-end align-items-center">
+                    @if (ViewBag.showCREATE == true)
+                    {
+                        <a id="btnCallModalCreateProfileUserGroup" onclick="callModalInsertProfileUserGroup();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                            <i class="fas fa-plus"></i> Create New
+                        </a>
+                    }
+                </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateProfileUserGroup" onclick="callModalInsertProfileUserGroup();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Create New
-                </a>
-            </div>
-
-
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-hover-animation" id="tbProfileUserGroupMain">
-                        <thead>
-                            <tr>
-                                <th class="text-center">PK Key</th>
-                                <th class="text-center">No</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-hover-animation" id="tbProfileUserGroupMain">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">PK Key</th>
+                                    <th class="text-center">No</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+}

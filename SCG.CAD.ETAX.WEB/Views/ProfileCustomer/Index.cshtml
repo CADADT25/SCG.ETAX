@@ -35,26 +35,43 @@
         {
             value: 0,
         }).html("--- Select Company Code ---").appendTo("#ddlInsertCompanyCode");
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        
+        $.getJSON("@Url.Action("DropDownList", "ProfileCustomer")", function (data) {
+            console.log(data);
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
-            });
-        })
+                        value: data,
+                        text: data
+                    }).html(data).appendTo("#ddlInsertCompanyCode");
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
+                        value: data,
+                        text: data
                     }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
             });
         })
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlInsertCompanyCode");
+        //    });
+        //})
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlUpdateCompanyCode");
+        //    });
+        //})
     }
 
     function fnDropdownProfileCustomerEmailType() {
@@ -265,8 +282,18 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }
@@ -535,8 +562,8 @@
 
                 //$('#ddlUpdateEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
                 //.val(""+data.EmailTemplateNo+"").trigger("change");
-                
-                setTimeout(function(){                
+
+                setTimeout(function(){
                     $('#ddlUpdateCompanyCode').val(data.CompanyCode).trigger('change');
                     $('#ddlUpdateEmailType').val(data.EmailType).trigger('change');
                     $('#ddlUpdateEmailTemplate').val(data.EmailTemplateNo).trigger('change');
@@ -564,7 +591,7 @@
         var StatusSignPdf = ($('#toggleInsertProfileCustomerFileSignedPdf').prop('checked')) ? 1 : 0 ;
         var StatusSignxml = ($('#toggleInsertProfileCustomerFileSignedXml').prop('checked')) ? 1 : 0 ;
 
-        
+
         if( (StatusPrint == 1) && (StatusEmail == 0) && (StatusSignPdf == 0) && (StatusSignxml == 0)){
             OutPutType = 1;
         }else if((StatusPrint == 0) && (StatusEmail == 1) && (StatusSignPdf == 1) && (StatusSignxml == 0)){

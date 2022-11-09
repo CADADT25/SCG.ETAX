@@ -7,9 +7,12 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateConfigMftsCompressXmlSetting" onclick="callModalInsertConfigMftsCompressPrintSetting();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Create New
-                </a>
+                @if (ViewBag.showCREATE == true)
+                {
+                    <a id="btnCallModalCreateConfigMftsCompressXmlSetting" onclick="callModalInsertConfigMftsCompressPrintSetting();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                        <i class="fas fa-plus"></i> Create New
+                    </a>
+                }
 
             </div>
             <div class="card-body">

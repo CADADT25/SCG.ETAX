@@ -14,6 +14,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownConfigXmlSignDataSource();
             RenderConfigXmlSign(setCompanyCode);
         }, 1200);
 
@@ -56,9 +57,6 @@
 
         $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
             $.each(data, function (i, data) {
-
-                
-
                 $('<option>',
                     {
                         value: data.dataSourceName,
@@ -76,9 +74,6 @@
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigXmlSignOutputConvertSource");
-
-
-                
 
                 $('<option>',
                     {
@@ -292,7 +287,7 @@
         document.getElementById('txtInsertConfigXmlSignCompanyCode').value = setCompanyCode;
         document.getElementById('txtInsertConfigXmlSignTaxNumber').value = setTaxNumber;
 
-        fnDropdownConfigXmlSignDataSource();
+        //fnDropdownConfigXmlSignDataSource();
 
         $("#modalInsertConfigXmlSign").modal('show');
     }
@@ -373,7 +368,7 @@
 
     function callConfigXmlSignGetDetailController(getPK){
 
-        fnDropdownConfigXmlSignDataSource();
+        //fnDropdownConfigXmlSignDataSource();
 
         $.ajax({
             type: "GET",
@@ -383,14 +378,13 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-
+                
+                console.log(data);
                 document.getElementById('txtUpdateConfigXmlSignNo').value = data.ConfigXmlsignNo;
                 document.getElementById('txtUpdateConfigXmlSignCompanyCode').value = data.ConfigXmlsignCompanycode;
                 document.getElementById('txtUpdateConfigXmlSignTaxNumber').value = data.ConfigXmlsignCompanyTax;
 
                 if(data.ConfigXmlsignOnlineRecordNumber == '' || data.ConfigXmlsignOnlineRecordNumber == null){
-
-                    
 
                     document.getElementById("toggleUpdateConfigXmlSignIsBatch").checked = true;
                     document.getElementById("toggleUpdateConfigXmlSignIsOnline").checked = false;
@@ -422,7 +416,19 @@
 
                 document.getElementById('ddlUpdateConfigXmlSignOutputConvertSource').value = data.ConfigXmlsignOutputConvertSource;
                 document.getElementById('txtUpdateConfigXmlSignOutputConvertPath').value = data.ConfigXmlsignOutputConvertPath;
+                
+                document.getElementById('txtUpdateConfigXmlSignOnlineRecordNumber').value = data.ConfigXmlsignOnlineRecordNumber;
+                
 
+                setTimeout(function(){
+                    $('#ddlUpdateConfigXmlSignInputSource').val(data.ConfigXmlsignInputSource).trigger('change');
+                }, 1000);
+                setTimeout(function(){
+                    $('#ddlUpdateConfigXmlSignOutputSource').val(data.ConfigXmlsignOutputSource).trigger('change');
+                }, 1000);
+                setTimeout(function(){
+                    $('#ddlUpdateConfigXmlSignOutputConvertSource').val(data.ConfigXmlsignOutputConvertSource).trigger('change');
+                }, 1000);
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateConfigXmlSignIsActive").checked = true;
@@ -527,27 +533,14 @@
         model.ConfigXmlsignCompanycode = $('#txtUpdateConfigXmlSignCompanyCode').val();
         model.ConfigXmlsignCompanyTax = $('#txtUpdateConfigXmlSignTaxNumber').val();
 
-
-        if($('#toggleUpdateConfigXmlSignIsBatch').prop('checked')){
-
-            model.ConfigXmlSignInputSource = $('#ddlUpdateConfigXmlSignInputSource').val();
-            model.ConfigXmlSignInputPath = $('#txtUpdateConfigXmlSignInputPath').val();
-            model.ConfigXmlSignOutputSource = $('#ddlUpdateConfigXmlSignOutputSource').val();
-            model.ConfigXmlSignOutputPath = $('#txtUpdateConfigXmlSignOutputPath').val();
-
-            model.ConfigXmlsignOutputConvertSource = $('#ddlUpdateConfigXmlSignOutputConvertSource').val();
-            model.ConfigXmlsignOutputConvertPath = $('#txtUpdateConfigXmlSignOutputConvertPath').val();
-        }
-        else{
-            model.ConfigXmlSignInputSource = '';
-            model.ConfigXmlSignInputPath = '';
-            model.ConfigXmlSignOutputSource = '';
-            model.ConfigXmlSignOutputPath = '';
-            model.ConfigXmlsignOutputConvertSource = '';
-            model.ConfigXmlsignOutputConvertPath = '';
-        }
-
+        model.ConfigXmlSignInputSource = $('#ddlUpdateConfigXmlSignInputSource').val();
+        model.ConfigXmlSignInputPath = $('#txtUpdateConfigXmlSignInputPath').val();
+        model.ConfigXmlSignOutputSource = $('#ddlUpdateConfigXmlSignOutputSource').val();
+        model.ConfigXmlSignOutputPath = $('#txtUpdateConfigXmlSignOutputPath').val();
         
+        model.ConfigXmlsignOutputConvertSource = $('#ddlUpdateConfigXmlSignOutputConvertSource').val();
+        model.ConfigXmlsignOutputConvertPath = $('#txtUpdateConfigXmlSignOutputConvertPath').val();
+
         model.ConfigXmlSignOnlineRecordNumber = $('#txtUpdateConfigXmlSignOnlineRecordNumber').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();

@@ -2,66 +2,68 @@
     Layout = null;
 }
 
+@if (ViewBag.showADMINTOOL == true)
+{
 <div class="row">
 </div>
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <!-- pill tabs tab content -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <!-- pill tabs tab content -->
         <div class="tab-content">
-            <!-- admintool panel -->
+                <!-- admintool panel -->
             <div role="tabpanel" class="tab-pane active" id="faq-admintool" aria-labelledby="admintool" aria-expanded="true">
 
-                <!-- frequent answer and question  collapse  -->
+                    <!-- frequent answer and question  collapse  -->
                 <div class="collapse-margin collapse-icon mt-2" id="faq-admintool-qna">
 
-                    <div class="card">
-                        <div class="card-header" id="TabReset" data-toggle="collapse" role="button" data-target="#faq-admintool-two" aria-expanded="true" aria-controls="faq-payment-two">
-                            <span class="lead collapse-title">AdminTool</span>
-                        </div>
-                        <div id="faq-admintool-two" class="collapse show" aria-labelledby="TabReset" data-parent="#faq-admintool-qna">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Sync Status (PDF Sign)</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnSyncStatusPDFSign();"> Sync Status (PDF Sign) </a>
+                        <div class="card">
+                            <div class="card-header" id="TabReset" data-toggle="collapse" role="button" data-target="#faq-admintool-two" aria-expanded="true" aria-controls="faq-payment-two">
+                                <span class="lead collapse-title">AdminTool</span>
+                            </div>
+                            <div id="faq-admintool-two" class="collapse show" aria-labelledby="TabReset" data-parent="#faq-admintool-qna">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Sync Status (PDF Sign)</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnSyncStatusPDFSign();"> Sync Status (PDF Sign) </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Sync Status (XML Sign)</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnSyncStatusXMLSign();"> Sync Status (XML Sign) </a>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Sync Status (XML Sign)</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnSyncStatusXMLSign();"> Sync Status (XML Sign) </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Reset Status (Print Zip)</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnResetStatusPrintZip();"> Reset Status (Print Zip) </a>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Reset Status (Print Zip)</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnResetStatusPrintZip();"> Reset Status (Print Zip) </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Reset Status (XML Zip)</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnResetStatusXMLZip();"> Reset Status (XML Zip) </a>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Reset Status (XML Zip)</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnResetStatusXMLZip();"> Reset Status (XML Zip) </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Reset Status (Indexing)</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnResetStatusIndexing();"> Reset Status (Indexing) </a>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Reset Status (Indexing)</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnResetStatusIndexing();"> Reset Status (Indexing) </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12 mb-1">
-                                        <div class="form-group">
-                                            <label for="helpInputTop" style="color:transparent">Resend Email</label>
-                                            <br />
-                                            <a class="btn btn-primary btn-block" onclick="fnResendEmail();"> Resend Email </a>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Resend Email</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnResendEmail();"> Resend Email </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,8 +74,7 @@
             </div>
         </div>
     </div>
-</div>
-
+}
 <div class="row">
     <div class="col-md-12">
         <div class="card">

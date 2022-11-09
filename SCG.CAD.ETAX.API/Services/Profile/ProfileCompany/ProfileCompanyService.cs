@@ -90,7 +90,7 @@
                     else
                     {
                         resp.STATUS = false;
-                        resp.ERROR_MESSAGE = "Can't insert new record becuase Company Code is duplicate.";
+                        resp.ERROR_MESSAGE = "Can't insert new record becuase Company Code or TaxNumber is duplicate.";
                     }
 
 
@@ -120,7 +120,8 @@
                         update.CompanyCode = param.CompanyCode;
                         update.CompanyNameTh = param.CompanyNameTh;
                         update.CompanyNameEn = param.CompanyNameEn;
-                        update.CertificateProfileNo = param.CertificateProfileNo;
+                        update.TaxNumber = param.TaxNumber;
+                        //update.CertificateProfileNo = param.CertificateProfileNo;
                         update.IsEbill = param.IsEbill;
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
