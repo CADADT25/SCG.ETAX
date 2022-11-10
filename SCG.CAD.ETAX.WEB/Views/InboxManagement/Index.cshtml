@@ -165,27 +165,33 @@
 
 
     function fnCheckStatus(status) {
-        if (status == "wait_manager") {
+        if (status == "@Variable.RequestStatusCode_WaitManager") {
             return 'Wait Manager';
         }
-        if (status == "wait_officer") {
+        if (status == "@Variable.RequestStatusCode_WaitOfficer") {
             return 'Wait Officer';
         }
-        if (status == "complete") {
+        if (status == "@Variable.RequestStatusCode_Complete") {
             return 'Complete';
         }
-        if (status == "reject") {
+        if (status == "@Variable.RequestStatusCode_Reject") {
             return 'Reject';
         }
         return status;
     }
 
     function fnCheckAction(act) {
-        if (act == "delete") {
+        if (act == "@Variable.RequestActionCode_Delete") {
             return 'Delete';
         }
-        if (act == "undelete") {
+        if (act == "@Variable.RequestActionCode_Undelete") {
             return 'Undelete';
+        }
+        if (act == "@Variable.RequestActionCode_ReSignNewTrans") {
+            return 'Re-Sign PDF XML (Workaround)';
+        }
+        if (act == "@Variable.RequestActionCode_ReSignNewCert") {
+            return 'Re-Sign PDF XML (New cert)';
         }
         if (act == "unzip") {
             return 'Unzip';

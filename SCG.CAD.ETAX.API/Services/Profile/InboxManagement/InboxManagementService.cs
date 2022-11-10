@@ -17,7 +17,7 @@ namespace SCG.CAD.ETAX.API.Services
                 var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == search.EmailUser);
                 var companyGroupList = _dbContext.profileUserGroup
                        .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
-                       .Select(x => x.profileCompanyCode)
+                       .Select(x => x.ProfileCompanyCode)
                        .ToList();
                 var companyCodeList = new List<string>();
                 foreach (var company in companyGroupList)
@@ -38,15 +38,15 @@ namespace SCG.CAD.ETAX.API.Services
                 if(profileuser.LevelId == 5)
                 {
                     requestList = _dbContext.request.Where(t =>
-                                                        (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == "wait_manager")
+                                                        (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == Variable.RequestStatusCode_WaitManager)
                                                         ||
-                                                        (companyCodeList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == "wait_officer")
+                                                        (companyCodeList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == Variable.RequestStatusCode_WaitOfficer)
                                                     ).ToList();
                 }
                 else
                 {
                     requestList = _dbContext.request.Where(t =>
-                                                       (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == "wait_manager")
+                                                       (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == Variable.RequestStatusCode_WaitManager)
                                                    ).ToList();
                 }
                 if (!string.IsNullOrEmpty(search.RequestNo))
@@ -126,9 +126,9 @@ namespace SCG.CAD.ETAX.API.Services
             try
             {
                 var requestList = _dbContext.request.Where(t =>
-                                                        (t.Manager == search.EmailUser && t.StatusCode != "wait_manager" && t.StatusCode != "reject" && t.StatusCode != "complete" && t.StatusCode != "cancel")
+                                                        (t.Manager == search.EmailUser && t.StatusCode != Variable.RequestStatusCode_WaitManager && t.StatusCode != Variable.RequestStatusCode_Reject && t.StatusCode != Variable.RequestStatusCode_Complete && t.StatusCode != Variable.RequestStatusCode_Cancel)
                                                         ||
-                                                        (t.CreateBy == search.EmailUser && t.StatusCode != "reject" && t.StatusCode != "complete" && t.StatusCode != "cancel")
+                                                        (t.CreateBy == search.EmailUser && t.StatusCode != Variable.RequestStatusCode_Reject && t.StatusCode != Variable.RequestStatusCode_Complete && t.StatusCode != Variable.RequestStatusCode_Cancel)
                                                     ).ToList();
                 if (!string.IsNullOrEmpty(search.RequestNo))
                 {
@@ -209,7 +209,7 @@ namespace SCG.CAD.ETAX.API.Services
                 var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == search.EmailUser);
                 var companyGroupList = _dbContext.profileUserGroup
                        .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
-                       .Select(x => x.profileCompanyCode)
+                       .Select(x => x.ProfileCompanyCode)
                        .ToList();
                 var companyCodeList = new List<string>();
                 foreach (var company in companyGroupList)

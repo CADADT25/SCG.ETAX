@@ -33,14 +33,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 model.IsOfficer = true;
             }
-            if (model.StatusCode == "wait_manager")
+            if (model.StatusCode == Variable.RequestStatusCode_WaitManager)
             {
                 if (model.TempUser == model.ManagerEmail)
                 {
                     model.IsAuth = true;
                 }
             }
-            else if (model.StatusCode == "wait_officer")
+            else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
             {
                 if (permissionModel.CompanyCodeList.Count > 0)
                 {

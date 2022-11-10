@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.API.Services
                 var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == user);
                 var companyGroupList = _dbContext.profileUserGroup
                        .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
-                       .Select(x => x.profileCompanyCode)
+                       .Select(x => x.ProfileCompanyCode)
                        .ToList();
 
                 var data = new RequestPermissionDataModel();

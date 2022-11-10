@@ -8,7 +8,7 @@
     }
 </style>
 <div class="row">
-    @if (Model.StatusCode == "wait_manager")
+    @if (Model.StatusCode == Variable.RequestStatusCode_WaitManager)
     {
         <div id="steps">
             <div class="step done" data-desc="Submit">
@@ -21,7 +21,7 @@
             <div class="step " data-desc="Complete">4</div>
         </div>
     }
-    else if (Model.StatusCode == "wait_officer")
+    else if (Model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
     {
         <div id="steps">
             <div class="step done" data-desc="Submit">
@@ -38,7 +38,7 @@
             <div class="step " data-desc="Complete">4</div>
         </div>
     }
-    else if (Model.StatusCode == "complete")
+    else if (Model.StatusCode == Variable.RequestStatusCode_Complete)
     {
         <div id="steps">
             <div class="step done" data-desc="Submit">
@@ -63,7 +63,7 @@
             </div>
         </div>
     }
-    else if (Model.StatusCode == "reject")
+    else if (Model.StatusCode == Variable.RequestStatusCode_Reject)
     {
         if(Model.OfficerEmail != null && Model.OfficerEmail != ""){
             <div id="steps">
@@ -488,9 +488,9 @@
   
     function fnClickAction(no, act, sta) {
         var re_act = "";
-        if (sta == "wait_manager") {
+        if (sta == "@Variable.RequestStatusCode_WaitManager") {
             re_act = "manager_" + act;
-        } else if (sta == "wait_officer") {
+        } else if (sta == "@Variable.RequestStatusCode_WaitOfficer") {
             re_act = "officer_" + act;
         }
         r_no = no;

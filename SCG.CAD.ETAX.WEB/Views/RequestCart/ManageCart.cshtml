@@ -21,9 +21,11 @@
                             <label for="helpInputTop">Select Action</label>
                             <select class="select2 form-control" id="cartSelectAction" onchange="onChangeAction(this)">
                                 <option value="" hidden>--- Please select action ---</option>
-                                <option value="delete">Delete</option>
-                                <option value="undelete">Undelete</option>
-                                <option value="unzip">Unzip</option>
+                                <option value="@Variable.RequestActionCode_Delete">Delete</option>
+                                <option value="@Variable.RequestActionCode_Undelete">Undelete</option>
+                                <option value="@Variable.RequestActionCode_ReSignNewTrans">Re-Sign PDF XML (Workaround)</option>
+                                <option value="@Variable.RequestActionCode_ReSignNewCert">Re-Sign PDF XML (New cert)</option>
+                                @*<option value="unzip">Unzip</option>*@
                             </select>
                         </div>
                     </div>

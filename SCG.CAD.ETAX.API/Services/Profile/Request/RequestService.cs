@@ -242,7 +242,7 @@ namespace SCG.CAD.ETAX.API.Services
                         request.Id = Guid.NewGuid();
                         request.RequestNo = GetRunningNo(comCode);
                         request.RequestAction = param.Action;
-                        request.StatusCode = "wait_manager";
+                        request.StatusCode = Variable.RequestStatusCode_WaitManager;
                         request.CompanyCode = comCode;
                         request.Manager = param.Manager;
                         request.CreateDate = dtNow;
@@ -305,35 +305,61 @@ namespace SCG.CAD.ETAX.API.Services
                     var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
                     if (param.Action == "manager_approve")
                     {
-                        request.StatusCode = "wait_officer";
+                        request.StatusCode = Variable.RequestStatusCode_WaitOfficer;
                         request.ManagerAction = true;
                     }
                     else if (param.Action == "manager_reject")
                     {
-                        request.StatusCode = "reject";
+                        request.StatusCode = Variable.RequestStatusCode_Reject;
                         request.ManagerAction = true;
                     }
                     else if (param.Action == "officer_approve")
                     {
-                        request.StatusCode = "complete";
+                        request.StatusCode = Variable.RequestStatusCode_Complete;
                         request.OfficerBy = param.User;
                         // Clear Data
-                        if (request.RequestAction == "delete")
+                        if (request.RequestAction == Variable.RequestActionCode_Delete)
                         {
                             var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
                             var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
                             var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
-                            foreach(var tran in transactions)
+                            foreach (var tran in transactions)
                             {
+                                if (tran.XmlCompressStatus == "Successful")
+                                {
+                                    tran.XmlCompressStatus = "Waiting";
+                                    if (tran.OutputXmlTransactionNo != null)
+                                    {
+                                        var transactions2 = _dbContext.transactionDescription.Where(t => t.OutputXmlTransactionNo == tran.OutputXmlTransactionNo && !tranNos.Contains(t.TransactionNo)).ToList();
+                                        foreach (var tran2 in transactions2)
+                                        {
+                                            tran2.XmlCompressStatus = "Waiting";
+                                            tran2.OutputXmlTransactionNo = null;
+                                            tran2.UpdateBy = param.User;
+                                            tran2.UpdateDate = dtNow;
+                                            _dbContext.Entry(tran2).State = EntityState.Modified;
+                                        }
+                                        var outputxml = _dbContext.outputSearchXmlZip.Where(t => t.OutputSearchXmlZipNo == int.Parse(tran.OutputXmlTransactionNo)).FirstOrDefault();
+                                        if (outputxml != null)
+                                        {
+                                            outputxml.Isactive = 0;
+                                            outputxml.UpdateBy = param.User;
+                                            outputxml.UpdateDate = dtNow;
+                                            _dbContext.Entry(outputxml).State = EntityState.Modified;
+                                            outputXmlTransactionNos.Add(tran.OutputXmlTransactionNo);
+                                        }
+
+                                        tran.OutputXmlTransactionNo = null;
+                                    }
+                                }
                                 tran.Isactive = 0;
                                 tran.CancelBilling = 0;
                                 tran.UpdateBy = param.User;
                                 tran.UpdateDate = dtNow;
                                 _dbContext.Entry(tran).State = EntityState.Modified;
                             }
-                            
                         }
-                        else if (request.RequestAction == "undelete")
+                        else if (request.RequestAction == Variable.RequestActionCode_Undelete)
                         {
                             var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
                             var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
@@ -346,47 +372,57 @@ namespace SCG.CAD.ETAX.API.Services
                                 tran.UpdateDate = dtNow;
                                 _dbContext.Entry(tran).State = EntityState.Modified;
                             }
+
+
                         }
-                        else if (request.RequestAction == "unzip")
+                        else if (request.RequestAction == Variable.RequestActionCode_ReSignNewTrans)
                         {
-                            var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
-                            var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
-                            var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
-                            foreach (var tran in transactions)
-                            {
-                                tran.XmlCompressStatus = "Waiting";
-                                if(tran.OutputXmlTransactionNo != null)
-                                {
-                                    var transactions2 = _dbContext.transactionDescription.Where(t => t.OutputXmlTransactionNo == tran.OutputXmlTransactionNo && t.TransactionNo != tran.TransactionNo).ToList();
-                                    foreach(var tran2 in transactions2)
-                                    {
-                                        tran2.XmlCompressStatus = "Waiting";
-                                        tran2.OutputXmlTransactionNo = null;
-                                        tran2.UpdateBy = param.User;
-                                        tran2.UpdateDate = dtNow;
-                                        _dbContext.Entry(tran2).State = EntityState.Modified;
-                                    }
-                                    var outputxml = _dbContext.outputSearchXmlZip.Where(t => t.OutputSearchXmlZipNo == int.Parse(tran.OutputXmlTransactionNo)).FirstOrDefault();
-                                    if(outputxml!= null)
-                                    {
-                                        outputxml.Isactive = 0;
-                                        outputxml.UpdateBy = param.User;
-                                        outputxml.UpdateDate = dtNow;
-                                        _dbContext.Entry(outputxml).State = EntityState.Modified;
-                                        outputXmlTransactionNos.Add(tran.OutputXmlTransactionNo);
-                                    }
-                                    
-                                    tran.OutputXmlTransactionNo = null;
-                                }
-                                tran.UpdateBy = param.User;
-                                tran.UpdateDate = dtNow;
-                                _dbContext.Entry(tran).State = EntityState.Modified;
-                            }
+                            
                         }
+                        else if (request.RequestAction == Variable.RequestActionCode_ReSignNewCert)
+                        {
+
+                        }
+                        //else if (request.RequestAction == "unzip")
+                        //{
+                        //    var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
+                        //    var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
+                        //    var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
+                        //    foreach (var tran in transactions)
+                        //    {
+                        //        tran.XmlCompressStatus = "Waiting";
+                        //        if(tran.OutputXmlTransactionNo != null)
+                        //        {
+                        //            var transactions2 = _dbContext.transactionDescription.Where(t => t.OutputXmlTransactionNo == tran.OutputXmlTransactionNo && t.TransactionNo != tran.TransactionNo).ToList();
+                        //            foreach(var tran2 in transactions2)
+                        //            {
+                        //                tran2.XmlCompressStatus = "Waiting";
+                        //                tran2.OutputXmlTransactionNo = null;
+                        //                tran2.UpdateBy = param.User;
+                        //                tran2.UpdateDate = dtNow;
+                        //                _dbContext.Entry(tran2).State = EntityState.Modified;
+                        //            }
+                        //            var outputxml = _dbContext.outputSearchXmlZip.Where(t => t.OutputSearchXmlZipNo == int.Parse(tran.OutputXmlTransactionNo)).FirstOrDefault();
+                        //            if(outputxml!= null)
+                        //            {
+                        //                outputxml.Isactive = 0;
+                        //                outputxml.UpdateBy = param.User;
+                        //                outputxml.UpdateDate = dtNow;
+                        //                _dbContext.Entry(outputxml).State = EntityState.Modified;
+                        //                outputXmlTransactionNos.Add(tran.OutputXmlTransactionNo);
+                        //            }
+
+                        //            tran.OutputXmlTransactionNo = null;
+                        //        }
+                        //        tran.UpdateBy = param.User;
+                        //        tran.UpdateDate = dtNow;
+                        //        _dbContext.Entry(tran).State = EntityState.Modified;
+                        //    }
+                        //}
                     }
                     else
                     {
-                        request.StatusCode = "reject";
+                        request.StatusCode = Variable.RequestStatusCode_Reject;
                         request.OfficerBy = param.User;
                     }
                     request.UpdateDate = dtNow;

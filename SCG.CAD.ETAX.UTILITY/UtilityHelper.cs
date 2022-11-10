@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -122,23 +123,23 @@ namespace SCG.CAD.ETAX.UTILITY
         {
             if (!string.IsNullOrEmpty(statusCode))
             {
-                if (statusCode.ToLower() == "wait_manager")
+                if (statusCode.ToLower() == Variable.RequestStatusCode_WaitManager)
                 {
                     return "Wait Manager";
                 }
-                if (statusCode.ToLower() == "wait_officer")
+                if (statusCode.ToLower() == Variable.RequestStatusCode_WaitOfficer)
                 {
                     return "Wait Officer";
                 }
-                if (statusCode.ToLower() == "reject")
+                if (statusCode.ToLower() == Variable.RequestStatusCode_Reject)
                 {
                     return "Reject";
                 }
-                if (statusCode.ToLower() == "complete")
+                if (statusCode.ToLower() == Variable.RequestStatusCode_Complete)
                 {
                     return "Complete";
                 }
-                if (statusCode.ToLower() == "cancel")
+                if (statusCode.ToLower() == Variable.RequestStatusCode_Cancel)
                 {
                     return "Cancel";
                 }
@@ -150,17 +151,25 @@ namespace SCG.CAD.ETAX.UTILITY
         {
             if (!string.IsNullOrEmpty(actionCode))
             {
-                if (actionCode.ToLower() == "delete")
+                if (actionCode.ToLower() == Variable.RequestActionCode_Delete)
                 {
                     return "Delete";
                 }
-                if (actionCode.ToLower() == "undelete")
+                if (actionCode.ToLower() == Variable.RequestActionCode_Undelete)
                 {
                     return "Undelete";
                 }
-                if (actionCode.ToLower() == "unzip")
+                //if (actionCode.ToLower() == "unzip")
+                //{
+                //    return "Unzip";
+                //}
+                if (actionCode.ToLower() == Variable.RequestActionCode_ReSignNewTrans)
                 {
-                    return "Unzip";
+                    return "Re-Sign PDF XML (Workaround)";
+                }    
+                if (actionCode.ToLower() == Variable.RequestActionCode_ReSignNewCert)
+                {
+                    return "Re-Sign PDF XML (New cert)";
                 }
 
             }

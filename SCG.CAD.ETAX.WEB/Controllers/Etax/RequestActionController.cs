@@ -37,14 +37,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 model.IsOfficer = true;
             }
-            if (model.StatusCode == "wait_manager")
+            if (model.StatusCode == Variable.RequestStatusCode_WaitManager)
             {
                 if (model.TempUser == model.ManagerEmail)
                 {
                     model.IsAuth = true;
                 }
             }
-            else if (model.StatusCode == "wait_officer")
+            else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
             {
                 if (permissionModel.CompanyCodeList.Count > 0)
                 {
@@ -89,14 +89,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     requestModel.IsOfficer = true;
                 }
-                if (requestModel.StatusCode == "wait_manager")
+                if (requestModel.StatusCode == Variable.RequestStatusCode_WaitManager)
                 {
                     if (userEmail == requestModel.ManagerEmail)
                     {
                         requestModel.IsAuth = true;
                     }
                 }
-                else if (requestModel.StatusCode == "wait_officer")
+                else if (requestModel.StatusCode == Variable.RequestStatusCode_WaitOfficer)
                 {
                     if (permissionModel.CompanyCodeList.Count > 0)
                     {
@@ -115,7 +115,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 }
                 if (action == "manager_approve" || action == "manager_reject")
                 {
-                    if (requestModel.StatusCode == status && status == "wait_manager")
+                    if (requestModel.StatusCode == status && status == Variable.RequestStatusCode_WaitManager)
                     {
 
                     }
@@ -126,7 +126,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 }
                 else if (action == "officer_approve" || action == "officer_reject")
                 {
-                    if (requestModel.StatusCode == status && status == "wait_officer")
+                    if (requestModel.StatusCode == status && status == Variable.RequestStatusCode_WaitOfficer)
                     {
 
                     }
@@ -217,7 +217,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         private string ValidateBeforSubmitRequest(string requestAction, List<TransactionDescription> dataTrans)
         {
             string errorMsg = "";
-            if (requestAction != "delete" && requestAction != "undelete" && requestAction != "unzip")
+            if (requestAction != Variable.RequestActionCode_Delete && requestAction != Variable.RequestActionCode_Undelete && requestAction != Variable.RequestActionCode_ReSignNewTrans && requestAction != Variable.RequestActionCode_ReSignNewCert)
             {
                 errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
@@ -230,41 +230,49 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             foreach (var item in dataTrans)
             {
                 // delete
-                if (requestAction == "delete")
+                if (requestAction == Variable.RequestActionCode_Delete)
                 {
-                    if (item.XmlCompressStatus == "Successful")
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
-                    }
+                    //if (item.XmlCompressStatus == "Successful")
+                    //{
+                    //    errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                    //}
                     if (item.Isactive != 1)
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
                     }
                 }
                 // undelete
-                else if (requestAction == "undelete")
+                else if (requestAction == Variable.RequestActionCode_Undelete)
                 {
                     if (item.Isactive == 1)
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
                     }
                 }
-                // unzip
-                else if (requestAction == "unzip")
+                else if (requestAction == Variable.RequestActionCode_ReSignNewTrans)
                 {
-                    if (item.XmlCompressStatus != "Successful")
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
-                    }
-                    if (item.Isactive != 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
-                    }
-                    if (item.SentRevenueDepartment == 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
-                    }
+
                 }
+                else if (requestAction == Variable.RequestActionCode_ReSignNewCert)
+                {
+
+                }
+                // unzip
+                //else if (requestAction == "unzip")
+                //{
+                //    if (item.XmlCompressStatus != "Successful")
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
+                //    }
+                //    if (item.Isactive != 1)
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                //    }
+                //    if (item.SentRevenueDepartment == 1)
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                //    }
+                //}
             }
 
 
@@ -311,14 +319,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     requestModel.IsOfficer = true;
                 }
-                if (requestModel.StatusCode == "wait_manager")
+                if (requestModel.StatusCode == Variable.RequestStatusCode_WaitManager)
                 {
                     if (dataArr[2] == requestModel.ManagerEmail)
                     {
                         requestModel.IsAuth = true;
                     }
                 }
-               
+
 
                 string errorMsg = "";
                 // check permission
@@ -327,7 +335,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     errorMsg = UtilityHelper.SetError(errorMsg, "You are not authorized.");
                 }
-                if (requestModel.StatusCode != "wait_manager")
+                if (requestModel.StatusCode != Variable.RequestStatusCode_WaitManager)
                 {
                     errorMsg = UtilityHelper.SetError(errorMsg, "Request status invalid.");
                 }
@@ -343,7 +351,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         var actRes = Task.Run(() => ApiHelper.PostURI("api/Request/Action", httpActionRequest)).Result;
                         if (actRes.STATUS)
                         {
-                             
+
                             //Send mail
                             Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + requestModel.RequestNo + "&action=reject"));
                         }

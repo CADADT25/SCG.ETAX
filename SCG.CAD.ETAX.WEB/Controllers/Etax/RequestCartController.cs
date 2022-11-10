@@ -201,7 +201,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 errorMsg = UtilityHelper.SetError(errorMsg, "Please select manager.");
             }
-            if (action != "delete" && action != "undelete" && action != "unzip")
+            if (action != Variable.RequestActionCode_Delete && action != Variable.RequestActionCode_Undelete && action != Variable.RequestActionCode_ReSignNewTrans && action != Variable.RequestActionCode_ReSignNewCert)
             {
                 errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
@@ -211,7 +211,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
             }
 
-            var requestStatus = new List<string>() { "wait_manager", "wait_officer" };
+            var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer };
             var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
             var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
             var dataRequestItem = new List<RequestItem>();
@@ -234,47 +234,55 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     }
                 }
                 // delete
-                if (action == "delete")
+                if (action == Variable.RequestActionCode_Delete)
                 {
-                    if(item.XmlCompressStatus == "Successful")
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
-                    }
-                    if(item.Isactive != 1)
+                    //if(item.XmlCompressStatus == "Successful")
+                    //{
+                    //    errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                    //}
+                    if (item.Isactive != 1)
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
                     }
                 }
                 // undelete
-                else if (action == "undelete")
+                else if (action == Variable.RequestActionCode_Undelete)
                 {
                     if (item.Isactive == 1)
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
                     }
                 }
-                // unzip
-                else if (action == "unzip")
+                else if (action == Variable.RequestActionCode_ReSignNewTrans)
                 {
-                    if (item.XmlCompressStatus != "Successful")
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
-                    }
-                    if (item.Isactive != 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
-                    }
-                    if (item.SentRevenueDepartment == 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
-                    }
+
                 }
+                else if (action == Variable.RequestActionCode_ReSignNewCert)
+                {
+
+                }
+                // unzip
+                //else if (action == "unzip")
+                //{
+                //    if (item.XmlCompressStatus != "Successful")
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
+                //    }
+                //    if (item.Isactive != 1)
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                //    }
+                //    if (item.SentRevenueDepartment == 1)
+                //    {
+                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                //    }
+                //}
             }
 
 
             return errorMsg;
         }
- 
+
 
     }
 }
