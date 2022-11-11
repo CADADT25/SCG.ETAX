@@ -357,7 +357,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         }
                         else
                         {
-                            ViewBag.Status = "Fail";
+                            ViewBag.Status = "Failed";
                             ViewBag.Message = actRes.MESSAGE ?? actRes.INNER_EXCEPTION;
                         }
                     }
@@ -385,27 +385,27 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             }
                             else
                             {
-                                ViewBag.Status = "Fail";
+                                ViewBag.Status = "Failed";
                                 ViewBag.Message = actRes.MESSAGE ?? actRes.INNER_EXCEPTION;
                             }
 
                         }
                         else
                         {
-                            ViewBag.Status = "Fail";
+                            ViewBag.Status = "Failed";
                             ViewBag.Message = errorMsg;
                         }
                     }
                 }
                 else
                 {
-                    ViewBag.Status = "Fail";
+                    ViewBag.Status = "Failed";
                     ViewBag.Message = errorMsg;
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.Status = "Fail";
+                ViewBag.Status = "Failed";
                 ViewBag.Message = ex.Message.ToString();
             }
 

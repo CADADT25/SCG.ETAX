@@ -101,12 +101,25 @@
                                         <h4 class="invoice-title">
                                             Action By : @ViewBag.User
                                         </h4>
-                                        <h4 class="invoice-title">
-                                            Status : @ViewBag.Status
-                                        </h4>
-                                        <h4 class="invoice-title">
-                                            Message : @Html.Raw(ViewBag.Message)
-                                        </h4>
+                                        @if (ViewBag.Status == "Success")
+                                        {
+                                            <h4 class="invoice-title">
+                                                Status : <span class="text-success">@ViewBag.Status</span>
+                                            </h4>
+                                            <h5 class="invoice-title">
+                                                Message : <span class="text-success">@Html.Raw(ViewBag.Message)</span>
+                                            </h5>
+                                        }
+                                        else
+                                        {
+                                            <h4 class="invoice-title">
+                                                Status : <span class="text-danger">@ViewBag.Status</span>
+                                            </h4>
+                                            <h5 class="invoice-title">
+                                                Message : <span class="text-danger">@Html.Raw(ViewBag.Message)</span>
+                                            </h5>
+                                        }
+
 
                                     </div>
                                 </div>

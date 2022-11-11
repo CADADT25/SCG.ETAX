@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using SCG.CAD.ETAX.UTILITY.Authentication;
 using System.Threading.Tasks;
@@ -39,7 +40,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return View(models);
         }
-
+        public IActionResult _Modal()
+        {
+            return View();
+        }
+        
         public IActionResult ManageCart()
         {
             var models = new ManageRequestCartModel();
@@ -66,6 +71,32 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
             return View(models);
+        }
+
+        public JsonResult GetPathXmlPdf()
+        {
+            var data = new PathXmlPdfModel();
+            var path = @"C:\Work space\Document\Etax\Test\";
+            path = Path.Combine(path);
+            var filePaths = UtilityHelper.GetFileDirectories(path);
+
+            if (filePaths != null)
+            {
+                filePaths.ForEach(t =>
+                {
+                   
+                    if(t.Replace(path, "").ToLower().IndexOf("pdf") != -1)
+                    {
+                        data.Pdfs.Add(t.Replace(path, ""));
+                    }
+                    else
+                    {
+                        data.Xmls.Add(t.Replace(path, ""));
+                    }
+                });
+            }
+            
+            return Json(data);
         }
         public async Task<JsonResult> List(string searchJson)
         {

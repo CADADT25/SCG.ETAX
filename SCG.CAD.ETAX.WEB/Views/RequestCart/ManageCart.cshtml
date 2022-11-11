@@ -54,6 +54,39 @@
                     </div>
                     <div class="col-xl-3 col-md-3 col-6 mb-1"></div>
                 </div>
+                <br />
+                <div class="row mb-0">
+                    <div class="col-md-5">
+                        <label class="form-label" for="sub1">XML Path</label>
+                        <select class="select2 form-control" id="sub1" onchange="fnSub1Change()">
+                            <option value="">Please select</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="sub2">PDF Path</label>
+                        <select class="select2 form-control" id="sub2" onchange="fnSub2Change()">
+                            <option value="">Please select</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 8px;">
+                        <label for="helpInputTop" style="color:transparent">Add</label>
+                        <button class="btn btn-primary me-1 mt-1">Add</button>
+                    </div>
+
+                    <br />
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover-animation table-hover" id="tbAddFilesMain" style="font-size:12px;padding-bottom:15px;">
+                            <thead style="font-size:10px">
+                                <tr>
+                                    <th style="font-size:10px">XML path</th>
+                                    <th style="font-size:10px">PDF path</th>
+                                    <th style="font-size:10px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
                 <div class="mb-0 table-responsive">
                     <table class="table table-striped table-hover-animation table-hover" id="tbCartMain" style="font-size:12px;padding-bottom:15px;">
                         <thead style="font-size:10px">
@@ -67,16 +100,6 @@
                                 <th style="font-size:10px">Document Type</th>
                                 <th style="font-size:10px">Data Source</th>
                                 <th style="font-size:10px">Action</th>
-                                @* <th style="font-size:10px;white-space:nowrap">Billing Date</th>
-                                <th style="font-size:10px;white-space:nowrap">Processing Date</th>
-                                <th style="font-size:10px;white-space:nowrap">Create Date</th>
-                                <th style="font-size:10px">XML Gen</th>
-                                <th style="font-size:10px">XML Sign</th>
-                                <th style="font-size:10px">PDF Sign</th>
-                                <th style="font-size:10px">Print</th>
-                                <th style="font-size:10px">Email</th>
-                                <th style="font-size:10px">XML</th>
-                                <th style="font-size:10px">Indexing</th>*@
                             </tr>
                         </thead>
                     </table>
@@ -88,14 +111,74 @@
 
 
 <script type="text/javascript">
+    var xmlArr = [];
+    var pdfArr = [];
     $(document).ready(function () {
         $('#cartSelectAction').select2();
         $('#cartSelectManager').select2();
-
+        $('#sub1').select2();
+        $('#sub2').select2();
         fnDropdownCartSearchManager();
+        fnGetPathFile();
         fnRenderCartList();
         fnDefaultValueAction();
     });
+
+    function fnSelectFilesOpen() {
+        if ($('#cartSelectAction').val() == "@Variable.RequestActionCode_ReSignNewTrans") {
+            $("#reSignNewTransModal").modal('show');
+           
+        }
+
+    }
+
+    function fnSelectFilesClose() {
+        $("#reSignNewTransModal").modal('hide');
+    }
+
+    function fnGetPathFile() {
+        if(xmlArr.length == 0 && pdfArr.length == 0){
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetPathXmlPdf", "RequestCart")",
+                dataType: "json",
+                success: function (res) {
+                    xmlArr = res.xmls;
+                    pdfArr = res.pdfs;
+                    if(xmlArr.length > 0){
+                        $.each(xmlArr, function (i, data) {
+                            $('<option>',
+                                {
+                                    value: data,
+                                    text: data
+                                }).html(data).appendTo("#sub1");
+                        });
+                    }
+                    if(pdfArr.length > 0){
+                        $.each(pdfArr, function (i, data) {
+                            $('<option>',
+                                {
+                                    value: data,
+                                    text: data
+                                }).html(data).appendTo("#sub2");
+                        });
+                    }
+                }
+            });
+        }
+        
+ 
+    }
+
+    function fnSub1Change(){
+
+    }
+    function fnSub2Change(){
+
+    }
+    function fnAddPath(){
+
+    }
 
     function fnDropdownCartSearchManager() {
 
@@ -105,15 +188,15 @@
                     {
                         value: data.userEmail,
                         text: data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')'
-                    }).html(data.companyCode).appendTo("#cartSelectManager");
+                    }).html(data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')').appendTo("#cartSelectManager");
             });
             fnDefaultValueManager();
         })
     }
 
-    function onChangeSearchManager(self){
-         var value = self.value;
-         localStorage.setItem("cartManager", value);
+    function onChangeSearchManager(self) {
+        var value = self.value;
+        localStorage.setItem("cartManager", value);
     }
 
     function onChangeAction(self) {
@@ -121,13 +204,13 @@
         localStorage.setItem("cartAction", value);
     }
 
-    function fnDefaultValueManager(){
+    function fnDefaultValueManager() {
         if (localStorage.getItem("cartManager") != null && localStorage.getItem("cartManager") != "") {
             $("#cartSelectManager").select2().val(localStorage.getItem("cartManager")).trigger("change");
         }
     }
 
-    function fnDefaultValueAction(){
+    function fnDefaultValueAction() {
         if (localStorage.getItem("cartAction") != null && localStorage.getItem("cartAction") != "") {
             $("#cartSelectAction").select2().val(localStorage.getItem("cartAction")).trigger("change");
         }
@@ -240,22 +323,22 @@
         }
     }
 
-    function fnResetlocalStorageValue(){
+    function fnResetlocalStorageValue() {
         localStorage.setItem("cartManager", "");
         localStorage.setItem("cartAction", "");
     }
 
-    function fnSubmitRequest(){
-        if ($('#tbCartMain').DataTable().data().count() == 0){
+    function fnSubmitRequest() {
+        if ($('#tbCartMain').DataTable().data().count() == 0) {
             Swal.fire({
                 title: 'Warning',
                 text: 'Data not found in your cart.',
-                    icon: 'warning',
-                    customClass: {
-                        confirmButton: 'btn btn-primary'
-                    }
-                });
-        }else{
+                icon: 'warning',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        } else {
             var getManager = $('#cartSelectManager').val();
             var getAction = $('#cartSelectAction').val();
             var error = false;
@@ -338,7 +421,7 @@
                 });
             }
         }
-        
+
     }
 
     function fnGetCartCheckbox() {
@@ -350,9 +433,9 @@
         return data;
     }
 
-    function fnClearRenderCartList(){
+    function fnClearRenderCartList() {
         var table = $('#tbCartMain').DataTable();
- 
+
         table.clear().draw();
         table.destroy();
     }

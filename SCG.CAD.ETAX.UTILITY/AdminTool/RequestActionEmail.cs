@@ -50,7 +50,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     if (action == "submit")
                     {
                         profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
-                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", request.RequestAction);
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
                         subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
                         toEmail = request.ManagerEmail;
                         toName = request.ManagerName;
@@ -129,7 +129,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     string body = templateemail.EmailBody;
                     body = body.Replace("#$DearName$#", toName);
                     body = body.Replace("#$RequestNo$#", data.RequestNo);
-                    body = body.Replace("#$Action$#", data.RequestAction);
+                    body = body.Replace("#$Action$#", UtilityHelper.GetActionName(data.RequestAction));
                     body = body.Replace("#$RequestDate$#", data.RequestDate.ToString("dd-MM-yyyy"));
                     body = body.Replace("#$RequestBy$#", data.RequesterName);
                     var urlWeb = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("WebConfig")["WebBaseAddress"] ?? "";

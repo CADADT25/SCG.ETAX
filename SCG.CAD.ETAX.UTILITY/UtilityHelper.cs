@@ -12,6 +12,54 @@ namespace SCG.CAD.ETAX.UTILITY
 {
     public class UtilityHelper
     {
+        public static List<string> GetFileDirectories(string path)
+        {
+            List<string> files = new List<string>();
+            try
+            {
+                foreach (string f in Directory.GetFiles(path))
+                {
+                    files.Add(f);
+                }
+                foreach (string d in Directory.GetDirectories(path))
+                {
+                    files.AddRange(GetFileDirectories(d));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return files;
+        }
+        public static List<string> GetDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.AllDirectories)
+        {
+            if (searchOption == SearchOption.TopDirectoryOnly)
+                return Directory.GetDirectories(path, searchPattern).ToList();
+
+            var directories = new List<string>(GetDirectories(path, searchPattern));
+
+            for (var i = 0; i < directories.Count; i++)
+            {
+                directories.AddRange(GetDirectories(directories[i], searchPattern));
+            }
+
+
+            return directories;
+        }
+
+        private static List<string> GetDirectories(string path, string searchPattern)
+        {
+            try
+            {
+                return Directory.GetDirectories(path, searchPattern).ToList();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return new List<string>();
+            }
+        }
         public static string EncryptString(string plainText, string key = "")
         {
             if (string.IsNullOrEmpty(key))
