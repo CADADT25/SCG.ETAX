@@ -203,7 +203,7 @@
                                 <div class="col-md-2 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsFont" onclick="onChangeBathPdfSignFont();" />
+                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsFont" onclick="onChangeInsertBathPdfSignFont();" />
                                             <label class="custom-control-label" for="toggleInsertConfigPdfSignIsFont">Font</label>
                                         </div>
                                     </div>
@@ -212,16 +212,14 @@
                                 <div class="col-md-5 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Font </label>
-                                        <select disabled class="select2 form-control" id="ddlInsertConfigPdfSignFontName">
-                                            <option value="Arial" selected>Arial</option>
-                                        </select>
+                                        <select disabled class="select2 form-control" id="ddlInsertConfigPdfSignFontName"></select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Font Size </label>
-                                        <input type="text" id="txtInsertConfigPdfSignFontSize" onkeyup="validateInsertConfigPdfSign();" class="form-control">
+                                        <input disabled type="text" id="txtInsertConfigPdfSignFontSize" onkeyup="validateInsertConfigPdfSign();" class="form-control">
                                     </div>
                                 </div>
 
@@ -231,7 +229,7 @@
                                 <div class="col-md-2 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
+                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsImage" onclick="onChangeInsertBathPdfSignImageURL();" />
                                             <label class="custom-control-label" for="toggleInsertConfigPdfSignIsImage">Image</label>
                                         </div>
                                     </div>
@@ -240,7 +238,7 @@
                                 <div class="col-md-9 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Image </label>
-                                        <input type="text" id="txtInsertConfigPdfSignImage" class="form-control">
+                                        <input disabled type="text" id="txtInsertConfigPdfSignImage" class="form-control">
                                     </div>
                                 </div>
 
@@ -299,9 +297,9 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
-                                            <label class="custom-control-label" for="toggleInsertConfigPdfSignIsImage">Specific Page</label>
-                                            <input type="text" width="50" id="txtInsertConfigPdfSignImage" class="form-control">
+                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsImageSpecific" onclick="onChangeInsertBathPdfSignImageSpecific();" />
+                                            <label class="custom-control-label" for="toggleInsertConfigPdfSignIsImageSpecific">Specific Page</label>
+                                            <input disabled type="text" width="50" id="txtInsertConfigPdfSignImageSpecific" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -351,8 +349,8 @@
                                 <div class="col-md-12 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
-                                            <label class="custom-control-label" for="toggleInsertConfigPdfSignIsImage">Timestamp</label>
+                                            <input type="checkbox" class="custom-control-input" id="toggleInsertConfigTimestamp" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleInsertConfigTimestamp">Timestamp</label>
                                         </div>
                                     </div>
                                 </div>

@@ -21,6 +21,37 @@
 
     });
 
+    function ClearAllInsertXMLGEN(){
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlGeneratorInputSource').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlGeneratorInputType').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlGeneratorOutputSource').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlGeneratorOutputType').val('').trigger('change');
+        }, 1000);
+        
+        document.getElementById('txtInsertConfigXmlGeneratorInputPath').value = '';
+        document.getElementById('txtInsertConfigXmlGeneratorOutputPath').value = '';
+        document.getElementById('txtInsertConfigXmlGeneratorOnlineRecordNumber').value = '';
+        
+        $('#ddlInsertConfigXmlGeneratorInputSource').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorInputType').prop('disabled', true)
+        $('#txtInsertConfigXmlGeneratorInputPath').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorOutputSource').prop('disabled', true)
+        $('#ddlInsertConfigXmlGeneratorOutputType').prop('disabled', true)
+        $('#txtInsertConfigXmlGeneratorOutputPath').prop('disabled', true)
+        $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').prop('disabled', true)
+        
+        $('#toggleInsertConfigXmlGeneratorIsBatch').prop('checked', false)
+        $('#toggleInsertConfigXmlGeneratorIsOnline').prop('checked', false)
+    }
+
     function fnDropdownConfigXmlGeneratorDataSource() {
 
             $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
@@ -67,7 +98,6 @@
 
         $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').prop('disabled', true)
 
-        $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').val('');
     }
 
     function onChangeOnline(){
@@ -84,9 +114,6 @@
 
         $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').prop('disabled', false)
 
-
-        $('#txtInsertConfigXmlGeneratorInputPath').val('');
-        $('#txtInsertConfigXmlGeneratorOutputPath').val('');
     }
 
     function onChangeBathUpdate(){
@@ -103,7 +130,6 @@
 
         $('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').prop('disabled', true)
 
-        $('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').val('');
     }
 
     function onChangeOnlineUpdate(){
@@ -119,10 +145,6 @@
         $('#txtUpdateConfigXmlGeneratorOutputPath').prop('disabled', true)
 
         $('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').prop('disabled', false)
-
-
-        $('#txtUpdateConfigXmlGeneratorInputPath').val('');
-        $('#txtUpdateConfigXmlGeneratorOutputPath').val('');
 
     }
 
@@ -224,7 +246,7 @@
 
 
     function fnInsertCancelConfigXmlGenerator(){
-
+        ClearAllInsertXMLGEN();
         $("#modalInsertConfigXmlGenerator").modal('hide');
     }
 
@@ -248,7 +270,7 @@
         document.getElementById('txtInsertConfigXmlGeneratorCompanyCode').value = setCompanyCode;
 
         //fnDropdownConfigXmlGeneratorDataSource();
-
+        ClearAllInsertXMLGEN();
         $("#modalInsertConfigXmlGenerator").modal('show');
     }
 
@@ -416,22 +438,12 @@
 
         model.configXmlGeneratorCompanyCode = $('#txtInsertConfigXmlGeneratorCompanyCode').val();
 
-        if($('#txtInsertConfigXmlGeneratorOnlineRecordNumber') == ''){
-            model.ConfigXmlGeneratorInputSource = $('#ddlInsertConfigXmlGeneratorInputSource').val();
-            model.ConfigXmlGeneratorInputType = $('#ddlInsertConfigXmlGeneratorInputType').val();
-            model.ConfigXmlGeneratorInputPath = $('#txtInsertConfigXmlGeneratorInputPath').val();
-            model.ConfigXmlGeneratorOutputSource = $('#ddlInsertConfigXmlGeneratorOutputSource').val();
-            model.ConfigXmlGeneratorOutputType = $('#ddlInsertConfigXmlGeneratorOutputType').val();
-            model.ConfigXmlGeneratorOutputPath = $('#txtInsertConfigXmlGeneratorOutputPath').val();
-        }
-        else{
-            model.ConfigXmlGeneratorInputSource = '';
-            model.ConfigXmlGeneratorInputType = '';
-            model.ConfigXmlGeneratorInputPath = '';
-            model.ConfigXmlGeneratorOutputSource = '';
-            model.ConfigXmlGeneratorOutputType = '';
-            model.ConfigXmlGeneratorOutputPath = '';
-        }
+        model.ConfigXmlGeneratorInputSource = $('#ddlInsertConfigXmlGeneratorInputSource').val();
+        model.ConfigXmlGeneratorInputType = $('#ddlInsertConfigXmlGeneratorInputType').val();
+        model.ConfigXmlGeneratorInputPath = $('#txtInsertConfigXmlGeneratorInputPath').val();
+        model.ConfigXmlGeneratorOutputSource = $('#ddlInsertConfigXmlGeneratorOutputSource').val();
+        model.ConfigXmlGeneratorOutputType = $('#ddlInsertConfigXmlGeneratorOutputType').val();
+        model.ConfigXmlGeneratorOutputPath = $('#txtInsertConfigXmlGeneratorOutputPath').val();
 
         model.ConfigXmlGeneratorOnlineRecordNumber = $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').val();
         model.CreateBy = $("#leftSideEmail").text();

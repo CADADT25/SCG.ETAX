@@ -110,7 +110,6 @@
         $('#ddlInsertConfigXmlSignOutputConvertSource').prop('disabled', false)
         $('#txtInsertConfigXmlSignOutputConvertPath').prop('disabled', false)
         $('#txtInsertConfigXmlSignOnlineRecordNumber').prop('disabled', true)
-        $('#txtInsertConfigXmlSignOnlineRecordNumber').val('');
     }
 
     function onChangeOnlineXmlSign(){
@@ -139,7 +138,6 @@
         $('#ddlUpdateConfigXmlSignOutputConvertSource').prop('disabled', false)
         $('#txtUpdateConfigXmlSignOutputConvertPath').prop('disabled', false)
         $('#txtUpdateConfigXmlSignOnlineRecordNumber').prop('disabled', true)
-        $('#txtUpdateConfigXmlSignOnlineRecordNumber').val('');
     }
 
     function onChangeOnlineXmlSignUpdate(){
@@ -154,6 +152,34 @@
         $('#ddlUpdateConfigXmlSignOutputConvertSource').prop('disabled', true)
         $('#txtUpdateConfigXmlSignOutputConvertPath').prop('disabled', true)
         $('#txtUpdateConfigXmlSignOnlineRecordNumber').prop('disabled', false)
+    }
+
+    function ClearAllInsertXMLSING(){
+        $('#ddlInsertConfigXmlSignInputSource').prop('disabled', true)
+        $('#txtInsertConfigXmlSignInputPath').prop('disabled', true)
+        $('#ddlInsertConfigXmlSignOutputSource').prop('disabled', true)
+        $('#txtInsertConfigXmlSignOutputPath').prop('disabled', true)
+        $('#ddlInsertConfigXmlSignOutputConvertSource').prop('disabled', true)
+        $('#txtInsertConfigXmlSignOutputConvertPath').prop('disabled', true)
+        $('#txtInsertConfigXmlSignOnlineRecordNumber').prop('disabled', true)
+        
+        document.getElementById('txtInsertConfigXmlSignInputPath').value = '';
+        document.getElementById('txtInsertConfigXmlSignOutputPath').value = '';
+        document.getElementById('txtInsertConfigXmlSignOutputConvertPath').value = '';
+        document.getElementById('txtInsertConfigXmlSignOnlineRecordNumber').value = '';
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlSignInputSource').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlSignOutputSource').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigXmlSignOutputConvertSource').val('').trigger('change');
+        }, 1000);
+        
+        document.getElementById("toggleInsertConfigXmlSignIsBatch").checked = false;
+        document.getElementById("toggleInsertConfigXmlSignIsOnline").checked = false;
     }
 
     function RenderConfigXmlSign(setCompanyCode){
@@ -252,7 +278,8 @@
 
 
     function fnInsertCancelConfigXmlSign(){
-
+        
+        ClearAllInsertXMLSING();
         $("#modalInsertConfigXmlSign").modal('hide');
     }
 
@@ -287,6 +314,8 @@
         document.getElementById('txtInsertConfigXmlSignCompanyCode').value = setCompanyCode;
         document.getElementById('txtInsertConfigXmlSignTaxNumber').value = setTaxNumber;
 
+        ClearAllInsertXMLSING();
+        
         //fnDropdownConfigXmlSignDataSource();
 
         $("#modalInsertConfigXmlSign").modal('show');
@@ -461,26 +490,14 @@
         model.ConfigXmlsignCompanycode = $('#txtInsertConfigXmlSignCompanyCode').val();
         model.ConfigXmlsignCompanyTax = $('#txtInsertConfigXmlSignTaxNumber').val();
 
-        if($('#toggleInsertConfigXmlSignIsBatch').prop('checked')){
-
-            model.ConfigXmlSignInputSource = $('#ddlInsertConfigXmlSignInputSource').val();
-            model.ConfigXmlSignInputPath = $('#txtInsertConfigXmlSignInputPath').val();
-            model.ConfigXmlSignOutputSource = $('#ddlInsertConfigXmlSignOutputSource').val();
-            model.ConfigXmlSignOutputPath = $('#txtInsertConfigXmlSignOutputPath').val();
-
-            model.ConfigXmlsignOutputConvertSource = $('#ddlInsertConfigXmlSignOutputConvertSource').val();
-            model.ConfigXmlsignOutputConvertPath = $('#txtInsertConfigXmlSignOutputConvertPath').val();
-        }
-        else{
-            model.ConfigXmlSignInputSource = '';
-            model.ConfigXmlSignInputPath = '';
-            model.ConfigXmlSignOutputSource = '';
-            model.ConfigXmlSignOutputPath = '';
-            model.ConfigXmlsignOutputConvertSource = '';
-            model.ConfigXmlsignOutputConvertPath = '';
-        }
-
+        model.ConfigXmlSignInputSource = $('#ddlInsertConfigXmlSignInputSource').val();
+        model.ConfigXmlSignInputPath = $('#txtInsertConfigXmlSignInputPath').val();
+        model.ConfigXmlSignOutputSource = $('#ddlInsertConfigXmlSignOutputSource').val();
+        model.ConfigXmlSignOutputPath = $('#txtInsertConfigXmlSignOutputPath').val();
         
+        model.ConfigXmlsignOutputConvertSource = $('#ddlInsertConfigXmlSignOutputConvertSource').val();
+        model.ConfigXmlsignOutputConvertPath = $('#txtInsertConfigXmlSignOutputConvertPath').val();
+
         model.ConfigXmlSignOnlineRecordNumber = $('#txtInsertConfigXmlSignOnlineRecordNumber').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();

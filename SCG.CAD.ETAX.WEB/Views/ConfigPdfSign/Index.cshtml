@@ -14,6 +14,8 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownFont();
+            fnDropdownDataSource();
             RenderConfigPdfSign(setCompanyCode);
         }, 1200);
 
@@ -43,7 +45,7 @@
         {
             value: 0,
         }).html("--- Select Data Source ---").appendTo("#ddlInsertConfigPdfSignOutputConvertSource");
-        
+
 
 
         $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
@@ -65,13 +67,13 @@
                         value: data.dataSourceNo,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignOutputConvertSource");
-                    
+
                 $('<option>',
                     {
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlUpdateConfigPdfSignInputSource");
-                    
+
                 $('<option>',
                     {
                         value: data.dataSourceName,
@@ -80,7 +82,25 @@
 
             });
 
+        })
+    }
+     function fnDropdownFont() {
 
+        $.getJSON("@Url.Action("List", "Font")", function (data) {
+            console.log(data);
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.fontName,
+                        text: data.fontName
+                    }).html(data.fontName).appendTo("#ddlInsertConfigPdfSignFontName");
+
+                $('<option>',
+                    {
+                        value: data.fontName,
+                        text: data.fontName
+                    }).html(data.fontName).appendTo("#ddlUpdateConfigPdfSignFontName");
+            });
         })
     }
 
@@ -106,7 +126,6 @@
 
         $('#txtInsertConfigPdfSignOnlineRecordNumber').prop('disabled', true)
 
-        $('#txtInsertConfigPdfSignOnlineRecordNumber').val('');
     }
 
     function onChangeOnlinePdfSign(){
@@ -132,7 +151,7 @@
 
         // ====================
     }
-    
+
     function onChangeBathUpdatePdfSign(){
         $('#toggleUpdateConfigPdfSignIsBatch').prop('checked', true)
         $('#toggleUpdateConfigPdfSignIsOnline').prop('checked', false)
@@ -155,7 +174,6 @@
 
         $('#txtUpdateConfigPdfSignOnlineRecordNumber').prop('disabled', true)
 
-        //$('#txtUpdateConfigPdfSignOnlineRecordNumber').val('');
     }
 
     function onChangeOnlineUpdatePdfSign(){
@@ -180,6 +198,54 @@
         $('#txtUpdateConfigPdfSignOnlineRecordNumber').prop('disabled', false)
 
         // ====================
+    }
+
+    function ClearAllInsertConfigPDFSIGN(){
+        document.getElementById("toggleInsertConfigPdfSignIsBatch").checked = false;
+        document.getElementById("toggleInsertConfigPdfSignIsOnline").checked = false;
+
+
+        setTimeout(function(){
+            $('#ddlInsertConfigPdfSignInputType').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigPdfSignInputSource').val('').trigger('change');
+        }, 1000);
+        document.getElementById('txtInsertConfigPdfSignInputPath').value = '';
+
+        setTimeout(function(){
+            $('#ddlInsertConfigPdfSignOutputType').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigPdfSignOutputSource').val('').trigger('change');
+        }, 1000);
+        document.getElementById('txtInsertConfigPdfSignOutputPath').value = '';
+
+        document.getElementById('txtInsertConfigPdfSignFtpHost').value = '';
+        document.getElementById('txtInsertConfigPdfSignFtpPort').value = '';
+        document.getElementById('txtInsertConfigPdfSignFtpUsername').value = '';
+        document.getElementById('txtInsertConfigPdfSignFtpPassword').value = '';
+        document.getElementById('txtInsertConfigPdfSignOnlineRecordNumber').value = '';
+
+        document.getElementById("toggleInsertConfigPdfSignIsDigitalSign").checked = false;
+        document.getElementById("toggleInsertConfigPdfSignIsFont").checked = false;
+        document.getElementById("toggleInsertConfigPdfSignIsImage").checked = false;
+        document.getElementById('txtInsertConfigPdfSignFontSize').value = '';
+        document.getElementById('txtInsertConfigPdfSignImage').value = '';
+        document.getElementById('txtInsertConfigPdfSignImagex').value = '';
+        document.getElementById('txtInsertConfigPdfSignImagey').value = '';
+        document.getElementById("toggleInsertConfigPdfSignIsImageFirst").checked = false;
+        document.getElementById("toggleInsertConfigPdfSignIsImageLast").checked = false;
+        document.getElementById("toggleInsertConfigPdfSignIsImageSpecific").checked = false;
+        document.getElementById('txtInsertConfigPdfSignImage').value = '';
+
+        document.getElementById('txtInsertConfigPdfSignLocation').value = '';
+        document.getElementById('txtInsertConfigPdfSignReason').value = '';
+        document.getElementById('txtInsertConfigPdfSignImage').value = '';
+        document.getElementById("toggleInsertConfigPdfSignIsImage").checked = false;
+        document.getElementById('txtInsertConfigPdfSignUrl').value = '';
+        document.getElementById('txtInsertConfigPdfSignUsername').value = '';
+        document.getElementById('txtInsertConfigPdfSignPassword').value = '';
     }
 
     function RenderConfigPdfSign(setCompanyCode){
@@ -305,7 +371,7 @@
 
 
     function fnInsertCancelConfigPdfSign(){
-
+        ClearAllInsertConfigPDFSIGN();
         $("#modalInsertConfigPdfSign").modal('hide');
     }
 
@@ -323,13 +389,13 @@
 
             if(setCompanyCode == null || setCompanyCode == ''){
                 setCompanyCode = $("#companyCodeState").text();
-            }   
+            }
         }
 
-        fnDropdownDataSource();
+        //fnDropdownDataSource();
 
         document.getElementById('txtInsertConfigPdfSignCustomerCode').value = setCompanyCode;
-
+        ClearAllInsertConfigPDFSIGN();
         $("#modalInsertConfigPdfSign").modal('show');
     }
 
@@ -362,13 +428,13 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            
-            fnDropdownDataSource();
+
+            //fnDropdownDataSource();
             callConfigPdfSignGetDetailController(getPK);
         });
     }
     function callEditConfigPdfSign(getPK){
-        fnDropdownDataSource();
+        //fnDropdownDataSource();
         callConfigPdfSignGetDetailController(getPK);
     }
 
@@ -427,17 +493,18 @@
                 document.getElementById('txtUpdateConfigPdfSignInputPath').value = data.ConfigPdfsignInputPath;
                 document.getElementById('txtUpdateConfigPdfSignOutputPath').value = data.ConfigPdfsignOutputPath;
                 document.getElementById('txtUpdateConfigPdfSignOnlineRecordNumber').value = data.ConfigPdfsignOnlineRecordNumber;
-                
+
                 if(data.ConfigPdfsignPage == 'first'){
                     document.getElementById("toggleUpdateConfigPdfSignIsImageFirst").checked = true;
                 }else if(data.ConfigPdfsignPage == 'last'){
                     document.getElementById("toggleUpdateConfigPdfSignIsImageLast").checked = true;
                 }
                 else{
-                    document.getElementById('toggleUpdateConfigPdfSignIsImage').value = data.ConfigPdfsignPage;
+                    document.getElementById("toggleUpdateConfigPdfSignIsImageSpecific").checked = true;
+                    document.getElementById('txtUpdateConfigPdfSignImageSpecific').value = data.ConfigPdfsignPage;
                 }
 
-                if(data.ConfigPdfsignOnlineRecordNumber == '' || data.ConfigPdfsignOnlineRecordNumber == null){               
+                if(data.ConfigPdfsignOnlineRecordNumber == '' || data.ConfigPdfsignOnlineRecordNumber == null){
                     document.getElementById("toggleUpdateConfigPdfSignIsBatch").checked = true;
                     document.getElementById("toggleUpdateConfigPdfSignIsOnline").checked = false;
                     onChangeBathUpdatePdfSign();
@@ -447,7 +514,6 @@
                     onChangeOnlineUpdatePdfSign();
                 }
 
-                document.getElementById('ddlUpdateConfigPdfSignFontName').value = data.ConfigPdfsignFontName;
                 document.getElementById('txtUpdateConfigPdfSignFontSize').value = data.ConfigPdfsignFontSize;
                 document.getElementById('txtUpdateConfigPdfSignImage').value = data.ConfigPdfsignImage;
                 document.getElementById('txtUpdateConfigPdfSignImagex').value = data.ConfigPdfsignUlx;
@@ -478,7 +544,7 @@
                 else{
                     document.getElementById("toggleUpdateConfigPdfSignIsActive").checked = false;
                 }
-                
+
                 setTimeout(function(){
                     $('#ddlUpdateConfigPdfSignInputType').val(data.ConfigPdfsignInputType).trigger('change');
                 }, 1000);
@@ -490,6 +556,9 @@
                 }, 1000);
                 setTimeout(function(){
                     $('#ddlUpdateConfigPdfSignOutputSource').val(data.ConfigPdfsignOutputSource).trigger('change');
+                }, 1000);
+                setTimeout(function(){
+                    $('#ddlUpdateConfigPdfSignFontName').val(data.ConfigPdfsignFontName).trigger('change');
                 }, 1000);
 
                 $("#modalUpdateConfigPdfSign").modal('show');
@@ -516,11 +585,11 @@
             page = "last";
         }
         else{
-            page = $('#toggleInsertConfigPdfSignIsImage').val();
+            page = $('#toggleInsertConfigPdfSignIsImageSpecific').val();
         }
 
         var model = new Object();
-        
+
         model.ConfigPdfsignCompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CustomerCode = $('#txtInsertConfigPdfSignCustomerCode').val();
         model.ConfigPdfSignInputSource = $('#ddlInsertConfigPdfSignInputSource').val();
@@ -576,7 +645,7 @@
                     document.getElementById('txtInsertConfigPdfSignOnlineRecordNumber').value = '';
                     document.getElementById('toggleInsertConfigPdfSignIsImageFirst').value = '';
                     document.getElementById('toggleInsertConfigPdfSignIsImageLast').value = '';
-                    document.getElementById('toggleInsertConfigPdfSignIsImage').value = '';
+                    document.getElementById('toggleInsertConfigPdfSignIsImageSpecific').value = '';
                     document.getElementById('txtInsertConfigPdfSignCustomerCode').value = '';
                     document.getElementById('ddlInsertConfigPdfSignInputSource').value = '';
                     document.getElementById('txtInsertConfigPdfSignInputPath').value = '';
@@ -623,7 +692,7 @@
         else{
             IsActive = 0;
         }
-        
+
         if($('#toggleUpdateConfigPdfSignIsImageFirst').prop('checked')){
             page = "first";
         }
@@ -631,9 +700,9 @@
             page = "last";
         }
         else{
-            page = $('#toggleUpdateConfigPdfSignIsImage').val();
+            page = $('#toggleUpdateConfigPdfSignIsImageSpecific').val();
         }
-        
+
         if($('#toggleUpdateConfigPdfSignIsImage').prop('checked')){
             IsTimeStamp = "1";
         }
@@ -690,7 +759,7 @@
                 if(data.status == true){
 
                     fnSweetAlert_SaveSuccess();
-                                        
+
                     document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignInputSource').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignOutputSource').value = '';
@@ -699,7 +768,7 @@
                     document.getElementById('txtUpdateConfigPdfSignOnlineRecordNumber').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImageFirst').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImageLast').value = '';
-                    document.getElementById('toggleUpdateConfigPdfSignIsImage').value = '';
+                    document.getElementById('toggleUpdateConfigPdfSignIsImageSpecific').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignInputType').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignOutputType').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignFontName').value = '';
@@ -716,7 +785,7 @@
                     document.getElementById('txtUpdateConfigPdfSignFtpPort').value = '';
                     document.getElementById('txtUpdateConfigPdfSignFtpUsername').value = '';
                     document.getElementById('txtUpdateConfigPdfSignFtpPassword').value = '';
-                    
+
                     $("#modalUpdateConfigPdfSign").modal('hide');
 
                     callConfigPdfSignIndex();
@@ -806,6 +875,79 @@
 
     }
     function validateUpdateConfigPdfSign() {
+
+    }
+    function onChangeInsertBathPdfSignFont() {
+
+        if($('#toggleInsertConfigPdfSignIsFont').prop('checked')){
+            $('#ddlInsertConfigPdfSignFontName').prop('disabled', false)
+            $('#txtInsertConfigPdfSignFontSize').prop('disabled', false)
+        }else{
+            $('#ddlInsertConfigPdfSignFontName').prop('disabled', true)
+            $('#txtInsertConfigPdfSignFontSize').prop('disabled', true)
+        }
+    }
+    function onChangeUpdateBathPdfSignFont() {
+
+        if($('#toggleUpdateConfigPdfSignIsFont').prop('checked')){
+            $('#ddlUpdateConfigPdfSignFontName').prop('disabled', false)
+            $('#txtUpdateConfigPdfSignFontSize').prop('disabled', false)
+        }else{
+            $('#ddlUpdateConfigPdfSignFontName').prop('disabled', true)
+            $('#txtUpdateConfigPdfSignFontSize').prop('disabled', true)
+        }
+    }
+    function onChangeInsertBathPdfSignImageURL() {
+
+        if($('#toggleInsertConfigPdfSignIsImage').prop('checked')){
+            $('#txtInsertConfigPdfSignImage').prop('disabled', false)
+        }else{
+            $('#txtInsertConfigPdfSignImage').prop('disabled', true)
+        }
+    }
+    function onChangeUpdateBathPdfSignImageURL() {
+
+        if($('#toggleUpdateConfigPdfSignIsImage').prop('checked')){
+            $('#txtUpdateConfigPdfSignImage').prop('disabled', false)
+        }else{
+            $('#txtUpdateConfigPdfSignImage').prop('disabled', true)
+        }
+    }
+    function onChangeInsertBathPdfSignImageSpecific() {
+
+        if($('#toggleInsertConfigPdfSignIsImageSpecific').prop('checked')){
+            $('#txtInsertConfigPdfSignImageSpecific').prop('disabled', false)
+        }else{
+            $('#txtInsertConfigPdfSignImageSpecific').prop('disabled', true)
+        }
+    }
+    function onChangeUpdateBathPdfSignImageSpecific() {
+
+        if($('#toggleUpdateConfigPdfSignIsImageSpecific').prop('checked')){
+            $('#txtUpdateConfigPdfSignImageSpecific').prop('disabled', false)
+        }else{
+            $('#txtUpdateConfigPdfSignImageSpecific').prop('disabled', true)
+        }
+    }
+    function onChangeInsertBathPdfSignFont() {
+        if($('#toggleInsertConfigPdfSignIsFont').prop('checked')){
+            $('#ddlInsertConfigPdfSignFontName').prop('disabled', false)
+            $('#txtInsertConfigPdfSignFontSize').prop('disabled', false)
+        }else{
+            $('#ddlInsertConfigPdfSignFontName').prop('disabled', true)
+            $('#txtInsertConfigPdfSignFontSize').prop('disabled', true)
+        }
+    }
+    function onChangeUpdateBathPdfSignFont() {
+        if($('#toggleUpdateConfigPdfSignIsFont').prop('checked')){
+            $('#ddlUpdateConfigPdfSignFontName').prop('disabled', false)
+            $('#txtUpdateConfigPdfSignFontSize').prop('disabled', false)
+        }else{
+            $('#ddlUpdateConfigPdfSignFontName').prop('disabled', true)
+            $('#txtUpdateConfigPdfSignFontSize').prop('disabled', true)
+        }
+    }
+    function onChangeBathPdfSignDigitalSign() {
 
     }
 

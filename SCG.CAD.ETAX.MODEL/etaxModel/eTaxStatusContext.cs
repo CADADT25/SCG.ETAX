@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ProfileUserGroup> ProfileUserGroups { get; set; } = null!;
+        public virtual DbSet<Font> Fonts { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,50 +29,18 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileUserGroup>(entity =>
+            modelBuilder.Entity<Font>(entity =>
             {
-                entity.HasKey(e => e.ProfileUserGroupNo);
+                entity.HasKey(e => e.FontNo);
 
-                entity.ToTable("profileUserGroup");
+                entity.ToTable("Font");
 
-                entity.Property(e => e.ProfileUserGroupNo).HasColumnName("profileUserGroupNo");
-
-                entity.Property(e => e.CreateBy)
-                    .HasMaxLength(100)
-                    .HasColumnName("createBy");
-
-                entity.Property(e => e.CreateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createDate");
-
-                entity.Property(e => e.Isactive)
-                    .HasColumnName("isactive")
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ProfileCompanyCode)
-                    .HasMaxLength(1000)
-                    .HasColumnName("profileCompanyCode");
-
-                entity.Property(e => e.ProfileControlMenu)
-                    .HasMaxLength(1000)
-                    .HasColumnName("profileControlMenu");
-
-                entity.Property(e => e.ProfileUserGroupDescription)
-                    .HasMaxLength(500)
-                    .HasColumnName("profileUserGroupDescription");
-
-                entity.Property(e => e.ProfileUserGroupName)
-                    .HasMaxLength(100)
-                    .HasColumnName("profileUserGroupName");
-
-                entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(100)
-                    .HasColumnName("updateBy");
-
-                entity.Property(e => e.UpdateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("updateDate");
+                entity.Property(e => e.FontName).HasMaxLength(50);
             });
+
+            modelBuilder.HasSequence("RequestRunning")
+                .HasMax(9999)
+                .IsCyclic();
 
             OnModelCreatingPartial(modelBuilder);
         }

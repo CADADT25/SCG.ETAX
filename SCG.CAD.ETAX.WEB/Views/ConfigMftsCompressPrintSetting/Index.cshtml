@@ -14,6 +14,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownConfigMftsCompressPrintSettingDataSource();
             RenderConfigMftsCompressPrintSetting(setCompanyCode);
         }, 1200);
         
@@ -71,6 +72,15 @@
         })
     }
 
+    function ClearAllInsertPRINTSETTING(){
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsCompressPrintSettingDataSource').val('').trigger('change');
+        }, 1000);
+        
+        document.getElementById('txtInsertConfigMftsCompressPrintSettingInputFolder').value = '';
+        document.getElementById('txtInsertConfigMftsCompressPrintSettingOutputFolder').value = '';
+    }
 
 
     function RenderConfigMftsCompressPrintSetting(setCompanyCode){
@@ -165,7 +175,8 @@
 
 
     function fnInsertCancelConfigMftsCompressPrintSetting(){
-
+        
+        ClearAllInsertPRINTSETTING();
         $("#modalCreateConfigMftsCompressPrintSetting").modal('hide');
     }
 
@@ -185,9 +196,9 @@
                 setCompanyCode = $("#companyCodeState").text();
             }   
         }
-
+        ClearAllInsertPRINTSETTING();
         document.getElementById('txtInsertConfigMftsCompressPrintSettingCompanyCode').value = setCompanyCode;
-        fnDropdownConfigMftsCompressPrintSettingDataSource();
+        //fnDropdownConfigMftsCompressPrintSettingDataSource();
         $("#modalCreateConfigMftsCompressPrintSetting").modal('show');
     }
 
@@ -221,7 +232,7 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            fnDropdownConfigMftsCompressPrintSettingDataSource();
+            //fnDropdownConfigMftsCompressPrintSettingDataSource();
             callConfigMftsCompressPrintSettingGetDetailController(getPK);
         });
     }

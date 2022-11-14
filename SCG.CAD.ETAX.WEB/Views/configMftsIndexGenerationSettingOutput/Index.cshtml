@@ -14,6 +14,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownConfigMftsIndexGenerationSettingOutputOutputDataSource();
             RenderConfigMftsIndexGenerationSettingOutput(setCompanyCode);
         }, 1200);
 
@@ -182,9 +183,28 @@
         DeleteConfigMftsIndexGenerationSettingOutput(table);
     }
 
+    function ClearAllInsertOUTPUT(){
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingOutputOutputSourceName').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingOutputType').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingOutputLogReceiveType').val('').trigger('change');
+        }, 1000);
+        
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputFolder').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputLogReceiveFolder').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputHost').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputPort').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputUsername').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputPassword').value = '';
+    }
 
     function fnInsertCancelConfigMftsIndexGenerationSettingOutput(){
-
+        ClearAllInsertOUTPUT();
         $("#modalCreateConfigMftsIndexGenerationSettingOutput").modal('hide');
     }
 
@@ -204,9 +224,9 @@
                 setCompanyCode = $("#companyCodeState").text();
             }   
         }
-        fnDropdownConfigMftsIndexGenerationSettingOutputOutputDataSource();
+        //fnDropdownConfigMftsIndexGenerationSettingOutputOutputDataSource();
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputCompanyCode').value = setCompanyCode;
-
+        ClearAllInsertOUTPUT();
         $("#modalCreateConfigMftsIndexGenerationSettingOutput").modal('show');
     }
 
@@ -240,7 +260,7 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            fnDropdownConfigMftsIndexGenerationSettingOutputOutputDataSource();
+            //fnDropdownConfigMftsIndexGenerationSettingOutputOutputDataSource();
             callConfigMftsIndexGenerationSettingOutputGetDetailController(getPK);
         });
     }

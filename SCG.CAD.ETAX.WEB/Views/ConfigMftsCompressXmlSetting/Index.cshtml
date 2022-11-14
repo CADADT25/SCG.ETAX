@@ -197,8 +197,7 @@
 
     function fnInsertCancelConfigMftsCompressXmlSetting(){
 
-        //alert('123');
-
+        ClearAllInsertXMLSETTING();
         $("#modalCreateConfigMftsCompressXmlSetting").modal('hide');
     }
 
@@ -222,7 +221,7 @@
         document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = setCompanyCode;
 
         fnDropdownConfigMftsCompressXmlSettingDataSource();
-
+        ClearAllInsertXMLSETTING();
         $("#modalInsertConfigMftsCompressXmlSetting").modal('show');
     }
 
@@ -299,7 +298,23 @@
 
         $.unblockUI();
     }
-
+    
+    function ClearAllInsertXMLSETTING(){
+    
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsCompressXmlSettingDataSource').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsCompressXmlSettingCompressType').val('').trigger('change');
+        }, 1000);
+        
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingInputFolder').value = '';
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingOutputFolder').value = '';
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingHost').value = '';
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingPort').value = '';
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingUsername').value = '';
+        document.getElementById('txtInsertConfigMftsCompressXmlSettingPassword').value = '';
+    }
 
     // [Begin] Ajax call Controller
 
