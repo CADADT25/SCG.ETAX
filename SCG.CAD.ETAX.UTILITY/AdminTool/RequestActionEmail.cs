@@ -30,6 +30,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             Response res = new Response();
             ProfileEmailTemplate profileEmailTemplate = new ProfileEmailTemplate();
             ConfigMftsEmailSetting configEmail = new ConfigMftsEmailSetting();
+            var dataTables = new List<TransactionDescription>();
             res.STATUS = false;
             string subjectemail = "";
             string toName = "";
@@ -40,10 +41,15 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             {
                 GetDataFromDataBase();
                 var request = adminToolHelper.GetRequest(requestNo);
-                var dataTables = adminToolHelper.GetRequestItemTransaction(requestNo);
-                dataTables = dataTables.OrderBy(t => t.BillingNumber).ToList();
+
                 if (request != null)
                 {
+                    if (request.RequestAction != Variable.RequestActionCode_ReSignNewTrans)
+                    {
+                        dataTables = adminToolHelper.GetRequestItemTransaction(requestNo);
+                        dataTables = dataTables.OrderBy(t => t.BillingNumber).ToList();
+                    }
+
 
                     emailType = profileEmailType.FirstOrDefault(x => x.EmailTypeCode == "request").EmailTypeNo;
 
@@ -140,40 +146,70 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     body = body.Replace("#$UrlReject$#", urlReject);
                     body = body.Replace("#$UrlEtaxApp$#", new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("WebConfig")["UrlEtaxAppforEmail"] ?? "");
 
-                    document = "<table class=\"table\">";
-                    document += "<thead>";
-                    document += "<tr>";
-                    document += "<th>#</th>";
-                    document += "<th>Billing No</th>";
-                    document += "<th>Posting year</th>";
-                    document += "<th>Company</th>";
-                    document += "<th>Customer</th>";
-                    document += "<th>IC/O2C</th>";
-                    document += "<th>Document Type</th>";
-                    document += "<th>Data Source</th>";
-                    document += "</tr>";
-                    document += "</thead>";
-
-                    document += "<tbody>";
-                    int running = 1;
-                    foreach (var item in dataList)
+                    if (data.RequestAction != Variable.RequestActionCode_ReSignNewTrans)
                     {
-                        var ic = item.Ic == 1 ? "IC" : "O2C";
+                        document = "<table class=\"table\">";
+                        document += "<thead>";
                         document += "<tr>";
-                        document += "<td>" + running.ToString() + "</td>";
-                        document += "<td>" + item.BillingNumber + "</td>";
-                        document += "<td>" + item.PostingYear + "</td>";
-                        document += "<td>" + item.CompanyCode + "</td>";
-                        document += "<td>" + item.CustomerName + "</td>";
-                        document += "<td>" + ic + "</td>";
-                        document += "<td>" + item.DocType + "</td>";
-                        document += "<td>" + item.SourceName + "</td>";
+                        document += "<th>#</th>";
+                        document += "<th>Billing No</th>";
+                        document += "<th>Posting year</th>";
+                        document += "<th>Company</th>";
+                        document += "<th>Customer</th>";
+                        document += "<th>IC/O2C</th>";
+                        document += "<th>Document Type</th>";
+                        document += "<th>Data Source</th>";
                         document += "</tr>";
-                        running += 1;
-                    }
+                        document += "</thead>";
 
-                    document += "</tbody>";
-                    document += "</table>";
+                        document += "<tbody>";
+                        int running = 1;
+                        foreach (var item in dataList)
+                        {
+                            var ic = item.Ic == 1 ? "IC" : "O2C";
+                            document += "<tr>";
+                            document += "<td>" + running.ToString() + "</td>";
+                            document += "<td>" + item.BillingNumber + "</td>";
+                            document += "<td>" + item.PostingYear + "</td>";
+                            document += "<td>" + item.CompanyCode + "</td>";
+                            document += "<td>" + item.CustomerName + "</td>";
+                            document += "<td>" + ic + "</td>";
+                            document += "<td>" + item.DocType + "</td>";
+                            document += "<td>" + item.SourceName + "</td>";
+                            document += "</tr>";
+                            running += 1;
+                        }
+
+                        document += "</tbody>";
+                        document += "</table>";
+                    }
+                    else
+                    {
+                        document = "<table class=\"table\">";
+                        document += "<thead>";
+                        document += "<tr>";
+                        document += "<th>#</th>";
+                        document += "<th>XML Path</th>";
+                        document += "<th>PDF Path</th>";
+                        document += "</tr>";
+                        document += "</thead>";
+
+                        document += "<tbody>";
+                        int running = 1;
+                        foreach (var item in data.RequestPaths)
+                        {
+                            document += "<tr>";
+                            document += "<td>" + running.ToString() + "</td>";
+                            document += "<td>" + item.PathXml + "</td>";
+                            document += "<td>" + item.PathPdf + "</td>";
+                            document += "</tr>";
+                            running += 1;
+                        }
+
+                        document += "</tbody>";
+                        document += "</table>";
+                    }
+                        
 
                     body = body.Replace("#$DataTable$#", document);
 

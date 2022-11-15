@@ -65,7 +65,8 @@
     }
     else if (Model.StatusCode == Variable.RequestStatusCode_Reject)
     {
-        if(Model.OfficerEmail != null && Model.OfficerEmail != ""){
+        if (Model.OfficerEmail != null && Model.OfficerEmail != "")
+        {
             <div id="steps">
                 <div class="step done" data-desc="Submit">
                     <div class="icon-wrapper" style="margin-top: -5px;">
@@ -88,31 +89,31 @@
                     </div>
                 </div>
             </div>
-        }else{
-            <div id="steps">
-            <div class="step done" data-desc="Submit">
-                <div class="icon-wrapper" style="margin-top: -5px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                </div>
-            </div>
-            <div class="step done" data-desc="Wait Manager">
-                <div class="icon-wrapper" style="margin-top: -5px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                </div>
-            </div>
-                <div class="step reject" data-desc="Reject">
-                <div class="icon-wrapper" style="margin-top: -5px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                </div>
-            </div>
-        </div>
         }
-        
+        else
+        {
+            <div id="steps">
+                <div class="step done" data-desc="Submit">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+                <div class="step done" data-desc="Wait Manager">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+                <div class="step reject" data-desc="Reject">
+                    <div class="icon-wrapper" style="margin-top: -5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+        }
+
     }
 
 </div>
-
-
 
 <div class="row">
     <div class="col-xl-12 col-md-12 col-12">
@@ -163,32 +164,36 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="fag-transaction" aria-labelledby="transaction" aria-expanded="true">
-                <div class="collapse-margin collapse-icon mt-2" id="fag-transaction-qna">
+@if (Model.RequestAction != Variable.RequestActionCode_ReSignNewTrans)
+{
 
-                    <div class="card">
-                        <div class="card-header" id="TabReset" data-toggle="collapse" role="button" data-target="#fag-transaction-two" aria-expanded="false" aria-controls="faq-payment-two">
-                            <span class="lead collapse-title">Transaction</span>
-                        </div>
-                        <div id="fag-transaction-two" class="collapse show" aria-labelledby="TabReset" data-parent="#fag-transaction-qna">
-                            <div class="card-body">
-                                <div class="mb-0 table-responsive">
-                                    <table class="table table-striped table-hover-animation table-hover" id="tbItemTransactionMain" style="font-size:12px;padding-bottom:15px;">
-                                        <thead style="font-size:10px">
-                                            <tr>
-                                                <th style="font-size:10px">Billing No.</th>
-                                                <th style="font-size:10px">Posting year</th>
-                                                <th style="font-size:10px">Company</th>
-                                                <th style="font-size:10px">Customer</th>
-                                                <th style="font-size:10px">IC/O2C</th>
-                                                <th style="font-size:10px">Document Type</th>
-                                                <th style="font-size:10px">Data Source</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="fag-transaction" aria-labelledby="transaction" aria-expanded="true">
+                    <div class="collapse-margin collapse-icon mt-2" id="fag-transaction-qna">
+
+                        <div class="card">
+                            <div class="card-header" id="TabReset" data-toggle="collapse" role="button" data-target="#fag-transaction-two" aria-expanded="false" aria-controls="faq-payment-two">
+                                <span class="lead collapse-title">Transaction</span>
+                            </div>
+                            <div id="fag-transaction-two" class="collapse show" aria-labelledby="TabReset" data-parent="#fag-transaction-qna">
+                                <div class="card-body">
+                                    <div class="mb-0 table-responsive">
+                                        <table class="table table-striped table-hover-animation table-hover" id="tbItemTransactionMain" style="font-size:12px;padding-bottom:15px;">
+                                            <thead style="font-size:10px">
+                                                <tr>
+                                                    <th style="font-size:10px">Billing No.</th>
+                                                    <th style="font-size:10px">Posting year</th>
+                                                    <th style="font-size:10px">Company</th>
+                                                    <th style="font-size:10px">Customer</th>
+                                                    <th style="font-size:10px">IC/O2C</th>
+                                                    <th style="font-size:10px">Document Type</th>
+                                                    <th style="font-size:10px">Data Source</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +202,40 @@
             </div>
         </div>
     </div>
-</div>
+
+}else{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="fag-requestPath" aria-labelledby="requestPath" aria-expanded="true">
+                    <div class="collapse-margin collapse-icon mt-2" id="fag-requestPath-qna">
+
+                        <div class="card">
+                            <div class="card-header" id="TabReset" data-toggle="collapse" role="button" data-target="#fag-requestPath-two" aria-expanded="false" aria-controls="faq-payment-two">
+                                <span class="lead collapse-title">File Path</span>
+                            </div>
+                            <div id="fag-requestPath-two" class="collapse show" aria-labelledby="TabReset" data-parent="#fag-requestPath-qna">
+                                <div class="card-body">
+                                    <div class="mb-0 table-responsive">
+                                        <table class="table table-striped table-hover-animation table-hover" id="tbRequestPathMain" style="font-size:12px;padding-bottom:15px;">
+                                            <thead style="font-size:10px">
+                                                <tr>
+                                                    <th style="font-size:10px">XML Path</th>
+                                                    <th style="font-size:10px">PDF Path</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -243,8 +281,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating mb-0">
-                                <textarea  data-length="20" class="form-control char-textarea" id="textarea-reason" rows="3" placeholder="reason..." style="height: 100px"></textarea>
-                               
+                                <textarea data-length="20" class="form-control char-textarea" id="textarea-reason" rows="3" placeholder="reason..." style="height: 100px"></textarea>
+
                             </div>
                         </div>
                     </div>
@@ -264,7 +302,11 @@
     var r_sta = "";
     var r_txt = "";
     $(document).ready(function () {
-        fnSearchRequestItem();
+        if ("@Model.RequestAction" != "@Variable.RequestActionCode_ReSignNewTrans") {
+            fnSearchRequestItem();
+        } else {
+            fnSearchRequestPath();
+        }
         fnSearchRequestHistory();
     });
 
@@ -325,6 +367,46 @@
                     render: function (data, type, row, meta) {
                         return data != null ? data : ""
                     }
+                }
+            ]
+        });
+    }
+
+    function fnSearchRequestPath() {
+        var table = $('#tbRequestPathMain').DataTable();
+        table.clear().draw();
+        table.destroy();
+
+        var getRequestId = $('#requestId').val();
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var table = $("#tbRequestPathMain").DataTable({
+
+            "scrollY": false,
+            "processing": true, // for show progress bar
+            "serverSide": false, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": true, // for disable multiple column at once
+            "pageLength": 50,
+            "scrollX": true,
+
+            "ajax": {
+                url: "@Url.Action("RequestPath", "Request")",
+                type: "POST",
+                data: { jsonString: getRequestId },
+                dataType: "json"
+            },
+
+
+            "columns": [
+                {
+                    data: "pathXml",
+                    width: "50%"
+                },
+                {
+                    data: "pathPdf",
+                    width: "50%"
                 }
             ]
         });
@@ -485,7 +567,7 @@
             return '<div class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
         }
     }
-  
+
     function fnClickAction(no, act, sta) {
         var re_act = "";
         if (sta == "@Variable.RequestStatusCode_WaitManager") {

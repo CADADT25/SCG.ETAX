@@ -74,6 +74,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        [Route("SubmitRequestNewTrans")]
+        public IActionResult SubmitRequestNewTrans(RequestDataModel param)
+        {
+            var result = repo.SUBMIT_REQUEST_NEW_TRANS(param).Result;
+
+            return Ok(result);
+        }
 
         [HttpPost]
         [Route("Action")]

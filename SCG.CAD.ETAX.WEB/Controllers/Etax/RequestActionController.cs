@@ -222,7 +222,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
 
-            if (dataTrans.Count() == 0)
+            if (dataTrans.Count() == 0 && requestAction != Variable.RequestActionCode_ReSignNewTrans)
             {
                 errorMsg = UtilityHelper.SetError(errorMsg, "Transaction not found.");
             }
@@ -236,6 +236,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     //{
                     //    errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
                     //}
+                    if (item.SentRevenueDepartment == 1)
+                    {
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                    }
                     if (item.Isactive != 1)
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
@@ -255,7 +259,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 }
                 else if (requestAction == Variable.RequestActionCode_ReSignNewCert)
                 {
-
+                    if (item.SentRevenueDepartment == 1)
+                    {
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                    }
+                    if (item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
+                    {
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                    }
                 }
                 // unzip
                 //else if (requestAction == "unzip")

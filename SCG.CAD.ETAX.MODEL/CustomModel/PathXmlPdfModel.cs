@@ -15,5 +15,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         }
         public List<string> Xmls { get; set; }
         public List<string> Pdfs { get; set; }
+        public string XmlPath { get; set; }
+        public string PdfPath { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace SCG.CAD.ETAX.API.Repositories
 {
-    public class RequestItemRepository : IRequestItemRepository
+    public class RequestPathRepository : IRequestPathRepository
     {
-        RequestItemService service = new RequestItemService();
+        RequestPathService service = new RequestPathService();
         public async Task<Response> GET_LIST_BY_STATUS(List<string> param)
         {
             Response resp = new Response();
@@ -20,12 +20,12 @@
 
             return await Task.FromResult(resp);
         }
-        public async Task<Response> GET_LIST()
+        public async Task<Response> GET_LIST(Guid id)
         {
             Response resp = new Response();
             try
             {
-                var result = service.GET_LIST();
+                var result = service.GET_LIST(id);
 
                 resp = result;
             }
@@ -37,7 +37,7 @@
 
             return await Task.FromResult(resp);
         }
-        public async Task<Response> INSERT(RequestItem param)
+        public async Task<Response> INSERT(RequestPath param)
         {
             Response resp = new Response();
 
@@ -55,7 +55,7 @@
 
             return await Task.FromResult(resp);
         }
-        public async Task<Response> UPDATE(RequestItem param)
+        public async Task<Response> UPDATE(RequestPath param)
         {
             Response resp = new Response();
 
@@ -73,7 +73,7 @@
 
             return await Task.FromResult(resp);
         }
-        public async Task<Response> DELETE(RequestItem param)
+        public async Task<Response> DELETE(RequestPath param)
         {
             Response resp = new Response();
 

@@ -16,5 +16,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string Manager { get; set; }
         public string UserBy { get; set; }
         public List<RequestCartDataModel> RequestCartList { get; set; }
+        public List<PathXmlPdfModel> PathList { get; set; }
     }
 }

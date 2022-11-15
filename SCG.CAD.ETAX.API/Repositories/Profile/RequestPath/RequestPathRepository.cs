@@ -1,16 +1,14 @@
 ﻿namespace SCG.CAD.ETAX.API.Repositories
 {
-    public class ConfigGlobalRepository : IConfigGlobalRepository
+    public class RequestItemRepository : IRequestItemRepository
     {
-        ConfigGlobalService service = new ConfigGlobalService();
-
-        public async Task<Response> GET_DETAIL(int id)
+        RequestItemService service = new RequestItemService();
+        public async Task<Response> GET_LIST_BY_STATUS(List<string> param)
         {
             Response resp = new Response();
-
             try
             {
-                var result = service.GET_DETAIL(id);
+                var result = service.GET_LIST_BY_STATUS(param);
 
                 resp = result;
             }
@@ -22,29 +20,9 @@
 
             return await Task.FromResult(resp);
         }
-        public async Task<Response> GET_DETAIL_BY_NAME(string cate, string name)
-        {
-            Response resp = new Response();
-
-            try
-            {
-                var result = service.GET_DETAIL_BY_NAME(cate, name);
-
-                resp = result;
-            }
-            catch (Exception ex)
-            {
-                resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
-            }
-
-            return await Task.FromResult(resp);
-        }
-
         public async Task<Response> GET_LIST()
         {
             Response resp = new Response();
-
             try
             {
                 var result = service.GET_LIST();
@@ -59,8 +37,7 @@
 
             return await Task.FromResult(resp);
         }
-
-        public async Task<Response> INSERT(ConfigGlobal param)
+        public async Task<Response> INSERT(RequestItem param)
         {
             Response resp = new Response();
 
@@ -73,13 +50,12 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
-
-        public async Task<Response> UPDATE(ConfigGlobal param)
+        public async Task<Response> UPDATE(RequestItem param)
         {
             Response resp = new Response();
 
@@ -92,13 +68,12 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
-
-        public async Task<Response> DELETE(ConfigGlobal param)
+        public async Task<Response> DELETE(RequestItem param)
         {
             Response resp = new Response();
 
@@ -111,11 +86,10 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return await Task.FromResult(resp);
         }
-
     }
 }

@@ -35,6 +35,15 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("GetDetailByName")]
+        public IActionResult GetDetailByName(string cate, string name)
+        {
+            var result = repo.GET_DETAIL_BY_NAME(cate, name).Result;
+
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("Insert")]
         public IActionResult Insert(ConfigGlobal param)

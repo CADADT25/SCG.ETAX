@@ -126,6 +126,24 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> SUBMIT_REQUEST_NEW_TRANS(RequestDataModel param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.SUBMIT_REQUEST_NEW_TRANS(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
         public async Task<Response> Action(RequestActionDataModel param)
         {
             Response resp = new Response();

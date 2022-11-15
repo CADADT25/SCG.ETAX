@@ -91,5 +91,24 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(new { data = data });
         }
+        public async Task<JsonResult> RequestPath(string jsonString)
+        {
+            var data = new List<RequestPath>();
+            try
+            {
+
+                var task = await Task.Run(() => ApiHelper.GetURI("api/RequestPath/GetList?id=" + jsonString));
+                if (task.STATUS)
+                {
+                    data = JsonConvert.DeserializeObject<List<RequestPath>>(task.OUTPUT_DATA.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return Json(new { data = data });
+        }
     }
 }

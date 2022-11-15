@@ -12,6 +12,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
             this.RequestHistorys = new List<RequestHistory>();
             this.RequestItems = new List<RequestItem>();
+            this.RequestPaths = new List<RequestPath>();
         }
         public Guid RequestId { get; set; }
         public string RequestNo { get; set; }
@@ -27,6 +28,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public DateTime RequestDate { get; set; }
         public List<RequestHistory> RequestHistorys { get; set; }
         public List<RequestItem> RequestItems { get; set; }
+        public List<RequestPath> RequestPaths { get; set; }
         public string TempUser { get; set; }
         public bool IsManager { get; set; }
         public bool IsOfficer { get; set; }

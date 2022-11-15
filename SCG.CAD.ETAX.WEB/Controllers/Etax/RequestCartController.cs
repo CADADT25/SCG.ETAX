@@ -1,6 +1,8 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Authentication;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -44,7 +46,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             return View();
         }
-        
+
         public IActionResult ManageCart()
         {
             var models = new ManageRequestCartModel();
@@ -76,7 +78,18 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         public JsonResult GetPathXmlPdf()
         {
             var data = new PathXmlPdfModel();
-            var path = @"C:\Work space\Document\Etax\Test\";
+            var configTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=REQEUST&name=RESIGN_NEWTRANS_ROOT_PATH")).Result;
+            var config = new ConfigGlobal();
+            if (configTask.STATUS)
+            {
+                config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
+            }
+            else
+            {
+                return Json(data);
+            }
+            //var path = @"C:\Work space\Document\Etax\Test\";
+            var path = config.ConfigGlobalValue;
             path = Path.Combine(path);
             var filePaths = UtilityHelper.GetFileDirectories(path);
 
@@ -84,18 +97,27 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 filePaths.ForEach(t =>
                 {
-                   
-                    if(t.Replace(path, "").ToLower().IndexOf("pdf") != -1)
+
+                    //if (t.Replace(path, "").ToLower().IndexOf(".pdf") != -1)
+                    //{
+                    //    data.Pdfs.Add(t.Replace(path, ""));
+                    //}
+                    //else if (t.Replace(path, "").ToLower().IndexOf(".xml") != -1)
+                    //{
+                    //    data.Xmls.Add(t.Replace(path, ""));
+                    //}
+                    string fExtension = t.Split('.').Last();
+                    if (fExtension.ToLower() == "pdf")
                     {
                         data.Pdfs.Add(t.Replace(path, ""));
                     }
-                    else
+                    else if (fExtension.ToLower() == "xml")
                     {
                         data.Xmls.Add(t.Replace(path, ""));
                     }
                 });
             }
-            
+
             return Json(data);
         }
         public async Task<JsonResult> List(string searchJson)
@@ -220,7 +242,57 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(res);
         }
+        public async Task<JsonResult> SubmitRequestNewTrans(string action, string manager, string jsonString)
+        {
+            Response res = new Response();
+            try
+            {
+                var dataPath = JsonConvert.DeserializeObject<List<PathXmlPdfModel>>(jsonString);
 
+                string errorMsg = ValidateBeforSubmitRequestNewTrans(action, manager, dataPath);
+                if (string.IsNullOrEmpty(errorMsg))
+                {
+                    res.STATUS = true;
+                    // Submit request here
+                    var submitRequest = new RequestDataModel();
+                    submitRequest.PathList = dataPath;
+                    submitRequest.Action = action;
+                    submitRequest.Manager = manager;
+                    submitRequest.UserBy = HttpContext.Session.GetString("userMail");
+                    var httpContentSubmitRequest = new StringContent(JsonConvert.SerializeObject(submitRequest), Encoding.UTF8, "application/json");
+                    res = await Task.Run(() => ApiHelper.PostURI("api/Request/SubmitRequestNewTrans", httpContentSubmitRequest));
+                    if (res.STATUS)
+                    {
+                        if (res.OUTPUT_DATA != null)
+                        {
+                            var reqNos = JsonConvert.DeserializeObject<List<string>>(res.OUTPUT_DATA.ToString());
+                            // Send mail to Manager
+                            foreach (var item in reqNos)
+                            {
+                                Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + item + "&action=submit"));
+
+                            }
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    res.STATUS = false;
+                    res.MESSAGE = errorMsg;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                res.STATUS = false;
+                res.MESSAGE = ex.Message;
+            }
+
+
+            return Json(res);
+        }
         private string ValidateBeforSubmitRequest(string action, string manager, List<RequestCartDataModel> dataRequestCart)
         {
             string errorMsg = "";
@@ -237,83 +309,126 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
 
-            if (dataRequestCart.Count() == 0)
+            if (action == Variable.RequestActionCode_ReSignNewTrans)
             {
-                errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
-            }
 
-            var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer };
-            var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
-            var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
-            var dataRequestItem = new List<RequestItem>();
-            if (resRequestItem.STATUS)
-            {
-                dataRequestItem = JsonConvert.DeserializeObject<List<RequestItem>>(resRequestItem.OUTPUT_DATA.ToString());
             }
-
-            foreach (var item in dataRequestCart)
+            else
             {
-                if (dataRequestItem != null)
+                if (dataRequestCart.Count() == 0)
                 {
-                    if (dataRequestItem.Count() > 0)
+                    errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
+                }
+
+                var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer };
+                var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
+                var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
+                var dataRequestItem = new List<RequestItem>();
+                if (resRequestItem.STATUS)
+                {
+                    dataRequestItem = JsonConvert.DeserializeObject<List<RequestItem>>(resRequestItem.OUTPUT_DATA.ToString());
+                }
+
+                foreach (var item in dataRequestCart)
+                {
+                    if (dataRequestItem != null)
                     {
-                        var obj = dataRequestItem.Where(t => t.TransactionNo == item.TransactionNo).FirstOrDefault();
-                        if (obj != null)
+                        if (dataRequestItem.Count() > 0)
                         {
-                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + obj.BillingNumber + " duplicates another request.");
+                            var obj = dataRequestItem.Where(t => t.TransactionNo == item.TransactionNo).FirstOrDefault();
+                            if (obj != null)
+                            {
+                                errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + obj.BillingNumber + " duplicates another request.");
+                            }
                         }
                     }
-                }
-                // delete
-                if (action == Variable.RequestActionCode_Delete)
-                {
-                    //if(item.XmlCompressStatus == "Successful")
+                    // delete
+                    if (action == Variable.RequestActionCode_Delete)
+                    {
+                        //if(item.XmlCompressStatus == "Successful")
+                        //{
+                        //    errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                        //}
+                        if (item.SentRevenueDepartment == 1)
+                        {
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                        }
+                        if (item.Isactive != 1)
+                        {
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                        }
+                    }
+                    // undelete
+                    else if (action == Variable.RequestActionCode_Undelete)
+                    {
+                        if (item.Isactive == 1)
+                        {
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
+                        }
+                    }
+                    else if (action == Variable.RequestActionCode_ReSignNewTrans)
+                    {
+
+                    }
+                    else if (action == Variable.RequestActionCode_ReSignNewCert)
+                    {
+                        if (item.SentRevenueDepartment == 1)
+                        {
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                        }
+                        if(item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
+                        {
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                        }
+                    }
+                    // unzip
+                    //else if (action == "unzip")
                     //{
-                    //    errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " compressed file.");
+                    //    if (item.XmlCompressStatus != "Successful")
+                    //    {
+                    //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
+                    //    }
+                    //    if (item.Isactive != 1)
+                    //    {
+                    //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                    //    }
+                    //    if (item.SentRevenueDepartment == 1)
+                    //    {
+                    //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
+                    //    }
                     //}
-                    if (item.Isactive != 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
-                    }
                 }
-                // undelete
-                else if (action == Variable.RequestActionCode_Undelete)
-                {
-                    if (item.Isactive == 1)
-                    {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
-                    }
-                }
-                else if (action == Variable.RequestActionCode_ReSignNewTrans)
-                {
-
-                }
-                else if (action == Variable.RequestActionCode_ReSignNewCert)
-                {
-
-                }
-                // unzip
-                //else if (action == "unzip")
-                //{
-                //    if (item.XmlCompressStatus != "Successful")
-                //    {
-                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " uncompressed file.");
-                //    }
-                //    if (item.Isactive != 1)
-                //    {
-                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
-                //    }
-                //    if (item.SentRevenueDepartment == 1)
-                //    {
-                //        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
-                //    }
-                //}
+            }
+            return errorMsg;
+        }
+        private string ValidateBeforSubmitRequestNewTrans(string action, string manager, List<PathXmlPdfModel> dataPath)
+        {
+            string errorMsg = "";
+            if (string.IsNullOrEmpty(action))
+            {
+                errorMsg = UtilityHelper.SetError(errorMsg, "Please select action.");
+            }
+            if (string.IsNullOrEmpty(manager))
+            {
+                errorMsg = UtilityHelper.SetError(errorMsg, "Please select manager.");
+            }
+            if (action != Variable.RequestActionCode_Delete && action != Variable.RequestActionCode_Undelete && action != Variable.RequestActionCode_ReSignNewTrans && action != Variable.RequestActionCode_ReSignNewCert)
+            {
+                errorMsg = UtilityHelper.SetError(errorMsg, "Unknown action.");
             }
 
+            if (dataPath.Count() == 0)
+            {
+                errorMsg = UtilityHelper.SetError(errorMsg, "Data path not found.");
+            }
+
+            if (action == Variable.RequestActionCode_ReSignNewTrans)
+            {
+
+            }
 
             return errorMsg;
         }
-
 
     }
 }
