@@ -16,7 +16,7 @@
             RenderConfigMftsCompressXmlSetting(setCompanyCode);
         }, 1200);
 
-        
+
         $("#txtConfigMftsCompressXmlSettingOneTime").flatpickr({
             enableTime: true,
             minDate: "today",
@@ -44,7 +44,7 @@
     function fnDropdownConfigMftsCompressXmlSettingDataSource() {
 
         $('#ddlInsertConfigMftsCompressXmlSettingDataSource').empty();
- 
+
         $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').empty();
 
         $('<option>',
@@ -55,15 +55,12 @@
 
         $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
             $.each(data, function (i, data) {
-
-                
-
                 $('<option>',
                     {
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigMftsCompressXmlSettingDataSource");
-               
+
 
                 $('<option>',
                     {
@@ -72,8 +69,6 @@
                     }).html(data.dataSourceName).appendTo("#ddlUpdateConfigMftsCompressXmlSettingDataSource");
 
             });
-
-
         })
     }
 
@@ -95,6 +90,26 @@
             $('#txtInsertConfigMftsCompressXmlSettingPort').prop('disabled', false)
             $('#txtInsertConfigMftsCompressXmlSettingUsername').prop('disabled', false)
             $('#txtInsertConfigMftsCompressXmlSettingPassword').prop('disabled', false)
+
+          }
+    }
+    function onChangeUpdateMftsXmlCompressType(selectObject){
+
+          var value = selectObject.value;
+
+          if(value == 'FOLDER'){
+
+            $('#txtUpdateConfigMftsCompressXmlSettingHost').prop('disabled', true)
+            $('#txtUpdateConfigMftsCompressXmlSettingPort').prop('disabled', true)
+            $('#txtUpdateConfigMftsCompressXmlSettingUsername').prop('disabled', true)
+            $('#txtUpdateConfigMftsCompressXmlSettingPassword').prop('disabled', true)
+
+          }else{
+
+            $('#txtUpdateConfigMftsCompressXmlSettingHost').prop('disabled', false)
+            $('#txtUpdateConfigMftsCompressXmlSettingPort').prop('disabled', false)
+            $('#txtUpdateConfigMftsCompressXmlSettingUsername').prop('disabled', false)
+            $('#txtUpdateConfigMftsCompressXmlSettingPassword').prop('disabled', false)
 
           }
     }
@@ -215,7 +230,7 @@
 
             if(setCompanyCode == null || setCompanyCode == ''){
                 setCompanyCode = $("#companyCodeState").text();
-            }   
+            }
         }
 
         document.getElementById('txtInsertConfigMftsCompressXmlSettingCompanyCode').value = setCompanyCode;
@@ -236,10 +251,10 @@
             fnToastrInputDataFail();
         }
     }
-               
+
     function fnUpdateConfigMftsCompressXmlSetting(){
         if ($('#txtUpdateConfigMftsCompressXmlSettingCompanyCode').val() != '' && $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val() != '') {
-            
+
             callConfigMftsCompressXmlSettingUpdateController();
         }
         else {
@@ -256,7 +271,7 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-            
+
             fnDropdownConfigMftsCompressXmlSettingDataSource();
             callConfigMftsCompressXmlSettingGetDetailController(getPK);
         });
@@ -298,16 +313,16 @@
 
         $.unblockUI();
     }
-    
+
     function ClearAllInsertXMLSETTING(){
-    
+
         setTimeout(function(){
             $('#ddlInsertConfigMftsCompressXmlSettingDataSource').val('').trigger('change');
         }, 1000);
         setTimeout(function(){
             $('#ddlInsertConfigMftsCompressXmlSettingCompressType').val('').trigger('change');
         }, 1000);
-        
+
         document.getElementById('txtInsertConfigMftsCompressXmlSettingInputFolder').value = '';
         document.getElementById('txtInsertConfigMftsCompressXmlSettingOutputFolder').value = '';
         document.getElementById('txtInsertConfigMftsCompressXmlSettingHost').value = '';
@@ -332,8 +347,8 @@
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingNo').value = data.ConfigMftsCompressXmlSettingNo;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingCompanyCode').value = data.ConfigMftsCompressXmlSettingCompanyCode;
                 //document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingSourceName;
-                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingSourceName;
-                document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = data.ConfigMftsCompressXmlSettingCompressType;
+                //document.getElementById('ddlUpdateConfigMftsCompressXmlSettingDataSource').value = data.ConfigMftsCompressXmlSettingSourceName;
+                //document.getElementById('ddlUpdateConfigMftsCompressXmlSettingCompressType').value = data.ConfigMftsCompressXmlSettingCompressType;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingInputFolder').value = data.ConfigMftsCompressXmlSettingInputFolder;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingOutputFolder').value = data.ConfigMftsCompressXmlSettingOutputFolder;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingHost').value = data.ConfigMftsCompressXmlSettingHost;
@@ -341,6 +356,13 @@
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingUsername').value = data.ConfigMftsCompressXmlSettingUsername;
                 document.getElementById('txtUpdateConfigMftsCompressXmlSettingPassword').value = data.ConfigMftsCompressXmlSettingPassword;
 
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsCompressXmlSettingDataSource').val(data.ConfigMftsCompressXmlSettingSourceName).trigger('change');
+                }, 1000);
+
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsCompressXmlSettingCompressType').val(data.ConfigMftsCompressXmlSettingCompressType).trigger('change');
+                }, 1000);
 
                 if(data.Isactive == 1){
                     document.getElementById("toggleUpdateConfigMftsCompressXmlSettingIsActive").checked = true;
@@ -539,7 +561,7 @@
         }, 500);
     }
 
-    
+
     function callModalInsertConfigMftsCompressXmlSettingOneTime(getPK){
 
         $('#appendMftsCompressXmlOneTime').empty();
@@ -575,12 +597,12 @@
                         }
             }
         });
-        
+
         sleep(1000);
         $("#modalUpdateConfigMftsCompressXmlSettingOneTime").modal('show');
     }
 
-    
+
     function callModalInsertConfigMftsCompressXmlSettingAnyTime(getPK){
 
         $('#appendMftsCompressXmlAnyTime').empty();
@@ -616,7 +638,7 @@
                         }
             }
         });
-        
+
         sleep(1000);
         $("#modalUpdateConfigMftsCompressXmlSettingAnyTime").modal('show');
     }
@@ -668,7 +690,7 @@
         });
 
     }
-    
+
     function callConfigMftsCompressXmlSettingUpdateAnyTime(setPK){
 
         var model = new Object();

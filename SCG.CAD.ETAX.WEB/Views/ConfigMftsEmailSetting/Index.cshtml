@@ -27,6 +27,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownProfilePartnerEmailTemplate();
             RenderConfigMftsEmailSetting(setCompanyCode);
         }, 1200);
 
@@ -43,10 +44,13 @@
 
     function fnDropdownProfilePartnerEmailTemplate() {
 
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Email Template ---").appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+        //$('<option>',
+        //{
+        //    value: 0,
+        //}).html("--- Select Email Template ---").appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+        
+        $('#ddlInsertConfigMftsEmailSettingEmailTemplate').empty();
+        $('#ddlUpdateConfigMftsEmailSettingEmailTemplate').empty();
 
         $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
             $.each(data, function (i, data) {
@@ -55,11 +59,7 @@
                         value: data.emailTemplateNo,
                         text: data.emailTemplateName
                     }).html(data.emailTemplateName).appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
-            });
-        })
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
-            $.each(data, function (i, data) {
+                
                 $('<option>',
                     {
                         value: data.emailTemplateNo,
@@ -257,7 +257,7 @@
 
     function callModalInsertConfigMftsEmailSetting(){
 
-        fnDropdownProfilePartnerEmailTemplate();
+        //fnDropdownProfilePartnerEmailTemplate();
 
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
@@ -412,7 +412,7 @@
 
     function callConfigMftsEmailSettingGetDetailController(getPK){
 
-        fnDropdownProfilePartnerEmailTemplate();
+        //fnDropdownProfilePartnerEmailTemplate();
 
         $.ajax({
             type: "GET",
@@ -438,7 +438,10 @@
 
                 //$('#ddlUpdateConfigMftsEmailSettingEmailTemplate').empty().append($("<option/>").val(""+data.ConfigMftsEmailSettingEmailTemplate+"").text(""+data.ConfigMftsEmailSettingEmailTemplate+""))
                 //.val(""+data.ConfigMftsEmailSettingEmailTemplate+"").trigger("change");
-
+                
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsEmailSettingEmailTemplate').val(data.ConfigMftsEmailSettingEmailTemplate).trigger('change');
+                }, 1000);
 
                 if(data.ConfigMftsEmailSettingOperation == 'SMTP'){
                     document.getElementById("toggleUpdateConfigEmailSmtp").checked = true;

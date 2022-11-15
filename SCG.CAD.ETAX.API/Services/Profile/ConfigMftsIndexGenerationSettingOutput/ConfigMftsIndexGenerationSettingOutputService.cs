@@ -1,6 +1,8 @@
 ﻿
 
 
+using SCG.CAD.ETAX.UTILITY;
+
 namespace SCG.CAD.ETAX.API.Services
 {
     public class ConfigMftsIndexGenerationSettingOutputService
@@ -75,6 +77,11 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 using (_dbContext)
                 {
+                    if (!string.IsNullOrEmpty(param.ConfigMftsIndexGenerationSettingOutputPassword))
+                    {
+                        EncodeHelper helper = new EncodeHelper();
+                        param.ConfigMftsIndexGenerationSettingOutputPassword = helper.Base64Encode(param.ConfigMftsIndexGenerationSettingOutputPassword);
+                    }
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -115,8 +122,15 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigMftsIndexGenerationSettingOutputHost = param.ConfigMftsIndexGenerationSettingOutputHost;
                         update.ConfigMftsIndexGenerationSettingOutputPort = param.ConfigMftsIndexGenerationSettingOutputPort;
                         update.ConfigMftsIndexGenerationSettingOutputUsername = param.ConfigMftsIndexGenerationSettingOutputUsername;
-                        update.ConfigMftsIndexGenerationSettingOutputPassword = param.ConfigMftsIndexGenerationSettingOutputPassword;
 
+                        if (!string.IsNullOrEmpty(param.ConfigMftsIndexGenerationSettingOutputPassword))
+                        {
+                            if (update.ConfigMftsIndexGenerationSettingOutputPassword != param.ConfigMftsIndexGenerationSettingOutputPassword)
+                            {
+                                EncodeHelper helper = new EncodeHelper();
+                                update.ConfigMftsIndexGenerationSettingOutputPassword = helper.Base64Encode(param.ConfigMftsIndexGenerationSettingOutputPassword);
+                            }
+                        }
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
