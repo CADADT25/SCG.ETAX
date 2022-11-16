@@ -80,12 +80,15 @@ namespace SCG.CAD.ETAX.API.Services
                     if (profilecompany != null)
                     {
                         dataCertificate = _dbContext.profileCertificate.FirstOrDefault(x => x.CertificateNo == profilecompany.CertificateProfileNo);
+                        if(dataCertificate != null)
+                        {
+                            param.ConfigPdfsignHsmModule = dataCertificate.CertificateHsmname;
+                            param.ConfigPdfsignHsmSerial = dataCertificate.CertificateHsmserial;
+                            param.ConfigPdfsignHsmPassword = dataCertificate.CertificateSlotPassword;
+                            param.ConfigPdfsignKeyAlias = dataCertificate.CertificateKeyAlias;
+                            param.ConfigPdfsignCertificateSerial = dataCertificate.CertificateCertSerial;
+                        }
                     }
-                    param.ConfigPdfsignHsmModule = dataCertificate.CertificateHsmname;
-                    param.ConfigPdfsignHsmSerial = dataCertificate.CertificateHsmserial;
-                    param.ConfigPdfsignHsmPassword = dataCertificate.CertificateSlotPassword;
-                    param.ConfigPdfsignKeyAlias = dataCertificate.CertificateKeyAlias;
-                    param.ConfigPdfsignCertificateSerial = dataCertificate.CertificateCertSerial;
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
                     EncodeHelper helper = new EncodeHelper();
