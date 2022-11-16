@@ -17,7 +17,7 @@
 
         $('#txtInsertProfileEmailTemplateEmailBody').summernote();
         $('#txtUpdateProfileEmailTemplateEmailBody').summernote();
-
+        fnDropdownProfileEmailTemplate();
         RenderProfileEmailTemplate();
 
     });
@@ -159,6 +159,8 @@
 
     function fnDropdownProfileEmailTemplate() {
 
+        $("#ddlInsertProfileEmailTemplateEmailTypeNo").empty();
+        $("#ddlUpdateProfileEmailTemplateEmailTypeNo").empty();
         $('<option>',
         {
             value: 0,
@@ -173,9 +175,8 @@
                         value: data.emailTypeCode,
                         text: data.emailTypeCode
                     }).html(data.emailTypeCode +' (' + data.emailTypeName + ')' ).appendTo("#ddlInsertProfileEmailTemplateEmailTypeNo");
-            });
 
-            $.each(data, function (i, data) {
+                
                 $('<option>',
                     {
                         value: data.emailTypeCode,
@@ -190,15 +191,15 @@
 
     function fnInsertCancelProfileEmailTemplate(){
 
-            $("#ddlInsertProfileEmailTemplateEmailTypeNo").empty();
             document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
+            document.getElementById('txtInsertProfileEmailTemplateName').value = '';
+            document.getElementById('txtInsertProfileEmailTemplateEmailSubject').value = '';
 
             $("#modalCreateProfileEmailTemplate").modal('hide');
     }
 
     function fnUpdateCancelProfileEmailTemplate(){
 
-            $("#ddlUpdateProfileEmailTemplateEmailTypeNo").empty();
             document.getElementById('txtUpdateProfileEmailTemplateEmailBody').value = '';
 
             $("#modalUpdateProfileEmailTemplate").modal('hide');
@@ -206,7 +207,10 @@
 
     function callModalInsertProfileEmailTemplate(){
 
-        fnDropdownProfileEmailTemplate();
+        //fnDropdownProfileEmailTemplate();
+        document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
+        document.getElementById('txtInsertProfileEmailTemplateName').value = '';
+        document.getElementById('txtInsertProfileEmailTemplateEmailSubject').value = '';
 
         $("#modalCreateProfileEmailTemplate").modal('show');
 
@@ -254,7 +258,7 @@
 
             var getPK = data[Object.keys(data)[0]];
 
-            fnDropdownProfileEmailTemplate();
+            //fnDropdownProfileEmailTemplate();
 
             callProfileEmailTemplateGetDetailController(getPK);
 
@@ -289,6 +293,8 @@
                 document.getElementById('txtUpdateProfileEmailTemplateNo').value = data.EmailTemplateNo;
 
                 document.getElementById('ddlUpdateProfileEmailTemplateEmailTypeNo').value = data.EmailTypeNo;
+                document.getElementById('txtUpdateProfileEmailTemplateName').value = data.EmailTemplateName;
+                document.getElementById('txtUpdateProfileEmailTemplateEmailSubject').value = data.EmailSubject;
 
                 $('#txtUpdateProfileEmailTemplateEmailBody').summernote('code', data.EmailBody);
 
@@ -313,7 +319,8 @@
 
         model.EmailTypeNo = $('#ddlInsertProfileEmailTemplateEmailTypeNo').val();
         model.EmailBody = $('#txtInsertProfileEmailTemplateEmailBody').val();
-
+        model.EmailTemplateName = $('#txtInsertProfileEmailTemplateName').val();
+        model.EmailSubject = $('#txtInsertProfileEmailTemplateEmailSubject').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -359,6 +366,8 @@
         model.EmailTemplateNo = $('#txtUpdateProfileEmailTemplateNo').val();
         model.EmailTypeNo = $('#ddlUpdateProfileEmailTemplateEmailTypeNo').val();
         model.EmailBody = $('#txtUpdateProfileEmailTemplateEmailBody').val();
+        model.EmailTemplateName = $('#txtUpdateProfileEmailTemplateName').val();
+        model.EmailSubject = $('#txtUpdateProfileEmailTemplateEmailSubject').val();
 
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
