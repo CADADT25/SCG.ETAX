@@ -87,7 +87,6 @@
      function fnDropdownFont() {
 
         $.getJSON("@Url.Action("List", "Font")", function (data) {
-            console.log(data);
             $.each(data, function (i, data) {
                 $('<option>',
                     {
@@ -487,7 +486,6 @@
             success: function (result) {
 
                 data = $.parseJSON(result)
-                console.log(data);
                 document.getElementById('txtUpdateConfigPdfSignNo').value = data.ConfigPdfsignNo;
                 document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = data.ConfigPdfsignCompanyCode;
                 document.getElementById('txtUpdateConfigPdfSignInputPath').value = data.ConfigPdfsignInputPath;

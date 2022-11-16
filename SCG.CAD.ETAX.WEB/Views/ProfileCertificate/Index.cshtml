@@ -3,7 +3,7 @@
     Layout = null;
 }
 
-    @await Html.PartialAsync("~/Views/ProfileCertificate/_Content.cshtml")
+@await Html.PartialAsync("~/Views/ProfileCertificate/_Content.cshtml")
 
 
 
@@ -15,30 +15,40 @@
         //$("#txtUpdateProfileCertificateStartDate").flatpickr();
 
         //$("#txtUpdateProfileCertificateEndDate").flatpickr();
-        
+
         $('#ddlInsertProfileCertificateName').select2();
 
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnGetddlCertificate();
             RenderProfileCertificate(setCompanyCode);
         }, 1200);
 
-        
+
 
         $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
         });
 
-        
+        var breakout = false;
         $('#ddlInsertProfileCertificateName').change(function() {
+            breakout = false;
             $.each(dataCertificateMaster, function (i, data) {
                 if(data.certificateCertSerial == $('#ddlInsertProfileCertificateName').val()){
                     document.getElementById('txtInsertProfileCertificatSerial').value = data.certificateCertSerial;
                     document.getElementById('txtInsertProfileCertificateStartDate').value = data.certificateStartDate;
                     document.getElementById('txtInsertProfileCertificateEndDate').value = data.certificateEndDate;
+                    breakout = true;
+                    return true;
                 }
             });
+            console.log(breakout);
+            if(breakout == false){
+               document.getElementById('txtInsertProfileCertificatSerial').value = '';
+               document.getElementById('txtInsertProfileCertificateStartDate').value = '';
+               document.getElementById('txtInsertProfileCertificateEndDate').value = '';
+            }
         });
 
     });
@@ -174,90 +184,46 @@
 
             $("#modalUpdateProfileCertificate").modal('hide');
     }
-    
+
     function callModalInsertProfileCertificate(){
-        
-        $('#ddlInsertProfileCertificateName').select2();
+
         $("#ddlUpdateProfileCompanyCertificate").empty();
         $("#modalCreateProfileCertificate").modal('show');
-        
-        sleep(1000);
-        $.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
-            $.each(data.data, function (i, slaveValue) {
-                $('select#ddlInsertProfileCertificateName').append(
-                $('<option></option>').val(slaveValue.certificateCertSerial).html(
-                 slaveValue.certificateName)
-                );
+
+
+        //$.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
+        //    $.each(data.data, function (i, slaveValue) {
+        //        $('select#ddlInsertProfileCertificateName').append(
+        //        $('<option></option>').val(slaveValue.certificateCertSerial).html(
+        //         slaveValue.certificateName)
+        //        );
+        //    });
+        //    dataCertificateMaster = data.data;
+
+        //    //$("#ddlInsertProfileCertificatSerial").trigger('change');
+        //})
+    }
+
+    function fnGetddlCertificate(){
+        var testddl = "";
+        $('<option>',
+        {
+            value: "",
+        }).html("--- Select Certificate ---").appendTo("#ddlInsertProfileCertificateName");
+
+        $.getJSON("@Url.Action("DropDownList", "CertificateMaster")", function (data) {
+
+            dataCertificateMaster = data;
+            $.each(data, function (i, data) {
+                testddl = data.certificateName + " | " + data.certificateCertSerial + " | " + data.certificateStartDate + " | " + data.certificateEndDate;
+                $('<option>',
+                    {
+                        value: data.certificateCertSerial,
+                        text: testddl
+                    }).html(testddl).appendTo("#ddlInsertProfileCertificateName");
+
             });
-            dataCertificateMaster = data.data;
-
-            //$("#ddlInsertProfileCertificatSerial").trigger('change');
         })
-        //var setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
-
-        //if(setTaxNumber == null || setTaxNumber == ''){
-        //    setTaxNumber = $("#txtUpdateProfileCompanyTaxNumber").val();
-
-        //    if(setTaxNumber == null || setTaxNumber == ''){
-        //        setTaxNumber = $("#txtInsertProfileCompanyTaxNumber").val();
-        //    }   
-        //}
-
-        //var setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
-
-        //if(setCompanyName == null || setCompanyName == ''){
-        //    setCompanyName = $("#txtUpdateProfileCompanyNameTh").val();
-
-        //    if(setCompanyName == null || setCompanyName == ''){
-        //        setCompanyName = $("#txtInsertProfileCompanyNameTh").val();
-        //    }   
-        //}
-
-
-        //document.getElementById('txtInsertProfileCertificatTaxNumber').value = setTaxNumber;
-        //document.getElementById('txtInsertProfileCertificateCompanyName').value = setCompanyName;
-
-        //$.ajax({
-        //    type: "GET",
-        //    url: "Url.Action("List", "CertificateMaster")",
-        //    //data: { id : getPK },
-        //    //contentType: 'application/json; charset=utf-8',
-        //    dataType: "json",
-        //    success: function (result) {
-        //        data = $.parseJSON(result)
-        //        console.log('Mark');
-        //        console.log(data);
-
-        //        $.each(data, function (i, data) {
-        //        $('<option>',
-        //            {
-        //                value: data.CertificateCertSerial,
-        //                text: data.CertificateCertSerial
-        //            }).html(data.CertificateCertSerial).appendTo("#ddlInsertProfileCertificatSerial");
-        //        });
-
-        //        //document.getElementById('txtUpdateProfileCertificateHSMName').value = data.CertificateHsmname;
-        //        //document.getElementById('txtUpdateProfileCertificatHSMSerial').value = data.CertificateHsmserial;
-        //        //document.getElementById('txtUpdateProfileCertificateSerial').value = data.CertificateCertSerial;
-        //        //document.getElementById('txtUpdateProfileCertificateKeyAlias').value = data.CertificateKeyAlias;
-        //        //document.getElementById('txtUpdateProfileCertificateStartDate').value = data.CompanyCertificateStartDate;
-        //        //document.getElementById('txtUpdateProfileCertificateEndDate').value = data.CompanyCertificateEndDate;
-
-
-        //        //if(data.Isactive == 1){
-        //        //    document.getElementById("toggleUpdateProfileCertificate").checked = true;
-        //        //}
-        //        //else{
-        //        //    document.getElementById("toggleUpdateProfileCertificate").checked = false;
-        //        //}
-
-        //        $("#modalUpdateProfileCertificate").modal('show');
-
-        //    }
-        //});
-        
-        //$("#modalCreateProfileCertificate").modal('show');
-
     }
 
     function fnInsertProfileCertificate(){
@@ -371,6 +337,10 @@
 
     function callProfileCertificateInsertController(){
 
+        if($('#txtInsertProfileCertificatSerial').val() == null || $('#txtInsertProfileCertificatSerial').val() == ''){
+            fnSweetAlert_Error('Please Chose Certificate');
+        }else{
+
         var IsActive = 1;
 
         if($('#toggleInsertProfileCertificate').prop('checked')){
@@ -431,6 +401,7 @@
 
             }
         });
+        }
     }
 
     function callProfileCertificateUpdateController(){
@@ -446,7 +417,7 @@
 
         var model = new Object();
 
-        
+
         model.CertificateNo = $('#txtUpdateProfileCertificateNo').val();
         model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CertificateHSMName = $('#txtUpdateProfileCertificateHSMName').val();
