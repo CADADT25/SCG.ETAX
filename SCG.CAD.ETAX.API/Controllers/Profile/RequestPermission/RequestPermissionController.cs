@@ -2,9 +2,9 @@
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestPermissionController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class RequestPermissionController : BaseController
     {
         private readonly IRequestPermissionRepository repo;
         public RequestPermissionController()

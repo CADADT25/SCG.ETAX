@@ -2,9 +2,9 @@
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class InboxManagementController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class InboxManagementController : BaseController
     {
         private readonly IInboxManagementRepository repo;
         public InboxManagementController()

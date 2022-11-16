@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ConfigPdfSignController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ConfigPdfSignController : BaseController
     {
         private readonly IConfigPdfSignRepository repo;
 

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ZipFilePostController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ZipFilePostController : BaseController
     {
         private readonly IZipFilePostRepository repo;
         public ZipFilePostController()

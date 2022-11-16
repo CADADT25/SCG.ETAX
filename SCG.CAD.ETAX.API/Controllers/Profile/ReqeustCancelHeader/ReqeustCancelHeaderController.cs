@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers.Profile.ReqeustCancelHeader
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ReqeustCancelHeaderController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ReqeustCancelHeaderController : BaseController
     {
     }
 }

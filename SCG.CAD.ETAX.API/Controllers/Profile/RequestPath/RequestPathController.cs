@@ -2,9 +2,7 @@
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestPathController : ControllerBase
+    public class RequestPathController : BaseController
     {
         private readonly IRequestPathRepository repo;
         public RequestPathController()

@@ -2,9 +2,7 @@
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestHistoryController : ControllerBase
+    public class RequestHistoryController : BaseController
     {
         private readonly IRequestHistoryRepository repo;
         public RequestHistoryController()

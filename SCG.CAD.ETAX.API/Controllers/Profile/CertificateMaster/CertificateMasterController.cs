@@ -4,9 +4,9 @@ using SCG.CAD.ETAX.API.Repositories.Profile.CertificateMaster;
 
 namespace SCG.CAD.ETAX.API.Controllers.Profile.CertificateMaster
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CertificateMasterController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class CertificateMasterController : BaseController
     {
         private readonly ICertificateMasterRepository repo;
 

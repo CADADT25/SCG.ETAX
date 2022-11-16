@@ -4,9 +4,9 @@ using SCG.CAD.ETAX.MODEL.etaxModel;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RdDocumentController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class RdDocumentController : BaseController
     {
 
         private readonly IRdDocumentRepository repo;

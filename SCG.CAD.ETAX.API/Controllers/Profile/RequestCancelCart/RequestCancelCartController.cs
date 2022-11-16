@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers.Profile.RequestCancelCart
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RequestCancelCartController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class RequestCancelCartController : BaseController
     {
     }
 }

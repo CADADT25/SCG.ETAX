@@ -1,8 +1,8 @@
 ﻿namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CancelZipHeaderControllers : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class CancelZipHeaderControllers : BaseController
     {
         private readonly ICancelZipHeaderRepository repo;
 

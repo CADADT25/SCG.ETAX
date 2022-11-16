@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DocumentCodeController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class DocumentCodeController : BaseController
     {
         private readonly IDocumentCodeRepository repo;
 

@@ -2,9 +2,9 @@
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OutputSearchPrintingController : Controller
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class OutputSearchPrintingController : BaseController
     {
 
         private readonly IOutputSearchPrintingRepository repo;

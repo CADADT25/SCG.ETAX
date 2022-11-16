@@ -577,7 +577,7 @@
                     width: "5%",
                     render: function (data, type, row) {
                         //return ' ' + data.substr(0, 100) + ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
-                        return ' ' + data.substr(0, 100);
+                        return data != null ? data.substr(0, 100) : '';
                     }
                 },
                 {
@@ -592,7 +592,7 @@
                     data: "ic",
                     width: "5%",
                     render: function (data, type, row) {
-                        return (data == "1") ? 'IC' : 'O2C';
+                        return data == null ? '' : (data == "1") ? 'IC' : 'O2C';
                     }
                 },
                 {

@@ -2,9 +2,9 @@
 
 namespace SCG.CAD.ETAX.API.Controllers.Profile.SendEmail
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SendEmailController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class SendEmailController : BaseController
     {
         private readonly ISendEmailRepository repo;
 

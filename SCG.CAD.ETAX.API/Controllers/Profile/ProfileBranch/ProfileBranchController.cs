@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace SCG.CAD.ETAX.API.Controllers
 {
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProfileBranchController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ProfileBranchController : BaseController
     {
         private readonly IProfileBranchRepository repo;
 

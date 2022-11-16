@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class AuthenticationController : BaseController
     {
         private readonly IAuthenticationRepository repo;
 

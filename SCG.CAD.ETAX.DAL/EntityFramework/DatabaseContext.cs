@@ -77,6 +77,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<RequestItem> requestItem { get; set; }
         public DbSet<RequestPath> requestPath { get; set; }
         public DbSet<RequestHistory> requestHistory { get; set; }
+        public DbSet<ConfigApplication> configApplication { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

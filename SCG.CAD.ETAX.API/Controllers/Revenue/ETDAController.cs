@@ -3,10 +3,10 @@ using SCG.CAD.ETAX.API.Repositories;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [ApiController]
+    //[ApiController]
 
-    [Route("api/[controller]")]
-    public class ETDAController : ControllerBase
+    //[Route("api/[controller]")]
+    public class ETDAController : BaseController
     {
         private readonly IETDARepository repo;
 
