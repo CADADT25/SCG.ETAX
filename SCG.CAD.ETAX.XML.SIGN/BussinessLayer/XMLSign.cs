@@ -338,19 +338,21 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         public APISendFileXMLSignModel PrepareSendXMLSign(ConfigXmlSign config, string filepath, string documentType)
         {
             APISendFileXMLSignModel result = new APISendFileXMLSignModel();
+            EncodeHelper encodeHelper = new EncodeHelper();
             try
             {
-                //result.hsmName = config.ConfigXmlsignHsmModule;
-                //result.hsmSerial = config.ConfigXmlsignHsmSerial;
-                //result.slotPassword = config.ConfigXmlsignHsmPassword;
-                //result.keyAlias = config.ConfigXmlsignKeyAlias;
-                //result.certSerial = config.ConfigXmlsignCertificateSerial;
+                result.hsmName = config.ConfigXmlsignHsmModule;
+                result.hsmSerial = config.ConfigXmlsignHsmSerial;
+                result.slotPassword = encodeHelper.Base64Decode(config.ConfigXmlsignHsmPassword);
+                result.keyAlias = config.ConfigXmlsignKeyAlias;
+                result.certSerial = config.ConfigXmlsignCertificateSerial;
                 result.documentType = documentType;
-                result.hsmName = "pse";
-                result.hsmSerial = "571271:28593";
-                result.slotPassword = "P@ssw0rd1";
-                result.keyAlias = "NEW06391012205001173_200916150834";
-                result.certSerial = "5c6e65dc1b7b9da8";
+
+                //result.hsmName = "pse";
+                //result.hsmSerial = "571271:28593";
+                //result.slotPassword = "P@ssw0rd1";
+                //result.keyAlias = "NEW06391012205001173_200916150834";
+                //result.certSerial = "5c6e65dc1b7b9da8";
                 //result.documentType = "388";
                 result.fileEncode = logicToolHelper.ConvertFileToEncodeBase64(filepath);
 

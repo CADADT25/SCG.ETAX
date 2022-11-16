@@ -117,13 +117,14 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             IEnumerable<SftpFile> allFileInPath;
             List<FileDetail> result = new List<FileDetail>();
             FileDetail filedetail = new FileDetail();
+            EncodeHelper encodeHelper = new EncodeHelper();
             string filename = "logindex";
             try
             {
                 var host = configoutput.ConfigMftsIndexGenerationSettingOutputHost;
                 var port = configoutput.ConfigMftsIndexGenerationSettingOutputPort;
                 var username = configoutput.ConfigMftsIndexGenerationSettingOutputUsername;
-                var password = configoutput.ConfigMftsIndexGenerationSettingOutputPassword;
+                var password = encodeHelper.Base64Decode(configoutput.ConfigMftsIndexGenerationSettingOutputPassword);
 
                 using (var client = new SftpClient(host, Convert.ToInt32(port), username, password))
                 {
