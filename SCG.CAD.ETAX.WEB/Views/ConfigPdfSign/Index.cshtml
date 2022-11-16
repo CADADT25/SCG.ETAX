@@ -286,10 +286,10 @@
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
-                {
-                    data: "configPdfsignCompanyTax",
-                    width: "20%"
-                },
+                //{
+                //    data: "configPdfsignCompanyTax",
+                //    width: "20%"
+                //},
                 {
                     data: "configPdfsignUlx",
                     width: "10%"
@@ -380,7 +380,7 @@
     }
 
     function callModalInsertConfigPdfSign(){
-
+        $( "#homeIcon-tab" ).click();
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
         if(setCompanyCode == null || setCompanyCode == ''){
@@ -434,6 +434,7 @@
     }
     function callEditConfigPdfSign(getPK){
         //fnDropdownDataSource();
+        $( "#homeIconUpdate-tab" ).click();
         callConfigPdfSignGetDetailController(getPK);
     }
 
