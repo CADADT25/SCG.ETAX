@@ -69,8 +69,19 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/>',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }
@@ -91,75 +102,75 @@
 
     function RenderProfileUserRoleMenuConfiguraion(){
 
-        var table = $("#tbUserRoleConfigControlMenu").DataTable({
+        //var table = $("#tbUserRoleConfigControlMenu").DataTable({
 
-            "scrollY": false,
-            "processing": true, // for show progress bar
-            "serverSide": false, // for process server side
-            "filter": true, // this is for disable filter (search box)
-            "orderMulti": true, // for disable multiple column at once
-            "pageLength": 50,
+        //    "scrollY": false,
+        //    "processing": true, // for show progress bar
+        //    "serverSide": false, // for process server side
+        //    "filter": true, // this is for disable filter (search box)
+        //    "orderMulti": true, // for disable multiple column at once
+        //    "pageLength": 50,
 
-            "ajax": {
-                url: "@Url.Action("List", "ConfigControlMenu")",
-                type: "POST",
-                datatype: "json"
-            },
+        //    "ajax": {
+        //        url: "@Url.Action("List", "ConfigControlMenu")",
+        //        type: "POST",
+        //        datatype: "json"
+        //    },
 
 
-            "columns": [
+        //    "columns": [
 
-                {
-                    data: "configControlMenuNo",
-                    className: "text-center",
-                    width: "5%",
-                    visible: false
-                },
-                {
-                    //data: "productUnitNo",
-                    className: "text-center",
-                    width: "5%",
-                    visible: false,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: "configControlMenuName",
-                    width: "40%"
-                },
-                {
-                    className: "text-center",
-                    data: "configControlMenuValue",
-                    width: "10%"
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                },
-                {
-                    render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
-                }
+        //        {
+        //            data: "configControlMenuNo",
+        //            className: "text-center",
+        //            width: "5%",
+        //            visible: false
+        //        },
+        //        {
+        //            //data: "productUnitNo",
+        //            className: "text-center",
+        //            width: "5%",
+        //            visible: false,
+        //            render: function (data, type, row, meta) {
+        //                return meta.row + meta.settings._iDisplayStart + 1;
+        //            }
+        //        },
+        //        {
+        //            data: "configControlMenuName",
+        //            width: "40%"
+        //        },
+        //        {
+        //            className: "text-center",
+        //            data: "configControlMenuValue",
+        //            width: "10%"
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        },
+        //        {
+        //            render: function (data, type, full, meta){
+        //            return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+        //        }
 
-            ]
-        });
+        //    ]
+        //});
     }
 
     function fnInsertCancelProfileUserRole(){

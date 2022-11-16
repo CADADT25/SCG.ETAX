@@ -16,7 +16,24 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 string pathredirect = Url.Action("Index", "Home");
                 return new RedirectResult(pathredirect);
             }
-            return View();
+            else
+            {
+                var menuindex = 7;
+                var userLevel = HttpContext.Session.GetInt32("userLevel").ToString();
+                var configControl = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(HttpContext.Session.GetString("controlPermission"));
+
+                ViewData["showCREATE"] = permission.CheckControlAction(configControl, 1, userLevel, menuindex);
+                ViewData["showUPDATE"] = permission.CheckControlAction(configControl, 2, userLevel, menuindex);
+                ViewData["showDELETE"] = permission.CheckControlAction(configControl, 3, userLevel, menuindex);
+                ViewData["showEXPORT"] = permission.CheckControlAction(configControl, 4, userLevel, menuindex);
+                ViewData["showDOWNLOAD"] = permission.CheckControlAction(configControl, 5, userLevel, menuindex);
+                ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
+                ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
+                ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+                var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                ViewData["companycode"] = comcode;
+                return View();
+            }
         }
 
         public IActionResult _Content()
@@ -72,8 +89,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
-                    tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
+                    tran = tran.Where(x=> comcode.Contains(x.OutputSearchPrintingCompanyCode)).OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
                 }
                 else
                 {
@@ -103,8 +121,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
-
+                    tran = tran.Where(x => comcode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
                     outputSearchPrintingModel obj = new outputSearchPrintingModel();
                     obj = JsonConvert.DeserializeObject<outputSearchPrintingModel>(jsonSearchString);
                     if (obj != null)
@@ -218,8 +237,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (task.STATUS)
                 {
-
+                    outputSearchPrintingModel obj = new outputSearchPrintingModel();
+                    obj = JsonConvert.DeserializeObject<outputSearchPrintingModel>(jsonSearchString);
                     tran = JsonConvert.DeserializeObject<List<OutputSearchPrinting>>(task.OUTPUT_DATA.ToString());
+
+                    if (obj.outPutSearchCompanyCode == null || obj.outPutSearchCompanyCode.Count == 0)
+                    {
+                        var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+                        tran = tran.Where(x=> comcode.Contains(x.OutputSearchPrintingCompanyCode)).ToList();
+                    }
                     tran = tran.OrderBy(x => x.OutputSearchPrintingCompanyCode).ThenBy(x => x.CreateDate).ToList();
 
                 }

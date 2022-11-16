@@ -58,8 +58,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 return new RedirectResult("~/AuthSinIn/Index");
             }
 
-
-
             //return View();
         }
 
@@ -84,10 +82,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
 
                     tran = JsonConvert.DeserializeObject<List<ConfigControlMenu>>(task.OUTPUT_DATA.ToString());
+                    //var comcode = JsonConvert.DeserializeObject<List<string>>(task.CODE.ToString());
 
                     result = JsonConvert.SerializeObject(tran);
                     var menu = string.Join(",", tran.Select(x => x.ConfigControlMenuNo).ToList());
                     HttpContext.Session.SetString("premissionMenu", menu); 
+                    HttpContext.Session.SetString("premissionComCode", task.CODE.ToString()); 
                 }
                 else
                 {
@@ -112,6 +112,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
 
             return result;
+        }
+
+        public async Task<bool> GetControlPermission()
+        {
+            List<ConfigControlFunction> tran = new List<ConfigControlFunction>();
+
+            Response resp = new Response();
+
+            var result = "";
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigControlFunction/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    var userlevel = HttpContext.Session.GetInt32("userLevel").ToString();
+
+                    tran = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x=> x.Isactive == 1).ToList();
+                    //tran = tran.Where(x=> !string.IsNullOrEmpty(x.ConfigControlFunctionRole) && x.ConfigControlFunctionRole.Contains(userlevel)).ToList();
+
+                    HttpContext.Session.SetString("controlPermission", JsonConvert.SerializeObject(tran));
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

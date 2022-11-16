@@ -98,7 +98,7 @@
 
                                 <div class="col-md-5 col-12">
                                     <div class="form-group">
-                                        <label><span class="text-danger">* </span> Output Source </label>
+                                        <label><span class="text-danger">* </span> Output Path </label>
                                         <input disabled type="text" id="txtUpdateConfigPdfSignOutputPath" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
                                     </div>
                                 </div>
@@ -110,29 +110,29 @@
 
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
-                                        <label><span class="text-danger">* </span> FTP Host </label>
+                                        <label> FTP Host </label>
                                         <input disabled type="text" id="txtUpdateConfigPdfSignFtpHost" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-2 col-12">
                                     <div class="form-group">
-                                        <label><span class="text-danger">* </span> FTP Port </label>
+                                        <label> FTP Port </label>
                                         <input disabled type="text" id="txtUpdateConfigPdfSignFtpPort" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
-                                        <label><span class="text-danger">* </span> FTP Username </label>
+                                        <label> FTP Username </label>
                                         <input disabled type="text" id="txtUpdateConfigPdfSignFtpUsername" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
-                                        <label><span class="text-danger">* </span> FTP Password </label>
-                                        <input disabled type="text" id="txtUpdateConfigPdfSignFtpPassword" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
+                                        <label> FTP Password </label>
+                                        <input disabled type="password" id="txtUpdateConfigPdfSignFtpPassword" onkeyup="validateUpdateConfigPdfSign()" class="form-control">
                                     </div>
                                 </div>
 
@@ -206,7 +206,7 @@
                                 <div class="col-md-2 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsFont" onclick="onChangeBathPdfSignFont();" />
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsFont" onclick="onChangeUpdateBathPdfSignFont();" />
                                             <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsFont">Font</label>
                                         </div>
                                     </div>
@@ -215,16 +215,14 @@
                                 <div class="col-md-5 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Font </label>
-                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignFontName">
-                                            <option value="Arial" selected>Arial</option>
-                                        </select>
+                                        <select disabled class="select2 form-control" id="ddlUpdateConfigPdfSignFontName"></select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Font Size </label>
-                                        <input type="text" id="txtUpdateConfigPdfSignFontSize" onkeyup="validateUpdateConfigPdfSign();" class="form-control">
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignFontSize" onkeyup="validateUpdateConfigPdfSign();" class="form-control">
                                     </div>
                                 </div>
 
@@ -234,7 +232,7 @@
                                 <div class="col-md-2 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeUpdateBathPdfSignImageURL();" />
                                             <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Image</label>
                                         </div>
                                     </div>
@@ -243,7 +241,7 @@
                                 <div class="col-md-9 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Image </label>
-                                        <input type="text" id="txtUpdateConfigPdfSignImage" class="form-control">
+                                        <input disabled type="text" id="txtUpdateConfigPdfSignImage" class="form-control">
                                     </div>
                                 </div>
 
@@ -302,9 +300,9 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
-                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Specific Page</label>
-                                            <input type="text" width="50" id="txtUpdateConfigPdfSignImage" class="form-control">
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImageSpecific" onclick="onChangeUpdateBathPdfSignImageSpecific();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImageSpecific">Specific Page</label>
+                                            <input type="text" width="50" id="txtUpdateConfigPdfSignImageSpecific" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -354,8 +352,8 @@
                                 <div class="col-md-12 col-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignIsImage" onclick="onChangeBathPdfSignImage();" />
-                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignIsImage">Timestamp</label>
+                                            <input type="checkbox" class="custom-control-input" id="toggleUpdateConfigPdfSignTimestamp" onclick="onChangeBathPdfSignImage();" />
+                                            <label class="custom-control-label" for="toggleUpdateConfigPdfSignTimestamp">Timestamp</label>
                                         </div>
                                     </div>
                                 </div>
@@ -380,7 +378,7 @@
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
                                         <label><span class="text-danger">* </span> Password </label>
-                                        <input type="text" id="txtUpdateConfigPdfSignPassword" class="form-control">
+                                        <input type="password" id="txtUpdateConfigPdfSignPassword" class="form-control">
                                     </div>
                                 </div>
 

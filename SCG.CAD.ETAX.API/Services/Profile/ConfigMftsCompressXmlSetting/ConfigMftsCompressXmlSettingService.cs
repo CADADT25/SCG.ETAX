@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SCG.CAD.ETAX.UTILITY;
+using System.Collections;
 using System.Globalization;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -75,6 +76,11 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 using (_dbContext)
                 {
+                    if (!string.IsNullOrEmpty(param.ConfigMftsCompressXmlSettingPassword))
+                    {
+                        EncodeHelper helper = new EncodeHelper();
+                        param.ConfigMftsCompressXmlSettingPassword = helper.Base64Encode(param.ConfigMftsCompressXmlSettingPassword);
+                    }
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -117,7 +123,15 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigMftsCompressXmlSettingHost = param.ConfigMftsCompressXmlSettingHost;
                         update.ConfigMftsCompressXmlSettingPort = param.ConfigMftsCompressXmlSettingPort;
                         update.ConfigMftsCompressXmlSettingUsername = param.ConfigMftsCompressXmlSettingUsername;
-                        update.ConfigMftsCompressXmlSettingPassword = param.ConfigMftsCompressXmlSettingPassword;
+
+                        if (!string.IsNullOrEmpty(param.ConfigMftsCompressXmlSettingPassword))
+                        {
+                            if(update.ConfigMftsCompressXmlSettingPassword != param.ConfigMftsCompressXmlSettingPassword)
+                            {
+                                EncodeHelper helper = new EncodeHelper();
+                                update.ConfigMftsCompressXmlSettingPassword = helper.Base64Encode(param.ConfigMftsCompressXmlSettingPassword);
+                            }
+                        }
                        
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

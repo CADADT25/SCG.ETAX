@@ -119,7 +119,8 @@
                     {
                         update.ProfileUserGroupName = param.ProfileUserGroupName;
                         update.ProfileUserGroupDescription = param.ProfileUserGroupDescription;
-                        update.ProfileControlMenu = CheckMainMenu(param.ProfileControlMenu);
+                        update.ProfileControlMenu = "," + CheckMainMenu(param.ProfileControlMenu) + ",";
+                        update.ProfileCompanyCode = "," + param.ProfileCompanyCode + ",";
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;

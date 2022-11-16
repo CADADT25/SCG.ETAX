@@ -7,6 +7,7 @@
      $(document).ready(function () {
 
         callUserMenu();
+        callGetControlPermissionAsync();
         callCheckPermission();
     });
 
@@ -16,6 +17,26 @@
         $.ajax({
             type: "GET",
             url: "@Url.Action("CheckPermission", "Home")",
+            success: function (result) {
+                if(!result){
+                    location.href = url;
+                }
+            }
+        });
+    }
+    function callGetControlPermissionAsync(){
+        //$.ajax({
+        //    type: "GET",
+        //    url: "@Url.Action("GetControlPermissionAsync", "Home")",
+        //    dataType: "json",
+        //    success: function (result) {
+        //        //
+        //        console.log('Testssss');
+        //    }
+        //});
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetControlPermission", "Home")",
             success: function (result) {
                 if(!result){
                     location.href = url;

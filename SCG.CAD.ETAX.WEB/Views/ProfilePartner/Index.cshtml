@@ -35,25 +35,42 @@
             value: 0,
         }).html("--- Select Company Code ---").appendTo("#ddlInsertProfilePartnerCompanyCode");
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        $.getJSON("@Url.Action("DropDownList", "ProfileCustomer")", function (data) {
+            console.log(data);
             $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#ddlInsertProfilePartnerCompanyCode");
-            });
-        })
+                        value: data,
+                        text: data
+                    }).html(data).appendTo("#ddlInsertProfilePartnerCompanyCode");
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
                 $('<option>',
                     {
-                        value: data.companyCode,
-                        text: data.companyCode
+                        value: data,
+                        text: data
                     }).html(data.companyCode).appendTo("#ddlUpdateProfilePartnerCompanyCode");
             });
         })
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlInsertProfilePartnerCompanyCode");
+        //    });
+        //})
+
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#ddlUpdateProfilePartnerCompanyCode");
+        //    });
+        //})
     }
 
     function fnDropdownProfilePartnerSaleOrg(companyCode) {
@@ -315,8 +332,19 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/>',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }
@@ -576,7 +604,6 @@
 
                 //$('#ddlUpdateProfilePartnerEmailTemplate').empty().append($("<option/>").val(""+data.EmailTemplateNo+"").text(""+data.EmailTemplateNo+""))
                 //.val(""+data.EmailTemplateNo+"").trigger("change");
-                console.log(data);
                 setTimeout(function(){                
                     $('#ddlUpdateProfilePartnerCompanyCode').val(data.CompanyCode).trigger('change');
                     $('#ddlUpdateProfilePartnerEmailType').val(data.PartnerEmailType).trigger('change');
@@ -584,7 +611,6 @@
                 }, 1000);
 
                 setTimeout(function(){   
-                    console.log($('#ddlUpdateProfilePartnerSaleOrg').val());
                     $('#ddlUpdateProfilePartnerSaleOrg').val(data.SellOrg).trigger('change');
                 }, 5000);
 

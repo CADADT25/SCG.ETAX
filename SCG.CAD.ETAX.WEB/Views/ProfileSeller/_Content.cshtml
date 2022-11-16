@@ -6,13 +6,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-end align-items-center">
-                <a id="btnCallModalCreateProfileSeller" onclick="callModalInsertProfileSeller();" class="pointer btn btn-icon icon-left text-white btn-primary">
-                    <i class="fas fa-plus"></i> Create New
-                </a>
+                @if (ViewBag.showCREATE == true)
+                {
+                    <a id="btnCallModalCreateProfileSeller" onclick="callModalInsertProfileSeller();" class="pointer btn btn-icon icon-left text-white btn-primary">
+                        <i class="fas fa-plus"></i> Create New
+                    </a>
+                }
                 &nbsp;&nbsp;
-@*                <a id="btnExportData" onclick="ExportProfileSeller()" class="pointer btn btn-icon icon-left text-white btn-success">
+                @*                <a id="btnExportData" onclick="ExportProfileSeller()" class="pointer btn btn-icon icon-left text-white btn-success">
                     <i class="fas fa-file-export"></i> Export (.csv)
-                </a>*@
+                    </a>*@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -27,9 +30,10 @@
                                 <th>Email</th>
                                 <th>Active</th>
                                 <th></th>
-@*                                <th></th>
+                                @*                                <th></th>
 
-*@                            </tr>
+                                *@
+                            </tr>
                         </thead>
                     </table>
                 </div>

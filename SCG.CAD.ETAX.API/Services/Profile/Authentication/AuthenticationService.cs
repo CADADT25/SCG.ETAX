@@ -57,52 +57,56 @@ namespace SCG.CAD.ETAX.API.Services
             Response resp = new Response();
             List<ConfigControlMenu> controlMenu = new List<ConfigControlMenu>();
             List<ConfigControlMenu> menu = new List<ConfigControlMenu>();
+            string profilecompanycode = "";
             try
             {
                 var test = _dbContext.profileUserManagement.ToList();
-                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == Username.Trim());
-                if (profileuser != null)
+                var profileuser = _dbContext.profileUserManagement.Where(x => x.UserEmail == Username.Trim()).Select(x => x.GroupId).ToList();
+                if (profileuser.Count() > 0)
                 {
-                    var menuid = _dbContext.profileUserGroup
-                        .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
-                        .Select(x => x.ProfileControlMenu)
-                        .ToList();
-                    if (menuid.Count > 0)
+                    var groupid = profileuser[0].Split(',');
+                    foreach(var id in groupid)
                     {
-                        foreach(var item in menuid)
+                        var menuid = _dbContext.profileUserGroup
+                            .Where(x => id.Contains(x.ProfileUserGroupNo.ToString()))
+                            .ToList();
+                        if (menuid.Count > 0)
                         {
-                            if (!string.IsNullOrEmpty(item))
+                            foreach (var item in menuid)
                             {
-                                menu = _dbContext.configControlMenu
-                                    .Where(x => item.Contains(x.ConfigControlMenuNo.ToString()))
-                                    .ToList();
-                                if (menu.Count > 0)
+                                if (!string.IsNullOrEmpty(item.ProfileControlMenu))
                                 {
-                                    controlMenu.AddRange(menu);
+                                    menu = _dbContext.configControlMenu
+                                        .Where(x => item.ProfileControlMenu.Contains(x.ConfigControlMenuNo.ToString()))
+                                        .ToList();
+                                    if (menu.Count > 0)
+                                    {
+                                        controlMenu.AddRange(menu);
+                                    }
+                                }
+
+                                if (!string.IsNullOrEmpty(item.ProfileCompanyCode))
+                                {
+                                    profilecompanycode += item.ProfileCompanyCode;
                                 }
                             }
-                        }
 
-                        if(controlMenu.Count > 0)
-                        {
-                            controlMenu = controlMenu.Distinct()
-                                .OrderBy(x=> x.ConfigControlMenuNo).ToList();
-
-                            resp.STATUS = true;
-                            resp.OUTPUT_DATA = controlMenu;
                         }
-                        else
-                        {
-                            resp.STATUS = false;
-                            resp.ERROR_MESSAGE = "User not found menu";
-                        }
-
                     }
-                    else
+
+                    if (controlMenu.Count > 0)
                     {
-                        resp.STATUS = false;
-                        resp.ERROR_MESSAGE = "User not found group";
+                        controlMenu = controlMenu.Distinct()
+                            .OrderBy(x => x.ConfigControlMenuNo).ToList();
+
+                        resp.OUTPUT_DATA = controlMenu;
                     }
+                    if (!string.IsNullOrEmpty(profilecompanycode))
+                    {
+                        var listcomcode = profilecompanycode.Split(',').Distinct().Where(x => !string.IsNullOrEmpty(x)).ToList();
+                        resp.CODE = JsonConvert.SerializeObject(listcomcode);
+                    }
+                    resp.STATUS = true;
                 }
                 else
                 {

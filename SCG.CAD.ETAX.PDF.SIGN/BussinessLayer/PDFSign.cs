@@ -405,30 +405,31 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         public APISendFilePDFSignModel PrepareSendPDFSign(ConfigPdfSign config, string filepath)
         {
             APISendFilePDFSignModel result = new APISendFilePDFSignModel();
+            EncodeHelper encodeHelper = new EncodeHelper();
             try
             {
-                result.hsmName = "pse";
-                result.hsmSerial = "571271:28593";
-                result.slotPassword = "P@ssw0rd1";
-                result.keyAlias = "NEW06391012205001173_200916150834";
-                result.certSerial = "5c6e65dc1b7b9da8";
-                //result.hsmName = config.ConfigPdfsignHsmModule;
-                //result.hsmSerial = config.ConfigPdfsignHsmSerial;
-                //result.slotPassword = config.ConfigPdfsignHsmPassword;
-                //result.keyAlias = config.ConfigPdfsignKeyAlias;
-                //result.certSerial = config.ConfigPdfsignHsmSerial;
+                //result.hsmName = "pse";
+                //result.hsmSerial = "571271:28593";
+                //result.slotPassword = "P@ssw0rd1";
+                //result.keyAlias = "NEW06391012205001173_200916150834";
+                //result.certSerial = "5c6e65dc1b7b9da8";
+                result.hsmName = config.ConfigPdfsignHsmModule;
+                result.hsmSerial = config.ConfigPdfsignHsmSerial;
+                result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);
+                result.keyAlias = config.ConfigPdfsignKeyAlias;
+                result.certSerial = config.ConfigPdfsignHsmSerial;
                 result.signatureType = "text";
-                result.coordinateUpperLeftX = 200;
-                result.coordinateUpperLeftY = 700;
-                result.page = "first";
-                result.fontName = "Tahoma";
-                result.fontSize = 8;
+                //result.coordinateUpperLeftX = 200;
+                //result.coordinateUpperLeftY = 700;
+                //result.page = "first";
+                //result.fontName = "Tahoma";
+                //result.fontSize = 8;
                 //result.signatureType = "text";
-                //result.coordinateUpperLeftX = Convert.ToInt32(config.ConfigPdfsignUlx);
-                //result.coordinateUpperLeftY = Convert.ToInt32(config.ConfigPdfsignUly);
-                //result.page = config.ConfigPdfsignPage;
-                //result.fontName = config.ConfigPdfsignFontName;
-                //result.fontSize = Convert.ToInt32(config.ConfigPdfsignFontSize);
+                result.coordinateUpperLeftX = Convert.ToInt32(config.ConfigPdfsignUlx);
+                result.coordinateUpperLeftY = Convert.ToInt32(config.ConfigPdfsignUly);
+                result.page = config.ConfigPdfsignPage;
+                result.fontName = config.ConfigPdfsignFontName;
+                result.fontSize = Convert.ToInt32(config.ConfigPdfsignFontSize);
                 //result.fontType = "";
                 //result.fontSpace = 0;
                 //result.fontColor = "";

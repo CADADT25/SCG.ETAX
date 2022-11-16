@@ -3,18 +3,74 @@
 
         <div class="col-12" hidden>
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>NO</label>
-                <input type="text" id="txtUpdateFunctionNo" onkeyup="validateUpdateConfigControlFunction();" class="form-control">
+                <label><span class="text-danger">* </span>NO</label>
+                <input type="text" id="txtUpdateFunctionMenuNo" class="form-control">
             </div>
         </div>
 
-      <div class="col-12">
+        <div class="col-12">
             <div class="form-group">
-                <label><spa class="text-danger">* </spa>MENU NAME</label>
-                <input type="text" disabled id="txtUpdateFunctionName" onkeyup="validateUpdateConfigControlFunction();" class="form-control text-uppercase">
+                <label><span class="text-danger">* </span>MENU NAME</label>
+                <input type="text" disabled id="txtUpdateFunctionName" class="form-control text-uppercase">
             </div>
         </div>
 
+        <div class="col-12">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-hover-animation" id="tbConfigFunction">
+                        <thead>
+                            <tr>
+                                <th>FunctionNo</th>
+                                <th>Function</th>
+                                <th>GroupNo</th>
+                                <th>Group</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" id="updateFunction" hidden>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label><span class="text-danger">* </span>Function</label>
+                        <input type="text" disabled id="txtFunctionName" class="form-control text-uppercase" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><span class="text-danger">* </span>Level</label>
+                        <select class="select2 form-control" id="ddlFunctionUserLevel" multiple></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Active</label>
+                        <select class="form-control" id="txtFunctionstatus">
+                            <option value="1">Active</option>
+                            <option value="0">IsActive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"> 
+                        <input type="text" disabled id="txtFunctionNo" hidden />
+                </div>
+                <div class="col-md-6"> 
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">              
+                        <button type="button" class="btn btn-primary" onclick="fnEditFunction();">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </form>

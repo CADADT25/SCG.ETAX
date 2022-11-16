@@ -102,8 +102,19 @@
                 },
                 {
                     data: null,
-                    className: "dt-center editor-edit text-center text-primary",
-                    defaultContent: '<i class="pointer fas fa-pen"/>',
+                    className: "dt-center text-center text-primary",
+                    //defaultContent: '<i class="pointer fas fa-pen"/>',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE') {
+                        $(td).addClass('editor-edit');
+                      }
+                    },
+                    render: function (data, type, row) {
+                        if ('@ViewBag.showUPDATE'.toUpperCase() == 'TRUE'){
+                            return '<i class="pointer fas fa-pen"/>';
+                        }
+                        return '';
+                    },
                     orderable: false,
                     width: "2%"
                 }
@@ -157,7 +168,7 @@
             success: function (result) {
 
                 res = $.parseJSON(result);
-                document.getElementById("txtUpdateProfileCompanyCertificate").value = res.CertificateName;
+                document.getElementById("txtUpdateProfileCompanyCertificate").value = res.CertificateCertSerial;
             }
         });
     }
@@ -227,7 +238,7 @@
         var TaxNumber = $('#txtUpdateProfileCompanyTaxNumber').val();
 
 
-        if ( Certificate != '0' && TaxNumber.length == 13 &&
+        if (TaxNumber.length == 13 &&
         $('#txtUpdateProfileCompanyCode').val() != '' &&
         $('#txtUpdateProfileCompanyNameTh').val() != '' &&
         $('#txtUpdateProfileCompanyNameEn').val() != '' &&
@@ -574,15 +585,12 @@
 
                     fnSweetAlert_SaveSuccess();
                     callProfileCompanyIndex();
-                    //document.getElementById('txtUpdateProfileCompanyCode').value = '';
-
-                    //document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
-
-                    //document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
-
+                    document.getElementById('txtUpdateProfileCompanyCode').value = '';
+                    document.getElementById('txtUpdateProfileCompanyNameTh').value = '';
+                    document.getElementById('txtUpdateProfileCompanyNameEn').value = '';
+                    document.getElementById('txtUpdateProfileCompanyCertificate').value = '';
                     //$("#ddlUpdateProfileCompanyCertificate").empty();
-
-                    //document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
+                    document.getElementById('txtUpdateProfileCompanyTaxNumber').value = '';
                 }
                 else{
                     fnSweetAlert_Error(errorMessage);
@@ -657,14 +665,12 @@
     function callProfileCompanyIndex() {
         setTimeout(function(){
             $.blockUI();
-            $("#contentPartial").load("@Url.Action("Index", "ProfileCompany")");
+            $("#contentPartial").empty();
+            $("#contentPartial").load("@Url.Action("Index", "ManagementCompanyProfile")");
             $.unblockUI();
-        }, 0);
+        }, 500);
+        
+        //$("#contentPartial").load("@Url.Action("Index", "ProfileCompany")");
     }
-
-
-
-
-
 
 </script>

@@ -16,7 +16,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         {
         }
 
-        public virtual DbSet<ConfigControlFunction> ConfigControlFunctions { get; set; } = null!;
+        public virtual DbSet<Font> Fonts { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,43 +29,18 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ConfigControlFunction>(entity =>
+            modelBuilder.Entity<Font>(entity =>
             {
-                entity.HasKey(e => e.ConfigControlFunctionNo)
-                    .HasName("PK_configFunctionControl");
+                entity.HasKey(e => e.FontNo);
 
-                entity.ToTable("configControlFunction");
+                entity.ToTable("Font");
 
-                entity.Property(e => e.ConfigControlFunctionNo).HasColumnName("configControlFunctionNo");
-
-                entity.Property(e => e.ConfigControlFunctionName)
-                    .HasMaxLength(100)
-                    .HasColumnName("configControlFunctionName");
-
-                entity.Property(e => e.ConfigControlFunctionPage)
-                    .HasMaxLength(100)
-                    .HasColumnName("configControlFunctionPage");
-
-                entity.Property(e => e.ConfigControlFunctionRole)
-                    .HasMaxLength(1000)
-                    .HasColumnName("configControlFunctionRole");
-
-                entity.Property(e => e.CreateBy)
-                    .HasMaxLength(100)
-                    .HasColumnName("createBy");
-
-                entity.Property(e => e.CreateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createDate");
-
-                entity.Property(e => e.UpdateBy)
-                    .HasMaxLength(100)
-                    .HasColumnName("updateBy");
-
-                entity.Property(e => e.UpdateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("updateDate");
+                entity.Property(e => e.FontName).HasMaxLength(50);
             });
+
+            modelBuilder.HasSequence("RequestRunning")
+                .HasMax(9999)
+                .IsCyclic();
 
             OnModelCreatingPartial(modelBuilder);
         }

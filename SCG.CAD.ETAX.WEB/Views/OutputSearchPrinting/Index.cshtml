@@ -34,15 +34,15 @@
 
     function fnDropdownOutputSearchPrintingCompanyCode() {
 
-        $.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
-            $.each(data, function (i, data) {
-                $('<option>',
-                    {
-                        value: data.companyCode,
-                        text: data.companyCode
-                    }).html(data.companyCode).appendTo("#outputSearchPrintingCustomerCode");
-            });
-        })
+        //$.getJSON("@Url.Action("DropDownList", "ProfileCompany")", function (data) {
+        //    $.each(data, function (i, data) {
+        //        $('<option>',
+        //            {
+        //                value: data.companyCode,
+        //                text: data.companyCode
+        //            }).html(data.companyCode).appendTo("#outputSearchPrintingCustomerCode");
+        //    });
+        //})
     }
 
     function fnSearchOutputDataPrinting(){
@@ -110,20 +110,23 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchPrintingNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE'){
+                            return'<a onclick="DownloadFile(' + row['outputSearchPrintingNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
+
                     }
-                },
-                {
-                    data: "outputSearchPrintingDowloadStatus",
-                    width: "10%",
-                    visible: false
                 },
                 {
                     data: "outputSearchPrintingNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchPrintingDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
             ]
@@ -150,8 +153,6 @@
     }
 
     function fnCallFullFilePathPrinting(PK){
-        console.log('Mark');
-        console.log(PK);
         $('#modalGetOutputSearchPrintingFullPath').modal('show');
 
         $('#fullPathPrintingGetFillName').empty();
@@ -335,20 +336,22 @@
                     className: "text-center",
                     width: "10%",
                     render: function (data, type, row) {
-                        return'<a onclick="DownloadFile(' + row['outputSearchPrintingNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        if ('@ViewBag.showDOWNLOAD'.toUpperCase() == 'TRUE'){
+                            return'<a onclick="DownloadFile(' + row['outputSearchPrintingNo'] +')" class="btn btn-primary btn-sm"> Download </a>';
+                        }
+                        return '';
                     }
-                },
-                {
-                    data: "outputSearchPrintingDowloadStatus",
-                    width: "10%",
-                    visible: false
                 },
                 {
                     data: "outputSearchPrintingNo",
                     className: "text-center",
                     width: "2%",
                         render: function (data, type, row) {
-                            return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            if(row['outputSearchPrintingDowloadStatus'] == '1'){
+                                return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
+                            }
+                            return '';
+                            //return'<a onclick="callEditOutputSearchPrinting(' + data +')" class="dt-center editor-edit text-center text-warning"><i class="pointer fas fa-clock"/> </i></a>';
                         }
                 }
                 
@@ -379,8 +382,6 @@
             dataType: "text",
             success: function (resp) {
                 data = $.parseJSON(resp)
-                console.log('Mark');
-                console.log(data);
                 //Convert Base64 string to Byte Array.
                 var bytes = Base64ToBytes(data.outpuT_DATA);
                 var fileName = data.message;

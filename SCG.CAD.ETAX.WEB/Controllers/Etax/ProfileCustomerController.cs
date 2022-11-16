@@ -80,7 +80,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
                 if (task.STATUS)
                 {
+                    var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
+
                     tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
+                    tran = tran.Where(x=> comcode.Contains(x.CompanyCode)).ToList();
                 }
                 else
                 {
@@ -204,32 +207,32 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
         }
 
-        public async Task<JsonResult> DropDownList(string companyCode)
+        public async Task<JsonResult> DropDownList()
         {
             Response resp = new Response();
-
-            List<ProfileCustomer> tran = new List<ProfileCustomer>();
-
-            var result = "";
+            List<string> comcode = new List<string>();
+            //List<ProfileCustomer> tran = new List<ProfileCustomer>();
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
+                //var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCustomer/GetListAll"));
 
-                if (task.STATUS)
-                {
-                    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
+                //if (task.STATUS)
+                //{
+                //    tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
 
-                    if (tran.Count > 0)
-                    {
-                        tran = tran.Where(x => x.Isactive == 1 && x.CompanyCode == companyCode).ToList();
-                    }
-                }
+                //    if (tran.Count > 0)
+                //    {
+                //        tran = tran.Where(x => x.Isactive == 1 && x.CompanyCode == companyCode).ToList();
+                //    }
+                //}
 
-                else
-                {
-                    ViewBag.Error = task.MESSAGE;
-                }
+                //else
+                //{
+                //    ViewBag.Error = task.MESSAGE;
+                //}
+
+                comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
             }
             catch (Exception ex)
             {
@@ -237,7 +240,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             }
 
 
-            return Json(tran);
+            return Json(comcode);
         }
 
         public async Task<JsonResult> GetEmailType()
