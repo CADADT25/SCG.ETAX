@@ -27,6 +27,7 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
+            fnDropdownProfilePartnerEmailTemplate();
             RenderConfigMftsEmailSetting(setCompanyCode);
         }, 1200);
 
@@ -43,10 +44,13 @@
 
     function fnDropdownProfilePartnerEmailTemplate() {
 
-        $('<option>',
-        {
-            value: 0,
-        }).html("--- Select Email Template ---").appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+        //$('<option>',
+        //{
+        //    value: 0,
+        //}).html("--- Select Email Template ---").appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
+        
+        $('#ddlInsertConfigMftsEmailSettingEmailTemplate').empty();
+        $('#ddlUpdateConfigMftsEmailSettingEmailTemplate').empty();
 
         $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
             $.each(data, function (i, data) {
@@ -55,11 +59,7 @@
                         value: data.emailTemplateNo,
                         text: data.emailTemplateName
                     }).html(data.emailTemplateName).appendTo("#ddlInsertConfigMftsEmailSettingEmailTemplate");
-            });
-        })
-
-        $.getJSON("@Url.Action("DropDownList", "ProfileEmailTemplate")", function (data) {
-            $.each(data, function (i, data) {
+                
                 $('<option>',
                     {
                         value: data.emailTemplateNo,
@@ -82,7 +82,6 @@
 
 
         $('#txtInsertConfigMftsEmailSettingApiKey').prop('disabled', true)
-        $('#txtInsertConfigMftsEmailSettingApiKey').val('');
     }
 
     function onChangeConfigEmailApi(){
@@ -113,7 +112,6 @@
 
 
         $('#txtUpdateConfigMftsEmailSettingApiKey').prop('disabled', true)
-        $('#txtUpdateConfigMftsEmailSettingApiKey').val('');
     }
 
     function onChangeConfigEmailApiUpdate(){
@@ -129,6 +127,28 @@
         $('#txtUpdateConfigMftsEmailSettingApiKey').prop('disabled', false)
 
         // ====================
+    }
+
+    function ClearAllInsertEMAILSETTING(){
+        
+        $('#toggleInsertConfigEmailSmtp').prop('checked', false)
+        $('#toggleInsertConfigEmailApi').prop('checked', false)
+        $('#txtUpdateConfigMftsEmailSettingHost').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingPort').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingUsername').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingPassword').prop('disabled', false)
+        $('#txtUpdateConfigMftsEmailSettingApiKey').prop('disabled', false)
+        
+        document.getElementById('txtInsertConfigMftsEmailSettingEmail').value = '';
+        document.getElementById('txtInsertConfigMftsEmailSettingHost').value = '';
+        document.getElementById('txtInsertConfigMftsEmailSettingPort').value = '';
+        document.getElementById('txtInsertConfigMftsEmailSettingUsername').value = '';
+        document.getElementById('txtInsertConfigMftsEmailSettingPassword').value = '';
+        document.getElementById('txtInsertConfigMftsEmailSettingApiKey').value = '';
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsEmailSettingEmailTemplate').val('').trigger('change');
+        }, 1000);
     }
 
 
@@ -226,6 +246,7 @@
 
     function fnInsertCancelConfigMftsEmailSetting(){
 
+        ClearAllInsertEMAILSETTING();
         $("#modalInsertConfigMftsEmailSetting").modal('hide');
     }
 
@@ -236,7 +257,7 @@
 
     function callModalInsertConfigMftsEmailSetting(){
 
-        fnDropdownProfilePartnerEmailTemplate();
+        //fnDropdownProfilePartnerEmailTemplate();
 
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
@@ -249,7 +270,8 @@
         }
 
         document.getElementById('txtInsertConfigMftsEmailSettingCompanyCode').value = setCompanyCode;
-
+        
+        ClearAllInsertEMAILSETTING();
         $("#modalInsertConfigMftsEmailSetting").modal('show');
     }
 
@@ -390,7 +412,7 @@
 
     function callConfigMftsEmailSettingGetDetailController(getPK){
 
-        fnDropdownProfilePartnerEmailTemplate();
+        //fnDropdownProfilePartnerEmailTemplate();
 
         $.ajax({
             type: "GET",
@@ -416,7 +438,10 @@
 
                 //$('#ddlUpdateConfigMftsEmailSettingEmailTemplate').empty().append($("<option/>").val(""+data.ConfigMftsEmailSettingEmailTemplate+"").text(""+data.ConfigMftsEmailSettingEmailTemplate+""))
                 //.val(""+data.ConfigMftsEmailSettingEmailTemplate+"").trigger("change");
-
+                
+                setTimeout(function(){
+                    $('#ddlUpdateConfigMftsEmailSettingEmailTemplate').val(data.ConfigMftsEmailSettingEmailTemplate).trigger('change');
+                }, 1000);
 
                 if(data.ConfigMftsEmailSettingOperation == 'SMTP'){
                     document.getElementById("toggleUpdateConfigEmailSmtp").checked = true;

@@ -9,7 +9,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
             return View();
         }
 
-
         public async Task<IActionResult> GetLoginxxx(string LoginEmail, string LoginPassword)
         {
             List<ProfileUserManagement> tran = new List<ProfileUserManagement>();

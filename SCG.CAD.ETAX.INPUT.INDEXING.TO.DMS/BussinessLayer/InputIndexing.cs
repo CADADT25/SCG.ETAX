@@ -279,12 +279,13 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
         public bool UploadToSFTP(ConfigMftsIndexGenerationSettingOutput configOutput, List<ImageDocType> imageDocType, byte[] controllFile, string controllFileName)
         {
             bool result = false;
+            EncodeHelper encodeHelper = new EncodeHelper();
             try
             {
                 var host = configOutput.ConfigMftsIndexGenerationSettingOutputHost;
                 var port = configOutput.ConfigMftsIndexGenerationSettingOutputPort;
                 var username = configOutput.ConfigMftsIndexGenerationSettingOutputUsername;
-                var password = configOutput.ConfigMftsIndexGenerationSettingOutputPassword;
+                var password = encodeHelper.Base64Decode(configOutput.ConfigMftsIndexGenerationSettingOutputPassword);
 
                 using (var client = new SftpClient(host, Convert.ToInt32(port), username, password))
                 {

@@ -246,6 +246,8 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             string customerid = "";
             string customername = "";
             string foldertemp = AppDomain.CurrentDomain.BaseDirectory + "\\TempEmail\\";
+            EncodeHelper encodeHelper = new EncodeHelper();
+            
             try
             {
                 if (!Directory.Exists(foldertemp))
@@ -259,16 +261,16 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
                 var templateemail = profileEmailTemplates.FirstOrDefault(x => x.EmailTemplateNo.ToString() == profileemailCustomer.EmailTemplateNo);
                 if (templateemail != null)
                 {
-                    //var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
-                    //var fromEmailPassword = config.ConfigMftsEmailSettingPassword;
-                    //var smtpHost = config.ConfigMftsEmailSettingHost;
-                    //var smtpPort = config.ConfigMftsEmailSettingPort;
-                    //var toEmailAddress = config.ConfigMftsEmailSettingEmail;
-                    var fromEmailAddress = "etaxadm@scg.com";
-                    var fromEmailPassword = "Thai2020";
-                    var smtpHost = "outmail.scg.co.th";
-                    var smtpPort = "25";
-                    var toEmailAddress = "cadadt25@scg.com";
+                    var fromEmailAddress = config.ConfigMftsEmailSettingEmail;
+                    var fromEmailPassword = encodeHelper.Base64Decode(config.ConfigMftsEmailSettingPassword);
+                    var smtpHost = config.ConfigMftsEmailSettingHost;
+                    var smtpPort = config.ConfigMftsEmailSettingPort;
+                    var toEmailAddress = config.ConfigMftsEmailSettingEmail;
+                    //var fromEmailAddress = "etaxadm@scg.com";
+                    //var fromEmailPassword = "Thai2020";
+                    //var smtpHost = "outmail.scg.co.th";
+                    //var smtpPort = "25";
+                    //var toEmailAddress = "cadadt25@scg.com";
 
                     string body = templateemail.EmailBody;
                     body = body.Replace("[COMPANY-NAME]", profileCompany.CompanyNameTh);

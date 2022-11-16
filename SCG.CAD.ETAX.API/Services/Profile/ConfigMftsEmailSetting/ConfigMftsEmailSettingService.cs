@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SCG.CAD.ETAX.UTILITY;
+using System.Collections;
 using System.Globalization;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -75,6 +76,11 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 using (_dbContext)
                 {
+                    if (!string.IsNullOrEmpty(param.ConfigMftsEmailSettingPassword))
+                    {
+                        EncodeHelper helper = new EncodeHelper();
+                        param.ConfigMftsEmailSettingPassword = helper.Base64Encode(param.ConfigMftsEmailSettingPassword);
+                    }
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
 
@@ -123,6 +129,14 @@ namespace SCG.CAD.ETAX.API.Services
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;
 
+                        if (!string.IsNullOrEmpty(param.ConfigMftsEmailSettingPassword))
+                        {
+                            if (update.ConfigMftsEmailSettingPassword != param.ConfigMftsEmailSettingPassword)
+                            {
+                                EncodeHelper helper = new EncodeHelper();
+                                update.ConfigMftsEmailSettingPassword = helper.Base64Encode(param.ConfigMftsEmailSettingPassword);
+                            }
+                        }
                         _dbContext.SaveChanges();
 
                         resp.STATUS = true;

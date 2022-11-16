@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SCG.CAD.ETAX.UTILITY;
+using System.Collections;
 using System.Globalization;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -79,14 +80,26 @@ namespace SCG.CAD.ETAX.API.Services
                     if (profilecompany != null)
                     {
                         dataCertificate = _dbContext.profileCertificate.FirstOrDefault(x => x.CertificateNo == profilecompany.CertificateProfileNo);
+                        if(dataCertificate != null)
+                        {
+                            param.ConfigPdfsignHsmModule = dataCertificate.CertificateHsmname;
+                            param.ConfigPdfsignHsmSerial = dataCertificate.CertificateHsmserial;
+                            param.ConfigPdfsignHsmPassword = dataCertificate.CertificateSlotPassword;
+                            param.ConfigPdfsignKeyAlias = dataCertificate.CertificateKeyAlias;
+                            param.ConfigPdfsignCertificateSerial = dataCertificate.CertificateCertSerial;
+                        }
                     }
-                    param.ConfigPdfsignHsmModule = dataCertificate.CertificateHsmname;
-                    param.ConfigPdfsignHsmSerial = dataCertificate.CertificateHsmserial;
-                    param.ConfigPdfsignHsmPassword = dataCertificate.CertificateSlotPassword;
-                    param.ConfigPdfsignKeyAlias = dataCertificate.CertificateKeyAlias;
-                    param.ConfigPdfsignCertificateSerial = dataCertificate.CertificateCertSerial;
                     param.CreateDate = dtNow;
                     param.UpdateDate = dtNow;
+                    EncodeHelper helper = new EncodeHelper();
+                    if (!string.IsNullOrEmpty(param.ConfigPdfsignFtpPassword))
+                    {
+                        param.ConfigPdfsignFtpPassword = helper.Base64Encode(param.ConfigPdfsignFtpPassword);
+                    }
+                    if (!string.IsNullOrEmpty(param.ConfigPdfsignTimestampPassword))
+                    {
+                        param.ConfigPdfsignTimestampPassword = helper.Base64Encode(param.ConfigPdfsignTimestampPassword);
+                    }
 
                     _dbContext.configPdfSign.Add(param);
                     _dbContext.SaveChanges();
@@ -146,7 +159,25 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigPdfsignTimestampUrl = param.ConfigPdfsignTimestampUrl;
                         update.ConfigPdfsignTimestampUserName = param.ConfigPdfsignTimestampUserName;
                         update.ConfigPdfsignTimestampPassword = param.ConfigPdfsignTimestampPassword;
-                      
+
+
+                        if (!string.IsNullOrEmpty(param.ConfigPdfsignFtpPassword))
+                        {
+                            if (update.ConfigPdfsignFtpPassword != param.ConfigPdfsignFtpPassword)
+                            {
+                                EncodeHelper helper = new EncodeHelper();
+                                update.ConfigPdfsignFtpPassword = helper.Base64Encode(param.ConfigPdfsignFtpPassword);
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(param.ConfigPdfsignTimestampPassword))
+                        {
+                            if (update.ConfigPdfsignTimestampPassword != param.ConfigPdfsignTimestampPassword)
+                            {
+                                EncodeHelper helper = new EncodeHelper();
+                                update.ConfigPdfsignTimestampPassword = helper.Base64Encode(param.ConfigPdfsignTimestampPassword);
+                            }
+                        }
 
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;

@@ -109,6 +109,19 @@
         })
     }
 
+    function ClearAllInsertINPUT(){
+        
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').val('').trigger('change');
+        }, 1000);
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').val('').trigger('change');
+        }, 1000);
+    }
+
     function RenderConfigMftsIndexGenerationSettingInput(setCompanyCode){
 
         if(setCompanyCode == null || setCompanyCode == ''){
@@ -205,7 +218,7 @@
 
 
     function fnInsertCancelConfigMftsIndexGenerationSettingInput(){
-
+        ClearAllInsertINPUT();
         $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('hide');
     }
 
@@ -225,7 +238,7 @@
                 setCompanyCode = $("#companyCodeState").text();
             }   
         }
-
+        ClearAllInsertINPUT();
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingInputCompanyCode').value = setCompanyCode;
         //fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
         $("#modalCreateConfigMftsIndexGenerationSettingInput").modal('show');
