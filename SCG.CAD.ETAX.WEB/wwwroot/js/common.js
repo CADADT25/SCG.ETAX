@@ -40,3 +40,25 @@ function fnSweetAlert_Error(error) {
     });
 }
 
+function fnSweetAlert_WarningSelectItem() {
+    Swal.fire({
+        title: 'Warning',
+        text: 'Please select item.',
+        icon: 'warning',
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+    });
+}
+
+function fnSweetAlert_Success() {
+    Swal.fire({
+        title: 'Good job!',
+        text: 'Your has been saved!',
+        icon: 'success',
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+    });
+}
+

@@ -12,6 +12,7 @@ namespace SCG.CAD.ETAX.UTILITY
     public class AdminToolHelper
     {
         UtilityTransactionDescriptionController transactionDescriptionController = new UtilityTransactionDescriptionController();
+        UtilityRequestController requestController = new UtilityRequestController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
 
         public List<TransactionDescription> GetBillingTransaction(string billno)
@@ -107,6 +108,61 @@ namespace SCG.CAD.ETAX.UTILITY
                 throw ex;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get Request by RequestNumber
+        /// </summary>
+        /// <param name="requestNo"></param>
+        /// <returns></returns>
+        public RequestRelateDataModel GetRequest(string requestNo)
+        {
+            RequestRelateDataModel req = new RequestRelateDataModel();
+            try
+            {
+                req = requestController.GetRequest(requestNo).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return req;
+        }
+
+        /// <summary>
+        /// Get RequestItem Transaction
+        /// </summary>
+        /// <param name="requestNo"></param>
+        /// <returns></returns>
+        public List<TransactionDescription> GetRequestItemTransaction(string requestNo)
+        {
+            List<TransactionDescription> req = new List<TransactionDescription>();
+            try
+            {
+                req = requestController.GetRequestItemTransaction(requestNo).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return req;
+        }
+        public bool UpdateRequestHistory(string jsonString)
+        {
+            Task<Response> res;
+            try
+            {
+                res = requestController.UpdateRequestHistory(jsonString);
+                if (res.Result.MESSAGE == "Updated Success.")
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
         }
     }
 }

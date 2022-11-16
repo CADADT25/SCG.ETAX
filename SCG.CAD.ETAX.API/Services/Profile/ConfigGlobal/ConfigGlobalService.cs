@@ -64,6 +64,35 @@
             }
             return resp;
         }
+        public Response GET_DETAIL_BY_NAME(string cate, string name)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var data = _dbContext.configGlobal.Where(x => x.ConfigGlobalName == name && x.ConfigGlobalCategoryName == cate).FirstOrDefault();
+
+                if (data != null)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = data;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.ERROR_MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
         public Response INSERT(ConfigGlobal param)
         {

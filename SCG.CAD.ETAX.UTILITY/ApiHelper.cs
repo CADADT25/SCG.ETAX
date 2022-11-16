@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.Json;
+using SCG.CAD.ETAX.MODEL.etaxModel;
+using Newtonsoft.Json.Linq;
 
 namespace SCG.CAD.ETAX.UTILITY
 {
@@ -40,6 +42,7 @@ namespace SCG.CAD.ETAX.UTILITY
         public static async Task<Response> PostURI(string url, HttpContent c)
         {
             Response response = new Response();
+            string token = GetToken().Result.Token;
             try
             {
                 using (var client = new HttpClient())
@@ -51,6 +54,8 @@ namespace SCG.CAD.ETAX.UTILITY
                     client.DefaultRequestHeaders.Accept.Clear();
 
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
 
@@ -82,6 +87,7 @@ namespace SCG.CAD.ETAX.UTILITY
         public static async Task<Response> GetURI(string url)
         {
             Response res = new Response();
+            string token = GetToken().Result.Token;
             using (var client = new HttpClient())
             {
                 var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
@@ -91,6 +97,8 @@ namespace SCG.CAD.ETAX.UTILITY
                 client.DefaultRequestHeaders.Accept.Clear();
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
 
@@ -115,5 +123,36 @@ namespace SCG.CAD.ETAX.UTILITY
 
         #endregion
 
+        #region GetToken
+
+        private static async Task<AuthModel> GetToken()
+        {
+            AuthModel res = new AuthModel();
+            using (var client = new HttpClient())
+            {
+                var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
+                string apiUrl = baseAdress + "api/Auth/GetToken";
+
+                client.DefaultRequestHeaders.Accept.Clear();
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("Jwt")["AppKey"]);
+                
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                //var getException = await client.GetAsync(apiUrl).Result.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var x = response.Content.ReadAsStringAsync().Result;
+
+                    res = JsonConvert.DeserializeObject<AuthModel>(x.ToString());
+                }
+            }
+            return res;
+        }
+        #endregion
     }
 }

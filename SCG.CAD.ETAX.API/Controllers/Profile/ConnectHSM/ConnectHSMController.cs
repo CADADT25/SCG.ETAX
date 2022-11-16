@@ -4,9 +4,9 @@ using SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ConnectHSMController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ConnectHSMController : BaseController
     {
         private readonly IConnectHSMRepository repo;
 

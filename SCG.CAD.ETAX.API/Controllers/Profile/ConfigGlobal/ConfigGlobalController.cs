@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ConfigGlobalController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class ConfigGlobalController : BaseController
     {
 
 
@@ -31,6 +31,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         public IActionResult GetDetail(int id)
         {
             var result = repo.GET_DETAIL(id).Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetDetailByName")]
+        public IActionResult GetDetailByName(string cate, string name)
+        {
+            var result = repo.GET_DETAIL_BY_NAME(cate, name).Result;
 
             return Ok(result);
         }

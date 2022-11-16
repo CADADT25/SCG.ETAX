@@ -16,5 +16,6 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string UpdateBy { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
         public int Isactive { get; set; }
+        public string? EmailTemplateCode { get; set; }
     }
 }

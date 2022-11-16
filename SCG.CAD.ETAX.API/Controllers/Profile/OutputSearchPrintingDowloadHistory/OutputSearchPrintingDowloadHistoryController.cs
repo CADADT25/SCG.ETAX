@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OutputSearchPrintingDowloadHistoryController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class OutputSearchPrintingDowloadHistoryController : BaseController
     {
 
         private readonly IOutputSearchPrintingDowloadHistoryRepository repo;

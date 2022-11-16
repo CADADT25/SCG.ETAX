@@ -2,9 +2,9 @@
 
 namespace SCG.CAD.ETAX.API.Controllers.Profile.SendEmail
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SendEmailController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class SendEmailController : BaseController
     {
         private readonly ISendEmailRepository repo;
 
@@ -18,6 +18,15 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.SendEmail
         public IActionResult SendEmail(string billno, string updateby)
         {
             var result = repo.ResendEmail(billno, updateby).Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("SendEmailRequestByAction")]
+        public IActionResult SendEmailRequestByAction(string requestNo, string action)
+        {
+            var result = repo.RequestActionEmail(requestNo, action).Result;
 
             return Ok(result);
         }

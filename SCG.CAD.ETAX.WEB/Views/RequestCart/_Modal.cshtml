@@ -1,0 +1,100 @@
+﻿@*@{
+    Layout = null;
+}
+
+<div class="modal fade" id="reSignNewTransModal" tabindex="-1" aria-labelledby="reSignNewTransModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body px-sm-5 mx-50 pb-5">
+                <h3 class="text-center mb-1" id="reSignNewTransModalTitle">Re-Sign PDF XML (Workaround)</h3>
+                <p class="text-center">Please select xml and pdf files.</p>
+
+                <!-- form -->
+                <div class="row gy-1 gx-2 mt-75">
+
+                    <div class="col-md-3">
+                        <label class="form-label" for="directoryRoot">Directory</label>
+                        <input type="text" id="directoryRoot" class="form-control" readonly disabled value="D:O2C_CancelTaxInvoice/Inbround/" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label" for="sub1">Company</label>
+                        <select class="select2 form-control" id="sub1">
+                            <option value="">Please select</option>
+                            <option value="0000">0000</option>
+                            <option value="0110">0110</option>
+                            <option value="0220">0220</option>
+                            <option value="0330">0330</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="sub2">File Type</label>
+                        <select class="select2 form-control" id="sub2">
+                            <option value="">Please select</option>
+                            <option value="PDF">PDF</option>
+                            <option value="XML">XML</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="sub3">Doc Type</label>
+                        <select class="select2 form-control" id="sub3">
+                            <option value="">Please select</option>
+                            <option value="Credit Note">Credit Note</option>
+                            <option value="Debit Note">Debit Note</option>
+                            <option value="Invoice Cancel">Invoice Cancel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="sub4">File</label>
+                        <select class="select2 form-control" id="sub4">
+                            <option value="">Please select</option>
+                            <option value="PDF">075020220750210C01_123456.PDF </option>
+                            <option value="PDF">075020220750210C01_123456.PDF </option>
+                            <option value="PDF">075020220750210C01_123456.PDF </option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary me-1 mt-1">Submit</button>
+                        <button type="reset" class="btn btn-outline-secondary mt-1" onclick="fnSelectFilesClose()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sub1').select2();
+        $('#sub2').select2();
+        $('#sub3').select2();
+        $('#sub4').select2();
+
+    });
+    function fnSelectFilesOpen() {
+        if ($('#cartSelectAction').val() == "@Variable.RequestActionCode_ReSignNewTrans") {
+            $("#reSignNewTransModal").modal('show');
+            fnDropdownsub1();
+        }
+
+    }
+
+    function fnSelectFilesClose() {
+        $("#reSignNewTransModal").modal('hide');
+    }
+
+    function fnDropdownsub1() {
+
+        $.getJSON("@Url.Action("DropDownList", "ProfileUserManagement")", function (data) {
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.userEmail,
+                        text: data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')'
+                    }).html(data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')').appendTo("#sub1");
+            });
+        })
+    }
+</script>*@

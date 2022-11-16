@@ -22,6 +22,24 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_DETAIL_BY_NAME(string cate, string name)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL_BY_NAME(cate, name);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> GET_LIST()
         {

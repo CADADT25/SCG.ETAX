@@ -1,8 +1,8 @@
 ﻿namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TaxCodeController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class TaxCodeController : BaseController
     {
 
         private readonly ITaxCodeRepository repo;

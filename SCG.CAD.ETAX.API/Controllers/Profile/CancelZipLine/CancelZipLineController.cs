@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CancelZipLineController : ControllerBase
+    //[Route("api/[controller]")]
+    //[ApiController]
+    public class CancelZipLineController : BaseController
     {
         private readonly ICancelZipLineRepository repo;
 

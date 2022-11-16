@@ -9,6 +9,7 @@
         callUserMenu();
         callGetControlPermissionAsync();
         callCheckPermission();
+        fnRenderTopCart();
     });
 
     
@@ -171,7 +172,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProductUnit")");
-
+        
         $("#li-btnCallPageProductUnit").addClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -213,7 +214,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "TaxCode")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").addClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -256,7 +257,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "RdDocument")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").addClass("active");
@@ -299,7 +300,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "DocumentCode")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -352,7 +353,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileDataSource")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -395,7 +396,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ErpDocument")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -440,7 +441,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileSellOrg")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -489,7 +490,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileCertificate")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -531,7 +532,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileCompanyCode")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -574,7 +575,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileEmailType")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -618,7 +619,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileReasonIssue")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -671,7 +672,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileEmailTemplate")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -720,7 +721,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ZipFileType")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -764,7 +765,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ZipFileConfig")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -807,7 +808,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileCompany")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -854,7 +855,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileSeller")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -909,7 +910,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ManagementCompanyProfile")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -951,7 +952,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ManagementDocumentProfile")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -993,7 +994,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ManagementCustomerProfile")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1036,7 +1037,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "TransactionDescription")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1079,7 +1080,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "OutputSearchPrinting")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1125,7 +1126,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "OutputSearchXmlZip")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1170,7 +1171,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "OutputSearchEmailSend")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1214,7 +1215,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ConfigGlobal")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1258,7 +1259,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ConfigGlobalCategory")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1303,7 +1304,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileEmailType")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1347,7 +1348,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileEmailTemplate")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1392,7 +1393,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileUserRole")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1436,7 +1437,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ConfigControlMenu")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1478,7 +1479,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ConfigControlFunction")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1523,7 +1524,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileUserGroup")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1568,7 +1569,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "ProfileUserManagement")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1614,7 +1615,7 @@
         $.blockUI();
 
         $("#contentPartial").load("@Url.Action("Index", "InboxManagement")");
-
+        
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");
         $("#li-btnCallPageRdDocument").removeClass("active");
@@ -1652,8 +1653,94 @@
         $.unblockUI();
     });
 
+    function fnRenderMyCart() {
+        $.blockUI();
+        
+        $("#contentPartial").load("@Url.Action("ManageCart", "RequestCart")");
 
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+        $("#li-btnCallPageProfileCompany").removeClass("active");
+        $("#li-btnCallPageProfileSeller").removeClass("active");
+        $("#li-ManagementCompanyProfile").removeClass("active");
+        $("#li-ManagementDocumentProfile").removeClass("active");
+        $("#li-ManagementCustomer").removeClass("active");
+        $("#li-btnCallPageTransactionDescription").removeClass("active");
+        $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+        $("#li-OutputSearchEmailSend").removeClass("active");
+        $("#li-ConfigGlobal").removeClass("active");
+        $("#li-ConfigGlobalCategory").removeClass("active");
+        $("#li-ProfileEmailType").removeClass("active");
+        $("#li-ProfileEmailTemplate").removeClass("active");
+        $("#li-ProfileUserRole").removeClass("active");
+        $("#li-ConfigControlMenu").removeClass("active");
+        $("#li-ConfigControlFunction").removeClass("active");
+        $("#li-ProfileUserGroup").removeClass("active");
+        $("#li-ProfileUserManagement").removeClass("active");
+        $("#li-InboxManagement").removeClass("active");
 
+        $.unblockUI();
+    }
+
+    function fnRenderViewRequest(reqNo) {
+
+        $.blockUI();
+
+        $("#contentPartial").load("@Url.Action("Index", "Request", new {requestNo = "xxx"})".replace("xxx", reqNo));
+
+        $("#li-btnCallPageProductUnit").removeClass("active");
+        $("#li-btnCallPageTaxCode").removeClass("active");
+        $("#li-btnCallPageRdDocument").removeClass("active");
+        $("#li-btnCallPageDocumentCode").removeClass("active");
+        $("#li-btnCallPageProfileDataSource").removeClass("active");
+        $("#li-btnCallPageErpDocument").removeClass("active");
+        $("#li-btnCallPageProfileSellOrg").removeClass("active");
+        $("#li-btnCallPageProfileCertificate").removeClass("active");
+        $("#li-btnCallPageProfileCompanyCode").removeClass("active");
+        $("#li-btnCallPageProfileEmailType").removeClass("active");
+        $("#li-btnCallPageProfileReasonIssue").removeClass("active");
+        $("#li-btnCallPageProfileEmailTemplate").removeClass("active");
+        $("#li-btnCallPageZipFileType").removeClass("active");
+        $("#li-btnCallPageZipFileConfig").removeClass("active");
+        $("#li-btnCallPageProfileCompany").removeClass("active");
+        $("#li-btnCallPageProfileSeller").removeClass("active");
+        $("#li-ManagementCompanyProfile").removeClass("active");
+        $("#li-ManagementDocumentProfile").removeClass("active");
+        $("#li-ManagementCustomer").removeClass("active");
+        $("#li-btnCallPageTransactionDescription").removeClass("active");
+        $("#li-OutputPrintingSearch").removeClass("active");
+        $("#li-OutputXmlSearch").removeClass("active");
+        $("#li-OutputSearchEmailSend").removeClass("active");
+        $("#li-ConfigGlobal").removeClass("active");
+        $("#li-ConfigGlobalCategory").removeClass("active");
+        $("#li-ProfileEmailType").removeClass("active");
+        $("#li-ProfileEmailTemplate").removeClass("active");
+        $("#li-ProfileUserRole").removeClass("active");
+        $("#li-ConfigControlMenu").removeClass("active");
+        $("#li-ConfigControlFunction").removeClass("active");
+        $("#li-ProfileUserGroup").removeClass("active");
+        $("#li-ProfileUserManagement").removeClass("active");
+        $("#li-InboxManagement").addClass("active");
+
+        $.unblockUI();
+    }
+
+    function fnRenderTopCart(){
+        $("#cartOnNav").load("@Url.Action("Index", "RequestCart")");
+    }
 
 
 </script>
