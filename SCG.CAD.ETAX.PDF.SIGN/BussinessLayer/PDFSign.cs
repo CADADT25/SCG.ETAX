@@ -382,9 +382,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 }
 
                 // See if the original exists now.  
-                if (File.Exists(pathinput))
+                if (File.Exists(output + filename))
                 {
-                    File.Delete(pathinput);
+                    File.Delete(output + filename);
                 }
                 // Move the file.  
                 File.Move(pathinput, output + filename);

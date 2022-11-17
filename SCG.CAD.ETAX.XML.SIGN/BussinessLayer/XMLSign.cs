@@ -50,73 +50,75 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     //{
                     var allfile = ReadXmlFile(config);
 
-                    if (allfile != null && allfile.Count > 0)
+                    if (allfile != null && allfile.listFileXMLs != null)
                     {
                         pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
-                        foreach (var src in allfile)
+                        if (allfile.listFileXMLs.Count > 0)
                         {
-                            if (src.listFileXMLs.Count > 0)
+                            foreach (var file in allfile.listFileXMLs)
                             {
-                                foreach (var file in src.listFileXMLs)
+                                round += 1;
+                                Console.WriteLine("Start round : " + round);
+                                log.InsertLog(pathlog, "Start round : " + round);
+                                Console.WriteLine("billno : " + file.Billno);
+                                log.InsertLog(pathlog, "billno : " + file.Billno);
+
+                                Console.WriteLine("Prepare XML");
+                                log.InsertLog(pathlog, "Prepare XML");
+                                var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
+                                if (!CheckCancelBillingOrSentRevenueDepartment(dataTran))
                                 {
-                                    round += 1;
-                                    Console.WriteLine("Start round : " + round);
-                                    log.InsertLog(pathlog, "Start round : " + round);
-                                    Console.WriteLine("billno : " + file.Billno);
-                                    log.InsertLog(pathlog, "billno : " + file.Billno);
-
-                                    Console.WriteLine("Prepare XML");
-                                    log.InsertLog(pathlog, "Prepare XML");
-                                    var dataTran = transactionDescription.GetBilling(file.Billno).Result.FirstOrDefault();
-                                    dataSend = PrepareSendXMLSign(src.configPdfSign, file.FullPath, dataTran.DocType);
-                                    log.InsertLog(pathlog, dataSend.fileEncode);
-                                    Console.WriteLine("Send To Sign");
-                                    log.InsertLog(pathlog, "Send To Sign");
-                                    resultXMLSign = SendFileXMLSign(dataSend);
-
-                                    Console.WriteLine("Status Sign : " + resultXMLSign.resultDes.ToString());
-                                    log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.resultDes.ToString());
-                                    Console.WriteLine("Update Status in DataBase");
-                                    log.InsertLog(pathlog, "Update Status in DataBase");
-
-                                    fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                                    pathoutbound = file.Outbound;
-
-                                    billingdate = DateTime.Now;
-                                    if (dataTran != null)
+                                    dataSend = PrepareSendXMLSign(allfile.configPdfSign, file.FullPath, dataTran.DocType);
+                                    if (dataSend != null)
                                     {
-                                        billingdate = dataTran.BillingDate ?? DateTime.Now;
-                                    }
-                                    if (resultXMLSign.resultCode == "000")
-                                    {
-                                        pathoutbound += "\\Success\\";
-                                    }
-                                    else
-                                    {
-                                        pathoutbound += "\\Fail\\";
-                                    }
-                                    pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                                    fullpath = pathoutbound + fileNameDest + fileType;
+                                        Console.WriteLine("Send To Sign");
+                                        log.InsertLog(pathlog, "Send To Sign");
+                                        resultXMLSign = SendFileXMLSign(dataSend);
 
-                                    UpdateStatusAfterSignXML(resultXMLSign, file.Billno, fullpath, dataTran);
+                                        Console.WriteLine("Status Sign : " + resultXMLSign.resultDes.ToString());
+                                        log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.resultDes.ToString());
+                                        Console.WriteLine("Update Status in DataBase");
+                                        log.InsertLog(pathlog, "Update Status in DataBase");
 
-                                    Console.WriteLine("Start Export XML file");
-                                    log.InsertLog(pathlog, "Start Export XML file");
-                                    if (resultXMLSign.resultCode == "000")
-                                    {
-                                        ExportXMLAfterSign(resultXMLSign.fileSigned, pathoutbound, fullpath);
+                                        fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                        pathoutbound = file.Outbound;
+
+                                        billingdate = DateTime.Now;
+                                        if (dataTran != null)
+                                        {
+                                            billingdate = dataTran.BillingDate ?? DateTime.Now;
+                                        }
+                                        if (resultXMLSign.resultCode == "000")
+                                        {
+                                            pathoutbound += "\\Success\\";
+                                        }
+                                        else
+                                        {
+                                            pathoutbound += "\\Fail\\";
+                                        }
+                                        pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                                        fullpath = pathoutbound + fileNameDest + fileType;
+
+                                        UpdateStatusAfterSignXML(resultXMLSign, file.Billno, fullpath, dataTran);
+
+                                        Console.WriteLine("Start Export XML file");
+                                        log.InsertLog(pathlog, "Start Export XML file");
+                                        if (resultXMLSign.resultCode == "000")
+                                        {
+                                            ExportXMLAfterSign(resultXMLSign.fileSigned, pathoutbound, fullpath);
+                                        }
+                                        else
+                                        {
+                                            ExportXMLAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
+                                        }
+                                        Console.WriteLine("End Export XML file");
+                                        log.InsertLog(pathlog, "End Export XML file");
+                                        Console.WriteLine("Start Move file");
+                                        log.InsertLog(pathlog, "Start Move file");
+                                        MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                        Console.WriteLine("End Move file");
+                                        log.InsertLog(pathlog, "End Move file");
                                     }
-                                    else
-                                    {
-                                        ExportXMLAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
-                                    }
-                                    Console.WriteLine("End Export XML file");
-                                    log.InsertLog(pathlog, "End Export XML file");
-                                    Console.WriteLine("Start Move file");
-                                    log.InsertLog(pathlog, "Start Move file");
-                                    MoveFile(file.FullPath, file.FileName + fileType, billingdate);
-                                    Console.WriteLine("End Move file");
-                                    log.InsertLog(pathlog, "End Move file");
                                 }
                             }
                         }
@@ -138,9 +140,9 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
         }
 
-        public List<XMLSignModel> ReadXmlFile(ConfigXmlSign config)
+        public XMLSignModel ReadXmlFile(ConfigXmlSign config)
         {
-            List<XMLSignModel> result = new List<XMLSignModel>();
+            XMLSignModel result = new XMLSignModel();
             XMLSignModel xMLSignModel = new XMLSignModel();
             string pathFolder = "";
             string fileType = "*.xml";
@@ -173,7 +175,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         xmlDetail.Billno = billno;
                         xMLSignModel.listFileXMLs.Add(xmlDetail);
                     }
-                    result.Add(xMLSignModel);
+                    result = xMLSignModel;
+                    Console.WriteLine("Path Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
+                    log.InsertLog(pathlog, "Path Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
+                }
+                else
+                {
+                    Console.WriteLine("Path Not Found: " + pathFolder);
+                    log.InsertLog(pathlog, "Path Not Found: " + pathFolder);
                 }
 
             }
@@ -310,22 +319,16 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 {
                     Directory.CreateDirectory(output);
                 }
+
+                // See if the original exists now.  
+                if (File.Exists(output + filename))
+                {
+                    File.Delete(output + filename);
+                }
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
                 log.InsertLog(pathlog, pathinput + " was moved to " + output);
-
-                // See if the original exists now.  
-                if (File.Exists(pathinput))
-                {
-                    Console.WriteLine("The original file still exists, which is unexpected.");
-                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
-                }
-                else
-                {
-                    Console.WriteLine("The original file no longer exists, which is expected.");
-                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
-                }
                 result = true;
             }
             catch (Exception ex)
@@ -357,6 +360,25 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                 //result.documentType = "388";
                 result.fileEncode = logicToolHelper.ConvertFileToEncodeBase64(filepath);
 
+            }
+            catch (Exception ex)
+            {
+                log.InsertLog(pathlog, "Exception : " + ex.ToString());
+            }
+            return result;
+        }
+        public bool CheckCancelBillingOrSentRevenueDepartment(TransactionDescription datatran)
+        {
+            bool result = false;
+            try
+            {
+                if (datatran != null)
+                {
+                    if (logicToolHelper.ConvertIntToBoolean(datatran.CancelBilling) || logicToolHelper.ConvertIntToBoolean(datatran.SentRevenueDepartment))
+                    {
+                        result = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
