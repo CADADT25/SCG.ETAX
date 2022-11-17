@@ -75,6 +75,10 @@
                     }
                 },
                 {
+                    data: "emailTemplateName",
+                    width: "20%"
+                },
+                {
                     data: "emailTypeNo",
                     width: "20%",
                     visible : false
@@ -191,9 +195,10 @@
 
     function fnInsertCancelProfileEmailTemplate(){
 
-            document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
+            //document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
             document.getElementById('txtInsertProfileEmailTemplateName').value = '';
             document.getElementById('txtInsertProfileEmailTemplateEmailSubject').value = '';
+            $('#txtInsertProfileEmailTemplateEmailBody').summernote('code', '');
 
             $("#modalCreateProfileEmailTemplate").modal('hide');
     }
@@ -208,7 +213,8 @@
     function callModalInsertProfileEmailTemplate(){
 
         //fnDropdownProfileEmailTemplate();
-        document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
+        //document.getElementById('txtInsertProfileEmailTemplateEmailBody').value = '';
+        $('#txtInsertProfileEmailTemplateEmailBody').summernote('code', '');
         document.getElementById('txtInsertProfileEmailTemplateName').value = '';
         document.getElementById('txtInsertProfileEmailTemplateEmailSubject').value = '';
 
