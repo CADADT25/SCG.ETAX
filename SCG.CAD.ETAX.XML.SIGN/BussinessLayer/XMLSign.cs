@@ -49,8 +49,6 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     //if (logicToolHelper.CheckRunTime(config.ConfigXmlsignNextTime))
                     //{
                     var allfile = ReadXmlFile(config);
-                    Console.WriteLine("End Read All XMLFile");
-                    log.InsertLog(pathlog, "End Read All XMLFile");
 
                     if (allfile != null && allfile.Count > 0)
                     {
@@ -128,6 +126,9 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                     //    log.InsertLog(pathlog, "Set NextTime : " + nexttime);
                     //}
                 }
+
+                Console.WriteLine("End Read All XMLFile");
+                log.InsertLog(pathlog, "End Read All XMLFile");
                 Console.WriteLine("End XMLSign");
                 log.InsertLog(pathlog, "End XMLSign");
             }

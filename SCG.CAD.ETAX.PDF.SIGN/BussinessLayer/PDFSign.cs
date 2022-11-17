@@ -25,9 +25,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         string namepathlog = "PATHLOGFILE_PDFSIGN";
         string batchname = "SCG.CAD.ETAX.PDF.SIGN";
 
-        public List<PDFSignModel> ReadPdfFile(ConfigPdfSign config)
+        public PDFSignModel ReadPdfFile(ConfigPdfSign config)
         {
-            List<PDFSignModel> result = new List<PDFSignModel>();
+            PDFSignModel result = new PDFSignModel();
             PDFSignModel pDFSignModel = new PDFSignModel();
             string pathFolder = "";
             string fileType = "*.pdf";
@@ -44,31 +44,40 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 pDFSignModel.listFilePDFs = new List<ListFilePDF>();
                 pathFolder = config.ConfigPdfsignInputPath;
 
-                directoryInfo = new DirectoryInfo(pathFolder);
-                listpath = directoryInfo.GetFiles(fileType)
-                 .OrderBy(f => f.LastWriteTime).ToList();
-
-                foreach (var item in listpath)
+                if (Directory.Exists(pathFolder))
                 {
-                    filename = Path.GetFileName(item.FullName).Replace(".pdf", "");
-                    if (filename.IndexOf('_') > -1)
-                    {
-                        billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
-                    }
-                    else
-                    {
-                        billno = filename.Substring(8);
-                    }
-                    pdfDetail = new ListFilePDF();
-                    pdfDetail.FullPath = item.FullName;
-                    pdfDetail.FileName = filename;
-                    pdfDetail.Outbound = config.ConfigPdfsignOutputPath;
-                    pdfDetail.Inbound = config.ConfigPdfsignInputPath;
-                    pdfDetail.Billno = billno;
-                    pDFSignModel.listFilePDFs.Add(pdfDetail);
-                }
-                result.Add(pDFSignModel);
+                    directoryInfo = new DirectoryInfo(pathFolder);
+                    listpath = directoryInfo.GetFiles(fileType)
+                     .OrderBy(f => f.LastWriteTime).ToList();
 
+                    foreach (var item in listpath)
+                    {
+                        filename = Path.GetFileName(item.FullName).Replace(".pdf", "");
+                        if (filename.IndexOf('_') > -1)
+                        {
+                            billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                        }
+                        else
+                        {
+                            billno = filename.Substring(8);
+                        }
+                        pdfDetail = new ListFilePDF();
+                        pdfDetail.FullPath = item.FullName;
+                        pdfDetail.FileName = filename;
+                        pdfDetail.Outbound = config.ConfigPdfsignOutputPath;
+                        pdfDetail.Inbound = config.ConfigPdfsignInputPath;
+                        pdfDetail.Billno = billno;
+                        pDFSignModel.listFilePDFs.Add(pdfDetail);
+                    }
+                    result = pDFSignModel;
+                    Console.WriteLine("Path Found PDF : " + pDFSignModel.listFilePDFs.Count + " files");
+                    log.InsertLog(pathlog, "Path Found PDF : " + pDFSignModel.listFilePDFs.Count + " files");
+                }
+                else
+                {
+                    Console.WriteLine("Path Not Found: " + pathFolder);
+                    log.InsertLog(pathlog, "Path Not Found: " + pathFolder);
+                }
             }
             catch (Exception ex)
             {
@@ -105,32 +114,30 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     //{
 
                     var allfile = ReadPdfFile(config);
-                    Console.WriteLine("End Read All PDFFile");
-                    log.InsertLog(pathlog, "End Read All PDFFile");
 
-                    if (allfile != null && allfile.Count > 0)
+                    if (allfile != null && allfile.listFilePDFs != null)
                     {
                         pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
-                        foreach (var src in allfile)
+                        if (allfile.listFilePDFs.Count > 0)
                         {
-                            if (src.listFilePDFs.Count > 0)
+                            foreach (var file in allfile.listFilePDFs)
                             {
-                                foreach (var file in src.listFilePDFs)
+                                round += 1;
+                                billno = file.Billno;
+                                Console.WriteLine("Start round : " + round);
+                                log.InsertLog(pathlog, "Start round : " + round);
+                                Console.WriteLine("billno : " + billno);
+                                log.InsertLog(pathlog, "billno : " + billno);
+
+                                var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
+                                if (!CheckCancelBillingOrSentRevenueDepartment(dataTran))
                                 {
-                                    round += 1;
-                                    billno = file.Billno;
-                                    Console.WriteLine("Start round : " + round);
-                                    log.InsertLog(pathlog, "Start round : " + round);
-                                    Console.WriteLine("billno : " + billno);
-                                    log.InsertLog(pathlog, "billno : " + billno);
+                                    Console.WriteLine("Prepare PDF");
+                                    log.InsertLog(pathlog, "Prepare PDF");
+                                    dataSend = PrepareSendPDFSign(allfile.configPdfSign, file.FullPath);
 
-                                    var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
-                                    if (!CheckCancelBillingOrSentRevenueDepartment(dataTran))
+                                    if(dataSend != null)
                                     {
-                                        Console.WriteLine("Prepare PDF");
-                                        log.InsertLog(pathlog, "Prepare PDF");
-                                        dataSend = PrepareSendPDFSign(src.configPdfSign, file.FullPath);
-
                                         Console.WriteLine("Send To Sign");
                                         log.InsertLog(pathlog, "Send To Sign");
                                         resultPDFSign = SendFilePDFSign(dataSend);
@@ -181,7 +188,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                                     }
                                 }
                             }
-
                         }
                     }
                     //nexttime = logicToolHelper.SetNextRunTime(config.ConfigPdfsignAnyTime, config.ConfigPdfsignOneTime, batchname, config.ConfigPdfsignNo);
@@ -190,6 +196,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     //}
                 }
 
+                Console.WriteLine("End Read All PDFFile");
+                log.InsertLog(pathlog, "End Read All PDFFile");
             }
             catch (Exception ex)
             {
@@ -359,16 +367,12 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         public bool MoveFile(string pathinput, string filename, DateTime billingdate)
         {
             bool result = false;
-            //pathinpput = @"c:\temp\MySample.txt";
-            //pathoutput = @"D:\sign\backupfile\";
             string output = "";
             try
             {
                 output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
-                {
-                    // This statement ensures that the file is created,  
-                    // but the handle is not kept.  
+                { 
                     using (FileStream fs = File.Create(pathinput)) { }
                 }
                 // Ensure that the target does not exist.  
@@ -376,22 +380,17 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 {
                     Directory.CreateDirectory(output);
                 }
+
+                // See if the original exists now.  
+                if (File.Exists(pathinput))
+                {
+                    File.Delete(pathinput);
+                }
                 // Move the file.  
                 File.Move(pathinput, output + filename);
                 Console.WriteLine("{0} was moved to {1}.", pathinput, output);
                 log.InsertLog(pathlog, pathinput + " was moved to " + output);
 
-                // See if the original exists now.  
-                if (File.Exists(pathinput))
-                {
-                    Console.WriteLine("The original file still exists, which is unexpected.");
-                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
-                }
-                else
-                {
-                    Console.WriteLine("The original file no longer exists, which is expected.");
-                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
-                }
                 result = true;
             }
             catch (Exception e)
@@ -406,6 +405,9 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             APISendFilePDFSignModel result = new APISendFilePDFSignModel();
             EncodeHelper encodeHelper = new EncodeHelper();
+            int pdfsignUlx;
+            int pdfsignUly;
+            int fontSize;
             try
             {
                 //result.hsmName = "pse";
@@ -413,23 +415,35 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 //result.slotPassword = "P@ssw0rd1";
                 //result.keyAlias = "NEW06391012205001173_200916150834";
                 //result.certSerial = "5c6e65dc1b7b9da8";
-                result.hsmName = config.ConfigPdfsignHsmModule;
-                result.hsmSerial = config.ConfigPdfsignHsmSerial;
-                result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);
-                result.keyAlias = config.ConfigPdfsignKeyAlias;
-                result.certSerial = config.ConfigPdfsignHsmSerial;
-                result.signatureType = "text";
                 //result.coordinateUpperLeftX = 200;
                 //result.coordinateUpperLeftY = 700;
                 //result.page = "first";
                 //result.fontName = "Tahoma";
                 //result.fontSize = 8;
                 //result.signatureType = "text";
-                result.coordinateUpperLeftX = Convert.ToInt32(config.ConfigPdfsignUlx);
-                result.coordinateUpperLeftY = Convert.ToInt32(config.ConfigPdfsignUly);
+                result.hsmName = config.ConfigPdfsignHsmModule;
+                result.hsmSerial = config.ConfigPdfsignHsmSerial;
+                result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);
+                result.keyAlias = config.ConfigPdfsignKeyAlias;
+                result.certSerial = config.ConfigPdfsignCertificateSerial;
+                result.signatureType = "text";
+                result.coordinateUpperLeftX = 200;
+                result.coordinateUpperLeftY = 700;
+                result.fontSize = 8;
+                if(int.TryParse(config.ConfigPdfsignUlx, out pdfsignUlx))
+                {
+                    result.coordinateUpperLeftX = pdfsignUlx;
+                }
+                if(int.TryParse(config.ConfigPdfsignUly, out pdfsignUly))
+                {
+                    result.coordinateUpperLeftY = pdfsignUly;
+                }
+                if(int.TryParse(config.ConfigPdfsignFontSize, out fontSize))
+                {
+                    result.fontSize = fontSize;
+                }
                 result.page = config.ConfigPdfsignPage;
                 result.fontName = config.ConfigPdfsignFontName;
-                result.fontSize = Convert.ToInt32(config.ConfigPdfsignFontSize);
                 //result.fontType = "";
                 //result.fontSpace = 0;
                 //result.fontColor = "";
