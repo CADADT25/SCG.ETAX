@@ -97,24 +97,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 filePaths.ForEach(t =>
                 {
-
-                    //if (t.Replace(path, "").ToLower().IndexOf(".pdf") != -1)
+                    string fExtension = t.Split('.').Last();
+                    //if (fExtension.ToLower() == "pdf")
                     //{
                     //    data.Pdfs.Add(t.Replace(path, ""));
                     //}
-                    //else if (t.Replace(path, "").ToLower().IndexOf(".xml") != -1)
+                    //else if (fExtension.ToLower() == "xml")
                     //{
                     //    data.Xmls.Add(t.Replace(path, ""));
                     //}
-                    string fExtension = t.Split('.').Last();
-                    if (fExtension.ToLower() == "pdf")
-                    {
-                        data.Pdfs.Add(t.Replace(path, ""));
-                    }
-                    else if (fExtension.ToLower() == "xml")
-                    {
-                        data.Xmls.Add(t.Replace(path, ""));
-                    }
                 });
             }
 
@@ -430,5 +421,61 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return errorMsg;
         }
 
+        [HttpPost]
+        public async Task<JsonResult> UploadFile(IFormFile files)
+        {
+            Response res = new Response();
+            try
+            {
+                if (files == null || files.Length == 0)
+                {
+                    res.STATUS = false;
+                    res.MESSAGE = "File not found.";
+                    return Json(res);
+                }
+
+                var data = new PathXmlPdfModel();
+                var configTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=REQEUST&name=RESIGN_NEWTRANS_TEMP_PATH")).Result;
+                var config = new ConfigGlobal();
+                if (configTask.STATUS)
+                {
+                    config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
+                }
+                else
+                {
+                    return Json(data);
+                }
+
+                string rootPath = config.ConfigGlobalValue;//@"C:\Work space\Document\Etax\Test\Upload\Temp";
+
+                string oldFileName = files.FileName;
+                
+                string newFileName = Guid.NewGuid().ToString() + "_" + files.FileName;
+
+                string destinationPath = Path.Combine(rootPath, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), newFileName);
+
+                //string path = Path.Combine(fullPath);
+                string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
+
+                if (!Directory.Exists(directoryPath))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(directoryPath);
+                }
+
+                using (var stream = new FileStream(destinationPath, FileMode.Create))
+                {
+                    await files.CopyToAsync(stream);
+                    stream.Close();
+                }
+                res.STATUS = true;
+                res.OUTPUT_DATA = new { newFileName = newFileName , oldFileName = oldFileName };
+            }
+            catch(Exception ex)
+            {
+                res.STATUS = false;
+                res.MESSAGE = ex.Message;
+            }
+            return Json(res);
+        }
     }
 }

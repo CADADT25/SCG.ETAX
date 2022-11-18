@@ -189,8 +189,8 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         document += "<thead>";
                         document += "<tr>";
                         document += "<th>#</th>";
-                        document += "<th>XML Path</th>";
-                        document += "<th>PDF Path</th>";
+                        document += "<th>XML File</th>";
+                        document += "<th>PDF File</th>";
                         document += "</tr>";
                         document += "</thead>";
 
