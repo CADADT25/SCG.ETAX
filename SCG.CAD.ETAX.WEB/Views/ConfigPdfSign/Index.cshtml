@@ -14,8 +14,6 @@
         var setCompanyCode = $("#companyCodeState").text();
 
         setTimeout(function(){
-            fnDropdownFont();
-            fnDropdownDataSource();
             RenderConfigPdfSign(setCompanyCode);
         }, 1200);
 
@@ -23,29 +21,48 @@
 
     $(window).on('load', function() {
 
-        $('#modalInsertConfigPdfSign').select2({
-            dropdownParent: $('#modalInsertConfigPdfSign')
+        //$('#modalInsertConfigPdfSign').select2({
+        //    dropdownParent: $('#modalInsertConfigPdfSign')
+        //});
+        
+        $('#ddlInsertConfigPdfSignInputType').select2({
+            dropdownParent: $('#ddlInsertConfigPdfSignInputType')
+        });
+        $('#ddlInsertConfigPdfSignInputSource').select2({
+            dropdownParent: $('#ddlInsertConfigPdfSignInputSource')
+        });
+        $('#ddlInsertConfigPdfSignOutputType').select2({
+            dropdownParent: $('#ddlInsertConfigPdfSignOutputType')
+        });
+        $('#ddlInsertConfigPdfSignOutputSource').select2({
+            dropdownParent: $('#ddlInsertConfigPdfSignOutputSource')
+        });
+        $('#ddlInsertConfigPdfSignFontName').select2({
+            dropdownParent: $('#ddlInsertConfigPdfSignFontName')
         });
 
     });
 
      function fnDropdownDataSource() {
 
+        $('#ddlInsertConfigPdfSignInputSource').empty();
+        $('#ddlInsertConfigPdfSignOutputSource').empty();
+        $('#ddlInsertConfigPdfSignOutputConvertSource').empty();
+        $('#ddlUpdateConfigPdfSignInputSource').empty();
+        $('#ddlUpdateConfigPdfSignOutputSource').empty();
+
         $('<option>',
         {
             value: 0,
         }).html("--- Select Data Source ---").appendTo("#ddlInsertConfigPdfSignInputSource");
-
         $('<option>',
         {
             value: 0,
         }).html("--- Select Data Source ---").appendTo("#ddlInsertConfigPdfSignOutputSource");
-
         $('<option>',
         {
             value: 0,
         }).html("--- Select Data Source ---").appendTo("#ddlInsertConfigPdfSignOutputConvertSource");
-
 
 
         $.getJSON("@Url.Action("DropDownList", "ProfileDataSource")", function (data) {
@@ -55,25 +72,21 @@
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignInputSource");
-
                 $('<option>',
                     {
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignOutputSource");
-
                 $('<option>',
                     {
-                        value: data.dataSourceNo,
+                        value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlInsertConfigPdfSignOutputConvertSource");
-
                 $('<option>',
                     {
                         value: data.dataSourceName,
                         text: data.dataSourceName
                     }).html(data.dataSourceName).appendTo("#ddlUpdateConfigPdfSignInputSource");
-
                 $('<option>',
                     {
                         value: data.dataSourceName,
@@ -81,7 +94,6 @@
                     }).html(data.dataSourceName).appendTo("#ddlUpdateConfigPdfSignOutputSource");
 
             });
-
         })
     }
      function fnDropdownFont() {
@@ -380,6 +392,8 @@
     }
 
     function callModalInsertConfigPdfSign(){
+        fnDropdownFont();
+        fnDropdownDataSource();
         $( "#homeIcon-tab" ).click();
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
@@ -427,7 +441,9 @@
             var data = table.row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
-
+            
+            fnDropdownFont();
+            fnDropdownDataSource();
             //fnDropdownDataSource();
             callConfigPdfSignGetDetailController(getPK);
         });
