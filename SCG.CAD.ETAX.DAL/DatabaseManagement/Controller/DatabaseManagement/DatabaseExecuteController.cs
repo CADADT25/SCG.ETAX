@@ -9,6 +9,10 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
 {
     public class DatabaseExecuteController : TransSqlController, IDisposable
     {
+        public DatabaseExecuteController(string conDbName = "") : base(conDbName)
+        {
+            
+        }
         OutputOnDbModel resultData = new OutputOnDbModel();
 
         protected OutputOnDbModel SearchBySqlList(List<string> sqlList)

@@ -154,6 +154,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     tran = JsonConvert.DeserializeObject<List<ProfileUserManagement>>(task.OUTPUT_DATA.ToString());
 
                     tran = tran.Where(x => x.AccountStatus == 1).OrderBy(x => x.UserNo).ToList();
+                    tran.ForEach(x => { x.UserEmail = x.UserEmail.ToLower(); });
                 }
                 else
                 {

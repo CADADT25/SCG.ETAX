@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-xl-6 col-md-6 col-12 mb-1">
                         <div class="form-group">
-                            <label for="helpInputTop">Select Manager</label>
+                            <label for="helpInputTop">Select Manager <span id="msgDefaultManager" style="color:red;display:none;">*The default user does not exist in the system</span></label>
                             <select class="select2 form-control" id="cartSelectManager" onchange="onChangeSearchManager(this)">
                                 <option value="" hidden>--- Please select manager ---</option>
                             </select>
@@ -118,7 +118,10 @@
 <script type="text/javascript">
     var xmlArr = [];
     var pdfArr = [];
+    var managerOfUser = new Object();
     $(document).ready(function () {
+        managerOfUser = null;
+        
         $('#cartSelectAction').select2();
         $('#cartSelectManager').select2();
         //$('#sub1').select2();
@@ -129,7 +132,17 @@
         //fnDefaultValueAction();
         fnCheckShowDiv();
     });
-
+    function fnGetManagerOfUser() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetManagerByUser", "MDSCAD")",
+            dataType: "json",
+            success: function (res) {
+                 managerOfUser = res;
+                fnDefaultValueManager();
+            }
+        });
+    }
     function fnCheckShowDiv(){
         if ($('#cartSelectAction').val() == "@Variable.RequestActionCode_ReSignNewTrans") {
             $("#divTbData").hide();
@@ -216,8 +229,8 @@
                         text: data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')'
                     }).html(data.firstName + ' ' + data.lastName + ' (' + data.userEmail + ')').appendTo("#cartSelectManager");
             });
-            fnDefaultValueManager();
-        })
+            fnGetManagerOfUser();
+        });
     }
 
     function onChangeSearchManager(self) {
@@ -232,8 +245,22 @@
     }
 
     function fnDefaultValueManager() {
-        if (localStorage.getItem("cartManager") != null && localStorage.getItem("cartManager") != "") {
-            $("#cartSelectManager").select2().val(localStorage.getItem("cartManager")).trigger("change");
+        //if (localStorage.getItem("cartManager") != null && localStorage.getItem("cartManager") != "") {
+        //    $("#cartSelectManager").select2().val(localStorage.getItem("cartManager")).trigger("change");
+        //}
+        
+        if(managerOfUser!=null){
+            if(managerOfUser.data.managerEmail != null && managerOfUser.data.managerEmail != ""){
+                
+                if(managerOfUser.data.isUse == false){
+                    $("#msgDefaultManager").text(" *Your manager '"+managerOfUser.data.managerUserID+"' does not exist in Etax system")
+                    $("#msgDefaultManager").show();
+                    //
+                }else{
+                    $("#msgDefaultManager").hide();
+                    $("#cartSelectManager").select2().val(managerOfUser.data.managerEmail).trigger("change");
+                }
+            }
         }
     }
 

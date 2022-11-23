@@ -22,10 +22,18 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
         private OutputOnDbModel dataOutPut;
 
 
-        public TransSqlController()
+        public TransSqlController(string conDbName = "")
         {
             //strConnection = ConfigurationManager.ConnectionStrings["ConnectionStr"].ConnectionString;
-            strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
+            if (string.IsNullOrEmpty(conDbName))
+            {
+                strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
+            }
+            else
+            {
+                strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")[conDbName];
+            }
+            
             //strConnection = ConfigurationManager.ConnectionStrings["ConnectionStr"].ConnectionString;
 
         }
