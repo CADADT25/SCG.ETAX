@@ -4,19 +4,24 @@
 }
 
 @await Html.PartialAsync("~/Views/ProfileCertificate/_Content.cshtml")
+<style type="text/css">
+    .fontdll{
+        font-family : Montserrat, Helvetica, Arial, serif;
+        font-size : 1rem;
+        line-height : 1.45;
+        color : #6e6b7b;
+    }
 
-
+    .select2-container--classic .select2-results__option[aria-selected='true'],
+    .select2-container--default .select2-results__option[aria-selected='true'] {
+      background-color: #ddd !important;
+      color: white !important; }
+</style>
 
 <script type="text/javascript">
     var dataCertificateMaster = null;
+
      $(document).ready(function () {
-
-
-        //$("#txtUpdateProfileCertificateStartDate").flatpickr();
-
-        //$("#txtUpdateProfileCertificateEndDate").flatpickr();
-
-        $('#ddlInsertProfileCertificateName').select2();
 
         var setCompanyCode = $("#companyCodeState").text();
 
@@ -24,8 +29,6 @@
             fnGetddlCertificate();
             RenderProfileCertificate(setCompanyCode);
         }, 1200);
-
-
 
         $('#toggleUpdateProfileCertificate').change(function() {
             $('#toggleUpdateProfileCertificate-event').html('Toggle: ' + $(this).prop('checked'))
@@ -43,7 +46,6 @@
                     return true;
                 }
             });
-            console.log(breakout);
             if(breakout == false){
                document.getElementById('txtInsertProfileCertificatSerial').value = '';
                document.getElementById('txtInsertProfileCertificateStartDate').value = '';
@@ -52,7 +54,6 @@
         });
 
     });
-
 
     function RenderProfileCertificate(setCompanyCode){
 
@@ -105,22 +106,6 @@
                     data: "certificateCertSerial",
                     width: "20%"
                 },
-                //{
-                //    data: "companyCertificateData",
-                //    width: "20%"
-                //},
-                //{
-                //    data: "companyCertificateSerial",
-                //    width: "20%"
-                //},
-                //{
-                //    data: "companyCertificateKeyAlias",
-                //    width: "20%"
-                //},
-                //{
-                //    data: "companyCertificateStartDate",
-                //    width: "20%"
-                //},
                 {
                     data: "certificateEndDate",
                     width: "20%"
@@ -140,13 +125,6 @@
                     orderable: false,
                     width: "2%"
                 }
-                //{
-                //    data: null,
-                //    className: "dt-center editor-delete text-center text-danger",
-                //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                //    orderable: false,
-                //    width: "2%"
-                //}
             ]
         });
 
@@ -164,12 +142,13 @@
 
     function fnInsertCancelProfileCertificate(){
 
-            document.getElementById('ddlInsertProfileCertificateName').value = '';
             document.getElementById('txtInsertProfileCertificatSerial').value = '';
             document.getElementById('txtInsertProfileCertificateStartDate').value = '';
             document.getElementById('txtInsertProfileCertificateEndDate').value = '';
-
-
+            
+            setTimeout(function(){
+                $('#ddlInsertProfileCertificateName').val('').trigger('change');
+            }, 1000);
             $("#modalCreateProfileCertificate").modal('hide');
     }
 
@@ -187,41 +166,43 @@
 
     function callModalInsertProfileCertificate(){
 
-        $("#ddlUpdateProfileCompanyCertificate").empty();
+        fnInsertCancelProfileCertificate();
         $("#modalCreateProfileCertificate").modal('show');
 
-
-        //$.getJSON("@Url.Action("List", "CertificateMaster")", function (data) {
-        //    $.each(data.data, function (i, slaveValue) {
-        //        $('select#ddlInsertProfileCertificateName').append(
-        //        $('<option></option>').val(slaveValue.certificateCertSerial).html(
-        //         slaveValue.certificateName)
-        //        );
-        //    });
-        //    dataCertificateMaster = data.data;
-
-        //    //$("#ddlInsertProfileCertificatSerial").trigger('change');
-        //})
     }
 
+    function template(data) {
+	    return data.html;
+    }
+    
+
     function fnGetddlCertificate(){
-        var testddl = "";
-        $('<option>',
-        {
-            value: "",
-        }).html("--- Select Certificate ---").appendTo("#ddlInsertProfileCertificateName");
+        var tempdataddl = "";
+        var htmltestddl = "";
+        var dataddl = [];
 
         $.getJSON("@Url.Action("DropDownList", "CertificateMaster")", function (data) {
-
             dataCertificateMaster = data;
             $.each(data, function (i, data) {
-                testddl = data.certificateName + " | " + data.certificateCertSerial + " | " + data.certificateStartDate + " | " + data.certificateEndDate;
-                $('<option>',
-                    {
-                        value: data.certificateCertSerial,
-                        text: testddl
-                    }).html(testddl).appendTo("#ddlInsertProfileCertificateName");
-
+                htmltestddl = "<div class='row col-12'><div class='col-8'>" +
+                            "<label class='fontdll'>" + data.certificateName + "</label></div>" +
+                        "<div class='col-4'><label class='fontdll'>" + data.certificateCertSerial + "</label></div>" +
+                        "<div class='col-12'><label class='fontdll'>" + data.certificateStartDate + " To " + 
+                        data.certificateEndDate + " </label></div></div>"
+                tempdataddl = {
+                       id: data.certificateCertSerial,
+                       text: data.certificateName,
+	                    html: htmltestddl
+                };
+                dataddl.push(tempdataddl);
+            });
+            
+            $("#ddlInsertProfileCertificateName").select2({
+               data: dataddl,
+               templateResult: template,
+               escapeMarkup: function(m) {
+                  return m;
+               }
             });
         })
     }
