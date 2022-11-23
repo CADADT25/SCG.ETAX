@@ -23,15 +23,32 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 permissionModel = JsonConvert.DeserializeObject<RequestPermissionDataModel>(permisRes.OUTPUT_DATA.ToString());
             }
+            // role
+            var configTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=ROLE&name=COLLECTION_MANAGER_ID")).Result;
+            var config = new ConfigGlobal();
+            if (configTask.STATUS)
+            {
+                config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
+            }
 
             // check permission
             if (model.TempUser == model.ManagerEmail)
             {
                 model.IsManager = true;
             }
-            if (permissionModel.Level == 5)
+            if (permissionModel.Level == int.Parse(config.ConfigGlobalValue))
             {
                 model.IsOfficer = true;
+                if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
+                {
+                    if (permissionModel.CompanyCodeList.Count > 0)
+                    {
+                        if (permissionModel.CompanyCodeList.Where(t => t.Contains(model.CompanyCode)).Count() > 0)
+                        {
+                            model.IsAuth = true;
+                        }
+                    }
+                }
             }
             if (model.StatusCode == Variable.RequestStatusCode_WaitManager)
             {
@@ -40,16 +57,16 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     model.IsAuth = true;
                 }
             }
-            else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
-            {
-                if (permissionModel.CompanyCodeList.Count > 0)
-                {
-                    if (permissionModel.CompanyCodeList.Where(t => t.Contains(model.CompanyCode)).Count() > 0)
-                    {
-                        model.IsAuth = true;
-                    }
-                }
-            }
+            //else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
+            //{
+            //    if (permissionModel.CompanyCodeList.Count > 0)
+            //    {
+            //        if (permissionModel.CompanyCodeList.Where(t => t.Contains(model.CompanyCode)).Count() > 0)
+            //        {
+            //            model.IsAuth = true;
+            //        }
+            //    }
+            //}
             
             return View(model);
         }
