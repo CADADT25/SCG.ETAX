@@ -276,7 +276,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     }
                     if (item.Isactive != 1)
                     {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " deleted.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " has been deleted.");
                     }
                 }
                 // undelete
@@ -284,7 +284,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     if (item.Isactive == 1)
                     {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " undeleted.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " has been undeleted.");
                     }
                 }
                 else if (requestAction == Variable.RequestActionCode_ReSignNewTrans)

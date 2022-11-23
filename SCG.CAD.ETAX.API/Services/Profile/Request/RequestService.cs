@@ -543,7 +543,16 @@ namespace SCG.CAD.ETAX.API.Services
                                 string fComCode = fileName.Substring(0, 4);
                                 string fYear = fileName.Substring(4, 4);
                                 string fBilNo = fileName.Substring(8, fileName.Length - 8);
-                                DateTime bilDate = DateTime.ParseExact(fDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                                DateTime bilDate = DateTime.Now;
+                                try
+                                {
+                                    bilDate = DateTime.ParseExact(fDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                                }
+                                catch
+                                {
+
+                                }
+                                
                                 var tranBilling = _dbContext.transactionDescription.Where(t => t.BillingNumber == fBilNo).FirstOrDefault();
                                 if(tranBilling!= null)
                                 {
