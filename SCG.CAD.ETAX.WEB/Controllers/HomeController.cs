@@ -22,16 +22,18 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
 
         [SessionExpire]
-        public IActionResult IndexCheckLogin(string Username, bool CurrentLogin, int LogOut)
+        //public IActionResult IndexCheckLogin(string Username, bool CurrentLogin, int LogOut)
+        public IActionResult IndexCheckLogin(bool CurrentLogin, int LogOut)
         {
             AuthenticationModel authenticationModel = new AuthenticationModel();
-
-            authenticationModel.username = Username;
+            string username = HttpContext.Session.GetString("userMail") ?? "";
+            if(username == "") return new RedirectResult("~/AuthSinIn/Index");
+            authenticationModel.username = username;
             authenticationModel.authenticated = CurrentLogin;
             string fullname = HttpContext.Session.GetString("userName").ToUpper() + " " + HttpContext.Session.GetString("userLastname").Substring(0, 1).ToUpper() + ".";
             string initialsname = HttpContext.Session.GetString("userName").Substring(0, 1).ToUpper() + HttpContext.Session.GetString("userLastname").Substring(0, 1).ToUpper();
             AuthGuard authGuard = new AuthGuard();
-            ViewData["userEmail"] = Username;
+            ViewData["userEmail"] = username;
             ViewData["userFullname"] = fullname;
             ViewData["userInitialsName"] = initialsname;
 

@@ -119,8 +119,11 @@
                                     </div>*@
 
                                 @*}*@
-
                                 <div class="mt-2">
+                                    <button type="button" onclick="loginmode(1);" class="btn btn-primary btn-block" tabindex="4">Login with Domain User</button>
+                                    <button type="button" onclick="loginmode(2);" class="btn btn-primary btn-block" tabindex="4">Login with Local Account</button>
+                                </div>
+                                <div class="mt-2" id="localLogin" style="display:none;">
                                     <div class="form-group">
                                         <label class="form-label" for="LoginEmail">Email</label>
                                         <input class="form-control" id="LoginEmail" type="text" name="LoginEmail" placeholder="john@example.com" aria-describedby="LoginEmail" autofocus="" tabindex="1" />
@@ -202,6 +205,14 @@
 
         });
 
+        function loginmode(v){
+            if(v==1){
+                $("#localLogin").hide();
+                window.location.replace("@ViewBag.autoLoginDomain")
+            }else{
+                $("#localLogin").show();
+            }
+        }
 
         function checklogin(){
 
