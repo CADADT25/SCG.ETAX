@@ -22,14 +22,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 var userLevel = HttpContext.Session.GetInt32("userLevel").ToString();
                 var configControl = JsonConvert.DeserializeObject<List<ConfigControlFunction>>(HttpContext.Session.GetString("controlPermission"));
 
-                ViewData["showCREATE"] = permission.CheckControlAction(configControl,1, userLevel, menuindex);
-                ViewData["showUPDATE"] = permission.CheckControlAction(configControl,2, userLevel, menuindex);
-                ViewData["showDELETE"] = permission.CheckControlAction(configControl,3, userLevel, menuindex);
-                ViewData["showEXPORT"] = permission.CheckControlAction(configControl,4, userLevel, menuindex);
-                ViewData["showDOWNLOAD"] = permission.CheckControlAction(configControl,5, userLevel, menuindex);
-                ViewData["showVIEW"] = permission.CheckControlAction(configControl,6, userLevel, menuindex);
-                ViewData["showSEARCH"] = permission.CheckControlAction(configControl,7, userLevel, menuindex);
-                ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl,8, userLevel, menuindex);
+                ViewData["showCREATE"] = permission.CheckControlAction(configControl, 1, userLevel, menuindex);
+                ViewData["showUPDATE"] = permission.CheckControlAction(configControl, 2, userLevel, menuindex);
+                ViewData["showDELETE"] = permission.CheckControlAction(configControl, 3, userLevel, menuindex);
+                ViewData["showEXPORT"] = permission.CheckControlAction(configControl, 4, userLevel, menuindex);
+                ViewData["showDOWNLOAD"] = permission.CheckControlAction(configControl, 5, userLevel, menuindex);
+                ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
+                ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
+                ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
                 var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                 ViewData["companycode"] = comcode;
                 return View();
@@ -105,7 +105,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/GetListByGroup?param=" + HttpContext.Session.GetString("userMail")));
 
                 if (task.STATUS)
                 {
@@ -273,14 +273,14 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
-        public async Task<JsonResult> ResetStatusIndexing(List<TransactionDescription> listData,string updateby)
+        public async Task<JsonResult> ResetStatusIndexing(List<TransactionDescription> listData, string updateby)
         {
             UTILITY.AdminTool.ResetIndexing resetIndexing = new UTILITY.AdminTool.ResetIndexing();
             Response res = new Response();
             List<string> listbillno = new List<string>();
             try
             {
-                if(listData.Count > 0)
+                if (listData.Count > 0)
                 {
                     listbillno = listData.Select(x => x.BillingNumber).ToList();
                     var result = resetIndexing.ResetStatusIndexingByMutipleRecords(listbillno, updateby);
@@ -462,7 +462,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
 
                 tran = JsonConvert.DeserializeObject<List<TransactionDescription>>(task.OUTPUT_DATA.ToString());
-                if(tran.Count > 0)
+                if (tran.Count > 0)
                 {
                     if (Type.Equals("PDF", StringComparison.CurrentCultureIgnoreCase))
                     {

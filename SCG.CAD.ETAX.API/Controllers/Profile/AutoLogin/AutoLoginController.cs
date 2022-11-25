@@ -35,8 +35,8 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
         private VerifyUserResponse VerifyTokenInternalStepTwo(VerifyUserRequest request)
         {
-            log.InsertLog(@"D:\log\login\", "jwtToken2");
-            log.InsertLog(@"D:\log\login\", request.JwtToken);
+            //log.InsertLog(@"D:\log\login\", "jwtToken2");
+            //log.InsertLog(@"D:\log\login\", request.JwtToken);
             var ret = new VerifyUserResponse() { IsError = true };
             string errorMsg = "";
             var data = JwtAuthExternal.Authenticate(request.JwtToken, out errorMsg);
@@ -51,8 +51,8 @@ namespace SCG.CAD.ETAX.API.Controllers
                 ret.IsError = false;
                 ret.UserId = data.userId;
                 var jsonStr = JsonConvert.SerializeObject(ret);
-                log.InsertLog(@"D:\log\login\", "return VerifyToken2");
-                log.InsertLog(@"D:\log\login\", jsonStr);
+                //log.InsertLog(@"D:\log\login\", "return VerifyToken2");
+                //log.InsertLog(@"D:\log\login\", jsonStr);
                 return ret;
             }
             else

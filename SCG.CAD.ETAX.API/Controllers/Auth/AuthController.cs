@@ -63,8 +63,8 @@ namespace SCG.CAD.ETAX.API.Controllers
         [HttpPost, Route("VerifyToken")]
         public IActionResult VerifyToken([FromBody] string jwtToken)
         {
-            log.InsertLog(@"D:\log\login\", "jwtToken1");
-            log.InsertLog(@"D:\log\login\", jwtToken);
+            //log.InsertLog(@"D:\log\login\", "jwtToken1");
+            //log.InsertLog(@"D:\log\login\", jwtToken);
             if (!Request.Headers.ContainsKey("bearer")) return Unauthorized();
             var appSecretKey = Request.Headers["bearer"].ToString();
 
@@ -75,12 +75,12 @@ namespace SCG.CAD.ETAX.API.Controllers
             {
                 var ret = VerifyTokenInternal(jwtToken);
                 var jsonStr = JsonConvert.SerializeObject(ret);
-                log.InsertLog(@"D:\log\login\", "return VerifyToken");
-                log.InsertLog(@"D:\log\login\", jsonStr);
+                //log.InsertLog(@"D:\log\login\", "return VerifyToken");
+                //log.InsertLog(@"D:\log\login\", jsonStr);
                 return Ok(ret);
             }
 
-            log.InsertLog(@"D:\log\login\", "return Unauthorized");
+            //log.InsertLog(@"D:\log\login\", "return Unauthorized");
             return Unauthorized();
         }
         private VerifyUserResponse VerifyTokenInternal(string jwtToken)
@@ -101,7 +101,7 @@ namespace SCG.CAD.ETAX.API.Controllers
                 if (string.IsNullOrEmpty(data.ExternalId))
                 {
                     //ret.Message = "The ExternalId was not found in the jwt token.";
-                    ret.Message = "User and Password is not correct.";
+                    ret.Message = "Invalid User and Password.";
                     return ret;
                 }
                 ProfileUserManagement externalId = null;
@@ -116,7 +116,7 @@ namespace SCG.CAD.ETAX.API.Controllers
                     if (string.IsNullOrEmpty(data.Email))
                     {
                         //ret.Message = "The Email was not found in the jwt token.";
-                        ret.Message = "User and Password is not correct.";
+                        ret.Message = "Invalid User and Password.";
                         return ret;
                     }
                     var resEmail = repoUser.GET_DETAIL_BY_EMAIL_EXTERNALID2(data.Email).Result;
@@ -128,7 +128,7 @@ namespace SCG.CAD.ETAX.API.Controllers
                     if (externalId == null)
                     {
                         //ret.Message = "The ExternalId and Email were not found in the Etax system.";
-                        ret.Message = "User and Password is not correct.";
+                        ret.Message = "Invalid User and Password.";
                         return ret;
                     }
                     else

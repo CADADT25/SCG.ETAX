@@ -25,6 +25,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetListByGroup")]
+        public IActionResult GetListByGroup(string param)
+        {
+            var result = repo.GET_DETAIL_BY_GROUP(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("GetDetail")]
         public IActionResult GetDetail(int id)
         {
