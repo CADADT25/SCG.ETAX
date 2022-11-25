@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class RequestCartController : Controller
     {
+        [SessionExpire]
         public IActionResult Index()
         {
             //ViewData["cartCount"] = 0;
@@ -47,6 +48,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View();
         }
 
+        [SessionExpire]
         public IActionResult ManageCart()
         {
             var models = new ManageRequestCartModel();

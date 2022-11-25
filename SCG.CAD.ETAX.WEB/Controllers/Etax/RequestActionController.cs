@@ -10,6 +10,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 {
     public class RequestActionController : Controller
     {
+        [SessionExpire]
         public IActionResult Index(string requestNo)
         {
             var model = new RequestRelateDataModel();

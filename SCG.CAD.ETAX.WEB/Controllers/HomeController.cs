@@ -47,16 +47,19 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     }
                     else
                     {
+                        HttpContext.Session.Clear();
                         return new RedirectResult("~/AuthSinIn/Index");
                     }
                 }
                 else
                 {
+                    HttpContext.Session.Clear();
                     return new RedirectResult("~/AuthSinIn/Index");
                 }
             }
             else
             {
+                HttpContext.Session.Clear();
                 return new RedirectResult("~/AuthSinIn/Index");
             }
 
@@ -157,5 +160,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
