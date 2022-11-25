@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.IdentityModel.Tokens;
 using SCG.CAD.ETAX.API.Functions;
@@ -77,6 +78,7 @@ namespace SCG.CAD.ETAX.API.Controllers
                 log.InsertLog(@"D:\log\login\", "return VerifyToken");
                 log.InsertLog(@"D:\log\login\", jsonStr);
                 return Ok(ret);
+                //return Ok(new { UserId = ret.UserId, IsError = ret.IsError, Message = ret.Message });
             }
 
             log.InsertLog(@"D:\log\login\", "return Unauthorized");
