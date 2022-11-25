@@ -154,7 +154,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> SEARCH(string JsonString)
+        public async Task<Response> SEARCH(transactionSearchModel JsonString)
         {
             Response resp = new Response();
 

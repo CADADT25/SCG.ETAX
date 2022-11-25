@@ -87,9 +87,9 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("Search")]
-        public IActionResult Search(string JsonString)
+        public IActionResult Search(transactionSearchModel JsonString)
         {
             var result = repo.SEARCH(JsonString).Result;
 

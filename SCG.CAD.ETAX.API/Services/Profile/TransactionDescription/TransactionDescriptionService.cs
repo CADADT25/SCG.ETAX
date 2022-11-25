@@ -403,7 +403,7 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
-        public Response SEARCH(string JsonString)
+        public Response SEARCH(transactionSearchModel JsonString)
         {
             Response resp = new Response();
 
@@ -416,7 +416,28 @@ namespace SCG.CAD.ETAX.API.Services
 
             try
             {
-                obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
+                //obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == JsonString.user);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.ProfileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach (var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
+                obj = JsonString;
 
                 if (obj != null)
                 {
@@ -515,7 +536,7 @@ namespace SCG.CAD.ETAX.API.Services
 
 
                     //.ToList();
-
+                    tran = tran.Where(t => companyCodeList.Contains(t.CompanyCode)).ToList();
 
                     if (tran.Count > 0)
                     {

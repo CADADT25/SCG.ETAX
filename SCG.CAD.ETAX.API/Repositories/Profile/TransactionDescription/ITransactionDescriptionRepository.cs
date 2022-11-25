@@ -10,7 +10,7 @@
         Task<Response> UPDATE(TransactionDescription param);
         Task<Response> UPDATE_LIST(List<TransactionDescription> param);
         Task<Response> DELETE(TransactionDescription param);
-        Task<Response> SEARCH(string JsonString);
+        Task<Response> SEARCH(transactionSearchModel JsonString);
         Task<Response> SYNCSTATUSPDFSIGN(string listbillno, string updateby);
         Task<Response> SYNCSTATUSXMLSIGN(string listbillno, string updateby);
         Task<Response> DOWNLOADFILE(string pathfile);

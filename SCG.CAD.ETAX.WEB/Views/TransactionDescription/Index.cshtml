@@ -418,7 +418,7 @@
         var JsonString = JSON.stringify(model);
 
         $('#tbTransactionMain').DataTable().destroy();
-
+        $.blockUI();
         $('#tbTransactionMain').DataTable({
             
             "scrollY": false,
@@ -564,7 +564,7 @@
              destroy : true
 
         }).ajax.reload();
-
+        $.unblockUI();
         //RenderTransaction(JsonString);
 
     }
