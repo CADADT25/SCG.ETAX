@@ -143,7 +143,7 @@
     <script src="~/app-assets/js/core/app-menu.js"></script>
     <script src="~/app-assets/js/core/app.js"></script>
     <script src="~/app-assets/js/scripts/forms/form-validation.js"></script>
-    <script src="~/app-assets/vendors/js/charts/apexcharts.min.js"></script>
+    @*<script src="~/app-assets/vendors/js/charts/apexcharts.min.js"></script>*@
     <script src="~/app-assets/vendors/js/extensions/toastr.min.js"></script>
     <script src="~/app-assets/vendors/js/extensions/moment.min.js"></script>
     <script src="~/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
@@ -160,7 +160,7 @@
     <script src="~/app-assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script>
     <script src="~/app-assets/vendors/js/tables/datatable/dataTables.select.min.js"></script>
     <script src="~/app-assets/vendors/js/tables/datatable/responsive.bootstrap4.js"></script>
-    <script src="~/app-assets/js/scripts/pages/dashboard-analytics.js"></script>
+    @*<script src="~/app-assets/js/scripts/pages/dashboard-analytics.js"></script>*@
     <script src="~/app-assets/js/scripts/pages/app-invoice-list.js"></script>
     <script src="~/app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
     <script src="~/app-assets/vendors/js/extensions/polyfill.min.js"></script>
@@ -195,17 +195,17 @@
 
     <script>
 
-            $(window).on('load', function() {
-                if (feather) {
-                    feather.replace({
-                        width: 13,
-                        height: 13
-                    });
-                }
-            })
+        $(window).on('load', function () {
+            if (feather) {
+                feather.replace({
+                    width: 13,
+                    height: 13
+                });
+            }
+        })
 
         function callHomeIndex() {
-            setTimeout(function(){
+            setTimeout(function () {
                 $.blockUI();
                 $("#contentPartial").load("@Url.Action("Index", "Home")");
                 $.unblockUI();
@@ -213,13 +213,14 @@
         }
 
         function sleep(num) {
-      let now = new Date();
-      let stop = now.getTime() + num;
-      while(true) { now = new Date();
-    if(now.getTime() >
-    stop) return;
-      }
-    }
+            let now = new Date();
+            let stop = now.getTime() + num;
+            while (true) {
+                now = new Date();
+                if (now.getTime() >
+                    stop) return;
+            }
+        }
 
     </script>
 

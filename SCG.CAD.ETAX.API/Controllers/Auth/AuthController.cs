@@ -78,7 +78,6 @@ namespace SCG.CAD.ETAX.API.Controllers
                 log.InsertLog(@"D:\log\login\", "return VerifyToken");
                 log.InsertLog(@"D:\log\login\", jsonStr);
                 return Ok(ret);
-                //return Ok(new { UserId = ret.UserId, IsError = ret.IsError, Message = ret.Message });
             }
 
             log.InsertLog(@"D:\log\login\", "return Unauthorized");
@@ -89,8 +88,6 @@ namespace SCG.CAD.ETAX.API.Controllers
             var ret = new VerifyUserResponse() { IsError = true };
             string errorMsg = "";
             var data = JwtAuthExternal.Authenticate(jwtToken, out errorMsg);
-            //log.InsertLog(@"D:\log\login\", "errorMsg");
-            //log.InsertLog(@"D:\log\login\", errorMsg);
             if (string.IsNullOrEmpty(errorMsg))
             {
                 //log.InsertLog(@"D:\log\login\", "ExternalId");
@@ -103,51 +100,44 @@ namespace SCG.CAD.ETAX.API.Controllers
                 //}
                 if (string.IsNullOrEmpty(data.ExternalId))
                 {
-                    ret.Message = "The ExternalId was not found in the jwt token.";
-                    //log.InsertLog(@"D:\log\login\", ret.Message);
+                    //ret.Message = "The ExternalId was not found in the jwt token.";
+                    ret.Message = "User and Password is not correct.";
                     return ret;
                 }
                 ProfileUserManagement externalId = null;
                 var resExternal = repoUser.GET_DETAIL_BY_EXTERNALID(data.ExternalId).Result;
                 if (resExternal.STATUS)
                 {
-                    //log.InsertLog(@"D:\log\login\", "resExternal");
                     var strJson = JsonConvert.SerializeObject(resExternal.OUTPUT_DATA);
                     externalId = JsonConvert.DeserializeObject<ProfileUserManagement>(strJson);
                 }
                 if (externalId == null)
                 {
-                    //log.InsertLog(@"D:\log\login\", "externalId == null");
                     if (string.IsNullOrEmpty(data.Email))
                     {
-                        ret.Message = "The Email was not found in the jwt token.";
-                        //log.InsertLog(@"D:\log\login\", ret.Message);
+                        //ret.Message = "The Email was not found in the jwt token.";
+                        ret.Message = "User and Password is not correct.";
                         return ret;
                     }
                     var resEmail = repoUser.GET_DETAIL_BY_EMAIL_EXTERNALID2(data.Email).Result;
                     if (resEmail.STATUS)
                     {
-                        //log.InsertLog(@"D:\log\login\", "resEmail");
                         var strJson = JsonConvert.SerializeObject(resEmail.OUTPUT_DATA);
-                        //log.InsertLog(@"D:\log\login\", strJson);
                         externalId = JsonConvert.DeserializeObject<ProfileUserManagement>(strJson);
                     }
                     if (externalId == null)
                     {
-                        //log.InsertLog(@"D:\log\login\", "externalId == null 2");
-                        ret.Message = "The ExternalId and Email were not found in the Etax system.";
-                        //log.InsertLog(@"D:\log\login\", ret.Message);
+                        //ret.Message = "The ExternalId and Email were not found in the Etax system.";
+                        ret.Message = "User and Password is not correct.";
                         return ret;
                     }
                     else
                     {
-                        //log.InsertLog(@"D:\log\login\", "befor UPDATE_EXTERNALID success");
                         externalId.ExternalId = data.ExternalId;
                         externalId.ExternalId2 = data.Email;
                         var updateUser = repoUser.UPDATE_EXTERNALID(externalId).Result;
                         ret.UserId = externalId.UserEmail;
                         ret.IsError = false;
-                        //log.InsertLog(@"D:\log\login\", "UPDATE_EXTERNALID success");
                         return ret;
                     }
                 }
@@ -155,7 +145,6 @@ namespace SCG.CAD.ETAX.API.Controllers
                 {
                     ret.UserId = externalId.UserEmail;
                     ret.IsError = false;
-                    //log.InsertLog(@"D:\log\login\", " success"+ ret.UserId);
                     return ret;
                 }
             }

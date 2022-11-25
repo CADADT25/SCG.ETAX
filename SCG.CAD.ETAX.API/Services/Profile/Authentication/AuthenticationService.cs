@@ -38,7 +38,7 @@ namespace SCG.CAD.ETAX.API.Services
                     else
                     {
                         resp.STATUS = false;
-                        resp.ERROR_MESSAGE = "Invalid password";
+                        resp.ERROR_MESSAGE = "User and Password is not correct.";
                     }
 
                 }
