@@ -17,15 +17,7 @@
             fnDropdownConfigMftsIndexGenerationSettingInputDataSource();
             RenderConfigMftsIndexGenerationSettingInput(setCompanyCode);
         }, 1200);
-
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').select2();
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').select2();
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').select2();
-
-        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
-        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
-        $('#ddlUpdateConfigMftsIndexGenerationSettingInputOCType').select2();
-        
+                
         $("#txtConfigMftsIndexGenerationSettingInputIndexOneTime").flatpickr({
             enableTime: true,
             minDate: "today",
@@ -40,23 +32,6 @@
         });
 
     });
-
-    $(window).on('load', function() {
-
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName').select2({
-            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputSourceName')
-        });
-
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName').select2({
-            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputOutputSourceName')
-        });
-
-        $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType').select2({
-            dropdownParent: $('#ddlInsertConfigMftsIndexGenerationSettingInputOCType')
-        });
-
-    });
-
     
     function fnDropdownConfigMftsIndexGenerationSettingInputDataSource() {
 

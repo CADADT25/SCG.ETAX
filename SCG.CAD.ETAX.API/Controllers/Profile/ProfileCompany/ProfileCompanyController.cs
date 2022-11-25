@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace SCG.CAD.ETAX.API.Controllers
 {
@@ -59,7 +60,15 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
-    
-    
+        [HttpGet]
+        [Route("ExportDataProfileCompany")]
+        public IActionResult ExportDataProfileCompany()
+        {
+            var result = repo.ExportDataProfileCompany().Result;
+
+            return Ok(result);
+        }
+
+
     }
 }

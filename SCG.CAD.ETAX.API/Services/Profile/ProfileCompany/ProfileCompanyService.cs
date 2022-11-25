@@ -1,4 +1,7 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using OfficeOpenXml;
+using System.Text;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class ProfileCompanyService
     {
@@ -94,7 +97,7 @@
                     }
 
 
-                    
+
                 }
             }
             catch (Exception ex)
@@ -177,6 +180,84 @@
                 resp.STATUS = false;
                 resp.MESSAGE = "Delete faild.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response ExportDataProfileCompany()
+        {
+            Response resp = new Response();
+            string path = "C:\\FileExport\\";
+            string filename = "scg-etax-ProfileCompany.xlsx";
+            try
+            {
+                using (_dbContext)
+                {
+                    var getList = _dbContext.profileCompany.ToList();
+
+                    if (getList.Count > 0)
+                    {
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        if (File.Exists(path + filename))
+                        {
+                            File.Delete(path + filename);
+                        }
+
+                        ExcelPackage ExcelPkg = new ExcelPackage();
+                        ExcelWorksheet wsSheet1 = ExcelPkg.Workbook.Worksheets.Add("Sheet1");
+
+                        wsSheet1.Cells["A1"].Value = "CompanyNo";
+                        wsSheet1.Cells["B1"].Value = "CompanyCode";
+                        wsSheet1.Cells["C1"].Value = "CompanyNameTh";
+                        wsSheet1.Cells["D1"].Value = "CompanyNameEn";
+                        wsSheet1.Cells["E1"].Value = "CertificateProfileNo";
+                        wsSheet1.Cells["F1"].Value = "TaxNumber";
+                        wsSheet1.Cells["G1"].Value = "IsEbill";
+                        wsSheet1.Cells["H1"].Value = "CreateBy";
+                        wsSheet1.Cells["I1"].Value = "CreateDate";
+                        wsSheet1.Cells["J1"].Value = "UpdateBy";
+                        wsSheet1.Cells["K1"].Value = "UpdateDate";
+                        wsSheet1.Cells["L1"].Value = "Isactive";
+
+                        for (int x = 1; x <= getList.Count; x++)
+                        {
+                            wsSheet1.Cells[x + 1, 1].Value = getList[x - 1].CompanyNo;
+                            wsSheet1.Cells[x + 1, 2].Value = getList[x - 1].CompanyCode;
+                            wsSheet1.Cells[x + 1, 3].Value = getList[x - 1].CompanyNameTh;
+                            wsSheet1.Cells[x + 1, 4].Value = getList[x - 1].CompanyNameEn;
+                            wsSheet1.Cells[x + 1, 5].Value = getList[x - 1].CertificateProfileNo;
+                            wsSheet1.Cells[x + 1, 6].Value = getList[x - 1].TaxNumber;
+                            wsSheet1.Cells[x + 1, 7].Value = getList[x - 1].IsEbill;
+                            wsSheet1.Cells[x + 1, 8].Value = getList[x - 1].CreateBy;
+                            wsSheet1.Cells[x + 1, 9].Value = getList[x - 1].CreateDate;
+                            wsSheet1.Cells[x + 1, 10].Value = getList[x - 1].UpdateBy;
+                            wsSheet1.Cells[x + 1, 11].Value = getList[x - 1].UpdateDate;
+                            wsSheet1.Cells[x + 1, 12].Value = getList[x - 1].Isactive;
+                        }
+
+                        wsSheet1.Protection.IsProtected = false;
+                        wsSheet1.Protection.AllowSelectLockedCells = false;
+                        ExcelPkg.SaveAs(new FileInfo(path + filename));
+
+                        byte[] bytes = File.ReadAllBytes(path + filename);
+                        resp.OUTPUT_DATA = Convert.ToBase64String(bytes, 0, bytes.Length);
+                        resp.STATUS = true;
+                        resp.MESSAGE = filename;
+
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             return resp;
         }
