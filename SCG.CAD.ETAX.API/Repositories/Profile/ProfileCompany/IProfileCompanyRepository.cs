@@ -7,5 +7,6 @@
         Task<Response> INSERT(ProfileCompany param);
         Task<Response> UPDATE(ProfileCompany param);
         Task<Response> DELETE(ProfileCompany param);
+        Task<Response> ExportDataProfileCompany();
     }
 }

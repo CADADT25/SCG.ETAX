@@ -98,6 +98,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> ExportDataProfileCompany()
+        {
+            Response resp;
+
+            try
+            {
+                var result = service.ExportDataProfileCompany();
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return await Task.FromResult(resp);
+        }
 
 
     }

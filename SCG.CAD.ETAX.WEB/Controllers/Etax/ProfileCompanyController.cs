@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using SCG.CAD.ETAX.UTILITY.Authentication;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
@@ -32,6 +34,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
                 var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                 ViewData["companycode"] = comcode;
+
                 return View();
             }
         }
@@ -55,8 +58,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             return View();
         }
-
-
 
         public async Task<JsonResult> Detail(int id)
         {
@@ -174,7 +175,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             try
             {
                 var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/GetListAll"));
-
+                //ExportFileCSVAsync();
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ProfileCompany>>(task.OUTPUT_DATA.ToString());
@@ -229,8 +230,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 Console.WriteLine(ex.InnerException.ToString());
             }
-
+            //System.Text.Encoding.GetEncoding("windows-874");
             return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileCompany.csv");
+            //return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileCompany.csv");
 
         }
 
@@ -270,6 +272,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(tran);
         }
 
+        public async Task<JsonResult> ExportFile()
+        {
+            var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileCompany/ExportDataProfileCompany"));
+
+            return Json(task);
+        }
 
 
     }
