@@ -298,5 +298,26 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             return Json(new { data = tran });
         }
+        public async Task<JsonResult> ExportFile(string jsonSearchString)
+        {
+            Response task = new Response();
+
+            outputSearchXmlModel obj = new outputSearchXmlModel();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+
+            var strBuilder = new StringBuilder();
+
+            try
+            {
+                task = await Task.Run(() => ApiHelper.GetURI("api/OutputSearchXmlZip/ExportData?JsonString= " + jsonSearchString + " "));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+            return Json(task);
+        }
     }
 }
