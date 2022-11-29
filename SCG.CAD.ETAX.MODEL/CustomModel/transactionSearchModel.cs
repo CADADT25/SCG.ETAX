@@ -18,6 +18,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? tranSearchDateType { get; set; }
         public string? tranSearchDateBetween { get; set; }
         public string? tranSearchDataSource { get; set; }
+        public string? user { get; set; }
 
     }
 }

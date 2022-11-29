@@ -1,5 +1,6 @@
 ﻿
 
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using SCG.CAD.ETAX.UTILITY.AdminTool;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -35,6 +36,54 @@ namespace SCG.CAD.ETAX.API.Services
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+        public Response GET_DETAIL_BY_GROUP(string param)
+        {
+            Response resp = new Response();
+            try
+            {
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == param);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.ProfileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach (var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
+                var getList = _dbContext.transactionDescription.Where(t => companyCodeList.Contains(t.CompanyCode)).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -354,7 +403,7 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
-        public Response SEARCH(string JsonString)
+        public Response SEARCH(transactionSearchModel JsonString)
         {
             Response resp = new Response();
 
@@ -367,7 +416,28 @@ namespace SCG.CAD.ETAX.API.Services
 
             try
             {
-                obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
+                //obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == JsonString.user);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.ProfileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach (var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
+                obj = JsonString;
 
                 if (obj != null)
                 {
@@ -466,7 +536,7 @@ namespace SCG.CAD.ETAX.API.Services
 
 
                     //.ToList();
-
+                    tran = tran.Where(t => companyCodeList.Contains(t.CompanyCode)).ToList();
 
                     if (tran.Count > 0)
                     {

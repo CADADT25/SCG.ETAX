@@ -66,6 +66,64 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
+        public Response GET_DETAIL_BY_EXTERNALID(string id)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var data = _dbContext.profileUserManagement.Where(x => x.ExternalId == id).FirstOrDefault();
+
+                if (data != null)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = data;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+        public Response GET_DETAIL_BY_EMAIL_EXTERNALID2(string email)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var data = _dbContext.profileUserManagement.Where(x => x.ExternalId2 == email.ToLower() || x.UserEmail == email.ToLower()).FirstOrDefault();
+
+                if (data != null)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = data;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
         public Response INSERT(ProfileUserManagement param)
         {
@@ -122,6 +180,42 @@ namespace SCG.CAD.ETAX.API.Services
                         //update.AttempLast = param.AttempLast;
                         update.AccountStatus = param.AccountStatus;
                         update.UpdateBy = param.UpdateBy;
+                        update.UpdateDate = dtNow;
+
+                        _dbContext.SaveChanges();
+
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Updated Success.";
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Can't update because data not found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+        public Response UPDATE_EXTERNALID(ProfileUserManagement param)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    var update = _dbContext.profileUserManagement.Where(x => x.UserNo == param.UserNo).FirstOrDefault();
+
+                    if (update != null)
+                    {
+                        update.ExternalId = param.ExternalId;
+                        update.ExternalId2 = param.ExternalId2;
+
                         update.UpdateDate = dtNow;
 
                         _dbContext.SaveChanges();

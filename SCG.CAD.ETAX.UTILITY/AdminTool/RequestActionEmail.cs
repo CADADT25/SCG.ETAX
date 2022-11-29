@@ -80,9 +80,9 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     }
 
                     configEmail = configMftsEmailSettings.FirstOrDefault(x => x.ConfigMftsEmailSettingCompanyCode == request.CompanyCode);
-                    toEmail = "cadadt02@scg.com";
-                    if (!string.IsNullOrEmpty(ccEmail))
-                        ccEmail = "cadadt02@scg.com";
+                    //toEmail = "cadadt02@scg.com";
+                    //if (!string.IsNullOrEmpty(ccEmail))
+                    //    ccEmail = "cadadt02@scg.com";
                     res.STATUS = SendEmailbyCompany(configEmail, profileEmailTemplate, request, subjectemail, dataTables, toName, toEmail, ccEmail);
                     if (res.STATUS)
                     {
@@ -189,8 +189,8 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         document += "<thead>";
                         document += "<tr>";
                         document += "<th>#</th>";
-                        document += "<th>XML Path</th>";
-                        document += "<th>PDF Path</th>";
+                        document += "<th>XML File</th>";
+                        document += "<th>PDF File</th>";
                         document += "</tr>";
                         document += "</thead>";
 

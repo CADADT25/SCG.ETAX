@@ -24,6 +24,42 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_DETAIL_BY_EXTERNALID(string id)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL_BY_EXTERNALID(id);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+        public async Task<Response> GET_DETAIL_BY_EMAIL_EXTERNALID2(string email)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.GET_DETAIL_BY_EMAIL_EXTERNALID2(email);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> GET_LIST()
         {
@@ -69,6 +105,25 @@
             try
             {
                 var result = service.UPDATE(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
+        public async Task<Response> UPDATE_EXTERNALID(ProfileUserManagement param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_EXTERNALID(param);
 
                 resp = result;
             }

@@ -2,107 +2,108 @@
 <script src="~/assets/validate/ConfigXmlGeneratorValidate.js"></script>
 
 <form class="form form-vertical">
-<div class="row">
+    <div class="row">
 
-    <div class="col-md-12 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Company Code </label>
-            <input type="text" disabled id="txtInsertConfigXmlGeneratorCompanyCode" onkeyup="validateInsertProductUnit();" class="form-control">
-        </div>
-    </div>
-
-    <div class="col-md-12 col-12">
-        <div class="form-group">
-            <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsBatch" onclick="onChangeBath();"/>
-                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsBatch">Batch</label>
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Company Code </label>
+                <input type="text" disabled id="txtInsertConfigXmlGeneratorCompanyCode" onkeyup="validateInsertProductUnit();" class="form-control">
             </div>
         </div>
-    </div>
 
-    <div class="col-md-1 col-12">
-    </div>
-
-    <div class="col-md-3 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Input Source </label>
-            <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputSource"></select>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Input Type </label>
-            <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputType">
-                <option value="FOLDER" selected>Folder</option>
-               @* <option value="FTP">FTP</option>*@
-            </select>
-        </div>
-    </div>
-
-    <div class="col-md-5 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Input Path </label>
-            <input disabled type="text" id="txtInsertConfigXmlGeneratorInputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
-        </div>
-    </div>
-
-    <div class="col-md-1 col-12">
-    </div>
-
-    <div class="col-md-3 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Output Source </label>
-            <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputSource"></select>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Output Type </label>
-            <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputType">
-                <option value="FOLDER" selected>Folder</option>
-                @*<option value="FTP">FTP</option>*@
-            </select>
-        </div>
-    </div>
-
-    <div class="col-md-5 col-12">
-        <div class="form-group">
-            <label><spa class="text-danger">* </spa> Output Path </label>
-            <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
-        </div>
-    </div>
-
-    <div class="col-md-12 col-12">
-        <div class="form-group">
-            <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsOnline" onclick="onChangeOnline();" />
-                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsOnline">Online</label>
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsBatch" onclick="onChangeBath();" />
+                    <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsBatch">Batch</label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-1 col-12">
-    </div>
-
-    <div class="col-md-11 col-12">
-        <div class="form-group">
-            <label>Online Record Number</label>
-            <input disabled type="text" id="txtInsertConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+        <div class="col-md-1 col-12">
         </div>
-    </div>
 
-    <div class="col-md-12 col-12">
-        <div class="form-group">
-            <div class="custom-control custom-control-primary custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsActive" checked />
-                <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsActive">Is Active</label>
+        <div class="col-md-3 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Input Source </label>
+                <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputSource"></select>
             </div>
         </div>
-    </div>
 
-</div>
+
+        <div class="col-md-3 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Input Type </label>
+                <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorInputType">
+                    <option value="FOLDER" selected>Folder</option>
+                    @* <option value="FTP">FTP</option>*@
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-5 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Input Path </label>
+                @*<input disabled type="text" id="txtInsertConfigXmlGeneratorInputPath" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">*@
+                <input disabled type="text" id="txtInsertConfigXmlGeneratorInputPath" onclick="fnOpenGetPathServerModal('txtInsertConfigXmlGeneratorInputPath')" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-3 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Output Source </label>
+                <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputSource"></select>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Output Type </label>
+                <select disabled class="select2 form-control" id="ddlInsertConfigXmlGeneratorOutputType">
+                    <option value="FOLDER" selected>Folder</option>
+                    @*<option value="FTP">FTP</option>*@
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-5 col-12">
+            <div class="form-group">
+                <label><spa class="text-danger">* </spa> Output Path </label>
+                <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputPath" onclick="fnOpenGetPathServerModal('txtInsertConfigXmlGeneratorOutputPath')" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsOnline" onclick="onChangeOnline();" />
+                    <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsOnline">Online</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <label>Online Record Number</label>
+                <input disabled type="text" id="txtInsertConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsActive" checked />
+                    <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsActive">Is Active</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </form>

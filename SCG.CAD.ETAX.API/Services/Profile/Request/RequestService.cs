@@ -1,12 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.ExtendedProperties;
-using DocumentFormat.OpenXml.Office.CustomUI;
-using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.UTILITY;
-using System.IO;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.API.Services
 {
@@ -241,12 +233,13 @@ namespace SCG.CAD.ETAX.API.Services
                 using (_dbContext)
                 {
                     var rootPath = _dbContext.configGlobal.Where(t => t.ConfigGlobalCategoryName == "REQEUST" && t.ConfigGlobalName == "RESIGN_NEWTRANS_ROOT_PATH").FirstOrDefault();
+                    var tempPath = _dbContext.configGlobal.Where(t => t.ConfigGlobalCategoryName == "REQEUST" && t.ConfigGlobalName == "RESIGN_NEWTRANS_TEMP_PATH").FirstOrDefault();
                     var pdfPaths = param.PathList.Select(t => t.PdfPath).Distinct().ToList();
                     var companys = new List<string>();
-                    foreach (var pdfPath in pdfPaths)
+                    foreach (var item in pdfPaths)
                     {
-                        var strArr = pdfPath.Split("\\");
-                        companys.Add(strArr[1]);
+                        var strArr = item.Split("_");
+                        companys.Add(strArr[1].Substring(0, 4));
                     }
                     companys = companys.Distinct().ToList();
                     foreach (var comCode in companys)
@@ -273,19 +266,50 @@ namespace SCG.CAD.ETAX.API.Services
                         history.UpdateDate = dtNow;
                         history.UpdateBy = param.UserBy;
                         _dbContext.requestHistory.Add(history);
-                        var dataList = param.PathList.Where(t => t.XmlPath.Contains("\\" + comCode)).ToList();
-                        foreach (var item in dataList)
+
+                        // @"C:\Work space\Document\Etax\Test\Upload\Temp"
+                        // Path.Combine(rootPath, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), newFileName);
+
+                        //var dataList = param.PathList.Where(t => t.XmlPath.Contains("\\" + comCode)).ToList();
+                        foreach (var itemPath in param.PathList)
                         {
-                            var requestPath = new RequestPath();
-                            requestPath.Id = Guid.NewGuid();
-                            requestPath.RequestId = request.Id;
-                            requestPath.PathXml = rootPath.ConfigGlobalValue + item.XmlPath;
-                            requestPath.PathPdf = rootPath.ConfigGlobalValue + item.PdfPath;
-                            requestPath.CreateDate = dtNow;
-                            requestPath.CreateBy = param.UserBy;
-                            requestPath.UpdateDate = dtNow;
-                            requestPath.UpdateBy = param.UserBy;
-                            _dbContext.requestPath.Add(requestPath);
+                            var strArr = itemPath.PdfPath.Split("_");
+                            if (strArr[1].Substring(0, 4) == comCode)
+                            {
+                                //move move file
+                                var pdfNewFileName = itemPath.PdfPath.Replace(itemPath.PdfPath.Split("_")[0] + "_", "");
+                                string pdfSourcePath = System.IO.Path.Combine(tempPath.ConfigGlobalValue, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), itemPath.PdfPath);
+                                string pdfDestinationPath = System.IO.Path.Combine(rootPath.ConfigGlobalValue, comCode, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), pdfNewFileName);
+                                var errStr = MoveTempFile(pdfSourcePath, pdfDestinationPath);
+                                if (!string.IsNullOrEmpty(errStr))
+                                {
+                                    resp.STATUS = false;
+                                    resp.MESSAGE = errStr;
+                                    return resp;
+                                }
+
+                                var xmlNewFileName = itemPath.XmlPath.Replace(itemPath.XmlPath.Split("_")[0] + "_", "");
+                                string xmlSourcePath = System.IO.Path.Combine(tempPath.ConfigGlobalValue, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), itemPath.XmlPath);
+                                string xmlDestinationPath = System.IO.Path.Combine(rootPath.ConfigGlobalValue, comCode, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), xmlNewFileName);
+                                errStr = MoveTempFile(xmlSourcePath, xmlDestinationPath);
+                                if (!string.IsNullOrEmpty(errStr))
+                                {
+                                    resp.STATUS = false;
+                                    resp.MESSAGE = errStr;
+                                    return resp;
+                                }
+                                //
+                                var requestPath = new RequestPath();
+                                requestPath.Id = Guid.NewGuid();
+                                requestPath.RequestId = request.Id;
+                                requestPath.PathXml = xmlDestinationPath;
+                                requestPath.PathPdf = pdfDestinationPath;
+                                requestPath.CreateDate = dtNow;
+                                requestPath.CreateBy = param.UserBy;
+                                requestPath.UpdateDate = dtNow;
+                                requestPath.UpdateBy = param.UserBy;
+                                _dbContext.requestPath.Add(requestPath);
+                            }
 
                         }
                     }
@@ -304,6 +328,43 @@ namespace SCG.CAD.ETAX.API.Services
                 resp.INNER_EXCEPTION = ex.Message;
             }
             return resp;
+        }
+        private string MoveTempFile(string sourcePath, string destinationPath)
+        {
+            string result = "";
+            try
+            {
+                if (File.Exists(sourcePath))
+                {
+                    string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(directoryPath);
+                    }
+                    if (File.Exists(destinationPath))
+                    {
+                        try
+                        {
+                            File.Delete(destinationPath);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    File.Move(sourcePath, destinationPath);
+                }
+                else
+                {
+                    result = "Source file not found.";
+                }
+            }
+            catch (Exception e)
+            {
+                result = e.Message.ToString();
+            }
+            return result;
         }
         public Response SUBMIT_REQUEST(RequestDataModel param)
         {
@@ -389,7 +450,7 @@ namespace SCG.CAD.ETAX.API.Services
                     var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode).FirstOrDefault();
                     var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
                     var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
-                    
+
                     if (param.Action == "manager_approve")
                     {
                         request.StatusCode = Variable.RequestStatusCode_WaitOfficer;
@@ -482,7 +543,23 @@ namespace SCG.CAD.ETAX.API.Services
                                 string fComCode = fileName.Substring(0, 4);
                                 string fYear = fileName.Substring(4, 4);
                                 string fBilNo = fileName.Substring(8, fileName.Length - 8);
-                                DateTime bilDate = DateTime.ParseExact(fDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                                DateTime bilDate = DateTime.Now;
+                                try
+                                {
+                                    bilDate = DateTime.ParseExact(fDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                                }
+                                catch
+                                {
+
+                                }
+                                
+                                var tranBilling = _dbContext.transactionDescription.Where(t => t.BillingNumber == fBilNo).FirstOrDefault();
+                                if(tranBilling!= null)
+                                {
+                                    resp.STATUS = false;
+                                    resp.MESSAGE = "Action faild. Duplicate Billing Number.";
+                                    return resp;
+                                }
                                 var newBilling = new TransactionDescription();
                                 newBilling.BillingDate = bilDate;
                                 newBilling.BillingYear = float.Parse(fYear);
@@ -636,7 +713,7 @@ namespace SCG.CAD.ETAX.API.Services
                     }
 
                     // Copy xml & pdf to sign
-                    foreach(var tran in resignTrans)
+                    foreach (var tran in resignTrans)
                     {
                         try
                         {
@@ -703,7 +780,7 @@ namespace SCG.CAD.ETAX.API.Services
                         {
 
                         }
-                        
+
                     }
 
                     resp.STATUS = true;

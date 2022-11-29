@@ -1,0 +1,116 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalGetPathServer" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" style="min-height: 587px;">
+            <div class="modal-header">
+                <h5 class="modal-title">Get path of Server</h5>
+            </div>
+            <div class="modal-body">
+                <h5 class="modal-title">Current Path: <span id="currentPath"></span></h5>
+                <div class="list-group" id="tbFolderList">
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnCloseGetPathServerModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnReturnSelectedPath()">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var idForReturnPath = "";
+    var currentSelectedPath = "";
+
+    function fnOpenGetPathServerModal(id) {
+        idForReturnPath = id;
+        fnGetPathServer_Forward('', '');
+        $("#modalGetPathServer").modal('show');
+    }
+
+    function fnCloseGetPathServerModal() {
+        idForReturnPath = "";
+        $("#modalGetPathServer").modal('hide');
+    }
+
+    function fnReturnSelectedPath(){
+        if (currentSelectedPath != null && currentSelectedPath != "") {
+            $("#" + idForReturnPath).val(currentSelectedPath);
+        }
+        fnCloseGetPathServerModal();
+    }
+
+    function fnGetPathServer_Forward(path,str) {
+        
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetPathServer_Forward", "DirectoryServer")",
+            data: { currentPath:path, name: str },
+            dataType: "json",
+            success: function (result) {
+                
+                renderData(result);
+
+            }
+        });
+    }
+
+    function fnGetPathServer_Back(str) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetPathServer_Back", "DirectoryServer")",
+            data: { path: str },
+            dataType: "json",
+            success: function (result) {
+
+                renderData(result);
+
+            }
+        });
+    }
+
+    function renderData(data) {
+        fnSetNavPath(data.currentPath);
+        currentSelectedPath = data.currentPath;
+        $("#tbFolderList").empty();
+        if (data.childFolderList.length>0){
+            for (var i = 0; i < data.childFolderList.length; i++) {
+                var str = '<a href="#" onclick="fnGetPathServer_Forward(\'' + data.currentPath.replace(/\\/g, '\\\\') + '\',\'' + data.childFolderList[i] + '\')" class="list-group-item list-group-item-action">' + data.childFolderList[i] + '</a>';
+                $("#tbFolderList").append(str);
+            }
+        }
+    }
+
+    function fnSetNavPath(v){
+        
+        $("#currentPath").html('');
+        if(v != null){
+            var pathlist = v.split('\\');
+            const index = pathlist.indexOf('');
+            if (index > -1) {
+                pathlist.splice(index, 1);
+            }
+            var strPath = "";
+            var strPathForBack = "";
+            for (var i = 0; i < pathlist.length; i++){
+                
+                if(i==0){
+                    strPathForBack += pathlist[i];
+                    strPath += '<span style="color:#097ee3;cursor: pointer;" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\\\\\')">' + pathlist[i] + '</span>';
+                    
+                }else{
+                    strPathForBack += '\\\\' + pathlist[i];
+                    strPath += ' \\ <span style="color:#097ee3;cursor: pointer;" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\')">' + pathlist[i] + '</span>';
+                }
+                
+            }
+            $("#currentPath").html(strPath);
+        }
+    }
+
+</script>

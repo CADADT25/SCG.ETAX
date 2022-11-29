@@ -25,7 +25,7 @@ namespace SCG.CAD.ETAX.API.Services
                     if (!string.IsNullOrEmpty(company))
                     {
                         var comArr = company.Split(",").ToList();
-                        foreach(var com in comArr)
+                        foreach (var com in comArr)
                         {
                             if (!string.IsNullOrEmpty(com))
                             {
@@ -34,8 +34,9 @@ namespace SCG.CAD.ETAX.API.Services
                         }
                     }
                 }
-
-                if(profileuser.LevelId == 5)
+                var roleClMg = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == "COLLECTION_MANAGER_ID" && t.ConfigGlobalCategoryName == "ROLE").FirstOrDefault();
+                int clManagerId = roleClMg != null ? int.Parse(roleClMg.ConfigGlobalValue) : 0;
+                if (profileuser.LevelId == clManagerId)
                 {
                     requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == Variable.RequestStatusCode_WaitManager)

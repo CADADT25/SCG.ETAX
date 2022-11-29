@@ -23,5 +23,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string UpdateBy { get; set; } = null!;
         public DateTime UpdateDate { get; set; }
         public int? AccountStatus { get; set; }
+        public string? ExternalId { get; set; }
+        public string? ExternalId2 { get; set; }
     }
 }

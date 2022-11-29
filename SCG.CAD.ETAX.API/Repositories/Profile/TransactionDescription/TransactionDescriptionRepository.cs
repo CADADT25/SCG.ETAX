@@ -60,6 +60,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_DETAIL_BY_GROUP(string param)
+        {
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_DETAIL_BY_GROUP(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> INSERT(TransactionDescription param)
         {
@@ -137,7 +154,7 @@
             return await Task.FromResult(resp);
         }
 
-        public async Task<Response> SEARCH(string JsonString)
+        public async Task<Response> SEARCH(transactionSearchModel JsonString)
         {
             Response resp = new Response();
 

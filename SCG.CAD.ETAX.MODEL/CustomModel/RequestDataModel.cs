@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public RequestDataModel()
         {
             this.RequestCartList = new List<RequestCartDataModel>();
+            this.PathList = new List<PathXmlPdfModel>();
         }
         public string Action { get; set; }
         public string Manager { get; set; }
