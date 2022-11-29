@@ -8,7 +8,7 @@ namespace SCG.CAD.ETAX.API.Services
 
         readonly DatabaseContext _dbContext = new();
 
-        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMอ-dd'" + "T" + "'HH:mm:ss.fff"));
 
         public Response GET_LIST()
         {
@@ -232,9 +232,9 @@ namespace SCG.CAD.ETAX.API.Services
                             wsSheet1.Cells[x + 1, 6].Value = getList[x - 1].TaxNumber;
                             wsSheet1.Cells[x + 1, 7].Value = getList[x - 1].IsEbill;
                             wsSheet1.Cells[x + 1, 8].Value = getList[x - 1].CreateBy;
-                            wsSheet1.Cells[x + 1, 9].Value = getList[x - 1].CreateDate;
+                            wsSheet1.Cells[x + 1, 9].Value = getList[x - 1].CreateDate.ToString("yyyy-MM-dd hh:mm:ss");
                             wsSheet1.Cells[x + 1, 10].Value = getList[x - 1].UpdateBy;
-                            wsSheet1.Cells[x + 1, 11].Value = getList[x - 1].UpdateDate;
+                            wsSheet1.Cells[x + 1, 11].Value = getList[x - 1].UpdateDate.ToString("yyyy-MM-dd hh:mm:ss");
                             wsSheet1.Cells[x + 1, 12].Value = getList[x - 1].Isactive;
                         }
 

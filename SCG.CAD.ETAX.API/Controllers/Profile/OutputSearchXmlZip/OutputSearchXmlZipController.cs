@@ -78,6 +78,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpGet]
+        [Route("ExportData")]
+        public IActionResult ExportData(string JsonString)
+        {
+            var result = repo.ExportData(JsonString).Result;
+
+            return Ok(result);
+        }
 
 
     }

@@ -632,30 +632,6 @@
     }
 
     function callProfileCompanyExportController(){
-        //$.ajax({
-        //    type: "GET",
-        //    url: "@Url.Action("ExportToCsv", "ProfileCompany")",
-        //    //data: { id : getPK },
-        //    contentType: 'application/json; charset=utf-8',
-        //    //dataType: "json",
-        //    success: function (response) {
-
-        //        //var blob = new Blob([response], {type: 'text/csv;charset=utf-8;'});
-        //        var blob = new Blob([response], {type: 'text/csv;charset=TIS-620;'});
-
-        //        var downloadUrl = URL.createObjectURL(blob);
-
-        //        var a = document.createElement("a");
-
-        //        a.href = downloadUrl;
-
-        //        a.download = "scg-etax-ProfileCompany.csv";
-
-        //        document.body.appendChild(a);
-
-        //        a.click();
-        //    }
-        //});
         $.ajax({
             type: "GET",
             url: "@Url.Action("ExportFile", "ProfileCompany")",

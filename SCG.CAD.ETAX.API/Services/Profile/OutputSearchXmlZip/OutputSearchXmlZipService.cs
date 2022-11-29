@@ -1,4 +1,6 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using OfficeOpenXml;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class OutputSearchXmlZipService
     {
@@ -180,112 +182,18 @@
 
             try
             {
-                obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(JsonString);
+                tran = SearchXmlZip(JsonString);
 
-                DateTime getMinDate = new DateTime();
-                DateTime getMaxDate = new DateTime();
-
-                var getDocType = obj.outPutSearchDocType.ToUpper();
-
-                var getStatus = obj.outPutSearchStatus;
-
-                int statusDownload = 99;
-
-                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
-
-                //if (!string.IsNullOrEmpty(getStatus))
-                //{
-                //    statusDownload = Convert.ToInt32(getStatus);
-                //}
-                //else
-                //{
-                //    statusDownload = 99;
-                //}
-
-
-                //if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                //{
-                //    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                //    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-                //}
-                //else
-                //{
-                //    getMinDate = DateTime.Now.AddDays(-30);
-                //    getMaxDate = DateTime.Now.AddDays(30);
-                //}
-
-                if (obj != null)
+                if (tran.Count > 0)
                 {
-                    tran = _dbContext.outputSearchXmlZip.ToList();
-
-                    if(obj.outPutSearchCompanyCode != null)
-                    {
-                        if(obj.outPutSearchCompanyCode.Count > 0)
-                        {
-                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(getStatus))
-                    {
-                        statusDownload = Convert.ToInt32(getStatus);
-                        tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
-                    {
-                        tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                    {
-                        var getArrayDate = obj.outPutSearchDate.Split("to");
-                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-
-                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
-                    }
-
-                    //tran = _dbContext.outputSearchXmlZip.Where(
-
-                    //        x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
-
-                    //        obj.outPutSearchCompanyCode.Count > 0 ? ( obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
-
-                    //        statusDownload == 99 ? ( x.OutputSearchXmlZipDowloadStatus != 1 && x.OutputSearchXmlZipDowloadStatus != 0  && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
-
-                    //        getDocType != "ALL" ? (obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper() && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDocType != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
-
-                    //        ).ToList();
-
-                    if (tran.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = tran;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = tran;
                 }
                 else
                 {
-
-                    var getList = _dbContext.outputSearchXmlZip.ToList();
-
-                    if (getList.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = getList;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
                 }
 
 
@@ -373,7 +281,143 @@
                 throw ex;
             }
         }
+        public Response ExportData(string JsonString)
+        {
+            Response resp = new Response();
+            string path = "C:\\FileExport\\";
+            string filename = "scg-etax-OutputSearchXmlZip.xlsx";
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+            try
+            {
+                tran = SearchXmlZip(JsonString);
+                if (tran.Count > 0)
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    if (File.Exists(path + filename))
+                    {
+                        File.Delete(path + filename);
+                    }
+                    ExcelPackage ExcelPkg = new ExcelPackage();
+                    ExcelWorksheet wsSheet1 = ExcelPkg.Workbook.Worksheets.Add("Sheet1");
 
+                    wsSheet1.Cells["A1"].Value = "OutputSearchXmlZipNo";
+                    wsSheet1.Cells["B1"].Value = "OutputSearchXmlZipCompanyCode";
+                    wsSheet1.Cells["C1"].Value = "OutputSearchXmlZipFileName";
+                    wsSheet1.Cells["D1"].Value = "OutputSearchXmlZipFullPath";
+                    wsSheet1.Cells["E1"].Value = "OutputSearchXmlZipDowloadStatus";
+                    wsSheet1.Cells["F1"].Value = "OutputSearchXmlZipDowloadCount";
+                    wsSheet1.Cells["G1"].Value = "OutputSearchXmlZipDowloadLastTime";
+                    wsSheet1.Cells["H1"].Value = "OutputSearchXmlZipDowloadLastBy";
+                    wsSheet1.Cells["I1"].Value = "CreateBy";
+                    wsSheet1.Cells["J1"].Value = "CreateDate";
+                    wsSheet1.Cells["K1"].Value = "UpdateBy";
+                    wsSheet1.Cells["L1"].Value = "UpdateDate";
+                    wsSheet1.Cells["M1"].Value = "Isactive";
 
+                    DateTime createdate;
+                    DateTime updatedate;
+                    for (int x = 1; x <= tran.Count; x++)
+                    {
+                        wsSheet1.Cells[x + 1, 1].Value = tran[x - 1].OutputSearchXmlZipNo;
+                        wsSheet1.Cells[x + 1, 2].Value = tran[x - 1].OutputSearchXmlZipCompanyCode;
+                        wsSheet1.Cells[x + 1, 3].Value = tran[x - 1].OutputSearchXmlZipFileName;
+                        wsSheet1.Cells[x + 1, 4].Value = tran[x - 1].OutputSearchXmlZipFullPath;
+                        wsSheet1.Cells[x + 1, 5].Value = tran[x - 1].OutputSearchXmlZipDowloadStatus;
+                        wsSheet1.Cells[x + 1, 6].Value = tran[x - 1].OutputSearchXmlZipDowloadCount;
+                        wsSheet1.Cells[x + 1, 7].Value = tran[x - 1].OutputSearchXmlZipDowloadLastTime;
+                        wsSheet1.Cells[x + 1, 8].Value = tran[x - 1].OutputSearchXmlZipDowloadLastBy;
+                        wsSheet1.Cells[x + 1, 9].Value = tran[x - 1].CreateBy;
+                        wsSheet1.Cells[x + 1, 10].Value = tran[x - 1].CreateDate?.ToString("yyyy-MM-dd hh:mm:ss");
+                        wsSheet1.Cells[x + 1, 11].Value = tran[x - 1].UpdateBy;
+                        wsSheet1.Cells[x + 1, 12].Value = tran[x - 1].UpdateDate?.ToString("yyyy-MM-dd hh:mm:ss");
+                        wsSheet1.Cells[x + 1, 13].Value = tran[x - 1].Isactive;
+                        wsSheet1.Cells[x + 1, 13].Value = tran[x - 1].Isactive;
+                    }
+
+                    wsSheet1.Protection.IsProtected = false;
+                    wsSheet1.Protection.AllowSelectLockedCells = false;
+                    ExcelPkg.SaveAs(new FileInfo(path + filename));
+
+                    resp = new Response();
+                    byte[] bytes = File.ReadAllBytes(path + filename);
+                    resp.OUTPUT_DATA = Convert.ToBase64String(bytes, 0, bytes.Length);
+                    resp.STATUS = true;
+                    resp.MESSAGE = filename;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+        }
+
+        private List<OutputSearchXmlZip> SearchXmlZip(string JsonString)
+        {
+            List<OutputSearchXmlZip> resp = new List<OutputSearchXmlZip>();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+            outputSearchXmlModel obj = new outputSearchXmlModel();
+            try
+            {
+                obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(JsonString);
+
+                DateTime getMinDate = new DateTime();
+                DateTime getMaxDate = new DateTime();
+
+                var getDocType = obj.outPutSearchDocType.ToUpper();
+
+                var getStatus = obj.outPutSearchStatus;
+
+                int statusDownload = 99;
+
+                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
+
+                if (obj != null)
+                {
+                    tran = _dbContext.outputSearchXmlZip.ToList();
+
+                    if (obj.outPutSearchCompanyCode != null)
+                    {
+                        if (obj.outPutSearchCompanyCode.Count > 0)
+                        {
+                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(getStatus))
+                    {
+                        statusDownload = Convert.ToInt32(getStatus);
+                        tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
+                    {
+                        tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                    {
+                        var getArrayDate = obj.outPutSearchDate.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                    }
+                }
+                else
+                {
+                    tran = _dbContext.outputSearchXmlZip.ToList();
+                }
+                resp = tran;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+        }
     }
 }
