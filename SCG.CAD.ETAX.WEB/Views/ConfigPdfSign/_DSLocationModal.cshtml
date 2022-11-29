@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+<style>
+    .Blackboard {
+        background-color: white;
+        border-style: ridge;
+        border-color: gray;
+        border-width: 1px;
+        width: 413.33333px;
+        height: 584.66667px;
+        cursor: crosshair;
+        position: relative;
+    }
+
+        .Blackboard:active {
+            cursor: crosshair;
+        }
+/*    #left-div {
+        margin-left: 21px;
+    }*/
+</style>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDSLocation" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog " role="document" >
+        <div class="modal-content" style="min-height: 590px;">
+            <div class="modal-body" style="text-align: center;">
+                X:<span id="xxx">0</span> Y:<span id="yyy">0</span>
+                <div id="left-div">
+                    <canvas class="Blackboard" id="blackboard-canvas"> </canvas>
+                  </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" onclick="fnCloseDSLocationModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnSetDSLocationh()">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // inc 8.3 x 11.7
+    // Pixel 2480 x 3508
+    // ตัวคูณ 72
+    var currentPositionX = 0;
+    var currentPositionY = 0;
+    //$(document).ready(function () {
+    //    //fnOpenDSLocationModal();
+    //    document.onselectstart = function () {
+    //        return false;
+    //    };
+    //    var board = new Blackboard("blackboard-canvas");
+    //});
+
+    function fnOpenDSLocationModal(id) {
+        $("#modalDSLocation").modal('show');
+    }
+
+    function fnCloseDSLocationModal() {
+        $("#xxx").text('0');
+        $("#yyy").text('0');
+        $("#modalDSLocation").modal('hide');
+        currentPositionX = 0;
+        currentPositionY = 0;
+    }
+
+    function fnSetDSLocationh(){
+        // (Pixel * 6 / inc) *72
+        //debugger
+        //currentPositionX = Math.floor((currentPositionX * 6 * 72) / 298);
+        //currentPositionY = Math.floor((currentPositionY * 6 * 72) / 299);
+        if (currentInsertModeConfigPdfSign){
+            $("#txtInsertConfigPdfSignImagex").val(currentPositionX)
+            $("#txtInsertConfigPdfSignImagey").val(currentPositionY)
+        }else{
+            $("#txtUpdateConfigPdfSignImagex").val(currentPositionX)
+            $("#txtUpdateConfigPdfSignImagey").val(currentPositionY)
+        }
+        fnCloseDSLocationModal();
+    }
+    //
+</script>

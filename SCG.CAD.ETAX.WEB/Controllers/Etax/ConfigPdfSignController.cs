@@ -67,6 +67,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             return View();
         }
+        public IActionResult _DSLocationModal()
+        {
+            return View();
+        }
 
 
 
