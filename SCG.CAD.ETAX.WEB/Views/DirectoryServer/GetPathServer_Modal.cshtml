@@ -101,11 +101,11 @@
                 
                 if(i==0){
                     strPathForBack += pathlist[i];
-                    strPath += '<span style="color:#097ee3" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\\\\\')">' + pathlist[i] + '</span>';
+                    strPath += '<span style="color:#097ee3;cursor: pointer;" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\\\\\')">' + pathlist[i] + '</span>';
                     
                 }else{
                     strPathForBack += '\\\\' + pathlist[i];
-                    strPath += ' \\ <span style="color:#097ee3" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\')">' + pathlist[i] + '</span>';
+                    strPath += ' \\ <span style="color:#097ee3;cursor: pointer;" onclick="fnGetPathServer_Back(\'' + strPathForBack + '\')">' + pathlist[i] + '</span>';
                 }
                 
             }
