@@ -282,16 +282,14 @@
         $.ajax({
             type: "GET",
             //url: "@Url.Action("ExportToCsv", "OutputSearchXmlZip")",
-            url: "@Url.Action("ExportData", "OutputSearchXmlZip")",
+            url: "@Url.Action("ExportFile", "OutputSearchXmlZip")",
             data: { jsonSearchString : JsonString },
             contentType: 'application/json; charset=utf-8',
             //dataType: "json",
             success: function (response) {
-
-                data = $.parseJSON(response)
                 //Convert Base64 string to Byte Array.
-                var bytes = Base64ToBytes(data.outpuT_DATA);
-                var fileName = data.message;
+                var bytes = Base64ToBytes(response.outpuT_DATA);
+                var fileName = response.message;
                 //Convert Byte Array to BLOB.
                 var blob = new Blob([bytes], { type: "application/octetstream" });
 

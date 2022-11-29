@@ -182,112 +182,18 @@ namespace SCG.CAD.ETAX.API.Services
 
             try
             {
-                obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(JsonString);
+                tran = SearchXmlZip(JsonString);
 
-                DateTime getMinDate = new DateTime();
-                DateTime getMaxDate = new DateTime();
-
-                var getDocType = obj.outPutSearchDocType.ToUpper();
-
-                var getStatus = obj.outPutSearchStatus;
-
-                int statusDownload = 99;
-
-                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
-
-                //if (!string.IsNullOrEmpty(getStatus))
-                //{
-                //    statusDownload = Convert.ToInt32(getStatus);
-                //}
-                //else
-                //{
-                //    statusDownload = 99;
-                //}
-
-
-                //if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                //{
-                //    getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                //    getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-                //}
-                //else
-                //{
-                //    getMinDate = DateTime.Now.AddDays(-30);
-                //    getMaxDate = DateTime.Now.AddDays(30);
-                //}
-
-                if (obj != null)
+                if (tran.Count > 0)
                 {
-                    tran = _dbContext.outputSearchXmlZip.ToList();
-
-                    if (obj.outPutSearchCompanyCode != null)
-                    {
-                        if (obj.outPutSearchCompanyCode.Count > 0)
-                        {
-                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(getStatus))
-                    {
-                        statusDownload = Convert.ToInt32(getStatus);
-                        tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
-                    {
-                        tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
-                    {
-                        var getArrayDate = obj.outPutSearchDate.Split("to");
-                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-
-                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
-                    }
-
-                    //tran = _dbContext.outputSearchXmlZip.Where(
-
-                    //        x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date &&
-
-                    //        obj.outPutSearchCompanyCode.Count > 0 ? ( obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode) && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipCompanyCode != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
-
-                    //        statusDownload == 99 ? ( x.OutputSearchXmlZipDowloadStatus != 1 && x.OutputSearchXmlZipDowloadStatus != 0  && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDowloadStatus == statusDownload && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) &&
-
-                    //        getDocType != "ALL" ? (obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper() && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date) : (x.OutputSearchXmlZipDocType != "" && x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date)
-
-                    //        ).ToList();
-
-                    if (tran.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = tran;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = tran;
                 }
                 else
                 {
-
-                    var getList = _dbContext.outputSearchXmlZip.ToList();
-
-                    if (getList.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = getList;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
                 }
 
 
@@ -383,8 +289,7 @@ namespace SCG.CAD.ETAX.API.Services
             List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
             try
             {
-                resp = SEARCH(JsonString);
-                tran = JsonConvert.DeserializeObject<List<OutputSearchXmlZip>>(resp.OUTPUT_DATA.ToString());
+                tran = SearchXmlZip(JsonString);
                 if (tran.Count > 0)
                 {
                     if (!Directory.Exists(path))
@@ -450,6 +355,69 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
+        private List<OutputSearchXmlZip> SearchXmlZip(string JsonString)
+        {
+            List<OutputSearchXmlZip> resp = new List<OutputSearchXmlZip>();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+            outputSearchXmlModel obj = new outputSearchXmlModel();
+            try
+            {
+                obj = JsonConvert.DeserializeObject<outputSearchXmlModel>(JsonString);
 
+                DateTime getMinDate = new DateTime();
+                DateTime getMaxDate = new DateTime();
+
+                var getDocType = obj.outPutSearchDocType.ToUpper();
+
+                var getStatus = obj.outPutSearchStatus;
+
+                int statusDownload = 99;
+
+                getStatus = getStatus == "All" ? getStatus = "" : getStatus = obj.outPutSearchStatus;
+
+                if (obj != null)
+                {
+                    tran = _dbContext.outputSearchXmlZip.ToList();
+
+                    if (obj.outPutSearchCompanyCode != null)
+                    {
+                        if (obj.outPutSearchCompanyCode.Count > 0)
+                        {
+                            tran = tran.Where(x => obj.outPutSearchCompanyCode.Contains(x.OutputSearchXmlZipCompanyCode)).ToList();
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(getStatus))
+                    {
+                        statusDownload = Convert.ToInt32(getStatus);
+                        tran = tran.Where(x => x.OutputSearchXmlZipDowloadStatus == statusDownload).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(getDocType) && getDocType.ToUpper() != "ALL")
+                    {
+                        tran = tran.Where(x => obj.outPutSearchDocType.ToUpper() == x.OutputSearchXmlZipDocType.ToUpper()).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.outPutSearchDate))
+                    {
+                        var getArrayDate = obj.outPutSearchDate.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                        tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                    }
+                }
+                else
+                {
+                    tran = _dbContext.outputSearchXmlZip.ToList();
+                }
+                resp = tran;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+        }
     }
 }
