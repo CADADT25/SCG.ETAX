@@ -405,167 +405,22 @@ namespace SCG.CAD.ETAX.API.Services
 
         public Response SEARCH(transactionSearchModel JsonString)
         {
-            Response resp = new Response();
-
-            transactionSearchModel obj = new transactionSearchModel();
-
             List<TransactionDescription> tran = new List<TransactionDescription>();
-
-            DateTime getMinDate = new DateTime();
-            DateTime getMaxDate = new DateTime();
-
+            Response resp = new Response();
             try
             {
-                //obj = JsonConvert.DeserializeObject<transactionSearchModel>(JsonString);
-                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == JsonString.user);
-                var companyGroupList = _dbContext.profileUserGroup
-                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
-                       .Select(x => x.ProfileCompanyCode)
-                       .ToList();
-                var companyCodeList = new List<string>();
-                foreach (var company in companyGroupList)
+                tran = SearchTransaction(JsonString);
+
+                if (tran.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(company))
-                    {
-                        var comArr = company.Split(",").ToList();
-                        foreach (var com in comArr)
-                        {
-                            if (!string.IsNullOrEmpty(com))
-                            {
-                                companyCodeList.Add(com);
-                            }
-                        }
-                    }
-                }
-                obj = JsonString;
-
-                if (obj != null)
-                {
-                    tran = _dbContext.transactionDescription.ToList();
-
-                    if (!string.IsNullOrEmpty(obj.tranSearchBillingNo))
-                    {
-                        tran = tran.Where(x => x.BillingNumber.Contains(obj.tranSearchBillingNo)).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.tranSearchCustomerCode))
-                    {
-                        tran = tran.Where(x => x.CustomerId.Contains(obj.tranSearchCustomerCode)).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.tranSearchDataSource))
-                    {
-                        tran = tran.Where(x => x.SourceName.Contains(obj.tranSearchDataSource)).ToList();
-                    }
-
-                    if (obj.tranSearchCompanyCode.Count > 0)
-                    {
-                        tran = tran.Where(x => obj.tranSearchCompanyCode.Contains(x.CompanyCode)).ToList();
-                    }
-
-                    if (obj.tranSearchStatus.Count > 0)
-                    {
-                        tran = tran.Where(x => obj.tranSearchStatus.Contains(x.EmailSendStatus) ||
-                                    obj.tranSearchStatus.Contains(x.GenerateStatus) ||
-                                    obj.tranSearchStatus.Contains(x.PdfIndexingStatus) ||
-                                    obj.tranSearchStatus.Contains(x.PdfSignStatus) ||
-                                    obj.tranSearchStatus.Contains(x.PrintStatus) ||
-                                    obj.tranSearchStatus.Contains(x.XmlCompressStatus) ||
-                                    obj.tranSearchStatus.Contains(x.XmlSignStatus)
-                                    ).ToList();
-                    }
-
-                    if (obj.tranSearchDocumentType.Count > 0)
-                    {
-                        tran = tran.Where(x => obj.tranSearchDocumentType.Contains(x.DocType)).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.tranSearchDataSource))
-                    {
-                        tran = tran.Where(x => obj.tranSearchDataSource.Contains(x.SourceName)).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(obj.tranSearchDateBetween))
-                    {
-                        var getArrayDate = obj.tranSearchDateBetween.Split("to");
-                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
-
-                        if (obj.tranSearchDateType.Equals("billingDate"))
-                        {
-                            tran = tran.Where(x => x.BillingDate >= getMinDate.Date && x.BillingDate <= getMaxDate.Date).ToList();
-                        }
-                        else if (obj.tranSearchDateType.Equals("createDate"))
-                        {
-                            tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
-                        }
-                        else if (obj.tranSearchDateType.Equals("processingDate"))
-                        {
-                            tran = tran.Where(x => x.ProcessingDate >= getMinDate.Date && x.ProcessingDate <= getMaxDate.Date).ToList();
-                        }
-                    }
-
-                    //tran = _dbContext.transactionDescription.Where(
-                    //        x => !string.IsNullOrEmpty(x.BillingNumber) ? x.BillingNumber.Contains(obj.tranSearchBillingNo) : x.BillingNumber != "" &&
-
-                    //!string.IsNullOrEmpty(x.CustomerId) ? x.CustomerId.Contains(obj.tranSearchCustomerCode) : x.CustomerId != "" &&
-
-                    //!string.IsNullOrEmpty(x.SourceName) ? x.SourceName.Contains(obj.tranSearchDataSource) : x.SourceName != "" &&
-
-                    //obj.tranSearchCompanyCode.Count > 0 ? obj.tranSearchCompanyCode.Contains(x.CompanyCode) : x.CompanyCode != "" &&
-
-                    //( 
-                    //obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.EmailSendStatus) : x.EmailSendStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.GenerateStatus) : x.GenerateStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PdfIndexingStatus) : x.PdfIndexingStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PdfSignStatus) : x.PdfSignStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.PrintStatus) : x.PrintStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.XmlCompressStatus) : x.XmlCompressStatus != "" ||
-
-                    //    obj.tranSearchStatus.Count > 0 ? obj.tranSearchStatus.Contains(x.XmlSignStatus) : x.XmlSignStatus != "" 
-                    //) && 
-                    // obj.tranSearchDocumentType.Count > 0 ? obj.tranSearchDocumentType.Contains(x.DocType) : x.DocType != ""  && 
-
-                    //    !string.IsNullOrEmpty(obj.tranSearchDataSource) ? obj.tranSearchDataSource.Contains(x.SourceName) : x.SourceName != ""
-                    //)
-
-
-                    //.ToList();
-                    tran = tran.Where(t => companyCodeList.Contains(t.CompanyCode)).ToList();
-
-                    if (tran.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = tran;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get data success. ";
+                    resp.OUTPUT_DATA = tran;
                 }
                 else
                 {
-
-                    var getList = _dbContext.transactionDescription.ToList();
-
-                    if (getList.Count > 0)
-                    {
-                        resp.STATUS = true;
-                        resp.MESSAGE = "Get data success. ";
-                        resp.OUTPUT_DATA = getList;
-                    }
-                    else
-                    {
-                        resp.STATUS = false;
-                        resp.MESSAGE = "Data not found";
-                    }
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
                 }
 
 
@@ -662,6 +517,122 @@ namespace SCG.CAD.ETAX.API.Services
             return resp;
         }
 
+        private List<TransactionDescription> SearchTransaction(transactionSearchModel JsonString)
+        {
+            List<TransactionDescription> resp = new List<TransactionDescription>();
+
+            transactionSearchModel obj = new transactionSearchModel();
+
+            List<TransactionDescription> tran = new List<TransactionDescription>();
+
+            DateTime getMinDate = new DateTime();
+            DateTime getMaxDate = new DateTime();
+
+            try
+            {
+                var profileuser = _dbContext.profileUserManagement.FirstOrDefault(x => x.UserEmail == JsonString.user);
+                var companyGroupList = _dbContext.profileUserGroup
+                       .Where(x => profileuser.GroupId.Contains(x.ProfileUserGroupNo.ToString()))
+                       .Select(x => x.ProfileCompanyCode)
+                       .ToList();
+                var companyCodeList = new List<string>();
+                foreach (var company in companyGroupList)
+                {
+                    if (!string.IsNullOrEmpty(company))
+                    {
+                        var comArr = company.Split(",").ToList();
+                        foreach (var com in comArr)
+                        {
+                            if (!string.IsNullOrEmpty(com))
+                            {
+                                companyCodeList.Add(com);
+                            }
+                        }
+                    }
+                }
+                obj = JsonString;
+
+                if (obj != null)
+                {
+                    tran = _dbContext.transactionDescription.ToList();
+
+                    if (!string.IsNullOrEmpty(obj.tranSearchBillingNo))
+                    {
+                        tran = tran.Where(x => x.BillingNumber.Contains(obj.tranSearchBillingNo)).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.tranSearchCustomerCode))
+                    {
+                        tran = tran.Where(x => x.CustomerId.Contains(obj.tranSearchCustomerCode)).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.tranSearchDataSource))
+                    {
+                        tran = tran.Where(x => x.SourceName.Contains(obj.tranSearchDataSource)).ToList();
+                    }
+
+                    if (obj.tranSearchCompanyCode.Count > 0)
+                    {
+                        tran = tran.Where(x => obj.tranSearchCompanyCode.Contains(x.CompanyCode)).ToList();
+                    }
+
+                    if (obj.tranSearchStatus.Count > 0)
+                    {
+                        tran = tran.Where(x => obj.tranSearchStatus.Contains(x.EmailSendStatus) ||
+                                    obj.tranSearchStatus.Contains(x.GenerateStatus) ||
+                                    obj.tranSearchStatus.Contains(x.PdfIndexingStatus) ||
+                                    obj.tranSearchStatus.Contains(x.PdfSignStatus) ||
+                                    obj.tranSearchStatus.Contains(x.PrintStatus) ||
+                                    obj.tranSearchStatus.Contains(x.XmlCompressStatus) ||
+                                    obj.tranSearchStatus.Contains(x.XmlSignStatus)
+                                    ).ToList();
+                    }
+
+                    if (obj.tranSearchDocumentType.Count > 0)
+                    {
+                        tran = tran.Where(x => obj.tranSearchDocumentType.Contains(x.DocType)).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.tranSearchDataSource))
+                    {
+                        tran = tran.Where(x => obj.tranSearchDataSource.Contains(x.SourceName)).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(obj.tranSearchDateBetween))
+                    {
+                        var getArrayDate = obj.tranSearchDateBetween.Split("to");
+                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+
+                        if (obj.tranSearchDateType.Equals("billingDate"))
+                        {
+                            tran = tran.Where(x => x.BillingDate >= getMinDate.Date && x.BillingDate <= getMaxDate.Date).ToList();
+                        }
+                        else if (obj.tranSearchDateType.Equals("createDate"))
+                        {
+                            tran = tran.Where(x => x.CreateDate >= getMinDate.Date && x.CreateDate <= getMaxDate.Date).ToList();
+                        }
+                        else if (obj.tranSearchDateType.Equals("processingDate"))
+                        {
+                            tran = tran.Where(x => x.ProcessingDate >= getMinDate.Date && x.ProcessingDate <= getMaxDate.Date).ToList();
+                        }
+                    }
+
+                    tran = tran.Where(t => companyCodeList.Contains(t.CompanyCode)).ToList();
+                }
+                else
+                {
+                    tran = _dbContext.transactionDescription.ToList();
+                }
+
+                resp = tran;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+        }
 
     }
 }
