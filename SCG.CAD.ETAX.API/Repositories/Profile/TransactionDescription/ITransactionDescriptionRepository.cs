@@ -14,6 +14,7 @@
         Task<Response> SYNCSTATUSPDFSIGN(string listbillno, string updateby);
         Task<Response> SYNCSTATUSXMLSIGN(string listbillno, string updateby);
         Task<Response> DOWNLOADFILE(string pathfile);
+        Task<Response> ExportData(transactionSearchModel JsonString);
 
     }
 }

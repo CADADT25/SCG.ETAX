@@ -505,7 +505,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             try
             {
-                task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/ExportData?JsonString= " + jsonSearchString + " "));
+
+                var request = JsonConvert.DeserializeObject<transactionSearchModel>(jsonSearchString);
+                request.user = HttpContext.Session.GetString("userMail");
+                //var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/Search?JsonString= " + transactionSearchJson + " "));
+                var httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                task = await Task.Run(() => ApiHelper.PostURI("api/TransactionDescription/ExportData", httpContent));
+                //task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/ExportData?JsonString= " + jsonSearchString + " "));
 
             }
             catch (Exception ex)
