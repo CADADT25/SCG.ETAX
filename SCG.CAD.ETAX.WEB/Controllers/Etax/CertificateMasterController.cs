@@ -79,7 +79,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 {
                     tran = JsonConvert.DeserializeObject<List<CertificateMaster>>(task.OUTPUT_DATA.ToString());
 
-                    tran = tran.Where(x => x.Isactive == 1).ToList();
+                    tran = tran.Where(x => x.Isactive == 1
+                        && !string.IsNullOrEmpty(x.CertificateStartDate)
+                        && !string.IsNullOrEmpty(x.CertificateEndDate)
+                        && DateTime.Parse(x.CertificateStartDate) <= DateTime.Now
+                        && DateTime.Parse(x.CertificateEndDate) >= DateTime.Now).ToList();
                 }
                 else
                 {
