@@ -1,8 +1,13 @@
-﻿namespace SCG.CAD.ETAX.API.Services
+﻿using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
+using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;
+
+namespace SCG.CAD.ETAX.API.Services
 {
     public class ProfileSellerService
     {
 
+        ETDAService eTDAService = new ETDAService();
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
@@ -16,9 +21,36 @@
 
                 if (getList.Count > 0)
                 {
+                    List<ProfileSeller> list = new List<ProfileSeller>();
+
+                    var Provice = GetProvice();
+                    var District = GetDistrict();
+                    var SubDivision = GetSubDivision();
+
+
+                    list = getList.Select(x => new ProfileSeller
+                    {
+                        SellerNo = x.SellerNo,
+                        CompanyCode = x.CompanyCode,
+                        BranchCode = x.BranchCode,
+                        Province = Provice.FirstOrDefault(y=> x.Province == y.ProviceCode).ProviceName,
+                        District = District.FirstOrDefault(y => x.District == y.districtCode).districtName,
+                        SubDistrict = SubDivision.FirstOrDefault(y => x.SubDistrict == y.subDistrictCode).subDistrictName,
+                        Road = x.Road,
+                        Building = x.Building,
+                        Addressnumber = x.Addressnumber,
+                        SellerEmail = x.SellerEmail,
+                        CreateBy = x.CreateBy,
+                        CreateDate = x.CreateDate,
+                        UpdateBy = x.UpdateBy,
+                        UpdateDate = x.UpdateDate,
+                        Isactive = x.Isactive,
+                        EmailTemplateNo = x.EmailTemplateNo
+                    }).ToList();
+
                     resp.STATUS = true;
-                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
-                    resp.OUTPUT_DATA = getList;
+                    resp.MESSAGE = "Get list count '" + list.Count + "' records. ";
+                    resp.OUTPUT_DATA = list;
                 }
                 else
                 {
@@ -184,6 +216,72 @@
             return resp;
         }
 
+        public List<ETDAProvice> GetProvice()
+        {
+            List<ETDAProvice> result = new List<ETDAProvice>();
 
+            try
+            {
+                var getXml = eTDAService.ReadXmlThaiISOCountrySubdivisionCode();
+
+                if (!string.IsNullOrEmpty(getXml))
+                {
+                    result = eTDAService.ProviceMappingToObject(getXml);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public List<ETDADistrict> GetDistrict()
+        {
+            List<ETDADistrict> result = new List<ETDADistrict>();
+
+            try
+            {
+                var getXml = eTDAService.ReadXmlTISICityName();
+
+                if (!string.IsNullOrEmpty(getXml))
+                {
+                    result = eTDAService.DistrictMappingToObject(getXml);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public List<ETDASubDistrict> GetSubDivision()
+        {
+            List<ETDASubDistrict> result = new List<ETDASubDistrict>();
+
+            Response resp = new Response();
+
+            try
+            {
+                var getXml = eTDAService.ReadXmlTISICitySubDivisionName();
+
+                if (!string.IsNullOrEmpty(getXml))
+                {
+                    result = eTDAService.SubDistrictMappingToObject(getXml);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

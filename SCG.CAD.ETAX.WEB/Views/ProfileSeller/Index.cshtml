@@ -114,8 +114,6 @@
                     data: { companyCode : setCompanyCode },
                     datatype: "json"
                 },
-
-
                 "columns": [
 
                     {
@@ -125,7 +123,6 @@
                         visible: false
                     },
                     {
-                        //data: "productUnitNo",
                         className: "text-center",
                         width: "5%",
                         render: function (data, type, row, meta) {
@@ -139,6 +136,26 @@
                     {
                         data: "branchCode",
                         width: "20%"
+                    },
+                    {
+                        data: "province",
+                        width: "10%"
+                    },
+                    {
+                        data: "district",
+                        width: "10%"
+                    },
+                    {
+                        data: "subDistrict",
+                        width: "10%"
+                    },
+                    {
+                        data: "road",
+                        width: "10%"
+                    },
+                    {
+                        data: "building",
+                        width: "10%"
                     },
                     {
                         data: "addressnumber",
@@ -157,24 +174,12 @@
                         }
                     },
                     {
-                        //data: null,
-                        //className: "dt-center editor-edit text-center text-primary",
-                        //defaultContent: '<i class="pointer fas fa-pen"/>',
-                        //orderable: false,
-                        //width: "2%"
                         data: "sellerNo",
                         width: "2%",
                         render: function (data, type, row) {
                             return'<a onclick="callEditProfileSeller(' + data +')" class="dt-center editor-edit text-center text-primary"><i class="pointer fas fa-pen"/></a>';
                         }
                     }
-                    //{
-                    //    data: null,
-                    //    className: "dt-center editor-delete text-center text-danger",
-                    //    defaultContent: '<i class="pointer fas fa-trash"/>',
-                    //    orderable: false,
-                    //    width: "2%"
-                    //}
                 ]
             });
 
@@ -183,11 +188,6 @@
                     cell.innerHTML = i+1;
                 } );
             } ).draw();
-
-
-            //EditProfileSeller(table);
-            //DeleteProfileSeller(table);
-
         }
 
 
@@ -379,7 +379,10 @@
 
 
     function callEditProfileSeller(getPK){
-        callProfileSellerGetDetailController(getPK);
+        fnDropdownProfileSellerProvince();
+        setTimeout(function(){
+            callProfileSellerGetDetailController(getPK);
+        }, 1000);
     }
 
     function callDeleteProfileSeller(getPK){
@@ -470,23 +473,19 @@
 
                     $("#ddlUpdateProfileSellerSubDistrict").empty();
 
-                    fnDropdownProfileSellerProvince();
-                    fnDropdownProfileSellerDistrict(data.Province);
-                    fnDropdownProfileSellerSubDistrict(data.District);
-
-
                     var iNum = parseInt(data.Province);
+                                        
+                    setTimeout(function(){
+                        $('#ddlUpdateProfileSellerProvince').val(data.Province).trigger('change');
+                    }, 1000);
 
+                    setTimeout(function(){
+                        $('#ddlUpdateProfileSellerDistrict').val(data.District).trigger('change');
+                    }, 2000);
 
-                    $('#ddlUpdateProfileSellerProvince').val(data.Province);
-                    $('#ddlUpdateProfileSellerProvince').trigger('change');
-
-                    $('#ddlUpdateProfileSellerDistrict').val(data.District);
-                    $('#ddlUpdateProfileSellerDistrict').trigger('change');
-
-                    $('#ddlUpdateProfileSellerSubDistrict').val(data.SubDistrict);
-                    $('#ddlUpdateProfileSellerSubDistrict').trigger('change');
-
+                    setTimeout(function(){
+                        $('#ddlUpdateProfileSellerSubDistrict').val(data.SubDistrict).trigger('change');
+                    }, 3000);
 
 
                     document.getElementById('txtUpdateProfileSellerEmail').value = data.SellerEmail;
