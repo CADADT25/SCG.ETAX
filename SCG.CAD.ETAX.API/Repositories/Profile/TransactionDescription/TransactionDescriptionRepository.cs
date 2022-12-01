@@ -226,6 +226,24 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> ExportData(transactionSearchModel JsonString)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.ExportDataTransaction(JsonString);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
 
     }

@@ -494,5 +494,33 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
+        public async Task<JsonResult> ExportFile(string jsonSearchString)
+        {
+            Response task = new Response();
+
+            outputSearchXmlModel obj = new outputSearchXmlModel();
+            List<OutputSearchXmlZip> tran = new List<OutputSearchXmlZip>();
+
+            var strBuilder = new StringBuilder();
+
+            try
+            {
+
+                var request = JsonConvert.DeserializeObject<transactionSearchModel>(jsonSearchString);
+                request.user = HttpContext.Session.GetString("userMail");
+                //var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/Search?JsonString= " + transactionSearchJson + " "));
+                var httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                task = await Task.Run(() => ApiHelper.PostURI("api/TransactionDescription/ExportData", httpContent));
+                //task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/ExportData?JsonString= " + jsonSearchString + " "));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+            }
+
+            return Json(task);
+        }
+
     }
 }
