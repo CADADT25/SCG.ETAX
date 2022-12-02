@@ -5,7 +5,7 @@
         .modal-custom {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
-            z-index: 200; /* Sit on top */
+        z-index: 9999; /* Sit on top */
             left: 0;
             top: 0;
             width: 100%; /* Full width */
@@ -24,7 +24,7 @@
             width: 50%;
         }
         .Blackboard {
-            background-image: url('/assets/img/template/pdf/bg-pdf-sign2.jpg');
+        background-image: url('@Url.Content("~/assets/img/template/pdf/bg-pdf-sign2.jpg")');
             background-size: 413.33333px;
             background-color: white;
             border-style: ridge;
@@ -41,7 +41,7 @@
             }
 
     .Blackboard2 {
-        background-image: url('/assets/img/template/pdf/bg-pdf-sign.jpg');
+        background-image: url('@Url.Content("~/assets/img/template/pdf/bg-pdf-sign.jpg")');
         background-size: 584.66667px;
         background-color: white;
         border-style: ridge;

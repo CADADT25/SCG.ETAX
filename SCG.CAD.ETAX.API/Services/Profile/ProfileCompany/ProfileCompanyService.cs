@@ -8,7 +8,7 @@ namespace SCG.CAD.ETAX.API.Services
 
         readonly DatabaseContext _dbContext = new();
 
-        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMอ-dd'" + "T" + "'HH:mm:ss.fff"));
+        public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
 
         public Response GET_LIST()
         {
