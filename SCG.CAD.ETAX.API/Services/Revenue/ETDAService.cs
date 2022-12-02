@@ -283,6 +283,124 @@ namespace SCG.CAD.ETAX.API.Services
 
             return listSubDistricts;
         }
+        public List<ETDADistrict> DistrictMappingToObject(string xmlText)
+        {
+            List<ETDADistrict> listDistricts = new List<ETDADistrict>();
+
+            List<string> strList = new List<string>();
+
+            try
+            {
+                List<string> idList = xmlText.Split("\n").ToList();
+
+                foreach (var item in idList)
+                {
+                    if (item.Contains("value"))
+                    {
+                        string Code = item.Trim().Substring(24, 4).ToString();
+
+                        strList.Add(Code);
+                    }
+                    if (item.Contains("ccts:Name"))
+                    {
+                        string FirstString = "<ccts:Name>";
+                        string LastString = "</ccts:Name>";
+
+                        int Pos1 = item.IndexOf(FirstString) + FirstString.Length;
+                        int Pos2 = item.IndexOf(LastString);
+
+                        if (Pos2 > 0)
+                        {
+                            string FinalString = item.Substring(Pos1, Pos2 - Pos1);
+                            strList.Add(FinalString);
+                        }
+                        else
+                        {
+                            strList.Add("");
+                        }
+                    }
+
+                    if (strList.Count == 2)
+                    {
+                        listDistricts.Add(new ETDADistrict()
+                        {
+                            districtCode = strList[0].Trim(),
+                            districtName = strList[1].Trim(),
+                            ProviceCode = strList[0].Trim().Substring(0, 2)
+                        });
+
+                        strList = new List<string>();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return listDistricts;
+        }
+
+        public List<ETDASubDistrict> SubDistrictMappingToObject(string xmlText)
+        {
+            List<ETDASubDistrict> listSubDistricts = new List<ETDASubDistrict>();
+
+            List<string> strList = new List<string>();
+
+            try
+            {
+                List<string> idList = xmlText.Split("\n").ToList();
+
+                foreach (var item in idList)
+                {
+                    if (item.Contains("value"))
+                    {
+                        string Code = item.Trim().Substring(24, 6).ToString();
+
+                        strList.Add(Code);
+                    }
+                    if (item.Contains("ccts:Name"))
+                    {
+                        string FirstString = "<ccts:Name>";
+                        string LastString = "</ccts:Name>";
+
+                        int Pos1 = item.IndexOf(FirstString) + FirstString.Length;
+                        int Pos2 = item.IndexOf(LastString);
+
+                        if (Pos2 > 0)
+                        {
+                            string FinalString = item.Substring(Pos1, Pos2 - Pos1);
+                            strList.Add(FinalString);
+                        }
+                        else
+                        {
+                            strList.Add("");
+                        }
+                    }
+
+                    if (strList.Count == 2)
+                    {
+                        listSubDistricts.Add(new ETDASubDistrict()
+                        {
+                            subDistrictCode = strList[0].Trim(),
+                            subDistrictName = strList[1].Trim(),
+                            districtCode = strList[0].Trim().Substring(0, 4),
+                            ProviceCode = strList[0].Trim().Substring(0, 2)
+                        });
+
+                        strList = new List<string>();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return listSubDistricts;
+        }
 
     }
 }

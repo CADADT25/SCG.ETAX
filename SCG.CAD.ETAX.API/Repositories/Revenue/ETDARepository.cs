@@ -46,7 +46,6 @@ namespace SCG.CAD.ETAX.API.Repositories
             return resp;
         }
 
-
         public async Task<Response> GetTISICityName(string ProviceCode)
         {
             List<ETDADistrict> result = new List<ETDADistrict>();
