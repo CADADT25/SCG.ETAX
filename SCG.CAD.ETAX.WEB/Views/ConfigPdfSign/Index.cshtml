@@ -8,8 +8,15 @@
 
 
 <script type="text/javascript">
+    var currentInsertModeConfigPdfSign = true; 
 
     $(document).ready(function () {
+        document.onselectstart = function () {
+            return false;
+        };
+        var board = new Blackboard("blackboard-canvas");
+        var board2 = new Blackboard2("blackboard-canvas2");
+        //$("#content_DSLocationModal").load("@Url.Action("_DSLocationModal", "ConfigPdfSign")");
 
         var setCompanyCode = $("#companyCodeState").text();
 
@@ -390,7 +397,6 @@
 
         $("#modalUpdateConfigPdfSign").modal('hide');
     }
-
     function callModalInsertConfigPdfSign(){
         fnDropdownFont();
         fnDropdownDataSource();
@@ -409,6 +415,7 @@
 
         document.getElementById('txtInsertConfigPdfSignCustomerCode').value = setCompanyCode;
         ClearAllInsertConfigPDFSIGN();
+        currentInsertModeConfigPdfSign = true;
         $("#modalInsertConfigPdfSign").modal('show');
     }
 
@@ -575,7 +582,8 @@
                 setTimeout(function(){
                     $('#ddlUpdateConfigPdfSignFontName').val(data.ConfigPdfsignFontName).trigger('change');
                 }, 1000);
-
+                
+                currentInsertModeConfigPdfSign = false
                 $("#modalUpdateConfigPdfSign").modal('show');
 
             }
@@ -969,6 +977,111 @@
 
 </script>
 
+
+
+<script type="text/javascript">
+    function Blackboard(canvasId) {
+        this.isMouseDown = false;
+        this.canvas = document.getElementById(canvasId);
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+
+        this.canvasContext = this.canvas.getContext("2d");
+        this.lastMouseClickedPosition = null;
+        var self = this;
+
+        this.onMouseDown = function (e) {
+            self.isMouseDown = true;
+            self.lastMouseClickedPosition = convertMousePositionFromMouseEvent(e);
+        };
+
+        this.onMouseUp = function (e) {
+            self.isMouseDown = false;
+            self.lastMouseClickedPosition = convertMousePositionFromMouseEvent(e);
+            window.started = false;
+        };
+        this.onMouseMove = function (e) {
+            if (self.isMouseDown) self.onMouseDown(e);
+        };
+        this.clearBoard = function () {
+            self.canvas.width = self.canvas.width;
+        };
+
+        self.canvas.addEventListener("mousedown", this.onMouseDown, false);
+        self.canvas.addEventListener("mouseup", this.onMouseUp, false);
+        self.canvas.addEventListener("mousemove", this.onMouseMove, false);
+    }
+    function convertMousePositionFromMouseEvent(e) {
+        var targ;
+        if (!e) e = window.event;
+        if (e.target) targ = e.target;
+        else if (e.srcElement) targ = e.srcElement;
+        if (targ.nodeType == 3)
+            targ = targ.parentNode;
+
+        var x = e.pageX - $(targ).offset().left;
+        var y = e.pageY - $(targ).offset().top;
+        currentPositionX = Math.floor((x * 6 * 72) / 320);
+        currentPositionY = Math.floor((y * 6 * 72) / 311);
+
+        $("#xxx").text(Math.floor(currentPositionX));
+        $("#yyy").text(Math.floor(currentPositionY));
+
+        return { x: x, y: y };
+    }
+</script>
+
+<script type="text/javascript">
+    function Blackboard2(canvasId) {
+        this.isMouseDown = false;
+        this.canvas = document.getElementById(canvasId);
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+
+        this.canvasContext = this.canvas.getContext("2d");
+        this.lastMouseClickedPosition = null;
+        var self = this;
+
+        this.onMouseDown = function (e) {
+            self.isMouseDown = true;
+            self.lastMouseClickedPosition = convertMousePositionFromMouseEvent2(e);
+        };
+
+        this.onMouseUp = function (e) {
+            self.isMouseDown = false;
+            self.lastMouseClickedPosition = convertMousePositionFromMouseEvent2(e);
+            window.started = false;
+        };
+        this.onMouseMove = function (e) {
+            if (self.isMouseDown) self.onMouseDown(e);
+        };
+        this.clearBoard = function () {
+            self.canvas.width = self.canvas.width;
+        };
+
+        self.canvas.addEventListener("mousedown", this.onMouseDown, false);
+        self.canvas.addEventListener("mouseup", this.onMouseUp, false);
+        self.canvas.addEventListener("mousemove", this.onMouseMove, false);
+    }
+    function convertMousePositionFromMouseEvent2(e) {
+        var targ;
+        if (!e) e = window.event;
+        if (e.target) targ = e.target;
+        else if (e.srcElement) targ = e.srcElement;
+        if (targ.nodeType == 3)
+            targ = targ.parentNode;
+
+        var x = e.pageX - $(targ).offset().left;
+        var y = e.pageY - $(targ).offset().top;
+        currentPositionX2 = Math.floor((x * 6 * 72) / 311);
+        currentPositionY2 = Math.floor((y * 6 * 72) / 320);
+
+        $("#xxx2").text(Math.floor(currentPositionX2));
+        $("#yyy2").text(Math.floor(currentPositionY2));
+
+        return { x: x, y: y };
+    }
+</script>
 
 
 

@@ -1,0 +1,170 @@
+﻿@{
+    Layout = null;
+}
+<style>
+        .modal-custom {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+        z-index: 9999; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+            .modal-content-custom {
+            background-color: #fefefe;
+            margin: auto;
+                padding-top: 10px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+        .Blackboard {
+        background-image: url('@Url.Content("~/assets/img/template/pdf/bg-pdf-sign2.jpg")');
+            background-size: 413.33333px;
+            background-color: white;
+            border-style: ridge;
+            border-color: gray;
+            border-width: 1px;
+            width: 413.33333px;
+            height: 584.66667px;
+            cursor: crosshair;
+            position: relative;
+        }
+
+            .Blackboard:active {
+                cursor: crosshair;
+            }
+
+    .Blackboard2 {
+        background-image: url('@Url.Content("~/assets/img/template/pdf/bg-pdf-sign.jpg")');
+        background-size: 584.66667px;
+        background-color: white;
+        border-style: ridge;
+        border-color: gray;
+        border-width: 1px;
+        width: 584.66667px;
+        height: 413.33333px;
+        cursor: crosshair;
+        position: relative;
+    }
+
+        .Blackboard2:active {
+            cursor: crosshair;
+        }
+</style>
+<div id="modalDSLocation" class="modal-custom">
+    <div class="modal-content-custom" style="text-align: center;">
+        X:<span id="xxx">0</span> Y:<span id="yyy">0</span>
+        <div id="left-div">
+            <canvas class="Blackboard" id="blackboard-canvas"> </canvas>
+        </div>
+        <div class="modal-footer bg-whitesmoke br">
+            <button type="button" class="btn btn-secondary" onclick="fnCloseDSLocationModal();">Close</button>
+            <button type="button" class="btn btn-primary" onclick="fnSetDSLocationh()">Select</button>
+        </div>
+    </div>
+
+</div>
+
+<div id="modalDSLocation2" class="modal-custom">
+    <div class="modal-content-custom" style="text-align: center;">
+        X:<span id="xxx2">0</span> Y:<span id="yyy2">0</span>
+        <div id="left-div">
+            <canvas class="Blackboard2" id="blackboard-canvas2"> </canvas>
+        </div>
+        <div class="modal-footer bg-whitesmoke br">
+            <button type="button" class="btn btn-secondary" onclick="fnCloseDSLocationModal2();">Close</button>
+            <button type="button" class="btn btn-primary" onclick="fnSetDSLocationh2()">Select</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // inc 8.3 x 11.7
+    // Pixel 2480 x 3508
+    // ตัวคูณ 72
+    var currentPositionX = 0;
+    var currentPositionY = 0;
+
+    function fnOpenDSLocationModal(id) {
+        //$("#modalDSLocation").modal('show');
+        document.getElementById("modalDSLocation").style.display = "block";
+        if (currentInsertModeConfigPdfSign) {
+            $("#modalInsertConfigPdfSign").modal("hide")
+        } else {
+            $("#modalUpdateConfigPdfSign").modal("hide")
+        }
+    }
+
+    function fnCloseDSLocationModal() {
+        $("#xxx").text('0');
+        $("#yyy").text('0');
+        //$("#modalDSLocation").modal('hide');
+        document.getElementById("modalDSLocation").style.display = "none";
+        if (currentInsertModeConfigPdfSign) {
+            $("#modalInsertConfigPdfSign").modal("show")
+        } else {
+            $("#modalUpdateConfigPdfSign").modal("show")
+        }
+        currentPositionX = 0;
+        currentPositionY = 0;
+    }
+
+    function fnSetDSLocationh() {
+        if (currentInsertModeConfigPdfSign) {
+            $("#txtInsertConfigPdfSignImagex").val(currentPositionX)
+            $("#txtInsertConfigPdfSignImagey").val(currentPositionY)
+        } else {
+            $("#txtUpdateConfigPdfSignImagex").val(currentPositionX)
+            $("#txtUpdateConfigPdfSignImagey").val(currentPositionY)
+        }
+        fnCloseDSLocationModal();
+    }
+
+    //// นอน
+    var currentPositionX2 = 0;
+    var currentPositionY2 = 0;
+    function fnOpenDSLocationModal2(id) {
+        //$("#modalDSLocation").modal('show');
+        document.getElementById("modalDSLocation2").style.display = "block";
+        if (currentInsertModeConfigPdfSign) {
+            $("#modalInsertConfigPdfSign").modal("hide")
+        } else {
+            $("#modalUpdateConfigPdfSign").modal("hide")
+        }
+    }
+
+    function fnCloseDSLocationModal2() {
+        $("#xxx2").text('0');
+        $("#yyy2").text('0');
+        //$("#modalDSLocation").modal('hide');
+        document.getElementById("modalDSLocation2").style.display = "none";
+        if (currentInsertModeConfigPdfSign) {
+            $("#modalInsertConfigPdfSign").modal("show")
+        } else {
+            $("#modalUpdateConfigPdfSign").modal("show")
+        }
+
+
+        currentPositionX2 = 0;
+        currentPositionY2 = 0;
+    }
+
+    function fnSetDSLocationh2() {
+        // (Pixel * 6 / inc) *72
+        if (currentInsertModeConfigPdfSign) {
+            $("#txtInsertConfigPdfSignImagex").val(currentPositionX2)
+            $("#txtInsertConfigPdfSignImagey").val(currentPositionY2)
+        } else {
+            $("#txtUpdateConfigPdfSignImagex").val(currentPositionX2)
+            $("#txtUpdateConfigPdfSignImagey").val(currentPositionY2)
+        }
+        fnCloseDSLocationModal2();
+    }
+</script>
