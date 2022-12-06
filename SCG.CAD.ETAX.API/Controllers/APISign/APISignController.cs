@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.MODEL.CustomModel;
 
 namespace SCG.CAD.ETAX.API.Controllers.APISign
 {
@@ -11,20 +12,20 @@ namespace SCG.CAD.ETAX.API.Controllers.APISign
             repo = new APISignRepository();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("SendXMLSign")]
-        public IActionResult SendXMLSign(string json)
+        public IActionResult SendXMLSign(APISendFileXMLSignModel data)
         {
-            var result = repo.SendXMLSign(json).Result;
+            var result = repo.SendXMLSign(data).Result;
 
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("PDFSign")]
-        public IActionResult SendPDFSign(string json)
+        public IActionResult SendPDFSign(APISendFilePDFSignModel data)
         {
-            var result = repo.SendPDFSign(json).Result;
+            var result = repo.SendPDFSign(data).Result;
 
             return Ok(result);
         }

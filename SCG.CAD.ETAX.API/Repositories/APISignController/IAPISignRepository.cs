@@ -4,7 +4,7 @@ namespace SCG.CAD.ETAX.API.Repositories
 {
     public interface IAPISignRepository
     {
-        Task<APIResponseSignModel> SendPDFSign(string json);
-        Task<APIResponseSignModel> SendXMLSign(string json);
+        Task<APIResponseSignModel> SendPDFSign(APISendFilePDFSignModel data);
+        Task<APIResponseSignModel> SendXMLSign(APISendFileXMLSignModel data);
     }
 }

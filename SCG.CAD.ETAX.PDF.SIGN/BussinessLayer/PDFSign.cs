@@ -421,6 +421,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 //result.fontName = "Tahoma";
                 //result.fontSize = 8;
                 //result.signatureType = "text";
+                result.environment = "0";
                 result.hsmName = config.ConfigPdfsignHsmModule;
                 result.hsmSerial = config.ConfigPdfsignHsmSerial;
                 result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);

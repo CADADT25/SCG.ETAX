@@ -6,6 +6,7 @@ using System.Xml;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.MODEL.CustomModel;
+using System.Text;
 
 namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 {
@@ -73,7 +74,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                     {
                                         Console.WriteLine("Send To Sign");
                                         log.InsertLog(pathlog, "Send To Sign");
-                                        resultXMLSign = SendFileXMLSign(dataSend);
+                                        resultXMLSign = SendFileXMLSignAsync(dataSend).Result;
 
                                         Console.WriteLine("Status Sign : " + resultXMLSign.resultDes.ToString());
                                         log.InsertLog(pathlog, "Status Sign : " + resultXMLSign.resultDes.ToString());
@@ -193,24 +194,38 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return result;
         }
 
-        public APIResponseSignModel SendFileXMLSign(APISendFileXMLSignModel data)
+        public async Task<APIResponseSignModel> SendFileXMLSignAsync(APISendFileXMLSignModel data)
         {
-            APIResponseSignModel result = new APIResponseSignModel();
+            APIResponseSignModel tran = new APIResponseSignModel();
             try
             {
                 var json = JsonSerializer.Serialize(data);
-                result = signXMLController.SendFileXMLSign(json).Result;
-                //result.fileSigned = null;
-                //result.resultCode = "000";
-                //result.resultDes = "Success";
-                log.InsertLog(pathlog, "Result : " + result.resultDes);
-                log.InsertLog(pathlog, "ResultCode : " + result.resultCode);
+                var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var task = await Task.Run(() => ApiHelper.PostURI("api/APISign/SendXMLSign", httpContent));
+                if (task.OUTPUT_DATA != null)
+                {
+                    tran = Newtonsoft.Json.JsonConvert.DeserializeObject<APIResponseSignModel>(task.OUTPUT_DATA.ToString());
+                }
+                else
+                {
+                    tran.resultDes = "fail";
+                }
+
+                //result = signXMLController.SendFileXMLSign(json).Result;
+                ////result.fileSigned = null;
+                ////result.resultCode = "000";
+                ////result.resultDes = "Success";
+                //log.InsertLog(pathlog, "Result : " + result.resultDes);
+                //log.InsertLog(pathlog, "ResultCode : " + result.resultCode);
             }
             catch (Exception ex)
             {
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
+                tran = new APIResponseSignModel();
+                tran.resultDes = ex.ToString();
             }
-            return result;
+            return tran;
         }
 
         public bool UpdateStatusAfterSignXML(APIResponseSignModel xmlsign, string billno, string pathfile, TransactionDescription dataTran)
@@ -220,7 +235,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             try
             {
                 Task<Response> res;
-                if (xmlsign.resultCode.Equals("000"))
+                if (xmlsign.resultCode != null && xmlsign.resultCode.Equals("000"))
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
                     dataTran.XmlSignDetail = "XML was signed completely";
@@ -345,6 +360,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             EncodeHelper encodeHelper = new EncodeHelper();
             try
             {
+                result.environment = "0";
                 result.hsmName = config.ConfigXmlsignHsmModule;
                 result.hsmSerial = config.ConfigXmlsignHsmSerial;
                 result.slotPassword = encodeHelper.Base64Decode(config.ConfigXmlsignHsmPassword);
