@@ -7,5 +7,6 @@
         Task<Response> INSERT(ProfileSeller param);
         Task<Response> UPDATE(ProfileSeller param);
         Task<Response> DELETE(ProfileSeller param);
+        Task<Response> GET_LIST_Detail();
     }
 }

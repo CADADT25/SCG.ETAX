@@ -8,6 +8,7 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
 {
     public class APISendFilePDFSignModel
     {
+        public string environment { get; set; }
         //‘eToken’,’PSE,’Luna’’
         public string hsmName { get; set; }
         //HSM Serail (slot)

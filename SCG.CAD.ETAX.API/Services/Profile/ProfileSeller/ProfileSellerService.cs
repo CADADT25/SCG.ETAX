@@ -21,36 +21,36 @@ namespace SCG.CAD.ETAX.API.Services
 
                 if (getList.Count > 0)
                 {
-                    List<ProfileSeller> list = new List<ProfileSeller>();
+                    //List<ProfileSeller> list = new List<ProfileSeller>();
 
-                    var Provice = GetProvice();
-                    var District = GetDistrict();
-                    var SubDivision = GetSubDivision();
+                    //var Provice = GetProvice();
+                    //var District = GetDistrict();
+                    //var SubDivision = GetSubDivision();
 
 
-                    list = getList.Select(x => new ProfileSeller
-                    {
-                        SellerNo = x.SellerNo,
-                        CompanyCode = x.CompanyCode,
-                        BranchCode = x.BranchCode,
-                        Province = Provice.FirstOrDefault(y=> x.Province == y.ProviceCode).ProviceName,
-                        District = District.FirstOrDefault(y => x.District == y.districtCode).districtName,
-                        SubDistrict = SubDivision.FirstOrDefault(y => x.SubDistrict == y.subDistrictCode).subDistrictName,
-                        Road = x.Road,
-                        Building = x.Building,
-                        Addressnumber = x.Addressnumber,
-                        SellerEmail = x.SellerEmail,
-                        CreateBy = x.CreateBy,
-                        CreateDate = x.CreateDate,
-                        UpdateBy = x.UpdateBy,
-                        UpdateDate = x.UpdateDate,
-                        Isactive = x.Isactive,
-                        EmailTemplateNo = x.EmailTemplateNo
-                    }).ToList();
+                    //list = getList.Select(x => new ProfileSeller
+                    //{
+                    //    SellerNo = x.SellerNo,
+                    //    CompanyCode = x.CompanyCode,
+                    //    BranchCode = x.BranchCode,
+                    //    Province = Provice.FirstOrDefault(y=> x.Province == y.ProviceCode).ProviceName,
+                    //    District = District.FirstOrDefault(y => x.District == y.districtCode).districtName,
+                    //    SubDistrict = SubDivision.FirstOrDefault(y => x.SubDistrict == y.subDistrictCode).subDistrictName,
+                    //    Road = x.Road,
+                    //    Building = x.Building,
+                    //    Addressnumber = x.Addressnumber,
+                    //    SellerEmail = x.SellerEmail,
+                    //    CreateBy = x.CreateBy,
+                    //    CreateDate = x.CreateDate,
+                    //    UpdateBy = x.UpdateBy,
+                    //    UpdateDate = x.UpdateDate,
+                    //    Isactive = x.Isactive,
+                    //    EmailTemplateNo = x.EmailTemplateNo
+                    //}).ToList();
 
                     resp.STATUS = true;
-                    resp.MESSAGE = "Get list count '" + list.Count + "' records. ";
-                    resp.OUTPUT_DATA = list;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
                 }
                 else
                 {
@@ -211,6 +211,62 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Delete faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response GET_LIST_Detail()
+        {
+            Response resp = new Response();
+            try
+            {
+                var getList = _dbContext.profileSeller.ToList();
+
+                if (getList.Count > 0)
+                {
+                    List<ProfileSeller> list = new List<ProfileSeller>();
+
+                    var Provice = GetProvice();
+                    var District = GetDistrict();
+                    var SubDivision = GetSubDivision();
+
+
+                    list = getList.Select(x => new ProfileSeller
+                    {
+                        SellerNo = x.SellerNo,
+                        CompanyCode = x.CompanyCode,
+                        BranchCode = x.BranchCode,
+                        Province = Provice.FirstOrDefault(y => x.Province == y.ProviceCode).ProviceName,
+                        District = District.FirstOrDefault(y => x.District == y.districtCode).districtName,
+                        SubDistrict = SubDivision.FirstOrDefault(y => x.SubDistrict == y.subDistrictCode).subDistrictName,
+                        Road = x.Road,
+                        Building = x.Building,
+                        Addressnumber = x.Addressnumber,
+                        SellerEmail = x.SellerEmail,
+                        CreateBy = x.CreateBy,
+                        CreateDate = x.CreateDate,
+                        UpdateBy = x.UpdateBy,
+                        UpdateDate = x.UpdateDate,
+                        Isactive = x.Isactive,
+                        EmailTemplateNo = x.EmailTemplateNo
+                    }).ToList();
+
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + list.Count + "' records. ";
+                    resp.OUTPUT_DATA = list;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
             }
             return resp;
