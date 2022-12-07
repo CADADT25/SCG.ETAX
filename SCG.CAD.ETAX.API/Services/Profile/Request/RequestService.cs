@@ -446,8 +446,8 @@ namespace SCG.CAD.ETAX.API.Services
                     List<string> pathPdfs = new List<string>();
                     List<TransactionDescription> resignTrans = new List<TransactionDescription>();
                     var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
-                    var destinationPdf = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == request.CompanyCode).FirstOrDefault();
-                    var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode).FirstOrDefault();
+                    var destinationPdf = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
+                    var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
                     var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
                     var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
 

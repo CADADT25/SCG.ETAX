@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="Controllers\DigitalSign\" />
     <Folder Include="Controllers\Profile\RequestPermission\" />
+    <Folder Include="Repositories\SignDocument\" />
     <Folder Include="Repositories\Profile\RequestPermission\" />
     <Folder Include="Services\Profile\RequestPermission\" />
   </ItemGroup>
