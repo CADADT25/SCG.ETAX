@@ -59,5 +59,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("GetListAllDetail")]
+        public IActionResult GetListAllDetail()
+        {
+            var result = repo.GET_LIST_Detail().Result;
+
+            return Ok(result);
+        }
     }
 }

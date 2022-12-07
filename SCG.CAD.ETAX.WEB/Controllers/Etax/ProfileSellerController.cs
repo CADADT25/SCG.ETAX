@@ -106,7 +106,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 try
                 {
-                    var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAll"));
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAllDetail"));
 
                     if (task.STATUS)
                     {
