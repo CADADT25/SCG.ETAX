@@ -626,7 +626,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 }
 
                                 tran.XmlSignStatus = "Waiting";
-                                tran.PdfSignStatus = "Waiting";
+                                //tran.PdfSignStatus = "Waiting";
 
                                 tran.UpdateBy = param.User;
                                 tran.UpdateDate = dtNow;
