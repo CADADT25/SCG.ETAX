@@ -290,6 +290,10 @@
                 $('#txtViewTransactionDecriptionGenerateDetail').text(data.GenerateDetail);
                 $('#txtViewTransactionDecriptionGenerateStatus').text(data.GenerateStatus);
                 $('#txtViewTransactionDecriptionGenerateDateTime').text(data.GenerateDateTime);
+                if(data.GenerateStatus == "Successful"){
+                    $('#downloadxmlfilegenerate').empty();
+                    $('#downloadxmlfilegenerate').append("<a onclick='DownloadFileXMLgenerate(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                }
 
                 $('#txtViewTransactionDecriptionXmlSignDetail').text(data.XmlSignDetail);
                 $('#txtViewTransactionDecriptionXmlSignStatus').text(data.XmlSignStatus);
@@ -814,6 +818,9 @@
     };
     function DownloadFileXML(transactionno) {
          DownloadFile(transactionno,"XML");
+    };
+    function DownloadFileXMLgenerate(transactionno) {
+         DownloadFile(transactionno,"XMLGen");
     };
     function DownloadFile(transactionno,filetype) {
                 
