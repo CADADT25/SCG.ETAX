@@ -52,6 +52,29 @@
         <div class="col-md-1 col-12">
         </div>
 
+        <div class="col-md-12 col-12">
+            <div class="form-group">
+                <div class="custom-control custom-control-primary custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsOnline" onclick="onChangeOnline();" />
+                    <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsOnline">Online</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 col-12">
+        </div>
+
+        <div class="col-md-11 col-12">
+            <div class="form-group">
+                <label>Online Record Number</label>
+                <input disabled type="text" id="txtInsertConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
+            </div>
+        </div>
+
+        
+        <div class="col-md-1 col-12">
+        </div>
+
         <div class="col-md-3 col-12">
             <div class="form-group">
                 <label><spa class="text-danger">* </spa> Output Source </label>
@@ -74,25 +97,6 @@
             <div class="form-group">
                 <label><spa class="text-danger">* </spa> Output Path </label>
                 <input disabled type="text" id="txtInsertConfigXmlGeneratorOutputPath" onclick="fnOpenGetPathServerModal('txtInsertConfigXmlGeneratorOutputPath')" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
-            </div>
-        </div>
-
-        <div class="col-md-12 col-12">
-            <div class="form-group">
-                <div class="custom-control custom-control-primary custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="toggleInsertConfigXmlGeneratorIsOnline" onclick="onChangeOnline();" />
-                    <label class="custom-control-label" for="toggleInsertConfigXmlGeneratorIsOnline">Online</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-1 col-12">
-        </div>
-
-        <div class="col-md-11 col-12">
-            <div class="form-group">
-                <label>Online Record Number</label>
-                <input disabled type="text" id="txtInsertConfigXmlGeneratorOnlineRecordNumber" onkeyup="validateInsertConfigXmlGenerator()" class="form-control">
             </div>
         </div>
 
