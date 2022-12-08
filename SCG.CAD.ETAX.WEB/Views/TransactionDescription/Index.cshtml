@@ -4,39 +4,41 @@
 }
 <style>
     .hovertext {
-      position: relative;
-    }
-    .hovertext:before {
-      content: attr(data-hover);
-      visibility: hidden;
-      opacity: 0;
-      font-size: 14px;
-      /*width: 140px;*/
-      /*background-color: black;*/
-      /*color: #fff;*/
-      text-align: center;
-      border-radius: 5px;
-      padding: 5px 0;
-      transition: opacity 1s ease-in-out;
-
-      position: absolute;
-      top: 100%;
-      left: 105%;
-      margin-left: -45px;
+        position: relative;
     }
 
-    .hovertext:hover:before {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .hoversuccess{
+        .hovertext:before {
+            content: attr(data-hover);
+            visibility: hidden;
+            opacity: 0;
+            font-size: 14px;
+            /*width: 140px;*/
+            /*background-color: black;*/
+            /*color: #fff;*/
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 100%;
+            left: 105%;
+            margin-left: -45px;
+        }
+
+        .hovertext:hover:before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    .hoversuccess {
         color: green;
     }
-    .hoverfail{
+
+    .hoverfail {
         color: red;
     }
-    .hoverwait{
+
+    .hoverwait {
         color: yellow;
     }
 </style>
@@ -85,7 +87,7 @@
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
-            "pageLength": 50,
+            "pageLength": 25,
             "scrollX": true,
 
             "ajax": {
@@ -168,49 +170,49 @@
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "generateStatus");
                     }
                 },
                 {
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "xmlSignStatus");
                     }
                 },
                 {
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "pdfSignStatus");
                     }
                 },
                 {
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "printStatus");
                     }
                 },
                 {
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "emailSendStatus");
                     }
                 },
                 {
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "xmlCompressStatus");
                     }
                 },
                 {
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
                     }
                 }
             ],
@@ -290,6 +292,10 @@
                 $('#txtViewTransactionDecriptionGenerateDetail').text(data.GenerateDetail);
                 $('#txtViewTransactionDecriptionGenerateStatus').text(data.GenerateStatus);
                 $('#txtViewTransactionDecriptionGenerateDateTime').text(data.GenerateDateTime);
+                if(data.GenerateStatus == "Successful"){
+                    $('#downloadxmlfilegenerate').empty();
+                    $('#downloadxmlfilegenerate').append("<a onclick='DownloadFileXMLgenerate(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                }
 
                 $('#txtViewTransactionDecriptionXmlSignDetail').text(data.XmlSignDetail);
                 $('#txtViewTransactionDecriptionXmlSignStatus').text(data.XmlSignStatus);
@@ -302,7 +308,7 @@
                 $('#txtViewTransactionDecriptionPdfSignDetail').text(data.PdfSignDetail);
                 $('#txtViewTransactionDecriptionPdfSignStatus').text(data.PdfSignStatus);
                 $('#txtViewTransactionDecriptionPdfSignDateTime').text(data.PdfSignDateTime);
-                
+
                 if(data.PdfSignStatus == "Successful"){
                     $('#downloadpdffile').empty();
                     $('#downloadpdffile').append("<a onclick='DownloadFilePDF(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
@@ -315,8 +321,8 @@
                 $('#txtViewTransactionDecriptionEmailSendDetail').text(data.EmailSendDetail);
                 $('#txtViewTransactionDecriptionEmailSendStatus').text(data.EmailSendStatus);
                 $('#txtViewTransactionDecriptionEmailSendDateTime').text(data.EmailSendDateTime);
-                              
-                $('#resendemail').empty();      
+
+                $('#resendemail').empty();
                 $('#resendemail').append("<a onclick='fnDetailResendEmail()' class='btn btn-primary btn-sm'> Resend Email </a>");
 
 
@@ -371,7 +377,7 @@
     }
 
     function fnDropdownTransactionSearchDataSource() {
-        
+
         $('<option>',
         {
             value: "",
@@ -420,13 +426,13 @@
         $('#tbTransactionMain').DataTable().destroy();
         $.blockUI();
         $('#tbTransactionMain').DataTable({
-            
+
             "scrollY": false,
             "processing": true, // for show progress bar
             "serverSide": false, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": true, // for disable multiple column at once
-            "pageLength": 50,
+            "pageLength": 25,
             "scrollX": true,
 
             "ajax":
@@ -509,49 +515,49 @@
                     data: "generateStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "generateStatus");
                     }
                 },
                 {
                     data: "xmlSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "xmlSignStatus");
                     }
                 },
                 {
                     data: "pdfSignStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "pdfSignStatus");
                     }
                 },
                 {
                     data: "printStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "printStatus");
                     }
                 },
                 {
                     data: "emailSendStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "emailSendStatus");
                     }
                 },
                 {
                     data: "xmlCompressStatus",
                     width: "3%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "xmlCompressStatus");
                     }
                 },
                 {
                     data: "pdfIndexingStatus",
                     width: "2%",
                     render: function (data, type, row) {
-                        return fnCheckStatus(data);
+                        return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
                     }
                 }
             ],
@@ -568,16 +574,16 @@
         //RenderTransaction(JsonString);
 
     }
-    
-    function fnCheckStatus(status){
+
+    function fnCheckStatus(status, tranno, process){
         if (status == "Successful"){
-            return '<div class="text-success text-center icon-wrapper hovertext hoversuccess" data-hover="Successful"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>';
+            return '<div onclick="fnCallDetailProcess(' + tranno +', \''+ process +'\')" class="text-success text-center icon-wrapper hovertext hoversuccess" data-hover="Successful"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>';
         }
         else if (status == "Failed"){
-            return '<div class="text-danger text-center icon-wrapper hovertext hoverfail" data-hover="Failed"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>';
+            return '<div onclick="fnCallDetailProcess(' + tranno +', \''+ process +'\')" class="text-danger text-center icon-wrapper hovertext hoverfail" data-hover="Failed"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>';
         }
         else{
-            return '<div class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
+            return '<div onclick="fnCallDetailProcess(' + tranno +', \''+ process +'\')" class="text-warning text-center icon-wrapper hovertext hoverwait" data-hover="Watting"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>';
         }
     }
 
@@ -586,7 +592,7 @@
         var data = table.rows( function ( idx, data, node ) {
         return $(node).find('.dt-checkboxes:input[type="checkbox"]').prop('checked');
         }).data().toArray();
-        
+
         return data;
     }
 
@@ -606,7 +612,7 @@
                     if (result) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("ResetStatusIndexing", "transactionDescription")",
@@ -625,7 +631,7 @@
                     }
                 })
     }
-    
+
     function fnResetStatusXMLZip(){
             Swal.fire({
                 title: 'Are you sure?',
@@ -642,7 +648,7 @@
                     if (result) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("ResetStatusXMLZip", "transactionDescription")",
@@ -677,7 +683,7 @@
                     if (result) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("ResetStatusPrintZip", "transactionDescription")",
@@ -712,7 +718,7 @@
                     if (result) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("SyncStatusXMLSign", "transactionDescription")",
@@ -747,7 +753,7 @@
                     if (result) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("SyncStatusPDFSign", "transactionDescription")",
@@ -791,7 +797,7 @@
                 }).then(function (result) {
                     if (result) {
                         var updateby = $("#leftSideEmail").text();
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "@Url.Action("ResendEmail", "transactionDescription")",
@@ -815,8 +821,11 @@
     function DownloadFileXML(transactionno) {
          DownloadFile(transactionno,"XML");
     };
+    function DownloadFileXMLgenerate(transactionno) {
+         DownloadFile(transactionno,"XMLGen");
+    };
     function DownloadFile(transactionno,filetype) {
-                
+
         $.ajax({
             type: "POST",
             url: "@Url.Action("DownloadFile", "transactionDescription")",
@@ -829,7 +838,7 @@
                 var fileName = data.message;
                 //Convert Byte Array to BLOB.
                 var blob = new Blob([bytes], { type: "application/octetstream" });
- 
+
                     //Check the Browser type and download the File.
                     var isIE = false || !!document.documentMode;
                     if (isIE) {
@@ -855,7 +864,7 @@
         }
         return bytes;
     };
-    
+
     function fnCallOutputSearchEmailDetail(getPk){
         $.ajax({
             type: "GET",
@@ -911,7 +920,7 @@
         });
     }
 
-    
+
     function callTransactionDescriptionIndex() {
         setTimeout(function(){
             $.blockUI();
@@ -979,7 +988,7 @@
             });
         }
     }
-    
+
     function Base64ToBytes(base64) {
         var s = window.atob(base64);
         var bytes = new Uint8Array(s.length);
@@ -1043,6 +1052,158 @@
                     $("body").append(a);
                     a[0].click();
                     $("body").remove(a);
+                }
+            }
+        });
+    }
+
+    function fnCallDetailProcess(tranno, process){
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "TransactionDescription")",
+            data: { id : tranno },
+            dataType: "json",
+            success: function (result) {
+
+                data = $.parseJSON(result);
+                console.log(data);
+                var processname = "";
+
+                $('#pProcessbutton').empty();
+                $('#txtProcessName').empty();
+                $('#txtProcessStatus').empty();
+                $('#txtProcessDate').empty();
+                $('#txtProcessStatusDetail').empty();
+                $('#txtProcessCustom1').empty();
+                $('#txtProcessCustom2').empty();
+
+                if(process == 'generateStatus'){
+                    processname = 'XML Generate';
+                    
+                    $('#txtProcessStatusDetail').text(data.GenerateDetail);
+                    $('#txtProcessStatus').text(data.GenerateStatus);
+                    $('#txtProcessDate').text(data.GenerateDateTime);
+                    if(data.GenerateStatus == "Successful"){
+                        $('#pProcessbutton').append("<a onclick='DownloadFileXMLgenerate(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                    }
+
+                }else if(process == 'xmlSignStatus'){
+                    processname = 'XML Sign';
+                    
+                    $('#txtProcessStatusDetail').text(data.XmlSignDetail);
+                    $('#txtProcessStatus').text(data.XmlSignStatus);
+                    $('#txtProcessDate').text(data.XmlSignDateTime);
+                    if(data.XmlSignStatus == "Successful"){
+                        $('#pProcessbutton').append("<a onclick='DownloadFileXML(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                    }
+
+                }else if(process == 'pdfSignStatus'){
+                    processname = 'PDF Sign';
+                    
+                    $('#txtProcessStatusDetail').text(data.PdfSignDetail);
+                    $('#txtProcessStatus').text(data.PdfSignStatus);
+                    $('#txtProcessDate').text(data.PdfSignDateTime);
+                    if(data.PdfSignStatus == "Successful"){
+                        $('#pProcessbutton').append("<a onclick='DownloadFilePDF(" + data.TransactionNo + ")' class='btn btn-primary btn-sm'> Download </a>");
+                    }
+
+                }else if(process == 'printStatus'){
+                    processname = 'Print';
+
+                    fnCallOutputSearchPrintingDetailStatus(data.OutputPdfTransactionNo);
+                    $('#txtProcessStatusDetail').text(data.PrintDetail);
+                    $('#txtProcessStatus').text(data.PrintStatus);
+                    $('#txtProcessDate').text(data.PrintDateTime);
+
+                }else if(process == 'emailSendStatus'){
+                    processname = 'Email';
+                    fnCallOutputSearchEmailDetailStatus(data.OutputMailTransactionNo);
+                    $('#txtProcessStatusDetail').text(data.EmailSendDetail);
+                    $('#txtProcessStatus').text(data.EmailSendStatus);
+                    $('#txtProcessDate').text(data.EmailSendDateTime);
+                    $('#pProcessbutton').append("<a onclick='fnDetailResendEmail()' class='btn btn-primary btn-sm'> Resend Email </a>");
+
+                }else if(process == 'xmlCompressStatus'){
+                    processname = 'XML Compress';
+
+                    fnCallOutputSearchXmlZipDetailStatus(data.OutputXmlTransactionNo);
+                    $('#txtProcessStatusDetail').text(data.XmlCompressDetail);
+                    $('#txtProcessStatus').text(data.XmlCompressStatus);
+                    $('#txtProcessDate').text(data.XmlCompressDateTime);
+                }else if(process == 'pdfIndexingStatus'){
+                    processname = 'PDF Indexing';
+                    
+                    $('#txtProcessStatusDetail').text(data.PdfIndexingDetail);
+                    $('#txtProcessStatus').text(data.PdfIndexingStatus);
+                    $('#txtProcessDate').text(data.PdfIndexingDateTime);
+                    if(typeof data.DmsAttachmentFilePath != 'undefined') {
+                        $('#txtProcessCustom1').text("Path : " + data.DmsAttachmentFilePath);
+                    }else{
+                        $('#txtProcessCustom1').text("Path : ");
+                    }
+                }
+
+                $('#txtProcessName').text(processname);
+                $("#modalShowDetailProcess").modal('show');
+
+            }
+        });
+    }
+    function fnCancelDetailProcess(){
+        $("#modalShowDetailProcess").modal('hide');
+    }
+
+    function fnCallOutputSearchEmailDetailStatus(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchEmailSend")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchEmailSendTo != 'undefined') {
+                    $('#txtProcessCustom1').text("EmailTo : " + data.OutputSearchEmailSendTo);
+                }else{
+                    $('#txtProcessCustom1').text("EmailTo : ");
+                }
+
+                if(typeof data.OutputSearchEmailSendCC != 'undefined') {
+                    $('#txtProcessCustom2').text("EmailCC : " + data.OutputSearchEmailSendCC);
+                }else{
+                    $('#txtProcessCustom2').text("EmailCC : ");
+                }
+            }
+        });
+    }
+    function fnCallOutputSearchPrintingDetailStatus(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchPrinting")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchPrintingFullPath != 'undefined') {
+                    $('#txtProcessCustom1').text("Path : " + data.OutputSearchPrintingFullPath);
+                }else{
+                    $('#txtProcessCustom1').text("Path : ");
+                }
+            }
+        });
+    }
+    function fnCallOutputSearchXmlZipDetailStatus(getPk){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detail", "OutputSearchXmlZip")",
+            data: { id : getPk },
+            dataType: "json",
+            success: function (result) {
+                data = $.parseJSON(result);
+                if(typeof data.OutputSearchXmlZipFullPath != 'undefined') {
+                    $('#txtProcessCustom1').text("Path : " + data.OutputSearchXmlZipFullPath);
+                }else{
+                    $('#txtProcessCustom1').text("Path : ");
                 }
             }
         });

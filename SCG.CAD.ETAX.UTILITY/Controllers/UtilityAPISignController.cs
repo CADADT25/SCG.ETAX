@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,9 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
     public class UtilityAPISignController
     {
-        public async Task<APIResponseSignModel> SendFilePDFSign(string jsonString)
+        public async Task<Response> SendFilePDFSign(APISendFilePDFSignModel data)
         {
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(data);
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             var task = await Task.Run(() => PostURI("v1/sign/pdf", httpContent));
@@ -21,8 +23,9 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return task;
         }
 
-        public async Task<APIResponseSignModel> SendFileXMLSign(string jsonString)
+        public async Task<Response> SendFileXMLSign(APISendFileXMLSignModel data)
         {
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(data);
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
             var task = await Task.Run(() => PostURI("v1/sign/xml", httpContent));
@@ -69,9 +72,9 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return response;
         }
 
-        public static async Task<APIResponseSignModel> PostURI(string url, HttpContent c)
+        public static async Task<Response> PostURI(string url, HttpContent c)
         {
-            APIResponseSignModel response = new APIResponseSignModel();
+            Response response = new Response();
             try
             {
                 using (var client = new HttpClient())
@@ -89,12 +92,13 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     if (result.IsSuccessStatusCode)
                     {
                         var x = result.Content.ReadAsStringAsync().Result;
-                        response = JsonConvert.DeserializeObject<APIResponseSignModel>(x.ToString());
+                        //response = JsonConvert.DeserializeObject<APIResponseSignModel>(x.ToString());
+                        response.OUTPUT_DATA = x.ToString();
                     }
                     else
                     {
                         var getException = result.Content.ReadAsStringAsync();
-                        response.resultDes = getException.ToString();
+                        response.ERROR_MESSAGE = getException.ToString();
                     }
                 }
             }

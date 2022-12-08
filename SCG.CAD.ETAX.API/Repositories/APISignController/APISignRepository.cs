@@ -6,13 +6,12 @@ namespace SCG.CAD.ETAX.API.Repositories
     public class APISignRepository : IAPISignRepository
     {
         UtilityAPISignController signController = new UtilityAPISignController();
-        public async Task<APIResponseSignModel> SendPDFSign(APISendFilePDFSignModel data)
+        public async Task<Response> SendPDFSign(APISendFilePDFSignModel data)
         {
-            APIResponseSignModel responseSignModel = new APIResponseSignModel();
+            Response responseSignModel = new Response();
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(data);
-                responseSignModel = signController.SendFileXMLSign(json).Result;
+                responseSignModel = signController.SendFilePDFSign(data).Result;
             }
             catch (Exception ex)
             {
@@ -21,13 +20,12 @@ namespace SCG.CAD.ETAX.API.Repositories
             return responseSignModel;
         }
 
-        public async Task<APIResponseSignModel> SendXMLSign(APISendFileXMLSignModel data)
+        public async Task<Response> SendXMLSign(APISendFileXMLSignModel data)
         {
-            APIResponseSignModel responseSignModel = new APIResponseSignModel();
+            Response responseSignModel = new Response();
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(data);
-                responseSignModel = signController.SendFileXMLSign(json).Result;
+                responseSignModel = signController.SendFileXMLSign(data).Result;
             }
             catch (Exception ex)
             {

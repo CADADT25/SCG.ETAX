@@ -50,7 +50,9 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? PdfIndexingStatus { get; set; }
         public string? PdfIndexingDetail { get; set; }
         public DateTime? PdfIndexingDateTime { get; set; }
+        public string? PdfBeforeSignLocation { get; set; }
         public string? PdfSignLocation { get; set; }
+        public string? XmlBeforeSignLocation { get; set; }
         public string? XmlSignLocation { get; set; }
         public string? OutputXmlTransactionNo { get; set; }
         public string? OutputPdfTransactionNo { get; set; }

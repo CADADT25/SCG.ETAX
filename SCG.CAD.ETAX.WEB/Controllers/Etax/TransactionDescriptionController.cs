@@ -472,9 +472,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     {
                         pathFile = tran[0].PdfSignLocation;
                     }
-                    else
+                    else if(Type.Equals("XML", StringComparison.CurrentCultureIgnoreCase))
                     {
                         pathFile = tran[0].XmlSignLocation;
+                    }
+                    else
+                    {
+                        pathFile = tran[0].XmlBeforeSignLocation;
                     }
 
                     task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/DownloadFile?pathfile=" + pathFile + ""));

@@ -119,8 +119,8 @@
 
         $('#ddlInsertConfigXmlSignInputSource').prop('disabled', true)
         $('#txtInsertConfigXmlSignInputPath').prop('disabled', true)
-        $('#ddlInsertConfigXmlSignOutputSource').prop('disabled', true)
-        $('#txtInsertConfigXmlSignOutputPath').prop('disabled', true)
+        $('#ddlInsertConfigXmlSignOutputSource').prop('disabled', false)
+        $('#txtInsertConfigXmlSignOutputPath').prop('disabled', false)
         $('#ddlInsertConfigXmlSignOutputConvertSource').prop('disabled', true)
         $('#txtInsertConfigXmlSignOutputConvertPath').prop('disabled', true)
         $('#txtInsertConfigXmlSignOnlineRecordNumber').prop('disabled', false)
@@ -147,8 +147,8 @@
 
         $('#ddlUpdateConfigXmlSignInputSource').prop('disabled', true)
         $('#txtUpdateConfigXmlSignInputPath').prop('disabled', true)
-        $('#ddlUpdateConfigXmlSignOutputSource').prop('disabled', true)
-        $('#txtUpdateConfigXmlSignOutputPath').prop('disabled', true)
+        $('#ddlUpdateConfigXmlSignOutputSource').prop('disabled', false)
+        $('#txtUpdateConfigXmlSignOutputPath').prop('disabled', false)
         $('#ddlUpdateConfigXmlSignOutputConvertSource').prop('disabled', true)
         $('#txtUpdateConfigXmlSignOutputConvertPath').prop('disabled', true)
         $('#txtUpdateConfigXmlSignOnlineRecordNumber').prop('disabled', false)
@@ -424,6 +424,7 @@
                     $('#txtUpdateConfigXmlSignOutputPath').prop('disabled', false)
                     $('#ddlUpdateConfigXmlSignOutputConvertSource').prop('disabled', false)
                     $('#txtUpdateConfigXmlSignOutputConvertPath').prop('disabled', false)
+                    $('#txtUpdateConfigXmlSignOnlineRecordNumber').prop('disabled', true)
 
                 }else{
                     document.getElementById("toggleUpdateConfigXmlSignIsBatch").checked = false;
@@ -431,10 +432,11 @@
 
                     $('#ddlUpdateConfigXmlSignInputSource').prop('disabled', true)
                     $('#txtUpdateConfigXmlSignInputPath').prop('disabled', true)
-                    $('#ddlUpdateConfigXmlSignOutputSource').prop('disabled', true)
-                    $('#txtUpdateConfigXmlSignOutputPath').prop('disabled', true)
+                    $('#ddlUpdateConfigXmlSignOutputSource').prop('disabled', false)
+                    $('#txtUpdateConfigXmlSignOutputPath').prop('disabled', false)
                     $('#ddlUpdateConfigXmlSignOutputConvertSource').prop('disabled', true)
                     $('#txtUpdateConfigXmlSignOutputConvertPath').prop('disabled', true)
+                    $('#txtUpdateConfigXmlSignOnlineRecordNumber').prop('disabled', false)
                 }
 
                 document.getElementById('ddlUpdateConfigXmlSignInputSource').value = data.ConfigXmlsignInputSource;
@@ -486,19 +488,24 @@
         
 
         var model = new Object();
+        
+        if($('#toggleInsertConfigXmlSignIsBatch').prop('checked')){
+            model.ConfigXmlSignInputSource = $('#ddlInsertConfigXmlSignInputSource').val();
+            model.ConfigXmlSignInputPath = $('#txtInsertConfigXmlSignInputPath').val();
+            model.ConfigXmlsignOutputConvertSource = $('#ddlInsertConfigXmlSignOutputConvertSource').val();
+            model.ConfigXmlsignOutputConvertPath = $('#txtInsertConfigXmlSignOutputConvertPath').val();
+        }
+        else{
+            model.ConfigXmlSignOnlineRecordNumber = $('#txtInsertConfigXmlSignOnlineRecordNumber').val();
+        }
 
         model.ConfigXmlsignCompanycode = $('#txtInsertConfigXmlSignCompanyCode').val();
         model.ConfigXmlsignCompanyTax = $('#txtInsertConfigXmlSignTaxNumber').val();
 
-        model.ConfigXmlSignInputSource = $('#ddlInsertConfigXmlSignInputSource').val();
-        model.ConfigXmlSignInputPath = $('#txtInsertConfigXmlSignInputPath').val();
         model.ConfigXmlSignOutputSource = $('#ddlInsertConfigXmlSignOutputSource').val();
         model.ConfigXmlSignOutputPath = $('#txtInsertConfigXmlSignOutputPath').val();
         
-        model.ConfigXmlsignOutputConvertSource = $('#ddlInsertConfigXmlSignOutputConvertSource').val();
-        model.ConfigXmlsignOutputConvertPath = $('#txtInsertConfigXmlSignOutputConvertPath').val();
 
-        model.ConfigXmlSignOnlineRecordNumber = $('#txtInsertConfigXmlSignOnlineRecordNumber').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();
@@ -545,20 +552,25 @@
         }
 
         var model = new Object();
+        
+        if($('#toggleUpdateConfigXmlSignIsBatch').prop('checked')){
+            model.ConfigXmlSignInputSource = $('#ddlUpdateConfigXmlSignInputSource').val();
+            model.ConfigXmlSignInputPath = $('#txtUpdateConfigXmlSignInputPath').val();
+            model.ConfigXmlsignOutputConvertSource = $('#ddlUpdateConfigXmlSignOutputConvertSource').val();
+            model.ConfigXmlsignOutputConvertPath = $('#txtUpdateConfigXmlSignOutputConvertPath').val();
+        }
+        else{
+            model.ConfigXmlSignOnlineRecordNumber = $('#txtUpdateConfigXmlSignOnlineRecordNumber').val();
+        }
 
         model.ConfigXmlSignNo = $('#txtUpdateConfigXmlSignNo').val();
         model.ConfigXmlsignCompanycode = $('#txtUpdateConfigXmlSignCompanyCode').val();
         model.ConfigXmlsignCompanyTax = $('#txtUpdateConfigXmlSignTaxNumber').val();
 
-        model.ConfigXmlSignInputSource = $('#ddlUpdateConfigXmlSignInputSource').val();
-        model.ConfigXmlSignInputPath = $('#txtUpdateConfigXmlSignInputPath').val();
         model.ConfigXmlSignOutputSource = $('#ddlUpdateConfigXmlSignOutputSource').val();
         model.ConfigXmlSignOutputPath = $('#txtUpdateConfigXmlSignOutputPath').val();
         
-        model.ConfigXmlsignOutputConvertSource = $('#ddlUpdateConfigXmlSignOutputConvertSource').val();
-        model.ConfigXmlsignOutputConvertPath = $('#txtUpdateConfigXmlSignOutputConvertPath').val();
 
-        model.ConfigXmlSignOnlineRecordNumber = $('#txtUpdateConfigXmlSignOnlineRecordNumber').val();
         model.CreateBy = $("#leftSideEmail").text();
         model.CreateDate = new Date();
         model.UpdateBy = $("#leftSideEmail").text();

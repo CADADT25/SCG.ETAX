@@ -210,8 +210,8 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             APIResponseSignModel result = new APIResponseSignModel();
             try
             {
-                var json = JsonSerializer.Serialize(data);
-                result = signPDFController.SendFilePDFSign(json).Result;
+                var res = signPDFController.SendFilePDFSign(data).Result;
+                result = JsonSerializer.Deserialize<APIResponseSignModel>(res.OUTPUT_DATA.ToString());
                 //result.fileSigned = data.fileEncode;
                 //result.resultCode = "000";
                 //result.resultDes = "Success";
