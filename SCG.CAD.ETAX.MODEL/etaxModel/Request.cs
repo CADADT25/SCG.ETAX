@@ -11,9 +11,10 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string RequestAction { get; set; } = null!;
         public string StatusCode { get; set; } = null!;
         public string? CompanyCode { get; set; }
+        public string? OfficerBy { get; set; }
         public string Manager { get; set; } = null!;
         public bool ManagerAction { get; set; }
-        public string? OfficerBy { get; set; }
+        public string? AdminCheck { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;

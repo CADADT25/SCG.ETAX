@@ -19,6 +19,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string RequestAction { get; set; }
         public string StatusCode { get; set; }
         public string CompanyCode { get; set; }
+        public string AdminCheckName { get; set; }
+        public string AdminCheckEmail { get; set; }
         public string ManagerName { get; set; }
         public string ManagerEmail { get; set; }
         public string RequesterName { get; set; }
@@ -30,6 +32,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public List<RequestItem> RequestItems { get; set; }
         public List<RequestPath> RequestPaths { get; set; }
         public string TempUser { get; set; }
+        public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }
         public bool IsOfficer { get; set; }
         public bool IsAuth { get; set; }

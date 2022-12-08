@@ -27,6 +27,7 @@
                 <label for="helpInputTop">Select status</label>
                 <select class="select2 form-control" id="allStatus" multiple>
                     <option value="" disabled hidden>--- Select action ---</option>
+                    <option value="@Variable.RequestStatusCode_WaitAdminCheck">Wait Admin</option>
                     <option value="@Variable.RequestStatusCode_WaitManager">Wait Manager</option>
                     <option value="@Variable.RequestStatusCode_WaitOfficer">Wait Officer</option>
                     <option value="@Variable.RequestStatusCode_Complete" selected>Complete</option>

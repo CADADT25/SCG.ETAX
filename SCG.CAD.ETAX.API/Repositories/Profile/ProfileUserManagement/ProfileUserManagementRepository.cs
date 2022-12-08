@@ -78,6 +78,23 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> GET_LIST_ADMIN()
+        {
+            Response resp = new Response();
+            try
+            {
+                var result = service.GET_LIST_ADMIN();
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> INSERT(ProfileUserManagement param)
         {

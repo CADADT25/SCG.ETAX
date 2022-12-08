@@ -3,6 +3,7 @@
     public interface IProfileUserManagementRepository
     {
         Task<Response> GET_LIST();
+        Task<Response> GET_LIST_ADMIN();
         Task<Response> GET_DETAIL(int id);
         Task<Response> GET_DETAIL_BY_EXTERNALID(string id);
         Task<Response> GET_DETAIL_BY_EMAIL_EXTERNALID2(string email);

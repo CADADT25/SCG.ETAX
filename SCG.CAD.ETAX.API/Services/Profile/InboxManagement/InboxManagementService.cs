@@ -36,12 +36,22 @@ namespace SCG.CAD.ETAX.API.Services
                 }
                 var roleClMg = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == "COLLECTION_MANAGER_ID" && t.ConfigGlobalCategoryName == "ROLE").FirstOrDefault();
                 int clManagerId = roleClMg != null ? int.Parse(roleClMg.ConfigGlobalValue) : 0;
+                var roleAdmin = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == "ADMINISTRATOR_ID" && t.ConfigGlobalCategoryName == "ROLE").FirstOrDefault();
+                int adminId = roleAdmin != null ? int.Parse(roleAdmin.ConfigGlobalValue) : 0;
                 if (profileuser.LevelId == clManagerId)
                 {
                     requestList = _dbContext.request.Where(t =>
                                                         (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == Variable.RequestStatusCode_WaitManager)
                                                         ||
                                                         (companyCodeList.Contains(t.CompanyCode) && t.ManagerAction == true && t.StatusCode == Variable.RequestStatusCode_WaitOfficer)
+                                                    ).ToList();
+                }
+                else if (profileuser.LevelId == adminId)
+                {
+                    requestList = _dbContext.request.Where(t =>
+                                                        (t.Manager == search.EmailUser && t.ManagerAction == false && t.StatusCode == Variable.RequestStatusCode_WaitManager)
+                                                        ||
+                                                        (companyCodeList.Contains(t.CompanyCode) && t.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
                                                     ).ToList();
                 }
                 else

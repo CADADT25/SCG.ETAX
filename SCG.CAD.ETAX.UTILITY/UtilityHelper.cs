@@ -171,6 +171,10 @@ namespace SCG.CAD.ETAX.UTILITY
         {
             if (!string.IsNullOrEmpty(statusCode))
             {
+                if (statusCode.ToLower() == Variable.RequestStatusCode_WaitAdminCheck)
+                {
+                    return "Wait Admin";
+                }
                 if (statusCode.ToLower() == Variable.RequestStatusCode_WaitManager)
                 {
                     return "Wait Manager";

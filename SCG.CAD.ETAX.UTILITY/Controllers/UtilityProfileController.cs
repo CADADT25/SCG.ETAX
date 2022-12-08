@@ -74,5 +74,33 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
             return profileSeller;
         }
+
+        public async Task<List<ProfileUserManagement>> ProfileUserManagementAllAdmin()
+        {
+            Response resp = new Response();
+
+            List<ProfileUserManagement> tran = new List<ProfileUserManagement>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileUserManagement/GetAllAdmin"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ProfileUserManagement>>(task.OUTPUT_DATA.ToString());
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+            return tran;
+        }
     }
 }

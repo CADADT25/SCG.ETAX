@@ -11,18 +11,14 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
     public class RequestActionEmail
     {
         AdminToolHelper adminToolHelper = new AdminToolHelper();
-        UtilityProfileCustomerController profileCustomerController = new UtilityProfileCustomerController();
         UtilityProfileEmailTypeController profileEmailTypeController = new UtilityProfileEmailTypeController();
         UtilityProfileEmailTemplateController profileEmailTemplateController = new UtilityProfileEmailTemplateController();
-        UtilityProfileCompanyController profileCompanyController = new UtilityProfileCompanyController();
         UtilityConfigMftsEmailSettingController configMftsEmailSettingController = new UtilityConfigMftsEmailSettingController();
+        UtilityProfileController profileController = new UtilityProfileController();
 
-
-        List<ProfileCustomer> profileCustomers = new List<ProfileCustomer>();
 
         List<ProfileEmailType> profileEmailType = new List<ProfileEmailType>();
         List<ProfileEmailTemplate> profileEmailTemplates = new List<ProfileEmailTemplate>();
-        List<ProfileCompany> profileCompanies = new List<ProfileCompany>();
         List<ConfigMftsEmailSetting> configMftsEmailSettings = new List<ConfigMftsEmailSetting>();
 
         public Response SendEmail(string requestNo, string action)
@@ -55,11 +51,33 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
 
                     if (action == "submit")
                     {
-                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
-                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
-                        subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
-                        toEmail = request.ManagerEmail;
-                        toName = request.ManagerName;
+                        if (request.RequestAction == Variable.RequestActionCode_ReSignNewTrans || request.RequestAction == Variable.RequestActionCode_ReSignNewCert)
+                        {
+                            // กรณีที่ต้องให้ admin select path
+                            profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "admin_check");
+                            subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
+                            subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
+                            var userAdminList = profileController.ProfileUserManagementAllAdmin().Result;
+                            foreach (var userAdmin in userAdminList)
+                            {
+                                toEmail += userAdmin.UserEmail + ";";
+                                toName += request.ManagerName + ",";
+                            }
+                            if (toName != "")
+                            {
+                                toName = toName.Remove(toName.Length - 1);
+                            }
+                        }
+                        else
+                        {
+                            profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
+                            subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
+                            subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
+
+                            toEmail = request.ManagerEmail;
+                            toName = request.ManagerName;
+                        }
+
                     }
                     else if (action == "reject" && string.IsNullOrEmpty(request.OfficerEmail))
                     {
@@ -209,7 +227,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         document += "</tbody>";
                         document += "</table>";
                     }
-                        
+
 
                     body = body.Replace("#$DataTable$#", document);
 
@@ -217,7 +235,11 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
 
 
                     message.From = new MailAddress(fromEmailAddress);
-                    message.To.Add(new MailAddress(toEmail));
+                    foreach (var address in toEmail.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        message.To.Add(new MailAddress(toEmail));
+                    }
+                    //message.To.Add(new MailAddress(toEmail));
                     if (!string.IsNullOrEmpty(ccEmail))
                     {
                         message.CC.Add(new MailAddress(ccEmail));

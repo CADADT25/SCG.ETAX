@@ -58,6 +58,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     model.IsAuth = true;
                 }
             }
+            //if (model.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
+            //{
+            //    if (model.TempUser == model.AdminCheckEmail)
+            //    {
+            //        model.IsAuth = true;
+            //    }
+            //}
             //else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
             //{
             //    if (permissionModel.CompanyCodeList.Count > 0)

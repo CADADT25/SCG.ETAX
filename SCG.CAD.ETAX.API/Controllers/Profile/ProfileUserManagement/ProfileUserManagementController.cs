@@ -60,6 +60,14 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("GetAllAdmin")]
+        public IActionResult GetAllAdmin()
+        {
+            var result = repo.GET_LIST_ADMIN().Result;
+
+            return Ok(result);
+        }
 
     }
 }

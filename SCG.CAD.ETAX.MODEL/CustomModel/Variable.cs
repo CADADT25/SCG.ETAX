@@ -9,6 +9,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
     public class Variable
     {
         // Request status
+        public static string RequestStatusCode_WaitAdminCheck = "wait_admin_check";
         public static string RequestStatusCode_WaitManager = "wait_manager";
         public static string RequestStatusCode_WaitOfficer = "wait_officer";
         public static string RequestStatusCode_Reject = "reject";

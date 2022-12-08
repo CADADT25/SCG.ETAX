@@ -36,6 +36,36 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
+        public Response GET_LIST_ADMIN()
+        {
+            Response resp = new Response();
+            try
+            {
+                var roleAdmin = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == "ADMINISTRATOR_ID" && t.ConfigGlobalCategoryName == "ROLE").FirstOrDefault();
+                int adminId = roleAdmin != null ? int.Parse(roleAdmin.ConfigGlobalValue) : 0;
+                var getList = _dbContext.profileUserManagement.Where(t => t.LevelId == adminId).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
 
         public Response GET_DETAIL(int id)
         {
