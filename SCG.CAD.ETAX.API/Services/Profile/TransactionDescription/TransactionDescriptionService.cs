@@ -230,7 +230,9 @@ namespace SCG.CAD.ETAX.API.Services
                         update.PdfIndexingStatus = param.PdfIndexingStatus;
                         update.PdfIndexingDetail = param.PdfIndexingDetail;
                         update.PdfIndexingDateTime = param.PdfIndexingDateTime;
+                        update.PdfBeforeSignLocation = param.PdfBeforeSignLocation;
                         update.PdfSignLocation = param.PdfSignLocation;
+                        update.XmlBeforeSignLocation = param.XmlBeforeSignLocation;
                         update.XmlSignLocation = param.XmlSignLocation;
                         update.OutputXmlTransactionNo = param.OutputXmlTransactionNo;
                         update.OutputPdfTransactionNo = param.OutputPdfTransactionNo;
