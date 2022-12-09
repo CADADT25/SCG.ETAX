@@ -31,6 +31,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
             }
+            var configAdminTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=ROLE&name=ADMINISTRATOR_ID")).Result;
+            var configAdmin = new ConfigGlobal();
+            if (configAdminTask.STATUS)
+            {
+                configAdmin = JsonConvert.DeserializeObject<ConfigGlobal>(configAdminTask.OUTPUT_DATA.ToString());
+            }
+
 
             // check permission
             if (model.TempUser == model.ManagerEmail)
@@ -58,13 +65,20 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     model.IsAuth = true;
                 }
             }
-            //if (model.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
-            //{
-            //    if (model.TempUser == model.AdminCheckEmail)
-            //    {
-            //        model.IsAuth = true;
-            //    }
-            //}
+            if (permissionModel.Level == int.Parse(configAdmin.ConfigGlobalValue))
+            {
+                model.IsAdmin = true;
+                if (model.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
+                {
+                    if (permissionModel.CompanyCodeList.Count > 0)
+                    {
+                        if (permissionModel.CompanyCodeList.Where(t => t.Contains(model.CompanyCode)).Count() > 0)
+                        {
+                            model.IsAuth = true;
+                        }
+                    }
+                }
+            }
             //else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
             //{
             //    if (permissionModel.CompanyCodeList.Count > 0)
@@ -75,7 +89,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             //        }
             //    }
             //}
-            
+
             return View(model);
         }
         public async Task<JsonResult> RequestItem(string jsonString)

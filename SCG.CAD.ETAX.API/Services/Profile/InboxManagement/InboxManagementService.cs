@@ -137,6 +137,8 @@ namespace SCG.CAD.ETAX.API.Services
             try
             {
                 var requestList = _dbContext.request.Where(t =>
+                                                        (t.AdminCheck == search.EmailUser && t.StatusCode != Variable.RequestStatusCode_WaitAdminCheck && t.StatusCode != Variable.RequestStatusCode_Reject && t.StatusCode != Variable.RequestStatusCode_Complete && t.StatusCode != Variable.RequestStatusCode_Cancel)
+                                                        ||
                                                         (t.Manager == search.EmailUser && t.StatusCode != Variable.RequestStatusCode_WaitManager && t.StatusCode != Variable.RequestStatusCode_Reject && t.StatusCode != Variable.RequestStatusCode_Complete && t.StatusCode != Variable.RequestStatusCode_Cancel)
                                                         ||
                                                         (t.CreateBy == search.EmailUser && t.StatusCode != Variable.RequestStatusCode_Reject && t.StatusCode != Variable.RequestStatusCode_Complete && t.StatusCode != Variable.RequestStatusCode_Cancel)
@@ -238,6 +240,8 @@ namespace SCG.CAD.ETAX.API.Services
                     }
                 }
                 var requestList = _dbContext.request.Where(t =>
+                                                        (t.AdminCheck == search.EmailUser)
+                                                        ||
                                                         (t.Manager == search.EmailUser)
                                                         ||
                                                         (t.CreateBy == search.EmailUser)

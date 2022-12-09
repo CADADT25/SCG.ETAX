@@ -46,6 +46,7 @@ namespace SCG.CAD.ETAX.API.Services
 
                 var requester = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.CreateBy).FirstOrDefault();
                 var manager = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.Manager).FirstOrDefault();
+                var admincheck = _dbContext.profileUserManagement.Where(t => t.UserEmail == requestData.AdminCheck).FirstOrDefault();
                 ProfileUserManagement officer = null;
                 if (!string.IsNullOrEmpty(requestData.OfficerBy))
                 {
@@ -66,6 +67,8 @@ namespace SCG.CAD.ETAX.API.Services
                     ManagerName = manager.FirstName + " " + manager.LastName,
                     OfficerEmail = requestData.OfficerBy ?? "",
                     OfficerName = officer != null ? officer.FirstName + " " + officer.LastName : "",
+                    AdminCheckEmail = requestData.AdminCheck ?? "",
+                    AdminCheckName = admincheck != null ? admincheck.FirstName + " " + admincheck.LastName : "",
                     RequestHistorys = _dbContext.requestHistory.Where(t => t.RequestId == requestData.Id).ToList(),
                     RequestPaths = _dbContext.requestPath.Where(t => t.RequestId == requestData.Id).ToList()
                 };
@@ -248,7 +251,7 @@ namespace SCG.CAD.ETAX.API.Services
                         request.Id = Guid.NewGuid();
                         request.RequestNo = GetRunningNo(comCode);
                         request.RequestAction = param.Action;
-                        request.StatusCode = Variable.RequestStatusCode_WaitManager;
+                        request.StatusCode = Variable.RequestStatusCode_WaitAdminCheck;
                         request.CompanyCode = comCode;
                         request.Manager = param.Manager;
                         request.CreateDate = dtNow;
@@ -383,6 +386,11 @@ namespace SCG.CAD.ETAX.API.Services
                         request.RequestNo = GetRunningNo(comCode);
                         request.RequestAction = param.Action;
                         request.StatusCode = Variable.RequestStatusCode_WaitManager;
+                        if (request.RequestAction == Variable.RequestActionCode_ReSignNewCert || request.RequestAction == Variable.RequestActionCode_ReSignNewTrans)
+                        {
+                            request.StatusCode = Variable.RequestStatusCode_WaitAdminCheck;
+                        }
+                        
                         request.CompanyCode = comCode;
                         request.Manager = param.Manager;
                         request.CreateDate = dtNow;
@@ -450,8 +458,18 @@ namespace SCG.CAD.ETAX.API.Services
                     var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
                     var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
                     var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
-
-                    if (param.Action == "manager_approve")
+                    
+                    if (param.Action == "admin_approve")
+                    {
+                        request.StatusCode = Variable.RequestStatusCode_WaitManager;
+                        request.AdminCheck = param.User;
+                    }
+                    else if (param.Action == "admin_reject")
+                    {
+                        request.StatusCode = Variable.RequestStatusCode_Reject;
+                        request.AdminCheck = param.User;
+                    }
+                    else if(param.Action == "manager_approve")
                     {
                         request.StatusCode = Variable.RequestStatusCode_WaitOfficer;
                         request.ManagerAction = true;

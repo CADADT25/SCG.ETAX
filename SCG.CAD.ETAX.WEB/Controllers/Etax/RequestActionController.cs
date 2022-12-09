@@ -35,6 +35,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
             }
+            var configAdminTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=ROLE&name=ADMINISTRATOR_ID")).Result;
+            var configAdmin = new ConfigGlobal();
+            if (configAdminTask.STATUS)
+            {
+                configAdmin = JsonConvert.DeserializeObject<ConfigGlobal>(configAdminTask.OUTPUT_DATA.ToString());
+            }
 
             // check permission
             if (model.TempUser == model.ManagerEmail)
@@ -60,6 +66,20 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (model.TempUser == model.ManagerEmail)
                 {
                     model.IsAuth = true;
+                }
+            }
+            if (permissionModel.Level == int.Parse(configAdmin.ConfigGlobalValue))
+            {
+                model.IsAdmin = true;
+                if (model.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
+                {
+                    if (permissionModel.CompanyCodeList.Count > 0)
+                    {
+                        if (permissionModel.CompanyCodeList.Where(t => t.Contains(model.CompanyCode)).Count() > 0)
+                        {
+                            model.IsAuth = true;
+                        }
+                    }
                 }
             }
             //else if (model.StatusCode == Variable.RequestStatusCode_WaitOfficer)
@@ -105,6 +125,13 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     config = JsonConvert.DeserializeObject<ConfigGlobal>(configTask.OUTPUT_DATA.ToString());
                 }
+                var configAdminTask = Task.Run(() => ApiHelper.GetURI("api/ConfigGlobal/GetDetailByName?cate=ROLE&name=ADMINISTRATOR_ID")).Result;
+                var configAdmin = new ConfigGlobal();
+                if (configAdminTask.STATUS)
+                {
+                    configAdmin = JsonConvert.DeserializeObject<ConfigGlobal>(configAdminTask.OUTPUT_DATA.ToString());
+                }
+
                 // check permission
                 if (userEmail == requestModel.ManagerEmail)
                 {
@@ -131,6 +158,20 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         requestModel.IsAuth = true;
                     }
                 }
+                if (permissionModel.Level == int.Parse(configAdmin.ConfigGlobalValue))
+                {
+                    requestModel.IsAdmin = true;
+                    if (requestModel.StatusCode == Variable.RequestStatusCode_WaitAdminCheck)
+                    {
+                        if (permissionModel.CompanyCodeList.Count > 0)
+                        {
+                            if (permissionModel.CompanyCodeList.Where(t => t.Contains(requestModel.CompanyCode)).Count() > 0)
+                            {
+                                requestModel.IsAuth = true;
+                            }
+                        }
+                    }
+                }
                 //else if (requestModel.StatusCode == Variable.RequestStatusCode_WaitOfficer)
                 //{
                 //    if (permissionModel.CompanyCodeList.Count > 0)
@@ -148,7 +189,19 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     errorMsg = UtilityHelper.SetError(errorMsg, "You are not authorized.");
                 }
-                if (action == "manager_approve" || action == "manager_reject")
+
+                if (action == "admin_approve" || action == "admin_reject")
+                {
+                    if (requestModel.StatusCode == status && status == Variable.RequestStatusCode_WaitAdminCheck)
+                    {
+
+                    }
+                    else
+                    {
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Request status invalid.");
+                    }
+                }
+                else if (action == "manager_approve" || action == "manager_reject")
                 {
                     if (requestModel.StatusCode == status && status == Variable.RequestStatusCode_WaitManager)
                     {
@@ -298,9 +351,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     {
                         errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
                     }
-                    if (item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
+                    //if (item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
+                    if (item.XmlSignStatus != "Successful")
                     {
-                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                        //errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                        errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml still not signed.");
                     }
                 }
                 // unzip

@@ -313,7 +313,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                     errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
                 }
 
-                var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer };
+                var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer, Variable.RequestStatusCode_WaitAdminCheck };
                 var httpContentRequestItem = new StringContent(JsonConvert.SerializeObject(requestStatus), Encoding.UTF8, "application/json");
                 var resRequestItem = Task.Run(() => ApiHelper.PostURI("api/RequestItem/GetListByStatus", httpContentRequestItem)).Result;
                 var dataRequestItem = new List<RequestItem>();
@@ -369,9 +369,11 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         {
                             errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
                         }
+                        //if(item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
                         if(item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
                         {
-                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                            //errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
+                            errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml still not signed.");
                         }
                     }
                     // unzip
