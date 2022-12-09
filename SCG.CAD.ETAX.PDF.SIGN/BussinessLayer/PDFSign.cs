@@ -117,7 +117,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                     if (allfile != null && allfile.listFilePDFs != null)
                     {
-                        pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
+                        //pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE").ConfigGlobalValue;
                         if (allfile.listFilePDFs.Count > 0)
                         {
                             foreach (var file in allfile.listFilePDFs)
@@ -149,6 +149,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
 
                                         fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                                         pathoutbound = file.Outbound;
+                                        pathoutput = file.Outbound += "\\BeforeSign\\";
 
                                         billingdate = DateTime.Now;
                                         if (dataTran != null)
@@ -164,9 +165,10 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                                             pathoutbound += "\\Fail\\";
                                         }
                                         pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                                        pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                                         fullpath = pathoutbound + fileNameDest + fileType;
 
-                                        UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran);
+                                        UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
 
                                         Console.WriteLine("Start Export PDF file");
                                         log.InsertLog(pathlog, "Start Export PDF file");
@@ -182,7 +184,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                                         log.InsertLog(pathlog, "End Export PDF file");
                                         Console.WriteLine("Start Move file");
                                         log.InsertLog(pathlog, "Start Move file");
-                                        MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                        MoveFile(file.FullPath, fileNameDest + fileType, billingdate, pathoutput);
                                         Console.WriteLine("End Move file");
                                         log.InsertLog(pathlog, "End Move file");
                                     }
@@ -225,7 +227,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             return result;
         }
 
-        public bool UpdateStatusAfterSignPDF(APIResponseSignModel pdfsign, string billno, string pathfile, TransactionDescription dataTran)
+        public bool UpdateStatusAfterSignPDF(APIResponseSignModel pdfsign, string billno, string pathfile, TransactionDescription dataTran, string beforesignfilepath)
         {
             bool result = false;
             try
@@ -249,6 +251,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                     dataTran.EmailSendStatus = "Waiting";
                     dataTran.DmsAttachmentFileName = null;
                     dataTran.DmsAttachmentFilePath = null;
+                    dataTran.PdfBeforeSignLocation = beforesignfilepath;
                     if (pdfsign.resultCode.Equals("000"))
                     {
                         dataTran.PdfSignDateTime = DateTime.Now;
@@ -273,6 +276,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
                         dataTran.PdfSignLocation = pathfile;
+                        dataTran.PdfBeforeSignLocation = beforesignfilepath;
 
                         var json = JsonSerializer.Serialize(dataTran);
                         res = transactionDescription.Insert(json);
@@ -364,13 +368,12 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             }
         }
 
-        public bool MoveFile(string pathinput, string filename, DateTime billingdate)
+        public bool MoveFile(string pathinput, string filename, DateTime billingdate, string output)
         {
             bool result = false;
-            string output = "";
             try
             {
-                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                //output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 { 
                     using (FileStream fs = File.Create(pathinput)) { }

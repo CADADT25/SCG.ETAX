@@ -94,7 +94,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                                 {
                                     Console.WriteLine("ValidateFileText Fail");
                                     log.InsertLog(pathlog, "ValidateFileText Fail");
-                                    UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                                    UpdateDataTransaction(errormessage, classtextfile.BILLING_NO, "");
                                     nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
                                     GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail");
                                 }
@@ -118,7 +118,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                                     {
                                         Console.WriteLine("ValidateSchematron Fail");
                                         log.InsertLog(pathlog, "ValidateSchematron Fail");
-                                        UpdateDataTransaction(errormessage, classtextfile.BILLING_NO);
+                                        UpdateDataTransaction(errormessage, classtextfile.BILLING_NO, "");
                                         nametextfilefail = filename.Replace(".txt", "") + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
                                         GenTextFileFail(nametextfilefail, classtextfile, configXML.ConfigXmlGeneratorOutputPath + "\\Fail\\");
                                     }
@@ -522,7 +522,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     default:
                         break;
                 }
-                UpdateDataTransaction(errormessage, billingno);
+                UpdateDataTransaction(errormessage, billingno, pathoutbound + filename);
 
             }
             catch (Exception ex)
@@ -959,7 +959,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             }
         }
 
-        public bool UpdateDataTransaction(List<string> errormessage, string billingNo)
+        public bool UpdateDataTransaction(List<string> errormessage, string billingNo, string pathfile)
         {
             bool result = false;
             string errorText = "";
@@ -976,6 +976,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         dataTran.GenerateDateTime = DateTime.Now;
                         dataTran.GenerateDetail = "XML was generated completely";
                         dataTran.GenerateStatus = "Successful";
+                        dataTran.XmlBeforeSignLocation = pathfile;
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 

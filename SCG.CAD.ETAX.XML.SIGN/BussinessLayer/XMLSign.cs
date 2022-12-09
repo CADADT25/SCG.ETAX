@@ -53,7 +53,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                     if (allfile != null && allfile.listFileXMLs != null)
                     {
-                        pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
+                        //pathoutput = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE").ConfigGlobalValue;
                         if (allfile.listFileXMLs.Count > 0)
                         {
                             foreach (var file in allfile.listFileXMLs)
@@ -83,7 +83,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
 
                                         fileNameDest = file.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                                         pathoutbound = file.Outbound;
-
+                                        pathoutput = file.Outbound += "\\BeforeSign\\";
                                         billingdate = DateTime.Now;
                                         if (dataTran != null)
                                         {
@@ -98,9 +98,10 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                             pathoutbound += "\\Fail\\";
                                         }
                                         pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                                        pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                                         fullpath = pathoutbound + fileNameDest + fileType;
 
-                                        UpdateStatusAfterSignXML(resultXMLSign, file.Billno, fullpath, dataTran);
+                                        UpdateStatusAfterSignXML(resultXMLSign, file.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
 
                                         Console.WriteLine("Start Export XML file");
                                         log.InsertLog(pathlog, "Start Export XML file");
@@ -116,7 +117,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                                         log.InsertLog(pathlog, "End Export XML file");
                                         Console.WriteLine("Start Move file");
                                         log.InsertLog(pathlog, "Start Move file");
-                                        MoveFile(file.FullPath, file.FileName + fileType, billingdate);
+                                        MoveFile(file.FullPath, fileNameDest + fileType, billingdate, pathoutput);
                                         Console.WriteLine("End Move file");
                                         log.InsertLog(pathlog, "End Move file");
                                     }
@@ -228,13 +229,14 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             return tran;
         }
 
-        public bool UpdateStatusAfterSignXML(APIResponseSignModel xmlsign, string billno, string pathfile, TransactionDescription dataTran)
+        public bool UpdateStatusAfterSignXML(APIResponseSignModel xmlsign, string billno, string pathfile, TransactionDescription dataTran, string beforesignfilepath)
         {
             bool result = false;
             string jsondata = "";
             try
             {
                 Task<Response> res;
+                dataTran.XmlBeforeSignLocation = beforesignfilepath;
                 if (xmlsign.resultCode != null && xmlsign.resultCode.Equals("000"))
                 {
                     dataTran.XmlSignDateTime = DateTime.Now;
@@ -315,14 +317,12 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             }
         }
 
-        public bool MoveFile(string pathinput, string filename, DateTime billingdate)
+        public bool MoveFile(string pathinput, string filename, DateTime billingdate, string output)
         {
             bool result = false;
-            string output = "";
 
             try
             {
-                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                 if (!File.Exists(pathinput))
                 {
                     // This statement ensures that the file is created,  
