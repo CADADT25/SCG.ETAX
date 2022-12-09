@@ -12,5 +12,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string Action { get; set; }
         public string User { get; set; }
         public string? Reason { get; set; }
+        public string? PdfOutputPath { get; set; }
+        public string? XmlOutputPath { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string Manager { get; set; } = null!;
         public bool ManagerAction { get; set; }
         public string? AdminCheck { get; set; }
+        public string? PdfOutputPath { get; set; }
+        public string? XmlOutputPath { get; set; }
         public string CreateBy { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; } = null!;

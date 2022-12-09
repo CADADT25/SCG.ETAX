@@ -188,7 +188,7 @@
                     </div>
                 </div>
             }
-            else if (Model.IsManager)
+            else if (Model.IsManagerAction)
             {
                 <div id="steps">
                     <div class="step done" data-desc="Submit">
@@ -262,7 +262,7 @@
                     </div>
                 </div>
             }
-            else if (Model.IsManager)
+            else if (Model.IsManagerAction)
             {
                 <div id="steps">
                     <div class="step done" data-desc="Submit">
@@ -470,19 +470,41 @@ else
     <div class="modal fade" id="reason" tabindex="-1" aria-labelledby="reasonTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reasonTitle">Reason</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-floating mb-0">
-                                <textarea data-length="20" class="form-control char-textarea" id="textarea-reason" rows="3" placeholder="reason..." style="height: 100px"></textarea>
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonTitle">Reason</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-floating mb-0">
+                                    <textarea data-length="20" class="form-control char-textarea" id="textarea-reason" rows="3" placeholder="reason..." style="height: 100px"></textarea>
 
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" id="divDestinationXmlPath" style="display:none;">
+                            <div class="col-12">
+                                <div class="form-floating mb-0">
+                                    <select class="select2 form-control" id="destinationXmlPath">
+                                        <option value="" hidden>--- Please select Xml destination path ---</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="divDestinationPdfPath" style="display:none;">
+                            <div class="col-12">
+                                <div class="form-floating mb-0">
+                                    <select class="select2 form-control" id="destinationPdfPath">
+                                        <option value="" hidden>--- Please select Pdf destination path ---</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
+                
                 <div class="modal-footer">
                     <button type="button" onclick="fnViewReasonClose()" class="btn btn-primary " data-bs-dismiss="modal">Next</button>
                 </div>
@@ -490,6 +512,8 @@ else
         </div>
     </div>
 </div>
+
+
 
 
 <script type="text/javascript">
@@ -504,14 +528,93 @@ else
             fnSearchRequestPath();
         }
         fnSearchRequestHistory();
+        
+        if ("@Model.StatusCode" == "@Variable.RequestStatusCode_WaitAdminCheck"){
+            $('#destinationXmlPath').select2();
+            $('#destinationPdfPath').select2();
+            fnDropdownDestinationXmlPath();
+            fnDropdownDestinationPdfPath();
+        }
     });
 
     function fnViewReasonOpen() {
+        $("#divDestinationXmlPath").hide();
+        $("#divDestinationPdfPath").hide();
+        if ("@Model.StatusCode" == "@Variable.RequestStatusCode_WaitAdminCheck"){
+            if(r_txt=="approve"){
+                $("#divDestinationXmlPath").show();
+                if("@Model.RequestAction" == "@Variable.RequestActionCode_ReSignNewTrans"){
+                     $("#divDestinationPdfPath").show();
+                }
+            }
+        }
+        
         $("#reason").modal('show');
     }
     function fnViewReasonClose() {
-        $("#reason").modal('hide');
-        fnActionRequest(r_no, r_act, r_sta, r_txt);
+        
+        if ("@Model.StatusCode" == "@Variable.RequestStatusCode_WaitAdminCheck" && r_txt=="approve"){
+            if($("#destinationXmlPath").val() == ""){
+                fnAlertValidate("Please select destination path.");
+            }
+            else if ("@Model.RequestAction" == "@Variable.RequestActionCode_ReSignNewTrans" && $("#destinationPdfPath").val() == "") {
+                fnAlertValidate("Please select destination path.");
+            }
+            else
+            {
+                $("#reason").modal('hide');
+                fnActionRequest(r_no, r_act, r_sta, r_txt);
+            }
+        }
+        else
+        {
+            $("#reason").modal('hide');
+            fnActionRequest(r_no, r_act, r_sta, r_txt);
+        }
+        
+        
+    }
+
+    function fnDropdownDestinationXmlPath() {
+        //$.blockUI();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("List", "ConfigXmlSign")",
+            data: { companyCode : "@Model.CompanyCode" },
+            dataType: "json",
+            success: function (res) {
+                //var ret = $.parseJSON(res);
+                for(var i = 0; i < res.data.length; i++){
+                    $('<option>',
+                        {
+                            value: res.data[i].configXmlsignOutputPath != null ? res.data[i].configXmlsignOutputPath.replace(/\\/g, '\\\\'):"",
+                            text: res.data[i].configXmlsignOutputPath != null ? res.data[i].configXmlsignOutputPath.replace(/\\/g, '\\\\') : ""
+                        }
+                    ).html(res.data[i].configXmlsignOutputPath).appendTo("#destinationXmlPath");
+                }
+            }
+        });
+    }
+
+    function fnDropdownDestinationPdfPath() {
+        //$.blockUI();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("List", "ConfigPdfSign")",
+            data: { companyCode : "@Model.CompanyCode" },
+            dataType: "json",
+            success: function (res) {
+                //var ret = $.parseJSON(res);
+                for(var i = 0; i < res.data.length; i++){
+                    $('<option>',
+                        {
+                            value: res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath.replace(/\\/g, '\\\\'):"",
+                            text: res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath.replace(/\\/g, '\\\\') : ""
+                        }
+                    ).html(res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath : "").appendTo("#destinationPdfPath");
+                }
+            }
+        });
     }
 
     function fnSearchRequestHistory() {
@@ -770,6 +873,8 @@ else
             re_act = "manager_" + act;
         } else if (sta == "@Variable.RequestStatusCode_WaitOfficer") {
             re_act = "officer_" + act;
+        } else if (sta == "@Variable.RequestStatusCode_WaitAdminCheck") {
+            re_act = "admin_" + act;
         }
         r_no = no;
         r_act = re_act;
@@ -798,7 +903,7 @@ else
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Action", "RequestAction")",
-                    data: { jsonString: no, action: act, status: sta, reason: txt_reason },
+                    data: { jsonString: no, action: act, status: sta, reason: txt_reason, xmlPath: $("#destinationXmlPath").val(), pdfPath: $("#destinationPdfPath").val() },
                     dataType: "text",
                     success: function (res) {
                         var ret = $.parseJSON(res);

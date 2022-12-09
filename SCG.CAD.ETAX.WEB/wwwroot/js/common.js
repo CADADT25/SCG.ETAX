@@ -62,3 +62,14 @@ function fnSweetAlert_Success() {
     });
 }
 
+function fnAlertValidate(str) {
+    Swal.fire({
+        title: 'Warning',
+        text: str,
+        icon: 'warning',
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+    });
+}
+
