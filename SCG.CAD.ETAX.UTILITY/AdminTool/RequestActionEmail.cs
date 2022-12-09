@@ -61,7 +61,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                             foreach (var userAdmin in userAdminList)
                             {
                                 toEmail += userAdmin.UserEmail + ";";
-                                toName += request.ManagerName + ",";
+                                toName += userAdmin.FirstName + " " + userAdmin.LastName + ",";
                             }
                             if (toName != "")
                             {
@@ -237,7 +237,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     message.From = new MailAddress(fromEmailAddress);
                     foreach (var address in toEmail.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        message.To.Add(new MailAddress(toEmail));
+                        message.To.Add(new MailAddress(address));
                     }
                     //message.To.Add(new MailAddress(toEmail));
                     if (!string.IsNullOrEmpty(ccEmail))
