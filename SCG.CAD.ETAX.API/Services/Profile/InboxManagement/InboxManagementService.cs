@@ -99,12 +99,12 @@ namespace SCG.CAD.ETAX.API.Services
                         RequestAction = item.RequestAction,
                         RequestDate = item.CreateDate,
                         RequesterEmail = item.CreateBy,
-                        RequesterName = requester.FirstName + " " + requester.LastName,
+                        RequesterName = requester != null ? requester.FirstName + " " + requester.LastName : "",
                         RequestNo = item.RequestNo,
                         CompanyCode = item.CompanyCode,
                         StatusCode = item.StatusCode,
                         ManagerEmail = item.Manager,
-                        ManagerName = manager.FirstName + " " + manager.LastName
+                        ManagerName = manager != null ? manager.FirstName + " " + manager.LastName : ""
                     });
                 }
                 //if (getList.Count > 0)
@@ -182,12 +182,12 @@ namespace SCG.CAD.ETAX.API.Services
                         RequestAction = item.RequestAction,
                         RequestDate = item.CreateDate,
                         RequesterEmail = item.CreateBy,
-                        RequesterName = requester.FirstName + " " + requester.LastName,
+                        RequesterName = requester != null ?requester.FirstName + " " + requester.LastName : "",
                         RequestNo = item.RequestNo,
                         CompanyCode = item.CompanyCode,
                         StatusCode = item.StatusCode,
                         ManagerEmail = item.Manager,
-                        ManagerName = manager.FirstName + " " + manager.LastName
+                        ManagerName = manager != null ? manager.FirstName + " " + manager.LastName : ""
                     });
                 }
                 //if (getList.Count > 0)
@@ -287,12 +287,12 @@ namespace SCG.CAD.ETAX.API.Services
                         RequestAction = item.RequestAction,
                         RequestDate = item.CreateDate,
                         RequesterEmail = item.CreateBy,
-                        RequesterName = requester.FirstName + " " + requester.LastName,
+                        RequesterName = requester!= null ? requester.FirstName + " " + requester.LastName : "",
                         RequestNo = item.RequestNo,
                         CompanyCode = item.CompanyCode,
                         StatusCode = item.StatusCode,
                         ManagerEmail = item.Manager,
-                        ManagerName = manager.FirstName + " " + manager.LastName
+                        ManagerName = manager != null ? manager.FirstName + " " + manager.LastName : ""
                     });
                 }
                 //if (getList.Count > 0)

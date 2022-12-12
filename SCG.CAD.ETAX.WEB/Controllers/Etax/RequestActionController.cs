@@ -231,7 +231,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (string.IsNullOrEmpty(errorMsg))
                 {
                     var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = userEmail, Reason = reason, PdfOutputPath = pdfPath, XmlOutputPath = xmlPath };
-                    if (action == "manager_reject" || action == "officer_reject")
+                    if (action == "manager_reject" || action == "officer_reject" || action == "admin_approve")
                     {
                         // Action here
                         var httpActionRequest = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
@@ -240,7 +240,15 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                         {
                             ret.STATUS = true;
                             //Send mail
-                            Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + requestModel.RequestNo + "&action=reject"));
+                            if (action == "admin_approve")
+                            {
+                                Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + requestModel.RequestNo + "&action=admin_approve"));
+                            }
+                            else
+                            {
+                                Task.Run(() => ApiHelper.GetURI("api/SendEmail/SendEmailRequestByAction?requestNo=" + requestModel.RequestNo + "&action=reject"));
+                            }
+
                         }
                         else
                         {

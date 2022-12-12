@@ -79,6 +79,15 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                         }
 
                     }
+                    else if(action == "admin_approve")
+                    {
+                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
+                        subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
+
+                        toEmail = request.ManagerEmail;
+                        toName = request.ManagerName;
+                    }
                     else if (action == "reject" && string.IsNullOrEmpty(request.OfficerEmail))
                     {
                         //manager reject
