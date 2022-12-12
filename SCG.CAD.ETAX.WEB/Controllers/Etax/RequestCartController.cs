@@ -370,7 +370,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " sent to the Revenue Department.");
                         }
                         //if(item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
-                        if(item.PdfSignStatus != "Successful" || item.XmlSignStatus != "Successful")
+                        if(item.XmlSignStatus != "Successful")
                         {
                             //errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml or Pdf not signed.");
                             errorMsg = UtilityHelper.SetError(errorMsg, "Billing No. " + item.BillingNumber + " Xml still not signed.");
