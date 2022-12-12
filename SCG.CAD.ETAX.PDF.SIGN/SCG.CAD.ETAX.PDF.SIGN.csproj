@@ -36,4 +36,8 @@
     <ProjectReference Include="..\SCG.CAD.ETAX.MODEL\SCG.CAD.ETAX.MODEL.csproj" />
     <ProjectReference Include="..\SCG.CAD.ETAX.UTILITY\SCG.CAD.ETAX.UTILITY.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>
