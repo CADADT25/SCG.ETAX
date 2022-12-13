@@ -22,7 +22,7 @@ namespace SCG.CAD.ETAX.API.Controllers.APISign
         }
 
         [HttpPost]
-        [Route("PDFSign")]
+        [Route("SendPDFSign")]
         public IActionResult SendPDFSign(APISendFilePDFSignModel data)
         {
             var result = repo.SendPDFSign(data).Result;

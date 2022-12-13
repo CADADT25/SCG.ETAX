@@ -33,17 +33,17 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
         public string fontName { get; set; }
         //Font size 
         public int fontSize { get; set; }
-        //‘blod’, ‘plain’, ‘italic’ (default is plain)
-        public string fontType { get; set; }
-        //Space between line (default is 0)
-        public int fontSpace { get; set; }
-        //Hex color code e.g.tangerine yellow = ‘FFCC00’
-        public string fontColor { get; set; }
-        //file image for show on signature in format byte[] encode base64
-        public string imageEncode { get; set; }
-        //Reason of digital signature
-        public string reason { get; set; }
-        //Location of digital signature
-        public string location { get; set; }
+        ////‘blod’, ‘plain’, ‘italic’ (default is plain)
+        //public string fontType { get; set; }
+        ////Space between line (default is 0)
+        //public int fontSpace { get; set; }
+        ////Hex color code e.g.tangerine yellow = ‘FFCC00’
+        //public string fontColor { get; set; }
+        ////file image for show on signature in format byte[] encode base64
+        //public string imageEncode { get; set; }
+        ////Reason of digital signature
+        //public string reason { get; set; }
+        ////Location of digital signature
+        //public string location { get; set; }
     }
 }

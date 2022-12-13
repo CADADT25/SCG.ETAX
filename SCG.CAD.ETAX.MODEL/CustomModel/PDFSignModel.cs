@@ -1,13 +1,13 @@
 ﻿using SCG.CAD.ETAX.MODEL.etaxModel;
 
-namespace SCG.CAD.ETAX.PDF.SIGN.Models
+namespace SCG.CAD.ETAX.MODEL.CustomModel
 {
     public class PDFSignModel
     {
         public ConfigPdfSign configPdfSign { get; set; }
-        public List<ListFilePDF> listFilePDFs { get; set; }
+        public List<FilePDF> listFilePDFs { get; set; }
     }
-    public class ListFilePDF
+    public class FilePDF
     {
         public string FullPath { get; set; }
         public string FileName { get; set; }
@@ -15,5 +15,4 @@ namespace SCG.CAD.ETAX.PDF.SIGN.Models
         public string Outbound { get; set; }
         public string Billno { get; set; }
     }
-
 }
