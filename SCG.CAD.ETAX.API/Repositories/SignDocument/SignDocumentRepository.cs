@@ -65,7 +65,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 //// sign xml
                 // sign pdf
                 var configPdfSing = service.GetConfigPdfSign(req.CompanyCode);
-                if(configPdfSing == null)
+                if (configPdfSing == null)
                 {
                     resp.CODE = "103";
                     resp.MESSAGE = "CofigPdfSign is not found.";
@@ -73,7 +73,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
                 var pdfFileModel = new FilePDF();
                 pdfFileModel.FullPath = pdfPath;
-                pdfFileModel.FileName = req.PdfFileName;
+                pdfFileModel.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
                 pdfFileModel.Outbound = configPdfSing.ConfigPdfsignOutputPath;
                 pdfFileModel.Inbound = configPdfSing.ConfigPdfsignInputPath;
                 pdfFileModel.Billno = req.BillingNo;
@@ -81,13 +81,14 @@ namespace SCG.CAD.ETAX.API.Repositories
                 if (!resPdfSign.STATUS)
                 {
                     resp.CODE = "103";
-                    resp.MESSAGE = ""+resPdfSign.ERROR_MESSAGE;
+                    resp.MESSAGE = "" + resPdfSign.ERROR_MESSAGE;
                     return await Task.FromResult(resp);
                 }
                 else
                 {
-                    var resultPDFSign = (APIResponseSignModel)resPdfSign.OUTPUT_DATA;
-                    res.PdfSignedEncodeBase64 = resultPDFSign.fileSigned;
+                    //ดึงจาก transactionDesc ตรงๆ
+                    //var resultPDFSign = (APIResponseSignModel)resPdfSign.OUTPUT_DATA;
+                    //res.PdfSignedEncodeBase64 = resultPDFSign.fileSigned;
                 }
                 //// create billing if exists clear status to new
 
