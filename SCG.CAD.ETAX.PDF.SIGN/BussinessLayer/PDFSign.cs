@@ -35,6 +35,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
             FilePDF pdfDetail = new FilePDF();
             DirectoryInfo directoryInfo;
             string billno = "";
+            string comcode = "";
             string filename = "";
 
             try
@@ -61,17 +62,19 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         {
                             billno = filename.Substring(8);
                         }
+                        comcode = filename.Substring(0, 4);
                         pdfDetail = new FilePDF();
                         pdfDetail.FullPath = item.FullName;
                         pdfDetail.FileName = filename;
                         pdfDetail.Outbound = config.ConfigPdfsignOutputPath;
                         pdfDetail.Inbound = config.ConfigPdfsignInputPath;
                         pdfDetail.Billno = billno;
+                        pdfDetail.Comcode = comcode;
                         pDFSignModel.listFilePDFs.Add(pdfDetail);
                     }
                     result = pDFSignModel;
-                    Console.WriteLine("Path Found PDF : " + pDFSignModel.listFilePDFs.Count + " files");
-                    log.InsertLog(pathlog, "Path Found PDF : " + pDFSignModel.listFilePDFs.Count + " files");
+                    Console.WriteLine("Path Found : " + pathFolder + " PDF : " + pDFSignModel.listFilePDFs.Count + " files");
+                    log.InsertLog(pathlog, "Path Found : " + pathFolder + " PDF : " + pDFSignModel.listFilePDFs.Count + " files");
                 }
                 else
                 {
