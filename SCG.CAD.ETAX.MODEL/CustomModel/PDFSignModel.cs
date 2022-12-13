@@ -14,5 +14,6 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
         public string Inbound { get; set; }
         public string Outbound { get; set; }
         public string Billno { get; set; }
+        public string Comcode { get; set; }
     }
 }

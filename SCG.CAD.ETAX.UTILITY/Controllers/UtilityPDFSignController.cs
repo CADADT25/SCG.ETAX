@@ -12,7 +12,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         UtilityTransactionDescriptionController transactionDescription = new UtilityTransactionDescriptionController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         UtilityAPISignController signPDFController = new UtilityAPISignController();
-        LogHelper log = new LogHelper();
         LogicToolHelper logicToolHelper = new LogicToolHelper(); 
 
         public Response ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF)
@@ -28,7 +27,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             string pathlog = @"D:\log\";
             string namepathlog = "PATHLOGFILE_PDFSIGN";
             string batchname = "SCG.CAD.ETAX.PDF.SIGN";
-            string billno = "";
             string fileNameDest = "";
             string fullpath = "";
             string pathoutbound = "";
@@ -37,30 +35,30 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
             try
             {
-                res = GetConfigGlobal(pathlog);
+                res = GetConfigGlobal();
                 if (res.STATUS == false)
                 {
                     return res;
                 }
                 configGlobal = (List<ConfigGlobal>)res.OUTPUT_DATA;
 
-                res = GetPathlog(pathlog, namepathlog, configGlobal);
+                res = GetPathlog(namepathlog, configGlobal);
                 if (res.STATUS == false)
                 {
                     return res;
                 }
                 pathlog = res.OUTPUT_DATA.ToString();
                                 
-                res = GetTransactionDescription(pathlog);
+                res = GetTransactionDescription();
                 if (res.STATUS == false)
                 {
                     return res;
                 }
                 datatransactionDescription = (List<TransactionDescription>)res.OUTPUT_DATA;
 
-                billno = filePDF.Billno;
-                var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
-                if (!CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
+                var dataTran = transactionDescription.GetBilling(filePDF.Billno).Result.FirstOrDefault();
+                //var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
+                if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
                 {
                     res = PrepareSendPDFSign(configPdfSign, filePDF.FullPath);
                     if (res.STATUS)
@@ -69,43 +67,44 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
                         //res = SendFilePDFSign(dataSend);
                         res = SendFilePDFSignAsync(dataSend).Result;
+                        resultPDFSign = (APIResponseSignModel)res.OUTPUT_DATA;
+
+                        fileNameDest = filePDF.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        pathoutbound = filePDF.Outbound;
+                        pathoutput = filePDF.Outbound += "\\BeforeSign\\";
+
+                        billingdate = DateTime.Now;
+                        if (dataTran != null)
+                        {
+                            billingdate = dataTran.BillingDate ?? DateTime.Now;
+                        }
+                        if (resultPDFSign.resultCode == "000")
+                        {
+                            pathoutbound += "\\Success\\";
+                        }
+                        else
+                        {
+                            pathoutbound += "\\Fail\\";
+                        }
+                        pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                        pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                        fullpath = pathoutbound + fileNameDest + fileType;
+
+                        res = UpdateStatusAfterSignPDF(resultPDFSign, filePDF.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType, filePDF.Comcode);
                         if (res.STATUS)
                         {
-                            resultPDFSign = (APIResponseSignModel)res.OUTPUT_DATA;
-
-                            fileNameDest = filePDF.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                            pathoutbound = filePDF.Outbound;
-                            pathoutput = filePDF.Outbound += "\\BeforeSign\\";
-
-                            billingdate = DateTime.Now;
-                            if (dataTran != null)
+                            if (!string.IsNullOrEmpty(resultPDFSign.resultCode) && resultPDFSign.resultCode == "000")
                             {
-                                billingdate = dataTran.BillingDate ?? DateTime.Now;
-                            }
-                            if (resultPDFSign.resultCode == "000")
-                            {
-                                pathoutbound += "\\Success\\";
+                                res = ExportPDFAfterSign(resultPDFSign.fileSigned, pathoutbound, fullpath);
                             }
                             else
                             {
-                                pathoutbound += "\\Fail\\";
+                                res = ExportPDFAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
                             }
-                            pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                            pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                            fullpath = pathoutbound + fileNameDest + fileType;
 
-                            res = UpdateStatusAfterSignPDF(resultPDFSign, billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
                             if (res.STATUS)
                             {
-                                if (resultPDFSign.resultCode == "000")
-                                {
-                                    ExportPDFAfterSign(resultPDFSign.fileSigned, pathoutbound, fullpath);
-                                }
-                                else
-                                {
-                                    ExportPDFAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
-                                }
-                                res = MoveFile(filePDF.FullPath, fileNameDest + fileType, billingdate, pathoutput);
+                                res = logicToolHelper.MoveFile(filePDF.FullPath, fileNameDest + fileType, billingdate, pathoutput);
                             }
                         }
                     }
@@ -120,7 +119,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return res;
         }
 
-        public Response GetConfigGlobal(string pathlog)
+        public Response GetConfigGlobal()
         {
             Response res = new Response();
             try
@@ -135,7 +134,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             return res;
         }
-        public Response GetPathlog(string pathlog, string namepathlog, List<ConfigGlobal> configGlobal)
+        public Response GetPathlog(string namepathlog, List<ConfigGlobal> configGlobal)
         {
             Response res = new Response();
             try
@@ -150,7 +149,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             return res;
         }
-        public Response GetTransactionDescription(string pathlog)
+        public Response GetTransactionDescription()
         {
             Response res = new Response();
             try
@@ -161,27 +160,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             catch (Exception ex)
             {
                 res.STATUS = false;
-                res.ERROR_MESSAGE = ex.ToString();
-            }
-            return res;
-        }
-
-        public Response CheckCancelBillingOrSentRevenueDepartment(TransactionDescription datatran)
-        {
-            Response res = new Response();
-            res.STATUS = false;
-            try
-            {
-                if (datatran != null)
-                {
-                    if (logicToolHelper.ConvertIntToBoolean(datatran.CancelBilling) || logicToolHelper.ConvertIntToBoolean(datatran.SentRevenueDepartment))
-                    {
-                        res.STATUS = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
                 res.ERROR_MESSAGE = ex.ToString();
             }
             return res;
@@ -249,7 +227,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return res;
         }
 
-        public Response UpdateStatusAfterSignPDF(APIResponseSignModel pdfsign, string billno, string pathfile, TransactionDescription dataTran, string beforesignfilepath)
+        public Response UpdateStatusAfterSignPDF(APIResponseSignModel pdfsign, string billno, string pathfile, TransactionDescription dataTran, string beforesignfilepath, string comcode)
         {
             Response res = new Response();
             res.STATUS = false;
@@ -261,6 +239,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     dataTran = new TransactionDescription();
 
                     dataTran.BillingNumber = Convert.ToString(billno);
+                    dataTran.CompanyCode = comcode;
                     dataTran.CreateBy = "Batch";
                     dataTran.CreateDate = DateTime.Now;
                     dataTran.TypeInput = "Batch";
@@ -311,20 +290,40 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 }
                 else
                 {
-                    if (pdfsign.resultCode.Equals("000"))
+                    dataTran.CompanyCode = comcode;
+                    dataTran.PdfSignLocation = pathfile;
+                    dataTran.PdfBeforeSignLocation = beforesignfilepath;
+                    if (!string.IsNullOrEmpty(pdfsign.resultCode))
                     {
-                        dataTran.PdfSignDateTime = DateTime.Now;
-                        dataTran.PdfSignDetail = "PDF was signed completely";
-                        dataTran.PdfSignStatus = "Successful";
-                        dataTran.UpdateBy = "Batch";
-                        dataTran.UpdateDate = DateTime.Now;
-                        dataTran.PdfSignLocation = pathfile;
-
-                        var json = System.Text.Json.JsonSerializer.Serialize(dataTran);
-                        resp = transactionDescription.Update(json);
-                        if (resp.Result.MESSAGE == "Updated Success.")
+                        if (pdfsign.resultCode.Equals("000"))
                         {
-                            res.STATUS = true;
+                            dataTran.PdfSignDateTime = DateTime.Now;
+                            dataTran.PdfSignDetail = "PDF was signed completely";
+                            dataTran.PdfSignStatus = "Successful";
+                            dataTran.UpdateBy = "Batch";
+                            dataTran.UpdateDate = DateTime.Now;
+
+                            var json = System.Text.Json.JsonSerializer.Serialize(dataTran);
+                            resp = transactionDescription.Update(json);
+                            if (resp.Result.MESSAGE == "Updated Success.")
+                            {
+                                res.STATUS = true;
+                            }
+                        }
+                        else
+                        {
+                            dataTran.PdfSignDateTime = DateTime.Now;
+                            dataTran.PdfSignDetail = "PDF was signed Failed";
+                            dataTran.PdfSignStatus = "Failed";
+                            dataTran.UpdateBy = "Batch";
+                            dataTran.UpdateDate = DateTime.Now;
+
+                            var json = System.Text.Json.JsonSerializer.Serialize(dataTran);
+                            resp = transactionDescription.Update(json);
+                            if (resp.Result.MESSAGE == "Updated Success.")
+                            {
+                                res.STATUS = true;
+                            }
                         }
                     }
                     else
@@ -334,7 +333,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                         dataTran.PdfSignStatus = "Failed";
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
-                        dataTran.PdfSignLocation = pathfile;
 
                         var json = System.Text.Json.JsonSerializer.Serialize(dataTran);
                         resp = transactionDescription.Update(json);
@@ -377,40 +375,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return res;
         }
 
-        public Response MoveFile(string pathinput, string filename, DateTime billingdate, string output)
-        {
-            Response res = new Response();
-            res.STATUS = false;
-            try
-            {
-                //output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                if (!File.Exists(pathinput))
-                {
-                    using (FileStream fs = File.Create(pathinput)) { }
-                }
-                // Ensure that the target does not exist.  
-                if (!Directory.Exists(output))
-                {
-                    Directory.CreateDirectory(output);
-                }
-
-                // See if the original exists now.  
-                if (File.Exists(output + filename))
-                {
-                    File.Delete(output + filename);
-                }
-                // Move the file.  
-                File.Move(pathinput, output + filename);
-
-                res.STATUS = true;
-            }
-            catch (Exception ex)
-            {
-                res.ERROR_MESSAGE = ex.Message.ToString();
-            }
-            return res;
-        }
-
         public async Task<Response> SendFilePDFSignAsync(APISendFilePDFSignModel data)
         {
             Response res = new Response();
@@ -434,12 +398,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 }
                 res.OUTPUT_DATA = tran;
 
-                //result = signXMLController.SendFileXMLSign(json).Result;
-                ////result.fileSigned = null;
-                ////result.resultCode = "000";
-                ////result.resultDes = "Success";
-                //log.InsertLog(pathlog, "Result : " + result.resultDes);
-                //log.InsertLog(pathlog, "ResultCode : " + result.resultCode);
             }
             catch (Exception ex)
             {

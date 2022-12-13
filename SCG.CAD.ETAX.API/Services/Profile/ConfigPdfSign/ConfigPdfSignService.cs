@@ -139,8 +139,8 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigPdfsignOutputSource = param.ConfigPdfsignOutputSource;
                         update.ConfigPdfsignOutputType = param.ConfigPdfsignOutputType;
                         update.ConfigPdfsignOutputPath = param.ConfigPdfsignOutputPath;
-                        update.ConfigPdfsignHsmSerial = param.ConfigPdfsignHsmSerial;
-                        update.ConfigPdfsignKeyAlias = param.ConfigPdfsignKeyAlias;
+                        //update.ConfigPdfsignHsmSerial = param.ConfigPdfsignHsmSerial;
+                        //update.ConfigPdfsignKeyAlias = param.ConfigPdfsignKeyAlias;
                         update.ConfigPdfsignOneTime = param.ConfigPdfsignOneTime;
                         update.ConfigPdfsignAnyTime = param.ConfigPdfsignAnyTime;
                         update.ConfigPdfsignNextTime = param.ConfigPdfsignNextTime;
