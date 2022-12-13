@@ -579,7 +579,7 @@ else
         //$.blockUI();
         $.ajax({
             type: "POST",
-            url: "@Url.Action("List", "ConfigXmlSign")",
+            url: "@Url.Action("ListOnline", "ConfigXmlSign")",
             data: { companyCode : "@Model.CompanyCode" },
             dataType: "json",
             success: function (res) {
@@ -587,7 +587,7 @@ else
                 for(var i = 0; i < res.data.length; i++){
                     $('<option>',
                         {
-                            value: res.data[i].configXmlsignOutputPath != null ? res.data[i].configXmlsignOutputPath.replace(/\\/g, '\\\\'):"",
+                            value: res.data[i].configXmlsignNo,
                             text: res.data[i].configXmlsignOutputPath != null ? res.data[i].configXmlsignOutputPath.replace(/\\/g, '\\\\') : ""
                         }
                     ).html(res.data[i].configXmlsignOutputPath).appendTo("#destinationXmlPath");
@@ -600,7 +600,7 @@ else
         //$.blockUI();
         $.ajax({
             type: "POST",
-            url: "@Url.Action("List", "ConfigPdfSign")",
+            url: "@Url.Action("ListOnline", "ConfigPdfSign")",
             data: { companyCode : "@Model.CompanyCode" },
             dataType: "json",
             success: function (res) {
@@ -608,7 +608,7 @@ else
                 for(var i = 0; i < res.data.length; i++){
                     $('<option>',
                         {
-                            value: res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath.replace(/\\/g, '\\\\'):"",
+                            value: res.data[i].configPdfsignNo,
                             text: res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath.replace(/\\/g, '\\\\') : ""
                         }
                     ).html(res.data[i].configPdfsignOutputPath != null ? res.data[i].configPdfsignOutputPath : "").appendTo("#destinationPdfPath");

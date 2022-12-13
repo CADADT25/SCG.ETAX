@@ -96,7 +96,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> Action(string jsonString, string action, string status, string reason, string xmlPath, string pdfPath)
+        public async Task<JsonResult> Action(string jsonString, string action, string status, string reason, int xmlPath, int pdfPath)
         {
             Response ret = new Response();
             string requestNo = jsonString;
@@ -230,7 +230,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
                 if (string.IsNullOrEmpty(errorMsg))
                 {
-                    var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = userEmail, Reason = reason, PdfOutputPath = pdfPath, XmlOutputPath = xmlPath };
+                    var requestData = new RequestActionDataModel() { RequestId = requestModel.RequestId, Action = action, User = userEmail, Reason = reason, ConfigPdfSignNo = pdfPath, ConfigXmlSignNo = xmlPath };
                     if (action == "manager_reject" || action == "officer_reject" || action == "admin_approve")
                     {
                         // Action here

@@ -8,7 +8,8 @@ namespace SCG.CAD.ETAX.API.Repositories
 {
     public class SignDocumentRepository : ISignDocumentRepository
     {
-        UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
+        //UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
+        UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
 
         SignDocumentService service = new SignDocumentService();
         public async Task<Response> Sign(SignDocumentRequest req)
@@ -18,41 +19,41 @@ namespace SCG.CAD.ETAX.API.Repositories
             resp.STATUS = false;
             try
             {
-                ////check string empty
-                //if (string.IsNullOrEmpty(req.TextEncodeBase64))
-                //{
-                //    resp.CODE = "101";
-                //    resp.MESSAGE = "TextEncodeBase64 is required.";
-                //    return await Task.FromResult(resp);
-                //}
-                //if (string.IsNullOrEmpty(req.PdfEncodeBase64))
-                //{
-                //    resp.CODE = "101";
-                //    resp.MESSAGE = "PdfEncodeBase64 is required.";
-                //    return await Task.FromResult(resp);
-                //}
-                //// check text & pdf file
-                //// "ConfigGlobal/GetDetailByName?cate=REQEUST&name=RESIGN_NEWTRANS_TEMP_PATH";
-                //string tempPath = service.GetConfigGlobal("RESIGN_NEWTRANS_TEMP_PATH");
+                //check string empty
+                if (string.IsNullOrEmpty(req.TextEncodeBase64))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "TextEncodeBase64 is required.";
+                    return await Task.FromResult(resp);
+                }
+                if (string.IsNullOrEmpty(req.PdfEncodeBase64))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "PdfEncodeBase64 is required.";
+                    return await Task.FromResult(resp);
+                }
+                // check text & pdf file
+                // "ConfigGlobal/GetDetailByName?cate=REQEUST&name=RESIGN_NEWTRANS_TEMP_PATH";
+                string tempPath = service.GetConfigGlobal("RESIGN_NEWTRANS_TEMP_PATH");
 
-                //string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.TextFileName);
-                //string textPath = service.CreateFileFromBase64(req.TextEncodeBase64, textPathTemp);
+                string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.TextFileName);
+                string textPath = service.CreateFileFromBase64(req.TextEncodeBase64, textPathTemp);
 
-                //string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.PdfFileName);
-                //string pdfPath = service.CreateFileFromBase64(req.PdfEncodeBase64, pdfPathTemp);
+                string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.PdfFileName);
+                string pdfPath = service.CreateFileFromBase64(req.PdfEncodeBase64, pdfPathTemp);
 
-                //if (string.IsNullOrEmpty(textPath))
-                //{
-                //    resp.CODE = "103";
-                //    resp.MESSAGE = "TextEncodeBase64 unable to decode.";
-                //    return await Task.FromResult(resp);
-                //}
-                //if (string.IsNullOrEmpty(pdfPath))
-                //{
-                //    resp.CODE = "103";
-                //    resp.MESSAGE = "TextEncodeBase64 unable to decode.";
-                //    return await Task.FromResult(resp);
-                //}
+                if (string.IsNullOrEmpty(textPath))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "TextEncodeBase64 unable to decode.";
+                    return await Task.FromResult(resp);
+                }
+                if (string.IsNullOrEmpty(pdfPath))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "TextEncodeBase64 unable to decode.";
+                    return await Task.FromResult(resp);
+                }
                 //// gen xml
                 //var errorMsg = service.GenerateTextToXml(textPath);
                 //if (!string.IsNullOrEmpty(errorMsg))
@@ -62,8 +63,35 @@ namespace SCG.CAD.ETAX.API.Repositories
                 //    return await Task.FromResult(resp);
                 //}
                 //// sign xml
-                //// sign pdf
+                // sign pdf
+                var configPdfSing = service.GetConfigPdfSign(req.CompanyCode);
+                if(configPdfSing == null)
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "CofigPdfSign is not found.";
+                    return await Task.FromResult(resp);
+                }
+                var pdfFileModel = new FilePDF();
+                pdfFileModel.FullPath = pdfPath;
+                pdfFileModel.FileName = req.PdfFileName;
+                pdfFileModel.Outbound = configPdfSing.ConfigPdfsignOutputPath;
+                pdfFileModel.Inbound = configPdfSing.ConfigPdfsignInputPath;
+                pdfFileModel.Billno = req.BillingNo;
+                var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSing, pdfFileModel);
+                if (!resPdfSign.STATUS)
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = ""+resPdfSign.ERROR_MESSAGE;
+                    return await Task.FromResult(resp);
+                }
+                else
+                {
+                    var resultPDFSign = (APIResponseSignModel)resPdfSign.OUTPUT_DATA;
+                    res.PdfSignedEncodeBase64 = resultPDFSign.fileSigned;
+                }
                 //// create billing if exists clear status to new
+
+                resp.OUTPUT_DATA = res;
             }
             catch (Exception ex)
             {

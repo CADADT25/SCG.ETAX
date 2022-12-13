@@ -456,25 +456,27 @@ namespace SCG.CAD.ETAX.API.Services
                     List<TransactionDescription> resignTrans = new List<TransactionDescription>();
                     
                     var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
-                    //var destinationPdf = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
-                    //var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
+                    var configPdfSign = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignNo == request.ConfigPdfSignNo).FirstOrDefault();
+                    var configXmlSign = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignNo == request.ConfigXmlSignNo).FirstOrDefault();
                     //var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
                     //var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
 
-                    string xmlOutputPath = request.XmlOutputPath;
-                    string pdfOutputPath = request.PdfOutputPath;
+                    //string xmlOutputPath = request.XmlOutputPath;
+                    //string pdfOutputPath = request.PdfOutputPath;
 
                     if (param.Action == "admin_approve")
                     {
                         request.StatusCode = Variable.RequestStatusCode_WaitManager;
                         request.AdminCheck = param.User;
+                        //request.PdfOutputPath = param.PdfOutputPath;
+                        //request.XmlOutputPath = param.XmlOutputPath;
+                        request.ConfigPdfSignNo = param.ConfigPdfSignNo;
+                        request.ConfigXmlSignNo = param.ConfigXmlSignNo;
                     }
                     else if (param.Action == "admin_reject")
                     {
                         request.StatusCode = Variable.RequestStatusCode_Reject;
                         request.AdminCheck = param.User;
-                        request.PdfOutputPath = param.PdfOutputPath;
-                        request.XmlOutputPath = param.XmlOutputPath;
                     }
                     else if(param.Action == "manager_approve")
                     {
@@ -701,7 +703,7 @@ namespace SCG.CAD.ETAX.API.Services
                         try
                         {
                             string sourcePath = item;
-                            string destinationPath = System.IO.Path.Combine(pdfOutputPath, item.Split("\\").Last());
+                            string destinationPath = System.IO.Path.Combine(configPdfSign.ConfigPdfsignOutputPath, item.Split("\\").Last());
                             string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
                             if (!Directory.Exists(directoryPath))
@@ -722,7 +724,7 @@ namespace SCG.CAD.ETAX.API.Services
                         try
                         {
                             string sourcePath = item;
-                            string destinationPath = System.IO.Path.Combine(xmlOutputPath, item.Split("\\").Last());
+                            string destinationPath = System.IO.Path.Combine(configXmlSign.ConfigXmlsignOutputPath, item.Split("\\").Last());
                             string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
                             if (!Directory.Exists(directoryPath))
@@ -802,7 +804,7 @@ namespace SCG.CAD.ETAX.API.Services
                             //}
                             // Pdf new
                             string sourcePdfPath = System.IO.Path.Combine(tran.PdfBeforeSignLocation);
-                            string destinationPdfPath = System.IO.Path.Combine(pdfOutputPath, System.IO.Path.GetFileName(tran.PdfBeforeSignLocation));
+                            string destinationPdfPath = System.IO.Path.Combine(configPdfSign.ConfigPdfsignOutputPath, System.IO.Path.GetFileName(tran.PdfBeforeSignLocation));
                             string directoryPdfPath = System.IO.Path.GetDirectoryName(destinationPdfPath);
 
                             if (!Directory.Exists(directoryPdfPath))
@@ -813,7 +815,7 @@ namespace SCG.CAD.ETAX.API.Services
 
                             // Xml new
                             string sourcePath = System.IO.Path.Combine(tran.XmlBeforeSignLocation);
-                            string destinationPath = System.IO.Path.Combine(xmlOutputPath, System.IO.Path.GetFileName(tran.XmlBeforeSignLocation));
+                            string destinationPath = System.IO.Path.Combine(configXmlSign.ConfigXmlsignOutputPath, System.IO.Path.GetFileName(tran.XmlBeforeSignLocation));
                             string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
                             if (!Directory.Exists(directoryPath))
