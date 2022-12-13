@@ -1,4 +1,5 @@
-﻿using SCG.CAD.ETAX.MODEL.etaxModel;
+﻿using SCG.CAD.ETAX.MODEL;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System;
 using System.Collections.Generic;
@@ -319,5 +320,59 @@ namespace SCG.CAD.ETAX.UTILITY
             return result;
         }
 
+        public Response CheckCancelBillingOrSentRevenueDepartment(TransactionDescription datatran)
+        {
+            Response res = new Response();
+            res.STATUS = false;
+            try
+            {
+                if (datatran != null)
+                {
+                    if (ConvertIntToBoolean(datatran.CancelBilling) || ConvertIntToBoolean(datatran.SentRevenueDepartment))
+                    {
+                        res.STATUS = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ERROR_MESSAGE = ex.ToString();
+            }
+            return res;
+        }
+
+        public Response MoveFile(string pathinput, string filename, DateTime billingdate, string output)
+        {
+            Response res = new Response();
+            res.STATUS = false;
+            try
+            {
+                //output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                if (!File.Exists(pathinput))
+                {
+                    using (FileStream fs = File.Create(pathinput)) { }
+                }
+                // Ensure that the target does not exist.  
+                if (!Directory.Exists(output))
+                {
+                    Directory.CreateDirectory(output);
+                }
+
+                // See if the original exists now.  
+                if (File.Exists(output + filename))
+                {
+                    File.Delete(output + filename);
+                }
+                // Move the file.  
+                File.Move(pathinput, output + filename);
+
+                res.STATUS = true;
+            }
+            catch (Exception ex)
+            {
+                res.ERROR_MESSAGE = ex.Message.ToString();
+            }
+            return res;
+        }
     }
 }
