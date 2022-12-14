@@ -8,6 +8,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
 {
     public class SignDocumentResponse
     {
+        public string CompanyCode { get; set; }
+        public string BillingNo { get; set; }
         public string PdfSignedEncodeBase64 { get; set; }
         public string XmlSignedEncodeBase64 { get; set; }
     }

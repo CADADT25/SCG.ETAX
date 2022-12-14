@@ -2,6 +2,7 @@
 using SCG.CAD.ETAX.API.Services.SignDocument;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.MODEL.etaxModel;
+using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.API.Repositories
@@ -81,22 +82,43 @@ namespace SCG.CAD.ETAX.API.Repositories
                 if (!resPdfSign.STATUS)
                 {
                     resp.CODE = "103";
-                    resp.MESSAGE = "" + resPdfSign.ERROR_MESSAGE;
+                    resp.MESSAGE = "Unable to sign Pdf.";
+                    resp.ERROR_MESSAGE = resPdfSign.ERROR_MESSAGE;
                     return await Task.FromResult(resp);
                 }
                 else
                 {
-                    //ดึงจาก transactionDesc ตรงๆ
-                    //var resultPDFSign = (APIResponseSignModel)resPdfSign.OUTPUT_DATA;
-                    //res.PdfSignedEncodeBase64 = resultPDFSign.fileSigned;
+                    var tran = service.GetTransactionDescription(req.BillingNo);
+                    if(tran != null)
+                    {
+                        if(tran.PdfSignStatus == "Successful")
+                        {
+                            LogicToolHelper logicToolHelper = new LogicToolHelper();
+                            res.PdfSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.PdfSignLocation);
+                            resp.CODE = "00";
+                            resp.MESSAGE = "Success";
+                            resp.OUTPUT_DATA = res;
+                        }
+                        else
+                        {
+                            resp.CODE = "103";
+                            resp.MESSAGE = tran.PdfSignDetail;
+                            return await Task.FromResult(resp);
+                        }
+                    }
+                    else
+                    {
+                        resp.CODE = "103";
+                        resp.MESSAGE = "Billing is not found.";
+                    }
                 }
                 //// create billing if exists clear status to new
 
-                resp.OUTPUT_DATA = res;
+                
             }
             catch (Exception ex)
             {
-                resp.MESSAGE = ex.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
             return await Task.FromResult(resp);
         }

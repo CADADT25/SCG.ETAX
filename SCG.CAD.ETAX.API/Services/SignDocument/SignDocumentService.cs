@@ -71,6 +71,12 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         }
         //#endregion
 
+        public TransactionDescription GetTransactionDescription(string billingNo)
+        {
+            var data = _dbContext.transactionDescription.Where(t => t.BillingNumber == billingNo).FirstOrDefault();
+            return data;
+        }
+
         //#region Xml generator
         //public string GenerateTextToXml(string textfile)
         //{
