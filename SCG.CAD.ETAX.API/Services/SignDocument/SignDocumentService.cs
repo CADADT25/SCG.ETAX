@@ -66,7 +66,12 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //}
         public ConfigPdfSign GetConfigPdfSign(string companyCode)
         {
-            var data = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == companyCode && t.ConfigPdfsignOnlineRecordNumber != null).FirstOrDefault();
+            var data = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == companyCode && t.ConfigPdfsignOnlineRecordNumber != null && t.ConfigPdfsignOnlineRecordNumber != "").FirstOrDefault();
+            return data;
+        }
+        public ConfigXmlSign GetConfigXmlSign(string companyCode)
+        {
+            var data = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == companyCode && t.ConfigXmlsignOnlineRecordNumber != null && t.ConfigXmlsignOnlineRecordNumber != "").FirstOrDefault();
             return data;
         }
         //#endregion

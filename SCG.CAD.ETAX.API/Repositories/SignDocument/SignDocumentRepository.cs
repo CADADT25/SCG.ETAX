@@ -11,6 +11,7 @@ namespace SCG.CAD.ETAX.API.Repositories
     {
         //UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
         UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
+        UtilityXMLSignController utilityXMLSignController = new UtilityXMLSignController();
 
         SignDocumentService service = new SignDocumentService();
         public async Task<Response> Sign(SignDocumentRequest req)
@@ -63,22 +64,68 @@ namespace SCG.CAD.ETAX.API.Repositories
                 //    resp.MESSAGE = errorMsg;
                 //    return await Task.FromResult(resp);
                 //}
-                //// sign xml
+                // sign xml
+                var configXmlSign = service.GetConfigXmlSign(req.CompanyCode);
+                if (configXmlSign == null)
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "ConfigXmlSign is not found.";
+                    return await Task.FromResult(resp);
+                }
+                var xmlFileDetail = new FileXML();
+                xmlFileDetail.FullPath = "";
+                xmlFileDetail.FileName = "";
+                xmlFileDetail.Outbound = configXmlSign.ConfigXmlsignOutputPath;
+                xmlFileDetail.Inbound = configXmlSign.ConfigXmlsignInputPath;
+                xmlFileDetail.Billno = req.BillingNo;
+                var resXmlSign = utilityXMLSignController.ProcessXMLSign(configXmlSign, xmlFileDetail);
+                if (!resXmlSign.STATUS)
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "Unable to sign Xml.";
+                    resp.ERROR_MESSAGE = resXmlSign.ERROR_MESSAGE;
+                    return await Task.FromResult(resp);
+                }
+                else
+                {
+                    var tran = service.GetTransactionDescription(req.BillingNo);
+                    if (tran != null)
+                    {
+                        if (tran.XmlSignStatus == "Successful")
+                        {
+                            LogicToolHelper logicToolHelper = new LogicToolHelper();
+                            res.XmlSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.XmlSignStatus);
+                        }
+                        else
+                        {
+                            resp.CODE = "103";
+                            resp.MESSAGE = tran.XmlSignDetail;
+                            return await Task.FromResult(resp);
+                        }
+                    }
+                    else
+                    {
+                        resp.CODE = "103";
+                        resp.MESSAGE = "Billing is not found.";
+                        return await Task.FromResult(resp);
+                    }
+                }
+
                 // sign pdf
-                var configPdfSing = service.GetConfigPdfSign(req.CompanyCode);
-                if (configPdfSing == null)
+                var configPdfSign = service.GetConfigPdfSign(req.CompanyCode);
+                if (configPdfSign == null)
                 {
                     resp.CODE = "103";
                     resp.MESSAGE = "CofigPdfSign is not found.";
                     return await Task.FromResult(resp);
                 }
-                var pdfFileModel = new FilePDF();
-                pdfFileModel.FullPath = pdfPath;
-                pdfFileModel.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
-                pdfFileModel.Outbound = configPdfSing.ConfigPdfsignOutputPath;
-                pdfFileModel.Inbound = configPdfSing.ConfigPdfsignInputPath;
-                pdfFileModel.Billno = req.BillingNo;
-                var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSing, pdfFileModel);
+                var pdfFileDetail = new FilePDF();
+                pdfFileDetail.FullPath = pdfPath;
+                pdfFileDetail.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
+                pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
+                pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
+                pdfFileDetail.Billno = req.BillingNo;
+                var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSign, pdfFileDetail);
                 if (!resPdfSign.STATUS)
                 {
                     resp.CODE = "103";
@@ -97,6 +144,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                             res.PdfSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.PdfSignLocation);
                             resp.CODE = "00";
                             resp.MESSAGE = "Success";
+                            resp.STATUS = true;
                             resp.OUTPUT_DATA = res;
                         }
                         else
@@ -110,6 +158,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                     {
                         resp.CODE = "103";
                         resp.MESSAGE = "Billing is not found.";
+                        return await Task.FromResult(resp);
                     }
                 }
                 //// create billing if exists clear status to new
