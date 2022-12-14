@@ -89,6 +89,7 @@
             "orderMulti": false, // for disable multiple column at once
             "pageLength": 25,
             "scrollX": true,
+            order: [[1, 'asc']],
             "columnDefs": [{ "orderable": false, "targets": 0 }],
 
             "ajax": {
@@ -435,6 +436,8 @@
             "orderMulti": true, // for disable multiple column at once
             "pageLength": 25,
             "scrollX": true,
+            order: [[1, 'asc']],
+            "columnDefs": [{ "orderable": false, "targets": 0 }],
 
             "ajax":
                 {
@@ -462,7 +465,7 @@
                     data: "postingYear",
                     width: "5%",
                     render: function (data, type, row) {
-                        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                        return' '+ data +  ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] +');"> <i class="fas fa-pen text-primary"> </i> </a>';
                     }
                 },
                 {
