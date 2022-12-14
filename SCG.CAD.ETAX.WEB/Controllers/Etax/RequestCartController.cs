@@ -310,7 +310,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 if (dataRequestCart.Count() == 0)
                 {
-                    errorMsg = UtilityHelper.SetError(errorMsg, "Data not found in your cart.");
+                    errorMsg = UtilityHelper.SetError(errorMsg, "ท่านยังไม่ได้เลือก Bill ที่จะมาทำ "+UtilityHelper.GetActionName(action));
                 }
 
                 var requestStatus = new List<string>() { Variable.RequestStatusCode_WaitManager, Variable.RequestStatusCode_WaitOfficer, Variable.RequestStatusCode_WaitAdminCheck };
