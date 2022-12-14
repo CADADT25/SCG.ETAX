@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCG.CAD.ETAX.XML.GENERATOR.Models
+namespace SCG.CAD.ETAX.MODEL.CustomModel
 {
     public class CrossIndustryInvoice
     {

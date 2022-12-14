@@ -1,14 +1,10 @@
-﻿using SCG.CAD.ETAX.XML.GENERATOR.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SCG.CAD.ETAX.MODEL.CustomModel;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
-    public class Template_DebitCreditNote
+    public class Template_TaxInvoice
     {
         public XDocument XMLtemplate(CrossIndustryInvoice data)
         {
@@ -16,23 +12,20 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 StringBuilder sb = new StringBuilder();
-
-                sb.Append("<rsm:DebitCreditNote_CrossIndustryInvoice xmlns:rsm='urn:etda:uncefact:data:standard:DebitCreditNote_CrossIndustryInvoice:2'");
-                sb.Append("xmlns:ram='urn:etda:uncefact:data:standard:DebitCreditNote_ReusableAggregateBusinessInformationEntity:2'");
-                sb.Append("xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'");
-                sb.Append("xsi:schemaLocation='urn:etda:uncefact:data:standard:DebitCreditNote_CrossIndustryInvoice:2 file: ../data/standard/DebitCreditNote_CrossIndustryInvoice_2p0.xsd'>");
+                sb.Append("<rsm:TaxInvoice_CrossIndustryInvoice xmlns:rsm='urn:etda:uncefact:data:standard:TaxInvoice_CrossIndustryInvoice:2' ");
+                sb.Append("xmlns:ram='urn:etda:uncefact:data:standard:TaxInvoice_ReusableAggregateBusinessInformationEntity:2' ");
+                sb.Append("xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' ");
+                sb.Append("xsi:schemaLocation='urn:etda:uncefact:data:standard:TaxInvoice_CrossIndustryInvoice:2 file:../data /standard/TaxInvoice_CrossIndustryInvoice_2p0.xsd'> ");
                 sb.Append("<rsm:ExchangedDocumentContext>");
                 sb.Append("<ram:GuidelineSpecifiedDocumentContextParameter>");
-                sb.Append("<ram:ID schemeAgencyID='" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeAgencyID + "' schemeVersionID='" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID + "'>" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id + "</ram:ID>");
+                sb.Append("<ram:ID schemeAgencyID='"+ data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeAgencyID + "' schemeVersionID='" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID + "'>" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id + "</ram:ID>");
                 sb.Append("</ram:GuidelineSpecifiedDocumentContextParameter>");
                 sb.Append("</rsm:ExchangedDocumentContext>");
                 sb.Append("<rsm:ExchangedDocument>");
-                sb.Append("<ram:ID>" + data.exchangedDocument.id + "</ram:ID>");
+                sb.Append("<ram:ID>"+ data.exchangedDocument.id + "</ram:ID>");
                 sb.Append("<ram:Name>" + data.exchangedDocument.name + "</ram:Name>");
                 sb.Append("<ram:TypeCode>" + data.exchangedDocument.typeCode + "</ram:TypeCode>");
                 sb.Append("<ram:IssueDateTime>" + data.exchangedDocument.issueDateTime + "</ram:IssueDateTime>");
-                sb.Append("<ram:Purpose>" + data.exchangedDocument.purpose + "</ram:Purpose>");
-                sb.Append("<ram:PurposeCode>" + data.exchangedDocument.purposeCode + "</ram:PurposeCode>");
                 sb.Append("<ram:CreationDateTime>" + data.exchangedDocument.createionDateTime + "</ram:CreationDateTime>");
                 sb.Append("</rsm:ExchangedDocument>");
                 sb.Append("<rsm:SupplyChainTradeTransaction>");
@@ -47,7 +40,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 sb.Append("<ram:StreetName>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.streetName + "</ram:StreetName>");
                 sb.Append("<ram:CityName>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.cityName + "</ram:CityName>");
                 sb.Append("<ram:CitySubDivisionName>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.citySubDivisionName + "</ram:CitySubDivisionName>");
-                sb.Append("<ram:CountryID schemeID='3166-1alpha-2'>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID + "</ram:CountryID>");
+                sb.Append("<ram:CountryID schemeID='3166-1 alpha-2'>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countryID + "</ram:CountryID>");
                 sb.Append("<ram:CountrySubDivisionID>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.countrySubDivisionID + "</ram:CountrySubDivisionID>");
                 sb.Append("<ram:BuildingNumber>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.sellerTradeParty.postalTradeAddress.buildingNumber + "</ram:BuildingNumber>");
                 sb.Append("</ram:PostalTradeAddress>");
@@ -60,14 +53,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 sb.Append("<ram:PostalTradeAddress>");
                 sb.Append("<ram:PostcodeCode>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.postcodeCode + "</ram:PostcodeCode>");
                 sb.Append("<ram:LineOne>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.line1 + "</ram:LineOne>");
-                sb.Append("<ram:CountryID schemeID='3166-1alpha-2'>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID + "</ram:CountryID>");
+                sb.Append("<ram:CountryID schemeID='3166-1 alpha-2'>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID + "</ram:CountryID>");
                 sb.Append("</ram:PostalTradeAddress>");
                 sb.Append("</ram:BuyerTradeParty>");
-                sb.Append("<ram:AdditionalReferencedDocument>");
-                sb.Append("<ram:IssuerAssignedID>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issuerAssignedID + "</ram:IssuerAssignedID>");
-                sb.Append("<ram:IssueDateTime>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issueDateTime + "</ram:IssueDateTime>");
-                sb.Append("<ram:ReferenceTypeCode>" + data.supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode + "</ram:ReferenceTypeCode>");
-                sb.Append("</ram:AdditionalReferencedDocument>");
                 sb.Append("</ram:ApplicableHeaderTradeAgreement>");
                 sb.Append("<ram:ApplicableHeaderTradeDelivery/>");
                 sb.Append("<ram:ApplicableHeaderTradeSettlement>");
@@ -79,9 +67,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 sb.Append("<ram:CalculatedAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.applicableTradeTax.calculatedAmount + "</ram:CalculatedAmount>");
                 sb.Append("</ram:ApplicableTradeTax>");
                 sb.Append("<ram:SpecifiedTradeSettlementHeaderMonetarySummation>");
-                sb.Append("<ram:OriginalInformationAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.originalInformationAmount + "</ram:OriginalInformationAmount>");
                 sb.Append("<ram:LineTotalAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.lineTotalAmount + "</ram:LineTotalAmount>");
-                sb.Append("<ram:DifferenceInformationAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.differenceSalesInformationAmount + "</ram:DifferenceInformationAmount>");
                 sb.Append("<ram:AllowanceTotalAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.allowanceTotalAmount + "</ram:AllowanceTotalAmount>");
                 sb.Append("<ram:ChargeTotalAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.chargeTotalAmount + "</ram:ChargeTotalAmount>");
                 sb.Append("<ram:TaxBasisTotalAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxBasisTotalAmount + "</ram:TaxBasisTotalAmount>");
@@ -89,7 +75,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 sb.Append("<ram:GrandTotalAmount>" + data.supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.grandTotalAmount + "</ram:GrandTotalAmount>");
                 sb.Append("</ram:SpecifiedTradeSettlementHeaderMonetarySummation>");
                 sb.Append("</ram:ApplicableHeaderTradeSettlement>");
-                foreach (var item in data.supplyChainTradeTransaction.includedSupplyChainTradeLineItem)
+                foreach(var item in data.supplyChainTradeTransaction.includedSupplyChainTradeLineItem)
                 {
                     sb.Append("<ram:IncludedSupplyChainTradeLineItem>");
                     sb.Append("<ram:AssociatedDocumentLineDocument>");
@@ -97,6 +83,9 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     sb.Append("</ram:AssociatedDocumentLineDocument>");
                     sb.Append("<ram:SpecifiedTradeProduct>");
                     sb.Append("<ram:Name>" + item.specifiedTradeProduct.name + "</ram:Name>");
+                    sb.Append("<ram:InformationNote>");
+                    sb.Append("<ram:Subject>" + item.specifiedTradeProduct.informationNote.subject + "</ram:Subject>");
+                    sb.Append("</ram:InformationNote>");
                     sb.Append("</ram:SpecifiedTradeProduct>");
                     sb.Append("<ram:SpecifiedLineTradeAgreement>");
                     sb.Append("<ram:GrossPriceProductTradePrice>");
@@ -109,7 +98,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     sb.Append("<ram:SpecifiedLineTradeSettlement>");
                     sb.Append("<ram:SpecifiedTradeAllowanceCharge>");
                     sb.Append("<ram:ChargeIndicator>" + item.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator + "</ram:ChargeIndicator>");
-                    sb.Append("<ram:ActualAmount>" + item.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.actualAmount + "</ram:ActualAmount>");
+                    sb.Append("<ram:ActualAmount>" + item.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.actualAmount + "0</ram:ActualAmount>");
                     sb.Append("</ram:SpecifiedTradeAllowanceCharge>");
                     //sb.Append("<ram:SpecifiedTradeAllowanceCharge>");
                     //sb.Append("<ram:ChargeIndicator>" + item.specifiedLineTradeSettlement.specifiedTradeAllowanceCharge.chargeIndicator + "</ram:ChargeIndicator>");
@@ -123,12 +112,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                     sb.Append("</ram:SpecifiedLineTradeSettlement>");
                     sb.Append("</ram:IncludedSupplyChainTradeLineItem>");
                 }
+
                 sb.Append("</rsm:SupplyChainTradeTransaction>");
-                sb.Append("</rsm:DebitCreditNote_CrossIndustryInvoice>");
+                sb.Append("</rsm:TaxInvoice_CrossIndustryInvoice>");
 
                 TextReader textReader = new StringReader(sb.ToString());
                 xmlDocument = XDocument.Load(textReader);
-
 
             }
             catch (Exception ex)
@@ -138,4 +127,5 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             return xmlDocument;
         }
     }
+
 }

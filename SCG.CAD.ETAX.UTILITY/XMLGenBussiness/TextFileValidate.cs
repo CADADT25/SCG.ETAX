@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
+using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.MODEL.etaxModel;
-using SCG.CAD.ETAX.XML.GENERATOR.Models;
 
-namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
+namespace SCG.CAD.ETAX.UTILITY.XMLGenBussiness
 {
     public class TextFileValidate
     {
 
         public List<string> ValidateTextFile(TextFileSchematic textfile, List<ProfileBranch> profileBranches, List<ProductUnit> productUnit)
         {
-            LogicTool tool = new LogicTool();
+            LogicToolHelper tool = new LogicToolHelper();
             List<string> result = new List<string>();
             bool checkproductname = false;
             int countlengthpo = 0;

@@ -1,4 +1,4 @@
-﻿using SCG.CAD.ETAX.XML.GENERATOR.Models;
+﻿using SCG.CAD.ETAX.MODEL.CustomModel;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
