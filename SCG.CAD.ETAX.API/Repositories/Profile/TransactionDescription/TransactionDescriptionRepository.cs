@@ -208,6 +208,24 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> UPDATEPOSTINGYEAR(string listbillno, string updateby, string postingYear)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATEPOSTINGYEAR(listbillno, updateby,postingYear);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
         public async Task<Response> DOWNLOADFILE(string pathfile)
         {
             Response resp = new Response();

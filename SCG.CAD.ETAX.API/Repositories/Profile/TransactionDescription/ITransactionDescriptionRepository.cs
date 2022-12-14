@@ -13,6 +13,7 @@
         Task<Response> SEARCH(transactionSearchModel JsonString);
         Task<Response> SYNCSTATUSPDFSIGN(string listbillno, string updateby);
         Task<Response> SYNCSTATUSXMLSIGN(string listbillno, string updateby);
+        Task<Response> UPDATEPOSTINGYEAR(string listbillno, string updateby, string postingYear);
         Task<Response> DOWNLOADFILE(string pathfile);
         Task<Response> ExportData(transactionSearchModel JsonString);
 

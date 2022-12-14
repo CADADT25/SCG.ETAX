@@ -1,6 +1,7 @@
 ﻿
 
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using SCG.CAD.ETAX.UTILITY.AdminTool;
 
@@ -477,6 +478,38 @@ namespace SCG.CAD.ETAX.API.Services
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
                 resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
+
+        public Response UPDATEPOSTINGYEAR(string listbillno, string updateby, string postingYear)
+        {
+            Response resp = new Response();
+            UpdateXMLSign updateXMLSign = new UpdateXMLSign();
+            try
+            {
+                List<string> billno = new List<string>();
+                billno = listbillno.Split("|").ToList();
+                if (billno.Count > 0)
+                {
+                    var trans = _dbContext.transactionDescription.Where(t => billno.Contains(t.BillingNumber)).ToList();
+                    foreach(var tran in trans)
+                    {
+                        tran.PostingYear = postingYear;
+                        tran.UpdateDate = dtNow;
+                        tran.UpdateBy = updateby;
+
+                        _dbContext.Entry(tran).State = EntityState.Modified;
+                    }
+                    _dbContext.SaveChanges();
+                }
+                resp.STATUS = true;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update data fail.";
+                resp.ERROR_MESSAGE = ex.ToString();
             }
             return resp;
         }

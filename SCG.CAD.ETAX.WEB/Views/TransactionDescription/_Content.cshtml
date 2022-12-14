@@ -65,6 +65,13 @@
                                                 <a class="btn btn-primary btn-block" onclick="fnResendEmail();"> Resend Email </a>
                                             </div>
                                         </div>
+                                        <div class="col-xl-4 col-md-6 col-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="helpInputTop" style="color:transparent">Multi Edit Posting Year</label>
+                                                <br />
+                                                <a class="btn btn-primary btn-block" onclick="fnModalMultiPostingYearOpen();"> Multi Edit Posting Year </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +114,7 @@
                     <table class="table table-striped table-hover-animation table-hover" id="tbTransactionMain" style="font-size:12px;padding-bottom:15px;">
                         <thead style="font-size:10px">
                             <tr>
-                                <th></th>
+                                <th><input type="checkbox" id="dt-main-checkbox" onchange="fnMainCheckboxChange()"></th>
                                 <th style="font-size:10px">Billing No.</th>
                                 <th style="font-size:10px">Posting year</th>
                                 <th style="font-size:10px">Company</th>
@@ -135,4 +142,61 @@
 </div>
 
 
+
+<div class="vertical-modal-ex">
+    <!-- Modal -->
+    <div class="modal fade" id="multi-postingyear-modal" tabindex="-1" aria-labelledby="reasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonTitle">Posting Year</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-floating mb-0">
+                                    <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="4" class="form-control" id="multipostingyear-data">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="modal-footer">
+                    <button type="button" onclick="fnModalMultiPostingYearClose()" class="btn btn-primary " data-bs-dismiss="modal">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="vertical-modal-ex">
+    <!-- Modal -->
+    <div class="modal fade" id="postingyear-modal" tabindex="-1" aria-labelledby="reasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Posting Year</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-floating mb-0">
+                                    <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="4" class="form-control" id="postingyear-data">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" onclick="fnModalPostingYearClose()" class="btn btn-primary " data-bs-dismiss="modal">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

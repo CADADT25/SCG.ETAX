@@ -113,6 +113,14 @@ namespace SCG.CAD.ETAX.API.Controllers
             return Ok(result);
         }
         [HttpGet]
+        [Route("UpdatePostingYear")]
+        public IActionResult UpdatePostingYear(string listbillno, string updateby, string postingYear)
+        {
+            var result = repo.UPDATEPOSTINGYEAR(listbillno, updateby, postingYear).Result;
+
+            return Ok(result);
+        }
+        [HttpGet]
         [Route("DownloadFile")]
         public IActionResult DownloadFile(string pathfile)
         {

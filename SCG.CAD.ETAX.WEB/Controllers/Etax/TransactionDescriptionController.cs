@@ -451,6 +451,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(res);
         }
+        public async Task<JsonResult> EditPostingYear(List<string> listData, string updateby, string year)
+        {
+            Response res = new Response();
+            try
+            {
+                string listbill = "";
+                if (listData.Count > 0)
+                {
+                    foreach (var item in listData)
+                    {
+                        listbill = listbill + "|" + item;
+                    }
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/UpdatePostingYear?listbillno=" + listbill + "&updateby=" + updateby + "&postingYear=" + year));
+
+                    if (task.STATUS)
+                    {
+                        res.STATUS = true;
+                    }
+                    else
+                    {
+                        res.ERROR_MESSAGE = "Failed";
+                        if (!string.IsNullOrEmpty(task.MESSAGE))
+                        {
+                            res.ERROR_MESSAGE = task.MESSAGE;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+
+            return Json(res);
+        }
         public async Task<JsonResult> DownloadFile(string TransactionNo, string Type)
         {
             string pathFile = "";
