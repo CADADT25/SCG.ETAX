@@ -26,12 +26,12 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 Response res = new Response();
+                GetDataFromDataBase();
                 var allTextFile = ReadTextFile();
                 ConfigXmlGenerator configXML = new ConfigXmlGenerator();
                 ProfileCompany companydata = new ProfileCompany();
                 string nametextfilefail = "";
 
-                GetDataFromDataBase();
                 foreach (var textfile in allTextFile)
                 {
                     res = utilityXMLGenerateController.ProcessXMLGenerate(textfile);
