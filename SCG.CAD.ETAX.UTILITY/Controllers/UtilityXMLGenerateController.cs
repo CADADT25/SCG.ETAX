@@ -45,6 +45,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             TextFileValidate textFileValidate = new TextFileValidate();
             ConfigXmlGenerator configXML = new ConfigXmlGenerator();
             ProfileCompany companydata = new ProfileCompany();
+            List<string> listbillingno = new List<string>();
+            List<string> listerror = new List<string>();
 
             try
             {
@@ -118,6 +120,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                             var cs = (List<TextFileSchematic>)res.OUTPUT_DATA;
                             foreach (var classtextfile in cs)
                             {
+                                listbillingno.Add(classtextfile.BILLING_NO);
                                 var dataTran = transactionDescription.GetBilling(classtextfile.BILLING_NO).Result.FirstOrDefault();
                                 res = logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran);
                                 if (!res.STATUS)
@@ -154,6 +157,10 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                                         }
                                     }
                                 }
+                                if (!res.STATUS)
+                                {
+                                    listerror.Add("BillingNo : " + classtextfile.BILLING_NO + " | Error : " + res.ERROR_MESSAGE);
+                                }
                             }
                         }
                     }
@@ -169,6 +176,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 res.STATUS = false;
                 res.ERROR_MESSAGE = ex.Message;
             }
+            res.OUTPUT_DATA = listbillingno;
+            res.OUTPUT_ERROR = listerror;
             return res;
         }
 
