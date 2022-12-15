@@ -10,6 +10,7 @@ namespace SCG.CAD.ETAX.API.Repositories
     public class SignDocumentRepository : ISignDocumentRepository
     {
         //UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
+        UtilityXMLGenerateController utilityXMLGenerateController = new UtilityXMLGenerateController();
         UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
         UtilityXMLSignController utilityXMLSignController = new UtilityXMLSignController();
 
@@ -28,20 +29,33 @@ namespace SCG.CAD.ETAX.API.Repositories
                     resp.MESSAGE = "TextEncodeBase64 is required.";
                     return await Task.FromResult(resp);
                 }
+                if (string.IsNullOrEmpty(req.TextFileName))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "TextFileName is required.";
+                    return await Task.FromResult(resp);
+                }
+                if (string.IsNullOrEmpty(req.PdfFileName))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "PdfFileName is required.";
+                    return await Task.FromResult(resp);
+                }
                 if (string.IsNullOrEmpty(req.PdfEncodeBase64))
                 {
                     resp.CODE = "103";
                     resp.MESSAGE = "PdfEncodeBase64 is required.";
                     return await Task.FromResult(resp);
                 }
+              
+
                 // check text & pdf file
-                // "ConfigGlobal/GetDetailByName?cate=REQEUST&name=RESIGN_NEWTRANS_TEMP_PATH";
                 string tempPath = service.GetConfigGlobal("RESIGN_NEWTRANS_TEMP_PATH");
 
-                string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.TextFileName);
+                string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.TextFileName);
                 string textPath = service.CreateFileFromBase64(req.TextEncodeBase64, textPathTemp);
 
-                string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), req.PdfFileName);
+                string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.PdfFileName);
                 string pdfPath = service.CreateFileFromBase64(req.PdfEncodeBase64, pdfPathTemp);
 
                 if (string.IsNullOrEmpty(textPath))
@@ -56,16 +70,46 @@ namespace SCG.CAD.ETAX.API.Repositories
                     resp.MESSAGE = "TextEncodeBase64 unable to decode.";
                     return await Task.FromResult(resp);
                 }
-                //// gen xml
-                //var errorMsg = service.GenerateTextToXml(textPath);
-                //if (!string.IsNullOrEmpty(errorMsg))
-                //{
-                //    resp.CODE = "103";
-                //    resp.MESSAGE = errorMsg;
-                //    return await Task.FromResult(resp);
-                //}
+
+                // xml gen
+                string xmlBeforeSignPath = "";
+                TransactionDescription tran = null;
+                List<string> billings;
+                var resXmlGen = utilityXMLGenerateController.ProcessXMLGenerate(textPath);
+                if (!resXmlGen.STATUS)
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "Unable to sign Xml.";
+                    resp.ERROR_MESSAGE = resXmlGen.ERROR_MESSAGE;
+                    return await Task.FromResult(resp);
+                }
+                else
+                {
+                    billings = (List<string>)resXmlGen.OUTPUT_DATA;
+                    tran = service.GetTransactionDescription(billings[0]);
+                    if (tran != null)
+                    {
+                        if (tran.GenerateStatus == "Successful")
+                        {
+                            xmlBeforeSignPath = tran.XmlBeforeSignLocation;
+                        }
+                        else
+                        {
+                            resp.CODE = "103";
+                            resp.MESSAGE = tran.GenerateDetail;
+                            return await Task.FromResult(resp);
+                        }
+                    }
+                    else
+                    {
+                        resp.CODE = "103";
+                        resp.MESSAGE = "Billing is not found.";
+                        return await Task.FromResult(resp);
+                    }
+                }
+
                 // sign xml
-                var configXmlSign = service.GetConfigXmlSign(req.CompanyCode);
+                var configXmlSign = service.GetConfigXmlSign(tran.CompanyCode);
                 if (configXmlSign == null)
                 {
                     resp.CODE = "103";
@@ -73,11 +117,12 @@ namespace SCG.CAD.ETAX.API.Repositories
                     return await Task.FromResult(resp);
                 }
                 var xmlFileDetail = new FileXML();
-                xmlFileDetail.FullPath = "";
-                xmlFileDetail.FileName = "";
+                string xmlFileName = Path.GetFileName(xmlBeforeSignPath);
+                xmlFileDetail.FullPath = xmlBeforeSignPath;
+                xmlFileDetail.FileName = xmlFileName.Replace("." + xmlFileName.Split(".").Last(), "");
                 xmlFileDetail.Outbound = configXmlSign.ConfigXmlsignOutputPath;
                 xmlFileDetail.Inbound = configXmlSign.ConfigXmlsignInputPath;
-                xmlFileDetail.Billno = req.BillingNo;
+                xmlFileDetail.Billno = tran.BillingNumber;
                 var resXmlSign = utilityXMLSignController.ProcessXMLSign(configXmlSign, xmlFileDetail);
                 if (!resXmlSign.STATUS)
                 {
@@ -88,7 +133,8 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
                 else
                 {
-                    var tran = service.GetTransactionDescription(req.BillingNo);
+                    tran = null;
+                    tran = service.GetTransactionDescription(tran.BillingNumber);
                     if (tran != null)
                     {
                         if (tran.XmlSignStatus == "Successful")
@@ -112,7 +158,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
 
                 // sign pdf
-                var configPdfSign = service.GetConfigPdfSign(req.CompanyCode);
+                var configPdfSign = service.GetConfigPdfSign(tran.CompanyCode);
                 if (configPdfSign == null)
                 {
                     resp.CODE = "103";
@@ -124,7 +170,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 pdfFileDetail.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
                 pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
                 pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
-                pdfFileDetail.Billno = req.BillingNo;
+                pdfFileDetail.Billno = tran.BillingNumber;
                 var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSign, pdfFileDetail);
                 if (!resPdfSign.STATUS)
                 {
@@ -135,7 +181,8 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
                 else
                 {
-                    var tran = service.GetTransactionDescription(req.BillingNo);
+                    tran = null;
+                    tran = service.GetTransactionDescription(tran.BillingNumber);
                     if(tran != null)
                     {
                         if(tran.PdfSignStatus == "Successful")
