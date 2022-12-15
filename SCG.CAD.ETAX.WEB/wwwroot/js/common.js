@@ -32,11 +32,13 @@ function fnSweetAlert_DeleteSuccess() {
 }
 
 function fnSweetAlert_Error(error) {
+    
     Swal.fire({
         icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-        footer: '<a href="javascript:void();">' + error + '</a>'
+        title: 'Error',
+        text: error
+        //text: 'Something went wrong!',
+        //footer: '<a href="javascript:void();">' + error + '</a>'
     });
 }
 

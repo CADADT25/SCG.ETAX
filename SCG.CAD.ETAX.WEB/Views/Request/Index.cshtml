@@ -911,7 +911,8 @@ else
                             fnAfterActionRequestSuccess(no);
                         }
                         else {
-                            fnSweetAlert_Error(ret.message);
+                            fnAlertValidate(ret.message);
+                            //fnSweetAlert_Error(ret.message);
                         }
                         $.unblockUI();
                     }
