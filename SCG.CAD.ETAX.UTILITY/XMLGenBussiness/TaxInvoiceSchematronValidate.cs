@@ -1,10 +1,11 @@
-﻿using SCG.CAD.ETAX.XML.GENERATOR.Models;
+﻿using SCG.CAD.ETAX.MODEL.CustomModel;
+using SCG.CAD.ETAX.UTILITY;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
     public class TaxInvoiceSchematronValidate
     {
-        LogicTool Tool = new LogicTool();
+        LogicToolHelper Tool = new LogicToolHelper();
         public List<string> TaxInvoiceChackSchematron(CrossIndustryInvoice dataXml)
         {
             List<string> errormessage = new List<string>();

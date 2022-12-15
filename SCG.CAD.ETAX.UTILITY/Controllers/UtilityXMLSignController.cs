@@ -51,53 +51,62 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 pathlog = res.OUTPUT_DATA.ToString();
 
                 var dataTran = transactionDescription.GetBilling(filePDF.Billno).Result.FirstOrDefault();
-                if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
+                if(dataTran != null)
                 {
-                    res = PrepareSendXMLSign(configXmlSign, filePDF.FullPath, dataTran.DocType);
-                    dataSend = (APISendFileXMLSignModel)res.OUTPUT_DATA;
-                    if (dataSend != null)
+
+                    if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
                     {
-                        res = SendFileXMLSignAsync(dataSend).Result;
-                        resultXMLSign = (APIResponseSignModel)res.OUTPUT_DATA;
+                        res = PrepareSendXMLSign(configXmlSign, filePDF.FullPath, dataTran.DocType);
+                        dataSend = (APISendFileXMLSignModel)res.OUTPUT_DATA;
+                        if (dataSend != null)
+                        {
+                            res = SendFileXMLSignAsync(dataSend).Result;
+                            resultXMLSign = (APIResponseSignModel)res.OUTPUT_DATA;
 
-                        fileNameDest = filePDF.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        pathoutbound = filePDF.Outbound;
-                        pathoutput = filePDF.Outbound += "\\BeforeSign\\";
-                        billingdate = DateTime.Now;
-                        if (dataTran != null)
-                        {
-                            billingdate = dataTran.BillingDate ?? DateTime.Now;
-                        }
-                        if (resultXMLSign.resultCode == "000")
-                        {
-                            pathoutbound += "\\Success\\";
-                        }
-                        else
-                        {
-                            pathoutbound += "\\Fail\\";
-                        }
-                        pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                        pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                        fullpath = pathoutbound + fileNameDest + fileType;
-
-                        res = UpdateStatusAfterSignXML(resultXMLSign, filePDF.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
-                        if (res.STATUS)
-                        {
-                            if (!string.IsNullOrEmpty(resultXMLSign.resultCode) && resultXMLSign.resultCode == "000")
+                            fileNameDest = filePDF.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                            pathoutbound = filePDF.Outbound;
+                            pathoutput = filePDF.Outbound += "\\BeforeSign\\";
+                            billingdate = DateTime.Now;
+                            if (dataTran != null)
                             {
-                                res = ExportXMLAfterSign(resultXMLSign.fileSigned, pathoutbound, fullpath);
+                                billingdate = dataTran.BillingDate ?? DateTime.Now;
+                            }
+                            if (resultXMLSign.resultCode == "000")
+                            {
+                                pathoutbound += "\\Success\\";
                             }
                             else
                             {
-                                res = ExportXMLAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
+                                pathoutbound += "\\Fail\\";
                             }
+                            pathoutbound += billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                            pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
+                            fullpath = pathoutbound + fileNameDest + fileType;
 
+                            res = UpdateStatusAfterSignXML(resultXMLSign, filePDF.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
                             if (res.STATUS)
                             {
-                                res = logicToolHelper.MoveFile(filePDF.FullPath, fileNameDest + fileType, billingdate, pathoutput);
+                                if (!string.IsNullOrEmpty(resultXMLSign.resultCode) && resultXMLSign.resultCode == "000")
+                                {
+                                    res = ExportXMLAfterSign(resultXMLSign.fileSigned, pathoutbound, fullpath);
+                                }
+                                else
+                                {
+                                    res = ExportXMLAfterSign(dataSend.fileEncode, pathoutbound, fullpath);
+                                }
+
+                                if (res.STATUS)
+                                {
+                                    res = logicToolHelper.MoveFile(filePDF.FullPath, fileNameDest + fileType, billingdate, pathoutput);
+                                }
                             }
                         }
                     }
+                }
+                else
+                {
+                    res.STATUS = false;
+                    res.ERROR_MESSAGE = "Not Found Data Transaction";
                 }
             }
             catch (Exception ex)

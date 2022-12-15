@@ -441,12 +441,6 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                         updatetransaction.XmlCompressDetail = "XML was compressed file is completely";
                         updatetransaction.XmlCompressDateTime = DateTime.Now;
                         listupdatetransaction.Add(updatetransaction);
-
-                        Console.WriteLine("Start MoveFile Company : " + comcode);
-                        log.InsertLog(pathlog, "Start MoveFile Company : " + comcode);
-                        MoveFile(xmldata.FullPath, xmldata.FileName, updatetransaction.BillingDate ?? DateTime.Now);
-                        Console.WriteLine("End MoveFile Company : " + comcode);
-                        log.InsertLog(pathlog, "End MoveFile Company : " + comcode);
                     }
                 }
                 if (listupdatetransaction.Count > 0)
@@ -479,52 +473,6 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
             }
             catch (Exception ex)
             {
-                log.InsertLog(pathlog, "Exception : " + ex.ToString());
-            }
-            return result;
-        }
-
-        public bool MoveFile(string pathinput, string filename, DateTime billingdate)
-        {
-            bool result = false;
-            //pathinpput = @"c:\temp\MySample.txt";
-            //string pathoutput = @"D:\sign\backupfile\";
-            string output = "";
-            try
-            {
-                output = pathoutput + "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
-                if (!File.Exists(pathinput))
-                {
-                    // This statement ensures that the file is created,  
-                    // but the handle is not kept.  
-                    using (FileStream fs = File.Create(pathinput)) { }
-                }
-                // Ensure that the target does not exist.  
-                if (!Directory.Exists(output))
-                {
-                    Directory.CreateDirectory(output);
-                }
-                // Move the file.  
-                File.Move(pathinput, output + filename);
-                Console.WriteLine("{0} was moved to {1}.", pathinput, output);
-                log.InsertLog(pathlog, pathinput + " was moved to " + output);
-
-                // See if the original exists now.  
-                if (File.Exists(pathinput))
-                {
-                    Console.WriteLine("The original file still exists, which is unexpected.");
-                    log.InsertLog(pathlog, "The original file still exists, which is unexpected.");
-                }
-                else
-                {
-                    Console.WriteLine("The original file no longer exists, which is expected.");
-                    log.InsertLog(pathlog, "The original file no longer exists, which is expected.");
-                }
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("The process failed: {0}", ex.ToString());
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
             return result;

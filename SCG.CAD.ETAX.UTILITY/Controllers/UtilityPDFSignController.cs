@@ -24,7 +24,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             APIResponseSignModel resultPDFSign = new APIResponseSignModel();
 
             string pathoutput;
-            string pathlog = @"D:\log\";
             string namepathlog = "PATHLOGFILE_PDFSIGN";
             string batchname = "SCG.CAD.ETAX.PDF.SIGN";
             string fileNameDest = "";
@@ -41,14 +40,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     return res;
                 }
                 configGlobal = (List<ConfigGlobal>)res.OUTPUT_DATA;
-
-                res = GetPathlog(namepathlog, configGlobal);
-                if (res.STATUS == false)
-                {
-                    return res;
-                }
-                pathlog = res.OUTPUT_DATA.ToString();
-                                
+                                                
                 res = GetTransactionDescription();
                 if (res.STATUS == false)
                 {
@@ -58,7 +50,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
                 var dataTran = transactionDescription.GetBilling(filePDF.Billno).Result.FirstOrDefault();
                 //var dataTran = datatransactionDescription.FirstOrDefault(x => x.BillingNumber == billno);
-                if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
+                res = logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran);
+                if (!res.STATUS)
                 {
                     res = PrepareSendPDFSign(configPdfSign, filePDF.FullPath);
                     if (res.STATUS)
@@ -126,21 +119,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             {
                 res.STATUS = true;
                 res.OUTPUT_DATA = configGlobalController.List().Result;
-            }
-            catch (Exception ex)
-            {
-                res.STATUS = false;
-                res.ERROR_MESSAGE = ex.ToString();
-            }
-            return res;
-        }
-        public Response GetPathlog(string namepathlog, List<ConfigGlobal> configGlobal)
-        {
-            Response res = new Response();
-            try
-            {
-                res.STATUS = true;
-                res.OUTPUT_DATA = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;
             }
             catch (Exception ex)
             {

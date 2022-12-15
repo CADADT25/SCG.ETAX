@@ -106,8 +106,8 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         xMLSignModel.listFileXMLs.Add(xmlDetail);
                     }
                     result = xMLSignModel;
-                    Console.WriteLine("Path Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
-                    log.InsertLog(pathlog, "Path Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
+                    Console.WriteLine("Path : " + pathFolder + " Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
+                    log.InsertLog(pathlog, "Path : " + pathFolder + " Found PDF : " + xMLSignModel.listFileXMLs.Count + " files");
                 }
                 else
                 {
