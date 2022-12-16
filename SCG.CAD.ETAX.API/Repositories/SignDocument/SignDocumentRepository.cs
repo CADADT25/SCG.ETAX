@@ -158,7 +158,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                         else
                         {
                             resp.CODE = "103";
-                            resp.MESSAGE = tran.BillingNumber + " " + tran.XmlSignStatus + " " + tran.XmlSignDetail;
+                            resp.MESSAGE = tran.XmlSignDetail;
                             return await Task.FromResult(resp);
                         }
                     }
