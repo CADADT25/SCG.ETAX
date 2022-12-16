@@ -10,7 +10,7 @@ namespace SCG.CAD.ETAX.API.Controllers
         {
             repo = new SignDocumentRepository();
         }
-        [HttpGet]
+        [HttpPost]
         [Route("Sign")]
         public IActionResult Sign(SignDocumentRequest req)
         {

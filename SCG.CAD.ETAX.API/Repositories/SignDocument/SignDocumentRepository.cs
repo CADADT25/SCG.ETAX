@@ -35,10 +35,22 @@ namespace SCG.CAD.ETAX.API.Repositories
                     resp.MESSAGE = "TextFileName is required.";
                     return await Task.FromResult(resp);
                 }
+                if (req.TextFileName.Split(".").Last().ToLower() != "txt")
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "TextFileName is is invalid.";
+                    return await Task.FromResult(resp);
+                }
                 if (string.IsNullOrEmpty(req.PdfFileName))
                 {
                     resp.CODE = "103";
                     resp.MESSAGE = "PdfFileName is required.";
+                    return await Task.FromResult(resp);
+                }
+                if (req.PdfFileName.Split(".").Last().ToLower() != "pdf")
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "PdfFileName is is invalid.";
                     return await Task.FromResult(resp);
                 }
                 if (string.IsNullOrEmpty(req.PdfEncodeBase64))
@@ -67,7 +79,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 if (string.IsNullOrEmpty(pdfPath))
                 {
                     resp.CODE = "103";
-                    resp.MESSAGE = "TextEncodeBase64 unable to decode.";
+                    resp.MESSAGE = "PdfEncodeBase64 unable to decode.";
                     return await Task.FromResult(resp);
                 }
 
@@ -79,7 +91,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 if (!resXmlGen.STATUS)
                 {
                     resp.CODE = "103";
-                    resp.MESSAGE = "Unable to sign Xml.";
+                    resp.MESSAGE = "Unable to gen Xml.";
                     resp.ERROR_MESSAGE = resXmlGen.ERROR_MESSAGE;
                     return await Task.FromResult(resp);
                 }
@@ -117,6 +129,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                     return await Task.FromResult(resp);
                 }
                 var xmlFileDetail = new FileXML();
+                //xmlBeforeSignPath = @"D:\SAPCH\0100\Outbound\GENERATOR\Success\010020221180200162_20221215161230387.xml";
                 string xmlFileName = Path.GetFileName(xmlBeforeSignPath);
                 xmlFileDetail.FullPath = xmlBeforeSignPath;
                 xmlFileDetail.FileName = xmlFileName.Replace("." + xmlFileName.Split(".").Last(), "");
@@ -134,7 +147,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 else
                 {
                     tran = null;
-                    tran = service.GetTransactionDescription(tran.BillingNumber);
+                    tran = service.GetTransactionDescription(billings[0]);
                     if (tran != null)
                     {
                         if (tran.XmlSignStatus == "Successful")
@@ -182,7 +195,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 else
                 {
                     tran = null;
-                    tran = service.GetTransactionDescription(tran.BillingNumber);
+                    tran = service.GetTransactionDescription(billings[0]);
                     if(tran != null)
                     {
                         if(tran.PdfSignStatus == "Successful")
@@ -214,6 +227,7 @@ namespace SCG.CAD.ETAX.API.Repositories
             }
             catch (Exception ex)
             {
+                resp.CODE = "101";
                 resp.ERROR_MESSAGE = ex.Message.ToString();
             }
             return await Task.FromResult(resp);

@@ -1,9 +1,11 @@
-﻿using SCG.CAD.ETAX.MODEL;
+﻿using Microsoft.AspNetCore.Mvc;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -283,8 +285,19 @@ namespace SCG.CAD.ETAX.UTILITY
             Byte[] bytes = File.ReadAllBytes(filepath);
             result = Convert.ToBase64String(bytes);
             return result;
+            //var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+            //Byte[] bytes = ReadFully(stream);
+            //stream.Close();
+            //return Convert.ToBase64String(bytes);
         }
-
+        public static byte[] ReadFully(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
         public bool ConvertIntToBoolean(int? value)
         {
             // null = false
