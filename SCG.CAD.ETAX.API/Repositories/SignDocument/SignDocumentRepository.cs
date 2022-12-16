@@ -59,7 +59,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                     resp.MESSAGE = "PdfEncodeBase64 is required.";
                     return await Task.FromResult(resp);
                 }
-              
+
 
                 // check text & pdf file
                 string tempPath = service.GetConfigGlobal("RESIGN_NEWTRANS_TEMP_PATH");
@@ -135,7 +135,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 xmlFileDetail.FileName = xmlFileName.Replace("." + xmlFileName.Split(".").Last(), "");
                 xmlFileDetail.Outbound = configXmlSign.ConfigXmlsignOutputPath;
                 xmlFileDetail.Inbound = configXmlSign.ConfigXmlsignInputPath;
-                xmlFileDetail.Billno = tran.BillingNumber;
+                xmlFileDetail.Billno = billings[0];
                 var resXmlSign = utilityXMLSignController.ProcessXMLSign(configXmlSign, xmlFileDetail);
                 if (!resXmlSign.STATUS)
                 {
@@ -153,12 +153,12 @@ namespace SCG.CAD.ETAX.API.Repositories
                         if (tran.XmlSignStatus == "Successful")
                         {
                             LogicToolHelper logicToolHelper = new LogicToolHelper();
-                            res.XmlSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.XmlSignStatus);
+                            res.XmlSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.XmlSignLocation);
                         }
                         else
                         {
                             resp.CODE = "103";
-                            resp.MESSAGE = tran.XmlSignDetail;
+                            resp.MESSAGE = tran.BillingNumber + " " + tran.XmlSignStatus + " " + tran.XmlSignDetail;
                             return await Task.FromResult(resp);
                         }
                     }
@@ -183,7 +183,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 pdfFileDetail.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
                 pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
                 pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
-                pdfFileDetail.Billno = tran.BillingNumber;
+                pdfFileDetail.Billno = billings[0];
                 var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSign, pdfFileDetail);
                 if (!resPdfSign.STATUS)
                 {
@@ -196,9 +196,9 @@ namespace SCG.CAD.ETAX.API.Repositories
                 {
                     tran = null;
                     tran = service.GetTransactionDescription(billings[0]);
-                    if(tran != null)
+                    if (tran != null)
                     {
-                        if(tran.PdfSignStatus == "Successful")
+                        if (tran.PdfSignStatus == "Successful")
                         {
                             LogicToolHelper logicToolHelper = new LogicToolHelper();
                             res.PdfSignedEncodeBase64 = logicToolHelper.ConvertFileToEncodeBase64(tran.PdfSignLocation);
@@ -223,7 +223,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
                 //// create billing if exists clear status to new
 
-                
+
             }
             catch (Exception ex)
             {
