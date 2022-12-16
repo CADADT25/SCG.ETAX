@@ -324,6 +324,7 @@ namespace SCG.CAD.ETAX.UTILITY
 
         public Response CheckCancelBillingOrSentRevenueDepartment(TransactionDescription datatran)
         {
+            //If True is CancelBilling or SentRevenueDepartment
             Response res = new Response();
             res.STATUS = false;
             try

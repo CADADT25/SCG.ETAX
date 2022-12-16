@@ -97,24 +97,27 @@ namespace SCG.CAD.ETAX.PRINT.ZIP.BussinessLayer
             List<TransactionDescription> datatransaction = new List<TransactionDescription>();
             try
             {
-                        fileModel = new FileModel();
-                        fileModel.InputPath = config.ConfigMftsCompressPrintSettingInputPdf;
-                        fileModel.OutPath = config.ConfigMftsCompressPrintSettingOutputPdf;
-                        fileModel.CompanyCode = config.ConfigMftsCompressPrintSettingCompanyCode;
-                        fileModel.FileDetails = new List<Filedetail>();
-                        datatransaction = transactionDescription.Where(x => x.PdfSignStatus == "Successful" &&
-                                                                        x.PrintStatus == "Waiting" &&
-                                                                        x.CompanyCode == config.ConfigMftsCompressPrintSettingCompanyCode &&
-                                                                        x.Isactive == 1).ToList();
-                        foreach (var file in datatransaction)
-                        {
-                            Filedetail = new Filedetail();
-                            Filedetail.FilePath = file.PdfSignLocation;
-                            Filedetail.FileName = Path.GetFileName(file.PdfSignLocation);
-                            Filedetail.BillingNo = file.BillingNumber;
-                            fileModel.FileDetails.Add(Filedetail);
-                        }
-                        result.Add(fileModel);
+                fileModel = new FileModel();
+                fileModel.InputPath = config.ConfigMftsCompressPrintSettingInputPdf;
+                fileModel.OutPath = config.ConfigMftsCompressPrintSettingOutputPdf;
+                fileModel.CompanyCode = config.ConfigMftsCompressPrintSettingCompanyCode;
+                fileModel.FileDetails = new List<Filedetail>();
+                datatransaction = transactionDescription.Where(x => x.PdfSignStatus == "Successful" &&
+                                                                x.PrintStatus == "Waiting" &&
+                                                                x.CompanyCode == config.ConfigMftsCompressPrintSettingCompanyCode &&
+                                                                x.Isactive == 1).ToList();
+                foreach (var file in datatransaction)
+                {
+                    if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(file).STATUS)
+                    {
+                        Filedetail = new Filedetail();
+                        Filedetail.FilePath = file.PdfSignLocation;
+                        Filedetail.FileName = Path.GetFileName(file.PdfSignLocation);
+                        Filedetail.BillingNo = file.BillingNumber;
+                        fileModel.FileDetails.Add(Filedetail);
+                    }
+                }
+                result.Add(fileModel);
 
             }
             catch (Exception ex)

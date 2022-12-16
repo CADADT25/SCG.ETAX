@@ -106,11 +106,14 @@ namespace SCG.CAD.ETAX.XML.ZIP.BussinessLayer
                                                                 x.Isactive == 1).ToList();
                 foreach (var file in datatransaction)
                 {
-                    Filedetail = new Filedetail();
-                    Filedetail.FilePath = file.XmlSignLocation;
-                    Filedetail.FileName = Path.GetFileName(file.XmlSignLocation);
-                    Filedetail.BillingNo = file.BillingNumber;
-                    fileModel.FileDetails.Add(Filedetail);
+                    if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(file).STATUS)
+                    {
+                        Filedetail = new Filedetail();
+                        Filedetail.FilePath = file.XmlSignLocation;
+                        Filedetail.FileName = Path.GetFileName(file.XmlSignLocation);
+                        Filedetail.BillingNo = file.BillingNumber;
+                        fileModel.FileDetails.Add(Filedetail);
+                    }
                 }
                 result.Add(fileModel);
 
