@@ -10,9 +10,12 @@ namespace SCG.CAD.ETAX.API.Repositories
     public class SignDocumentRepository : ISignDocumentRepository
     {
         //UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
-        UtilityXMLGenerateController utilityXMLGenerateController = new UtilityXMLGenerateController();
+        //UtilityXMLGenerateController utilityXMLGenerateController = new UtilityXMLGenerateController();
+        //UtilityXMLSignController utilityXMLSignController = new UtilityXMLSignController();
         UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
-        UtilityXMLSignController utilityXMLSignController = new UtilityXMLSignController();
+        
+        XMLGenerateRepository xmlGenRepo = new XMLGenerateRepository();
+        XMLSignRepository xmlSignRepo = new XMLSignRepository();
 
         SignDocumentService service = new SignDocumentService();
         public async Task<Response> Sign(SignDocumentRequest req)
@@ -87,7 +90,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 string xmlBeforeSignPath = "";
                 TransactionDescription tran = null;
                 List<string> billings;
-                var resXmlGen = utilityXMLGenerateController.ProcessXMLGenerate(textPath);
+                var resXmlGen = xmlGenRepo.ProcessXMLGenerate(textPath).Result;
                 if (!resXmlGen.STATUS)
                 {
                     resp.CODE = "103";
@@ -136,7 +139,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 xmlFileDetail.Outbound = configXmlSign.ConfigXmlsignOutputPath;
                 xmlFileDetail.Inbound = configXmlSign.ConfigXmlsignInputPath;
                 xmlFileDetail.Billno = billings[0];
-                var resXmlSign = utilityXMLSignController.ProcessXMLSign(configXmlSign, xmlFileDetail);
+                var resXmlSign = xmlSignRepo.ProcessXMLSign(configXmlSign, xmlFileDetail).Result;
                 if (!resXmlSign.STATUS)
                 {
                     resp.CODE = "103";
