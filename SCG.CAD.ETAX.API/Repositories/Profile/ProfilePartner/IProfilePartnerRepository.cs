@@ -6,6 +6,7 @@
         Task<Response> GET_DETAIL(int id);
         Task<Response> INSERT(ProfilePartner param);
         Task<Response> UPDATE(ProfilePartner param);
+        Task<Response> IMPORT(List<ProfilePartner> param);
         Task<Response> DELETE(ProfilePartner param);
     }
 }

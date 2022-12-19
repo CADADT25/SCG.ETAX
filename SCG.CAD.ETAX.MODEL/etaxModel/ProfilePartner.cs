@@ -20,10 +20,10 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ShipToCcemail { get; set; }
         public string? PartnerEmailType { get; set; }
         public int? EmailTemplateNo { get; set; }
-        public string CreateBy { get; set; } = null!;
-        public DateTime CreateDate { get; set; }
-        public string UpdateBy { get; set; } = null!;
-        public DateTime UpdateDate { get; set; }
+        public string? CreateBy { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string? UpdateBy { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public int Isactive { get; set; }
         public int? StatusPrint { get; set; }
         public int? StatusEmail { get; set; }

@@ -59,5 +59,14 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("Import")]
+        public IActionResult Import(List<ProfilePartner> param)
+        {
+            var result = repo.IMPORT(param).Result;
+
+            return Ok(result);
+        }
     }
 }

@@ -79,6 +79,24 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> IMPORT(List<ProfilePartner> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.IMPORT(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> DELETE(ProfilePartner param)
         {
