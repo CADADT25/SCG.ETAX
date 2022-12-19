@@ -6,6 +6,7 @@
         Task<Response> GET_DETAIL(int id);
         Task<Response> INSERT(ProfileCustomer param);
         Task<Response> UPDATE(ProfileCustomer param);
+        Task<Response> IMPORT(List<ProfileCustomer> param);
         Task<Response> DELETE(ProfileCustomer param);
     }
 }

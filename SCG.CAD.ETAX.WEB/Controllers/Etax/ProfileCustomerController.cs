@@ -228,8 +228,17 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             try
             {
                 var request = JsonConvert.DeserializeObject<List<ProfileCustomer>>(jsonString);
-                resp.STATUS = true;
-                resp.OUTPUT_DATA = jsonString;
+                var data = new List<ProfileCustomer>();
+                foreach (var item in request)
+                {
+                    item.UpdateBy = HttpContext.Session.GetString("userMail");
+                    item.CustomerEmail = item.CustomerEmail != null ? item.CustomerEmail.Replace("|", ",") : "";
+                    item.CustomerCcemail = item.CustomerCcemail != null ? item.CustomerCcemail.Replace("|", ",") : "";
+                    data.Add(item);
+                }
+                string jsonData = JsonConvert.SerializeObject(data);
+                var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                resp = await Task.Run(() => ApiHelper.PostURI("api/ProfileCustomer/Import", httpContent));
             }
             catch(Exception ex)
             {

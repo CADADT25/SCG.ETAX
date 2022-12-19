@@ -141,6 +141,72 @@
             }
             return resp;
         }
+        public Response IMPORT(List<ProfileCustomer> paramList)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    foreach(var param in paramList)
+                    {
+                        var data = _dbContext.profileCustomer.Where(x => x.CustomerProfileNo == param.CustomerProfileNo).FirstOrDefault();
+                        if (data != null)
+                        {
+                            data.CustomerId = param.CustomerId;
+                            data.CompanyCode = param.CompanyCode;
+                            data.OutputType = param.OutputType;
+                            data.NumberOfCopies = param.NumberOfCopies;
+                            data.CustomerEmail = param.CustomerEmail;
+                            data.CustomerCcemail = param.CustomerCcemail;
+                            data.EmailType = param.EmailType;
+                            data.Isactive = param.Isactive;
+                            data.EmailTemplateNo = param.EmailTemplateNo;
+                            data.StatusPrint = param.StatusPrint;
+                            data.StatusEmail = param.StatusEmail;
+                            data.StatusSignPdf = param.StatusSignPdf;
+                            data.StatusSignXml = param.StatusSignXml;
+
+                            data.UpdateBy = param.UpdateBy;
+                            data.UpdateDate = dtNow;
+                            _dbContext.profileCustomer.Update(data);
+                        }
+                        else
+                        {
+                            data = new ProfileCustomer();
+                            data.CustomerId = param.CustomerId;
+                            data.CompanyCode = param.CompanyCode;
+                            data.OutputType = param.OutputType;
+                            data.NumberOfCopies = param.NumberOfCopies;
+                            data.CustomerEmail = param.CustomerEmail;
+                            data.CustomerCcemail = param.CustomerCcemail;
+                            data.EmailType = param.EmailType;
+                            data.Isactive = param.Isactive;
+                            data.EmailTemplateNo = param.EmailTemplateNo;
+                            data.StatusPrint = param.StatusPrint;
+                            data.StatusEmail = param.StatusEmail;
+                            data.StatusSignPdf = param.StatusSignPdf;
+                            data.StatusSignXml = param.StatusSignXml;
+
+                            data.CreateBy = param.UpdateBy;
+                            data.CreateDate = dtNow;
+                            data.UpdateBy = param.UpdateBy;
+                            data.UpdateDate = dtNow;
+                            _dbContext.profileCustomer.Add(data);
+                        }
+                    }
+                    _dbContext.SaveChanges();
+                    resp.STATUS = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Import faild.";
+                resp.ERROR_MESSAGE = ex.ToString();
+            }
+            return resp;
+        }
 
         public Response DELETE(ProfileCustomer param)
         {
