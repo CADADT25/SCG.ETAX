@@ -477,7 +477,6 @@ namespace SCG.CAD.ETAX.API.Services
             Response res = new Response();
             TransactionDescription data = new TransactionDescription();
             List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
-            Response resp;
             bool insert = false;
             double ic = 0;
             string imageDocType = "";
@@ -629,15 +628,11 @@ namespace SCG.CAD.ETAX.API.Services
 
                 if (insert == true)
                 {
-                    resp = transactionDescriptionService.INSERT(data);
+                    res = transactionDescriptionService.INSERT(data);
                 }
                 else
                 {
-                    resp = transactionDescriptionService.UPDATE(data);
-                }
-                if (resp.MESSAGE == "Updated Success." || resp.MESSAGE == "Insert success.")
-                {
-                    res.STATUS = true;
+                    res = transactionDescriptionService.UPDATE(data);
                 }
             }
             catch (Exception ex)
@@ -653,7 +648,6 @@ namespace SCG.CAD.ETAX.API.Services
             Response res = new Response();
             res.STATUS = false;
             string errorText = "";
-            Response resp;
             TransactionDescription dataTran = new TransactionDescription();
             List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
             try
@@ -673,11 +667,7 @@ namespace SCG.CAD.ETAX.API.Services
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 
-                        resp = transactionDescriptionService.UPDATE(dataTran);
-                        if (resp.MESSAGE == "Updated Success.")
-                        {
-                            res.STATUS = true;
-                        }
+                        res = transactionDescriptionService.UPDATE(dataTran);
                     }
                     else
                     {
@@ -692,11 +682,7 @@ namespace SCG.CAD.ETAX.API.Services
                         dataTran.UpdateBy = "Batch";
                         dataTran.UpdateDate = DateTime.Now;
 
-                        resp = transactionDescriptionService.UPDATE(dataTran);
-                        if (resp.MESSAGE == "Updated Success.")
-                        {
-                            res.STATUS = true;
-                        }
+                        res = transactionDescriptionService.UPDATE(dataTran);
                     }
                 }
             }
@@ -1044,6 +1030,7 @@ namespace SCG.CAD.ETAX.API.Services
                 TextWriter filestream = new StreamWriter(fullpath);
                 //TextWriter filestream = new StreamWriter(@"C:\Code_Dev\output.xml");
                 xml.Save(filestream);
+                filestream.Close();
                 res.STATUS = true;
             }
             catch (Exception ex)
