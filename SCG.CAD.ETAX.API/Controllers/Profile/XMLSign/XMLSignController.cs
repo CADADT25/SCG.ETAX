@@ -1,4 +1,6 @@
-﻿namespace SCG.CAD.ETAX.API.Controllers
+﻿using SCG.CAD.ETAX.MODEL.CustomModel;
+
+namespace SCG.CAD.ETAX.API.Controllers
 {
     public class XMLSignController : BaseController
     {
