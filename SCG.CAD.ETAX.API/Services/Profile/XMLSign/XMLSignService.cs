@@ -17,7 +17,7 @@ namespace SCG.CAD.ETAX.API.Services
         string namepathlog = "PATHLOGFILE_XMLSIGN";
         string batchname = "SCG.CAD.ETAX.XML.SIGN";
 
-        public Response ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML filePDF)
+        public Response ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
         {
             Response res = new Response();
             APISendFileXMLSignModel dataSend = new APISendFileXMLSignModel();
@@ -37,7 +37,7 @@ namespace SCG.CAD.ETAX.API.Services
                 }
                 configGlobal = (List<ConfigGlobal>)res.OUTPUT_DATA;
 
-                res = transactionDescriptionService.GET_BILLING(filePDF.Billno);
+                res = transactionDescriptionService.GET_BILLING(fileXML.Billno);
                 if (res.STATUS)
                 {
                     var dataTran = ((List<TransactionDescription>)res.OUTPUT_DATA).FirstOrDefault();
@@ -46,16 +46,16 @@ namespace SCG.CAD.ETAX.API.Services
 
                         if (!logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran).STATUS)
                         {
-                            res = PrepareSendXMLSign(configXmlSign, filePDF.FullPath, dataTran.DocType);
+                            res = PrepareSendXMLSign(configXmlSign, fileXML.FullPath, dataTran.DocType);
                             dataSend = (APISendFileXMLSignModel)res.OUTPUT_DATA;
                             if (dataSend != null)
                             {
                                 res = SendFileXMLSignAsync(dataSend).Result;
                                 resultXMLSign = (APIResponseSignModel)res.OUTPUT_DATA;
 
-                                fileNameDest = filePDF.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                                pathoutbound = filePDF.Outbound;
-                                pathoutput = filePDF.Outbound += "\\BeforeSign\\";
+                                fileNameDest = fileXML.FileName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                pathoutbound = fileXML.Outbound;
+                                pathoutput = fileXML.Outbound += "\\BeforeSign\\";
                                 billingdate = DateTime.Now;
                                 if (dataTran != null)
                                 {
@@ -73,7 +73,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 pathoutput += "\\" + billingdate.ToString("yyyy") + "\\" + billingdate.ToString("MM") + "\\";
                                 fullpath = pathoutbound + fileNameDest + fileType;
 
-                                res = UpdateStatusAfterSignXML(resultXMLSign, filePDF.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
+                                res = UpdateStatusAfterSignXML(resultXMLSign, fileXML.Billno, fullpath, dataTran, pathoutput + fileNameDest + fileType);
                                 if (res.STATUS)
                                 {
                                     if (!string.IsNullOrEmpty(resultXMLSign.resultCode) && resultXMLSign.resultCode == "000")
@@ -87,7 +87,7 @@ namespace SCG.CAD.ETAX.API.Services
 
                                     if (res.STATUS)
                                     {
-                                        res = logicToolHelper.MoveFile(filePDF.FullPath, fileNameDest + fileType, billingdate, pathoutput);
+                                        res = logicToolHelper.MoveFile(fileXML.FullPath, fileNameDest + fileType, billingdate, pathoutput);
                                     }
                                 }
                             }

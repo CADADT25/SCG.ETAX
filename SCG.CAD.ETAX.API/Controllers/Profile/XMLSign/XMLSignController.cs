@@ -12,9 +12,9 @@ namespace SCG.CAD.ETAX.API.Controllers
 
         [HttpPost]
         [Route("ProcessXMLSign")]
-        public IActionResult ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML filePDF)
+        public IActionResult ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
         {
-            var result = repo.ProcessXMLSign(configXmlSign, filePDF).Result;
+            var result = repo.ProcessXMLSign(configXmlSign, fileXML).Result;
 
             return Ok(result);
         }

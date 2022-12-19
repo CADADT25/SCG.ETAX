@@ -2,17 +2,17 @@
 
 namespace SCG.CAD.ETAX.API.Repositories
 {
-    public class XMLSignRepository : IXMLSignRepository
+    public class PDFSignRepository : IPDFSignRepository
     {
-        XMLSignService service = new XMLSignService();
+        PDFSignService service = new PDFSignService();
 
-        public async Task<Response> ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
+        public async Task<Response> ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF)
         {
             Response resp = new Response();
 
             try
             {
-                resp = service.ProcessXMLSign(configXmlSign, fileXML);
+                resp = service.ProcessPDFSign(configPdfSign, filePDF);
             }
             catch (Exception ex)
             {
