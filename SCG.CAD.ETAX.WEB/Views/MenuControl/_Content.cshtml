@@ -5,6 +5,23 @@
 <script>
     var url = $("#RedirectTo").val();
      $(document).ready(function () {
+         
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+           if(settings.jqXHR.status == 401 || settings.jqXHR.status == "401"){
+               fnSweetAlert_SessionExpire();
+           }
+        };
+        $(document).ajaxError(function( event, request, settings ) {
+            debugger
+            if(request.status == 401 || request.status == "401"){
+                fnSweetAlert_SessionExpire();
+            }
+        });
+        //$.ajaxError(function(event, request, settings) {
+        //    if(settings.jqXHR.status == 401 || settings.jqXHR.status == "401"){
+        //        fnSweetAlert_SessionExpire();
+        //    }
+        //});
 
         callUserMenu();
         callGetControlPermissionAsync();
@@ -1614,7 +1631,13 @@
 
         $.blockUI();
 
-        $("#contentPartial").load("@Url.Action("Index", "InboxManagement")");
+        $("#contentPartial").load("@Url.Action("Index", "InboxManagement")", 
+            function (responseText, textStatus, XMLHttpRequest) {
+                if (XMLHttpRequest.status == 401 || XMLHttpRequest.status == "401") {
+                    fnSweetAlert_SessionExpire();
+                }
+            }
+        );
         
         $("#li-btnCallPageProductUnit").removeClass("active");
         $("#li-btnCallPageTaxCode").removeClass("active");

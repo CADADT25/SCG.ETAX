@@ -50,7 +50,6 @@
 <script type="text/javascript">
     var _dataExchangeColumnList = null;
      $(document).ready(function () {
-
         $('#tranSearchStatus').select2();
         $('#tranSearchIcOc').select2();
         $('#tranSearchCompanyCode').select2();
@@ -445,12 +444,12 @@
                     url: "@Url.Action("Search", "transactionDescription")",
                     data: { transactionSearchJson : JsonString },
                     dataType: "json",
-                    "statusCode":
-                    {
-                        401: function(){
-                        fnSweetAlert_SessionExpire();
-                        }
-                    }
+                    //"statusCode":
+                    //{
+                    //    401: function(){
+                    //    fnSweetAlert_SessionExpire();
+                    //    }
+                    //}
                 },
                 "columns": [
 

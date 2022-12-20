@@ -17,9 +17,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 {
                     //If it says it is a new session but an existing cookie exists
                     var checklogin = filterContext.HttpContext.Session.GetInt32("islogin");
-                    if(checklogin != null)
+                    if (checklogin != null)
                     {
-                        if(checklogin == 1)
+                        if (checklogin == 1)
                         {
                             login = true;
                         }
@@ -31,7 +31,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             {
                 //Redirect to the login page
                 //filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "AuthSinIn" }));
-                  filterContext.HttpContext.Response.StatusCode = 401;
+                filterContext.HttpContext.Response.StatusCode = 401;
             }
 
             base.OnActionExecuting(filterContext);
