@@ -140,7 +140,9 @@ namespace SCG.CAD.ETAX.API.Repositories
                 xmlFileDetail.Outbound = configXmlSign.ConfigXmlsignOutputPath;
                 xmlFileDetail.Inbound = configXmlSign.ConfigXmlsignInputPath;
                 xmlFileDetail.Billno = billings[0];
-                var resXmlSign = xmlSignRepo.ProcessXMLSign(configXmlSign, xmlFileDetail).Result;
+                var xmlSignModel = new XMLSignModel() { configXmlSign = configXmlSign, fileXML = xmlFileDetail };
+                //var resXmlSign = xmlSignRepo.ProcessXMLSign(configXmlSign, xmlFileDetail).Result;
+                var resXmlSign = xmlSignRepo.ProcessXMLFileSign(xmlSignModel).Result;
                 if (!resXmlSign.STATUS)
                 {
                     resp.CODE = "103";
@@ -188,7 +190,9 @@ namespace SCG.CAD.ETAX.API.Repositories
                 pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
                 pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
                 pdfFileDetail.Billno = billings[0];
-                var resPdfSign = pdfSignRepo.ProcessPDFSign(configPdfSign, pdfFileDetail).Result;
+                var pdfSignModel = new PDFSignModel() { configPdfSign = configPdfSign, filePDF = pdfFileDetail };
+                var resPdfSign = pdfSignRepo.ProcessPDFSign(pdfSignModel).Result;
+                //var resPdfSign = pdfSignRepo.ProcessPDFSign(configPdfSign, pdfFileDetail).Result;
                 if (!resPdfSign.STATUS)
                 {
                     resp.CODE = "103";

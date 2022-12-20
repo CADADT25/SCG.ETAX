@@ -24,6 +24,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
 
+var ci = CultureInfo.GetCultureInfo("en-US");
+
+Thread.CurrentThread.CurrentCulture = ci;
+Thread.CurrentThread.CurrentUICulture = ci;
 // Add services to the container.
 builder.Services.AddDbContext<DatabaseContext>
     (options =>
