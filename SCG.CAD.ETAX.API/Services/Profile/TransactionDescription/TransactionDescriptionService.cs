@@ -1,9 +1,12 @@
 ﻿
 
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.VariantTypes;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using SCG.CAD.ETAX.UTILITY.AdminTool;
+using Path = System.IO.Path;
 
 namespace SCG.CAD.ETAX.API.Services
 {
@@ -637,8 +640,10 @@ namespace SCG.CAD.ETAX.API.Services
                     if (!string.IsNullOrEmpty(obj.tranSearchDateBetween))
                     {
                         var getArrayDate = obj.tranSearchDateBetween.Split("to");
-                        getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
-                        getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
+                        getMinDate = DateTime.ParseExact(getArrayDate[0].Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                        getMaxDate = DateTime.ParseExact(getArrayDate[1].Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                        //getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
+                        //getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
 
                         if (obj.tranSearchDateType.Equals("billingDate"))
                         {
