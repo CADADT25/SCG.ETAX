@@ -2,6 +2,7 @@
 
 namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
+    [SessionExpire]
     public class FontController : Controller
     {
         public IActionResult Index()

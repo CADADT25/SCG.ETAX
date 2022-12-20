@@ -3,6 +3,7 @@ using SCG.CAD.ETAX.UTILITY.Authentication;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class TransactionDescriptionController : Controller
     {
         [SessionExpire]
@@ -130,7 +131,6 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(new { data = tran });
         }
-
 
         public async Task<JsonResult> Search(string transactionSearchJson)
         {

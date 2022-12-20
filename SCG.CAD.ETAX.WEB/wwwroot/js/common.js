@@ -75,6 +75,17 @@ function fnAlertValidate(str) {
     });
 }
 
+function fnSweetAlert_SessionExpire() {
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text: 'Session expired',
+        showConfirmButton: false,
+        footer: '<a href="/AuthSinIn/Index">Login</a>'
+    });
+}
+
 
 function csvToArray(str, delimiter = ",") {
     // slice from start of text to the first \n index

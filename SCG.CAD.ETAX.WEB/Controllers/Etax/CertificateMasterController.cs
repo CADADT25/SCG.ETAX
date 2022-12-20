@@ -37,7 +37,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                 return View();
             }
         }
-
+        [SessionExpire]
         public async Task<JsonResult> List()
         {
             Response resp = new Response();
@@ -65,7 +65,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
             return Json(new { data = tran });
         }
-
+        [SessionExpire]
         public async Task<JsonResult> DropDownList()
         {
             Response resp = new Response();

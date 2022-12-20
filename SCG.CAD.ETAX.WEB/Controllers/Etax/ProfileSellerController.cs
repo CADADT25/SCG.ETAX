@@ -6,6 +6,7 @@ using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDiv
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class ProfileSellerController : Controller
     {
         [SessionExpire]

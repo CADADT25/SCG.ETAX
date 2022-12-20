@@ -71,7 +71,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
 
 
-
+        [SessionExpire]
         public async Task<JsonResult> Detail(int id)
         {
             List<ConfigMftsCompressXmlSetting> tran = new List<ConfigMftsCompressXmlSetting>();
@@ -105,7 +105,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(result);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> List(string companyCode)
         {
             Response resp = new Response();
@@ -135,7 +135,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(new { data = tran });
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Insert(string jsonString)
         {
             Response res = new Response();
@@ -146,7 +146,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Update(string jsonString)
         {
             Response res = new Response();
@@ -157,7 +157,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Delete(string jsonString)
         {
             Response res = new Response();
@@ -168,7 +168,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> UpdateOneTime(string jsonString)
         {
             Response res = new Response();
@@ -179,7 +179,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> UpdateAnyTime(string jsonString)
         {
             Response res = new Response();
@@ -191,7 +191,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return Json(task);
         }
 
-
+        [SessionExpire]
         public async Task<JsonResult> DeleteOneTime(string jsonString)
         {
             Response res = new Response();
@@ -202,7 +202,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> DeleteAnyTime(string jsonString)
         {
             Response res = new Response();

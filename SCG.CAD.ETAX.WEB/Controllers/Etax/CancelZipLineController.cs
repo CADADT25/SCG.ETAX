@@ -21,7 +21,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         }
 
 
-
+        [SessionExpire]
         public async Task<JsonResult> Detail(int id)
         {
             List<CancelZipLine> tran = new List<CancelZipLine>();
@@ -55,7 +55,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(result);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> List()
         {
             Response resp = new Response();
@@ -83,7 +83,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(new { data = tran });
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Insert(string jsonString)
         {
             Response res = new Response();
@@ -94,7 +94,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Update(string jsonString)
         {
             Response res = new Response();
@@ -105,7 +105,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Delete(string jsonString)
         {
             Response res = new Response();
@@ -116,7 +116,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<ActionResult> ExportToCsv()
         {
             Response resp = new Response();

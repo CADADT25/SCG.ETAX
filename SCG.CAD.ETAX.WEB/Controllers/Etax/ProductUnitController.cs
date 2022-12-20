@@ -7,6 +7,7 @@ using System.Text;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class ProductUnitController : Controller
     {
         [SessionExpire]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
+    [SessionExpire]
     public class InboxTodoController : Controller
     {
         [SessionExpire]

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
+    [SessionExpire]
     public class ProfileCustomerController : Controller
     {
         [SessionExpire]

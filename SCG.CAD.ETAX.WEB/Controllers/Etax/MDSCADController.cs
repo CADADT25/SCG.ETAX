@@ -4,6 +4,7 @@ using System.Net.Http;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class MDSCADController : Controller
     {
         public async Task<JsonResult> GetManagerByUser()

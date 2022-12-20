@@ -1,5 +1,6 @@
 ﻿namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class TaxCodeController : Controller
     {
         [SessionExpire]

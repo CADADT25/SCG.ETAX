@@ -5,6 +5,7 @@ using SCG.CAD.ETAX.UTILITY.Authentication;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class ProfileCompanyController : Controller
     {
         [SessionExpire]

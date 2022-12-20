@@ -8,6 +8,7 @@ using System.Net.Http;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    
     public class RequestActionController : Controller
     {
         [SessionExpire]
@@ -95,7 +96,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return View(model);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Action(string jsonString, string action, string status, string reason, int xmlPath, int pdfPath)
         {
             Response ret = new Response();

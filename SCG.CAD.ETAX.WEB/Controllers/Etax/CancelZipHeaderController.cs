@@ -19,7 +19,7 @@
         }
 
 
-
+        [SessionExpire]
         public async Task<JsonResult> Detail(int id)
         {
             List<CancelZipHeader> tran = new List<CancelZipHeader>();
@@ -53,7 +53,7 @@
 
             return Json(result);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> List()
         {
             Response resp = new Response();
@@ -81,7 +81,7 @@
 
             return Json(new { data = tran });
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Insert(string jsonString)
         {
             Response res = new Response();
@@ -92,7 +92,7 @@
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Update(string jsonString)
         {
             Response res = new Response();
@@ -103,7 +103,7 @@
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Delete(string jsonString)
         {
             Response res = new Response();
@@ -114,7 +114,7 @@
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<ActionResult> ExportToCsv()
         {
             Response resp = new Response();

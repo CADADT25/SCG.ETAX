@@ -3,6 +3,7 @@ using SCG.CAD.ETAX.UTILITY.Authentication;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class ProfileSellOrgController : Controller
     {
         [SessionExpire]

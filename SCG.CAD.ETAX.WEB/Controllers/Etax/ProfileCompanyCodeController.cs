@@ -2,6 +2,7 @@
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
+    [SessionExpire]
     public class ProfileCompanyCodeController : Controller
     {
         [SessionExpire]

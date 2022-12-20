@@ -55,7 +55,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
         {
             return View();
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Detail(int id)
         {
             List<ConfigGlobalCategory> tran = new List<ConfigGlobalCategory>();
@@ -89,7 +89,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(result);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> List()
         {
             Response resp = new Response();
@@ -117,7 +117,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(new { data = tran.OrderBy(x => x.ConfigGlobalCategoryName) });
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Insert(string jsonString)
         {
             Response res = new Response();
@@ -128,7 +128,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Update(string jsonString)
         {
             Response res = new Response();
@@ -139,7 +139,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<JsonResult> Delete(string jsonString)
         {
             Response res = new Response();
@@ -150,7 +150,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             return Json(task);
         }
-
+        [SessionExpire]
         public async Task<ActionResult> ExportToCsv()
         {
             Response resp = new Response();
@@ -214,7 +214,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ConfigGlobalCategory.csv");
 
         }
-
+        [SessionExpire]
         public async Task<JsonResult> DropDownList()
         {
             Response resp = new Response();

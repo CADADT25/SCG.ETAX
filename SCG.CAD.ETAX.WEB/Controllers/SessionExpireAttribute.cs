@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SCG.CAD.ETAX.WEB.Controllers
 {
@@ -28,13 +30,12 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             if (!login)
             {
                 //Redirect to the login page
-                //filterContext.HttpContext.Response.Redirect("~/AuthSinIn/Index");
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "AuthSinIn" }));
+                //filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "AuthSinIn" }));
+                  filterContext.HttpContext.Response.StatusCode = 401;
             }
 
             base.OnActionExecuting(filterContext);
         }
 
     }
-
 }

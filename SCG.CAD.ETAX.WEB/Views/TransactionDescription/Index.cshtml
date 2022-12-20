@@ -444,7 +444,13 @@
                     type: "GET",
                     url: "@Url.Action("Search", "transactionDescription")",
                     data: { transactionSearchJson : JsonString },
-                    dataType: "json"
+                    dataType: "json",
+                    "statusCode":
+                    {
+                        401: function(){
+                        fnSweetAlert_SessionExpire();
+                        }
+                    }
                 },
                 "columns": [
 
