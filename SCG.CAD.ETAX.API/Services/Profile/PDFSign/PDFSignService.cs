@@ -12,7 +12,7 @@ namespace SCG.CAD.ETAX.API.Services
         ConfigGlobalService configGlobalService = new ConfigGlobalService();
         LogicToolHelper logicToolHelper = new LogicToolHelper();
 
-        public Response ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF)
+        public Response ProcessPDFSign(PDFSignModel pDFSignModel)
         {
             Response res = new Response();
             List<ConfigPdfSign> configPDFSign = new List<ConfigPdfSign>();
@@ -31,6 +31,8 @@ namespace SCG.CAD.ETAX.API.Services
 
             try
             {
+                ConfigPdfSign configPdfSign = pDFSignModel.configPdfSign;
+                FilePDF filePDF = pDFSignModel.filePDF;
                 res = GetConfigGlobal();
                 if (res.STATUS == false)
                 {

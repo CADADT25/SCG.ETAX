@@ -1,6 +1,4 @@
-﻿using SCG.CAD.ETAX.MODEL.CustomModel;
-
-namespace SCG.CAD.ETAX.API.Controllers
+﻿namespace SCG.CAD.ETAX.API.Controllers
 {
     public class XMLSignController : BaseController
     {
@@ -11,10 +9,10 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpPost]
-        [Route("ProcessXMLSign")]
-        public IActionResult ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
+        [Route("ProcessXMLFileSign")]
+        public IActionResult ProcessXMLFileSign(XMLSignModel xMLSignModel)
         {
-            var result = repo.ProcessXMLSign(configXmlSign, fileXML).Result;
+            var result = repo.ProcessXMLFileSign(xMLSignModel).Result;
 
             return Ok(result);
         }

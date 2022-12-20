@@ -6,13 +6,13 @@ namespace SCG.CAD.ETAX.API.Repositories
     {
         PDFSignService service = new PDFSignService();
 
-        public async Task<Response> ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF)
+        public async Task<Response> ProcessPDFSign(PDFSignModel pDFSignModel)
         {
             Response resp = new Response();
 
             try
             {
-                resp = service.ProcessPDFSign(configPdfSign, filePDF);
+                resp = service.ProcessPDFSign(pDFSignModel);
             }
             catch (Exception ex)
             {

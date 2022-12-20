@@ -6,13 +6,13 @@ namespace SCG.CAD.ETAX.API.Repositories
     {
         XMLSignService service = new XMLSignService();
 
-        public async Task<Response> ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
+        public async Task<Response> ProcessXMLFileSign(XMLSignModel xMLSignModel)
         {
             Response resp = new Response();
 
             try
             {
-                resp = service.ProcessXMLSign(configXmlSign, fileXML);
+                resp = service.ProcessXMLFileSign(xMLSignModel);
             }
             catch (Exception ex)
             {

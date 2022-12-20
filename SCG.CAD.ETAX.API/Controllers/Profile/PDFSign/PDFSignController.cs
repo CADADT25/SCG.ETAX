@@ -12,9 +12,9 @@ namespace SCG.CAD.ETAX.API.Controllers.Profile.PDFSign
 
         [HttpPost]
         [Route("ProcessPDFSign")]
-        public IActionResult ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF)
+        public IActionResult ProcessPDFSign(PDFSignModel pDFSignModel)
         {
-            var result = repo.ProcessPDFSign(configPdfSign, filePDF).Result;
+            var result = repo.ProcessPDFSign(pDFSignModel).Result;
 
             return Ok(result);
         }

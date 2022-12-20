@@ -6,6 +6,7 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
     {
         public ConfigPdfSign configPdfSign { get; set; }
         public List<FilePDF> listFilePDFs { get; set; }
+        public FilePDF filePDF { get; set; }
     }
     public class FilePDF
     {

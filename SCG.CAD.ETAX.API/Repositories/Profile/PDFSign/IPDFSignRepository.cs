@@ -4,6 +4,6 @@ namespace SCG.CAD.ETAX.API.Repositories
 {
     public interface IPDFSignRepository
     {
-        Task<Response> ProcessPDFSign(ConfigPdfSign configPdfSign, FilePDF filePDF);
+        Task<Response> ProcessPDFSign(PDFSignModel pDFSignModel);
     }
 }

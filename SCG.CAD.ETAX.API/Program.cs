@@ -12,11 +12,13 @@ global using SCG.CAD.ETAX.MODEL.etaxModel;
 global using System.Collections;
 global using System.Globalization;
 global using Newtonsoft.Json;
+global using SCG.CAD.ETAX.MODEL.CustomModel;
 using Microsoft.OpenApi.Models;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +89,7 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("Jwt")["Key"])) //Configuration["JwtToken:SecretKey"]
     };
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -95,6 +98,12 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US")
+});
 
 //app.UseSwagger();
 //app.UseSwaggerUI(c =>

@@ -17,7 +17,8 @@ namespace SCG.CAD.ETAX.API.Services
         string namepathlog = "PATHLOGFILE_XMLSIGN";
         string batchname = "SCG.CAD.ETAX.XML.SIGN";
 
-        public Response ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML)
+        public Response ProcessXMLFileSign(XMLSignModel xMLSignModel)
+        //public Response ProcessXMLFileSign(ConfigXmlSign configXmlSign, FileXML fileXML)
         {
             Response res = new Response();
             APISendFileXMLSignModel dataSend = new APISendFileXMLSignModel();
@@ -30,6 +31,8 @@ namespace SCG.CAD.ETAX.API.Services
             DateTime billingdate;
             try
             {
+                ConfigXmlSign configXmlSign = xMLSignModel.configXmlSign;
+                FileXML fileXML = xMLSignModel.fileXML;
                 res = GetConfigGlobal();
                 if (res.STATUS == false)
                 {
