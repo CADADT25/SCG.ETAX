@@ -4,6 +4,6 @@ namespace SCG.CAD.ETAX.API.Repositories
 {
     public interface IXMLSignRepository
     {
-        Task<Response> ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML filePDF);
+        Task<Response> ProcessXMLSign(ConfigXmlSign configXmlSign, FileXML fileXML);
     }
 }
