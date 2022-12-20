@@ -3148,6 +3148,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\app-assets\vendors\css\tables\datatable\extensions\" />
     <Folder Include="wwwroot\assets\img\template\pdf\" />
+    <Folder Include="wwwroot\vendor\xlsx\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties wwwroot_4app-assets_4data_4invoice-list_1json__JsonSchema="https://blockprotocol.org/schemas/block-metadata.json" /></VisualStudio></ProjectExtensions>

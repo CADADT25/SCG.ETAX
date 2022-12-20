@@ -30,18 +30,18 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //{
         //    return _dbContext.configXmlGenerator.Where(t => t.ConfigXmlGeneratorCompanyCode == comcode).FirstOrDefault();
         //}
-        //public string GetConfigGlobal(string configGlobalName)
-        //{
-        //    var data = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == configGlobalName).FirstOrDefault();
-        //    if (data != null)
-        //    {
-        //        return data.ConfigGlobalValue;
-        //    }
-        //    else
-        //    {
-        //        return "";
-        //    }
-        //}
+        public string GetConfigGlobal(string configGlobalName)
+        {
+            var data = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == configGlobalName).FirstOrDefault();
+            if (data != null)
+            {
+                return data.ConfigGlobalValue;
+            }
+            else
+            {
+                return "";
+            }
+        }
         //public string GetConfigGlobal(string cate, string name)
         //{
 
@@ -64,7 +64,23 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //    }
         //    return "";
         //}
+        public ConfigPdfSign GetConfigPdfSign(string companyCode)
+        {
+            var data = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == companyCode && t.ConfigPdfsignOnlineRecordNumber != null && t.ConfigPdfsignOnlineRecordNumber != "").FirstOrDefault();
+            return data;
+        }
+        public ConfigXmlSign GetConfigXmlSign(string companyCode)
+        {
+            var data = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == companyCode && t.ConfigXmlsignOnlineRecordNumber != null && t.ConfigXmlsignOnlineRecordNumber != "").FirstOrDefault();
+            return data;
+        }
         //#endregion
+
+        public TransactionDescription GetTransactionDescription(string billingNo)
+        {
+            var data = _dbContext.transactionDescription.Where(t => t.BillingNumber == billingNo).FirstOrDefault();
+            return data;
+        }
 
         //#region Xml generator
         //public string GenerateTextToXml(string textfile)
@@ -1266,44 +1282,44 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //    return result;
         //}
 
-        //public string CreateFileFromBase64(string fileBase64, string fullpath)
-        //{
-        //    try
-        //    {
-        //        // Delete old file
-        //        if (File.Exists(fullpath))
-        //        {
-        //            try
-        //            {
-        //                File.Delete(fullpath);
-        //            }
-        //            catch
-        //            {
+        public string CreateFileFromBase64(string fileBase64, string fullpath)
+        {
+            try
+            {
+                // Delete old file
+                if (File.Exists(fullpath))
+                {
+                    try
+                    {
+                        File.Delete(fullpath);
+                    }
+                    catch
+                    {
 
-        //            }
-        //        }
+                    }
+                }
 
-        //        string directoryPath = System.IO.Path.GetDirectoryName(fullpath);
+                string directoryPath = System.IO.Path.GetDirectoryName(fullpath);
 
-        //        if (!Directory.Exists(directoryPath))
-        //        {
-        //            Directory.CreateDirectory(directoryPath);
-        //        }
-        //        // create new file
-        //        byte[] bytes = Convert.FromBase64String(fileBase64);
-        //        FileStream stream = new FileStream(fullpath, FileMode.CreateNew);
-        //        BinaryWriter writer = new BinaryWriter(stream);
-        //        writer.Write(bytes, 0, bytes.Length);
-        //        writer.Close();
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+                // create new file
+                byte[] bytes = Convert.FromBase64String(fileBase64);
+                FileStream stream = new FileStream(fullpath, FileMode.CreateNew);
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write(bytes, 0, bytes.Length);
+                writer.Close();
 
-        //        return fullpath;
-        //    }
-        //    catch (Exception ex)
-        //    {
+                return fullpath;
+            }
+            catch (Exception ex)
+            {
 
-        //    }
-        //    return "";
-        //}
+            }
+            return "";
+        }
         //public bool MoveFile(string pathinput, string filename,string pathoutput)
         //{
         //    bool result = false;

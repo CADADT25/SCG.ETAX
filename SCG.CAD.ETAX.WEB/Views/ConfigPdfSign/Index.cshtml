@@ -19,6 +19,8 @@
         //$("#content_DSLocationModal").load("@Url.Action("_DSLocationModal", "ConfigPdfSign")");
 
         var setCompanyCode = $("#companyCodeState").text();
+        fnDropdownFont();
+        fnDropdownDataSource();
 
         setTimeout(function(){
             RenderConfigPdfSign(setCompanyCode);
@@ -398,8 +400,8 @@
         $("#modalUpdateConfigPdfSign").modal('hide');
     }
     function callModalInsertConfigPdfSign(){
-        fnDropdownFont();
-        fnDropdownDataSource();
+        //fnDropdownFont();
+        //fnDropdownDataSource();
         $( "#homeIcon-tab" ).click();
         var setCompanyCode = $("#companyCodeStateUpdate").text();
 
@@ -449,8 +451,8 @@
 
             var getPK = data[Object.keys(data)[0]];
             
-            fnDropdownFont();
-            fnDropdownDataSource();
+            //fnDropdownFont();
+            //fnDropdownDataSource();
             //fnDropdownDataSource();
             callConfigPdfSignGetDetailController(getPK);
         });
@@ -508,7 +510,7 @@
             data: { id : getPK },
             dataType: "json",
             success: function (result) {
-
+                
                 data = $.parseJSON(result)
                 document.getElementById('txtUpdateConfigPdfSignNo').value = data.ConfigPdfsignNo;
                 document.getElementById('txtUpdateConfigPdfSignCustomerCode').value = data.ConfigPdfsignCompanyCode;
@@ -551,10 +553,17 @@
                 //document.getElementById('txtUpdateConfigPdfSignFtpUsername').value = data.ConfigPdfsignFtpUserName;
                 //document.getElementById('txtUpdateConfigPdfSignFtpPassword').value = data.ConfigPdfsignFtpPassword;
 
-                if(data.ConfigPdfsignFontSize != "" && data.ConfigPdfsignFontSize != null){
+                if((data.ConfigPdfsignFontSize != "" && data.ConfigPdfsignFontSize != null) || (data.ConfigPdfsignFontName != "" && data.ConfigPdfsignFontName != null)){
                     document.getElementById("toggleUpdateConfigPdfSignIsDigitalSign").checked = true;
                     document.getElementById("toggleUpdateConfigPdfSignIsFont").checked = true;
+                    $('#ddlUpdateConfigPdfSignFontName').prop('disabled', false)
+                    $('#txtUpdateConfigPdfSignFontSize').prop('disabled', false)
+                }else{
+                    $('#ddlUpdateConfigPdfSignFontName').prop('disabled', true)
+                    $('#txtUpdateConfigPdfSignFontSize').prop('disabled', true)
+                    document.getElementById("toggleUpdateConfigPdfSignIsFont").checked = false;
                 }
+                
                 if(data.ConfigPdfsignImage != "" && data.ConfigPdfsignImage != null){
                     document.getElementById("toggleUpdateConfigPdfSignIsDigitalSign").checked = true;
                     document.getElementById("toggleUpdateConfigPdfSignIsImage").checked = true;

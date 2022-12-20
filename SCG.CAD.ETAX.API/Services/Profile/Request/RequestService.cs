@@ -70,7 +70,8 @@ namespace SCG.CAD.ETAX.API.Services
                     AdminCheckEmail = requestData.AdminCheck ?? "",
                     AdminCheckName = admincheck != null ? admincheck.FirstName + " " + admincheck.LastName : "",
                     RequestHistorys = _dbContext.requestHistory.Where(t => t.RequestId == requestData.Id).ToList(),
-                    RequestPaths = _dbContext.requestPath.Where(t => t.RequestId == requestData.Id).ToList()
+                    RequestPaths = _dbContext.requestPath.Where(t => t.RequestId == requestData.Id).ToList(),
+                    IsManagerAction = requestData.ManagerAction
                 };
 
                 resp.STATUS = true;
@@ -453,16 +454,24 @@ namespace SCG.CAD.ETAX.API.Services
                     List<string> pathXmls = new List<string>();
                     List<string> pathPdfs = new List<string>();
                     List<TransactionDescription> resignTrans = new List<TransactionDescription>();
-                    var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
-                    var destinationPdf = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
-                    var destinationXml = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == request.CompanyCode && t.Isactive == 1).FirstOrDefault();
-                    var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
-                    var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
                     
+                    var request = _dbContext.request.Where(t => t.Id == param.RequestId).FirstOrDefault();
+                    var configPdfSign = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignNo == request.ConfigPdfSignNo).FirstOrDefault();
+                    var configXmlSign = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignNo == request.ConfigXmlSignNo).FirstOrDefault();
+                    //var pathBackupPdf = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPPDFFILE");
+                    //var pathBackupXml = _dbContext.configGlobal.FirstOrDefault(x => x.ConfigGlobalName == "PATHBACKUPXMLFILE");
+
+                    //string xmlOutputPath = request.XmlOutputPath;
+                    //string pdfOutputPath = request.PdfOutputPath;
+
                     if (param.Action == "admin_approve")
                     {
                         request.StatusCode = Variable.RequestStatusCode_WaitManager;
                         request.AdminCheck = param.User;
+                        //request.PdfOutputPath = param.PdfOutputPath;
+                        //request.XmlOutputPath = param.XmlOutputPath;
+                        request.ConfigPdfSignNo = param.ConfigPdfSignNo;
+                        request.ConfigXmlSignNo = param.ConfigXmlSignNo;
                     }
                     else if (param.Action == "admin_reject")
                     {
@@ -543,12 +552,12 @@ namespace SCG.CAD.ETAX.API.Services
                         }
                         else if (request.RequestAction == Variable.RequestActionCode_ReSignNewTrans)
                         {
-                            if (destinationPdf == null || destinationXml == null)
-                            {
-                                resp.STATUS = false;
-                                resp.MESSAGE = "Destination path not found.";
-                                return resp;
-                            }
+                            //if (destinationPdf == null || destinationXml == null)
+                            //{
+                            //    resp.STATUS = false;
+                            //    resp.MESSAGE = "Destination path not found.";
+                            //    return resp;
+                            //}
                             var requestPaths = _dbContext.requestPath.Where(t => t.RequestId == request.Id).ToList();
                             foreach (var item in requestPaths)
                             {
@@ -604,12 +613,12 @@ namespace SCG.CAD.ETAX.API.Services
                         }
                         else if (request.RequestAction == Variable.RequestActionCode_ReSignNewCert)
                         {
-                            if (pathBackupPdf == null || pathBackupXml == null)
-                            {
-                                resp.STATUS = false;
-                                resp.MESSAGE = "Path backup pdf & xml not found.";
-                                return resp;
-                            }
+                            //if (pathBackupPdf == null || pathBackupXml == null)
+                            //{
+                            //    resp.STATUS = false;
+                            //    resp.MESSAGE = "Path backup pdf & xml not found.";
+                            //    return resp;
+                            //}
                             var requestItem = _dbContext.requestItem.Where(t => t.RequestId == request.Id).ToList();
                             var tranNos = requestItem.Select(t => t.TransactionNo).Distinct().ToList();
                             var transactions = _dbContext.transactionDescription.Where(t => tranNos.Contains(t.TransactionNo)).ToList();
@@ -694,7 +703,7 @@ namespace SCG.CAD.ETAX.API.Services
                         try
                         {
                             string sourcePath = item;
-                            string destinationPath = System.IO.Path.Combine(destinationPdf.ConfigPdfsignInputPath, item.Split("\\").Last());
+                            string destinationPath = System.IO.Path.Combine(configPdfSign.ConfigPdfsignOutputPath, item.Split("\\").Last());
                             string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
                             if (!Directory.Exists(directoryPath))
@@ -715,7 +724,7 @@ namespace SCG.CAD.ETAX.API.Services
                         try
                         {
                             string sourcePath = item;
-                            string destinationPath = System.IO.Path.Combine(destinationXml.ConfigXmlsignInputPath, item.Split("\\").Last());
+                            string destinationPath = System.IO.Path.Combine(configXmlSign.ConfigXmlsignOutputPath, item.Split("\\").Last());
                             string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
                             if (!Directory.Exists(directoryPath))
@@ -735,64 +744,86 @@ namespace SCG.CAD.ETAX.API.Services
                     {
                         try
                         {
-                            // PDF
-                            string pathBackupPdfYM = System.IO.Path.Combine(pathBackupPdf.ConfigGlobalValue, tran.BillingDate.Value.Year.ToString("yyyy"), tran.BillingDate.Value.Month.ToString("MM"));
-                            var dirInfoPdf = new DirectoryInfo(pathBackupPdfYM);
-                            var filePdfs = dirInfoPdf.GetFiles("*.pdf").ToList();
-                            foreach (var item in filePdfs)
-                            {
-                                var filename = System.IO.Path.GetFileName(item.FullName).Replace(".pdf", "");
-                                string billno = "";
-                                if (filename.IndexOf('_') > -1)
-                                {
-                                    billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
-                                }
-                                else
-                                {
-                                    billno = filename.Substring(8);
-                                }
-                                if (billno.ToLower() == tran.BillingNumber.ToLower())
-                                {
-                                    string sourcePath = item.FullName;
-                                    string destinationPath = System.IO.Path.Combine(destinationPdf.ConfigPdfsignInputPath, System.IO.Path.GetFileName(item.FullName));
-                                    string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
+                            // PDF old
+                            //string pathBackupPdfYM = System.IO.Path.Combine(pathBackupPdf.ConfigGlobalValue, tran.BillingDate.Value.Year.ToString("yyyy"), tran.BillingDate.Value.Month.ToString("MM"));
+                            //var dirInfoPdf = new DirectoryInfo(pathBackupPdfYM);
+                            //var filePdfs = dirInfoPdf.GetFiles("*.pdf").ToList();
+                            //foreach (var item in filePdfs)
+                            //{
+                            //    var filename = System.IO.Path.GetFileName(item.FullName).Replace(".pdf", "");
+                            //    string billno = "";
+                            //    if (filename.IndexOf('_') > -1)
+                            //    {
+                            //        billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                            //    }
+                            //    else
+                            //    {
+                            //        billno = filename.Substring(8);
+                            //    }
+                            //    if (billno.ToLower() == tran.BillingNumber.ToLower())
+                            //    {
+                            //        string sourcePath = item.FullName;
+                            //        string destinationPath = System.IO.Path.Combine(destinationPdf.ConfigPdfsignInputPath, System.IO.Path.GetFileName(item.FullName));
+                            //        string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
-                                    if (!Directory.Exists(directoryPath))
-                                    {
-                                        DirectoryInfo di = Directory.CreateDirectory(directoryPath);
-                                    }
-                                    File.Copy(sourcePath, destinationPath);
-                                }
-                            }
-                            // XML
-                            string pathBackupXmlYM = System.IO.Path.Combine(pathBackupXml.ConfigGlobalValue, tran.BillingDate.Value.Year.ToString("yyyy"), tran.BillingDate.Value.Month.ToString("MM"));
-                            var dirInfoXml = new DirectoryInfo(pathBackupXmlYM);
-                            var fileXmls = dirInfoXml.GetFiles("*.xml").ToList();
-                            foreach (var item in fileXmls)
-                            {
-                                var filename = System.IO.Path.GetFileName(item.FullName).Replace(".xml", "");
-                                string billno = "";
-                                if (filename.IndexOf('_') > -1)
-                                {
-                                    billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
-                                }
-                                else
-                                {
-                                    billno = filename.Substring(8);
-                                }
-                                if (billno.ToLower() == tran.BillingNumber.ToLower())
-                                {
-                                    string sourcePath = item.FullName;
-                                    string destinationPath = System.IO.Path.Combine(destinationXml.ConfigXmlsignInputPath, System.IO.Path.GetFileName(item.FullName));
-                                    string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
+                            //        if (!Directory.Exists(directoryPath))
+                            //        {
+                            //            DirectoryInfo di = Directory.CreateDirectory(directoryPath);
+                            //        }
+                            //        File.Copy(sourcePath, destinationPath);
+                            //    }
+                            //}
+                            // XML old
+                            //string pathBackupXmlYM = System.IO.Path.Combine(pathBackupXml.ConfigGlobalValue, tran.BillingDate.Value.Year.ToString("yyyy"), tran.BillingDate.Value.Month.ToString("MM"));
+                            //var dirInfoXml = new DirectoryInfo(pathBackupXmlYM);
+                            //var fileXmls = dirInfoXml.GetFiles("*.xml").ToList();
+                            //foreach (var item in fileXmls)
+                            //{
+                            //    var filename = System.IO.Path.GetFileName(item.FullName).Replace(".xml", "");
+                            //    string billno = "";
+                            //    if (filename.IndexOf('_') > -1)
+                            //    {
+                            //        billno = filename.Substring(8, (filename.IndexOf('_')) - 8);
+                            //    }
+                            //    else
+                            //    {
+                            //        billno = filename.Substring(8);
+                            //    }
+                            //    if (billno.ToLower() == tran.BillingNumber.ToLower())
+                            //    {
+                            //        string sourcePath = item.FullName;
+                            //        string destinationPath = System.IO.Path.Combine(destinationXml.ConfigXmlsignInputPath, System.IO.Path.GetFileName(item.FullName));
+                            //        string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
 
-                                    if (!Directory.Exists(directoryPath))
-                                    {
-                                        DirectoryInfo di = Directory.CreateDirectory(directoryPath);
-                                    }
-                                    File.Copy(sourcePath, destinationPath);
-                                }
+                            //        if (!Directory.Exists(directoryPath))
+                            //        {
+                            //            DirectoryInfo di = Directory.CreateDirectory(directoryPath);
+                            //        }
+                            //        File.Copy(sourcePath, destinationPath);
+                            //    }
+                            //}
+                            // Pdf new
+                            string sourcePdfPath = System.IO.Path.Combine(tran.PdfBeforeSignLocation);
+                            string destinationPdfPath = System.IO.Path.Combine(configPdfSign.ConfigPdfsignOutputPath, System.IO.Path.GetFileName(tran.PdfBeforeSignLocation));
+                            string directoryPdfPath = System.IO.Path.GetDirectoryName(destinationPdfPath);
+
+                            if (!Directory.Exists(directoryPdfPath))
+                            {
+                                DirectoryInfo di = Directory.CreateDirectory(directoryPdfPath);
                             }
+                            File.Copy(sourcePdfPath, destinationPdfPath);
+
+                            // Xml new
+                            string sourcePath = System.IO.Path.Combine(tran.XmlBeforeSignLocation);
+                            string destinationPath = System.IO.Path.Combine(configXmlSign.ConfigXmlsignOutputPath, System.IO.Path.GetFileName(tran.XmlBeforeSignLocation));
+                            string directoryPath = System.IO.Path.GetDirectoryName(destinationPath);
+
+                            if (!Directory.Exists(directoryPath))
+                            {
+                                DirectoryInfo di = Directory.CreateDirectory(directoryPath);
+                            }
+                            File.Copy(sourcePath, destinationPath);
+
                         }
                         catch
                         {

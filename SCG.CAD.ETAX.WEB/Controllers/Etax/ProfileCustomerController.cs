@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 {
@@ -83,7 +84,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                     var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
 
                     tran = JsonConvert.DeserializeObject<List<ProfileCustomer>>(task.OUTPUT_DATA.ToString());
-                    tran = tran.Where(x=> comcode.Contains(x.CompanyCode)).ToList();
+                    tran = tran.Where(x => comcode.Contains(x.CompanyCode)).ToList();
                 }
                 else
                 {
@@ -160,30 +161,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
                             "NumberOfCopies," +
                             "CustomerEmail," +
                             "CustomerCcemail," +
+                            "EmailType," +
                             "EmailTemplateNo," +
+                            "StatusPrint," +
+                            "StatusEmail," +
+                            "StatusSignPdf," +
+                            "StatusSignXml," +
+                            "Isactive," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
-                            "UpdateDate," +
-                            "Isactive");
+                            "UpdateDate");
 
 
                         foreach (var item in tran)
                         {
+                            string customerEmail = item.CustomerEmail != null ? item.CustomerEmail.Replace(",", "|") : "";
+                            string customerCcemail = item.CustomerCcemail != null ? item.CustomerCcemail.Replace(",", "|") : "";
                             strBuilder.AppendLine($"" +
                                 $"{item.CustomerProfileNo}," +
                                 $"{item.CustomerId}," +
                                 $"{item.CompanyCode}," +
                                 $"{item.OutputType}," +
                                 $"{item.NumberOfCopies}," +
-                                $"{item.CustomerEmail}," +
-                                $"{item.CustomerCcemail}," +
+                                $"{customerEmail}," +
+                                $"{customerCcemail}," +
+                                $"{item.EmailType}," +
                                 $"{item.EmailTemplateNo}," +
+                                $"{item.StatusPrint}," +
+                                $"{item.StatusEmail}," +
+                                $"{item.StatusSignPdf}," +
+                                $"{item.StatusSignXml}," +
+                                $"{item.Isactive}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
-                                $"{item.UpdateDate}," +
-                                $"{item.Isactive}");
+                                $"{item.UpdateDate}");
                         }
 
                         resp.STATUS = true;
@@ -207,6 +220,33 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
         }
 
+        //public async Task<JsonResult> Import(List<ProfileCustomer> request)
+        public async Task<JsonResult> Import(string jsonString)
+        {
+            // replace | to ,
+            Response resp = new Response();
+            try
+            {
+                var request = JsonConvert.DeserializeObject<List<ProfileCustomer>>(jsonString);
+                var data = new List<ProfileCustomer>();
+                foreach (var item in request)
+                {
+                    item.UpdateBy = HttpContext.Session.GetString("userMail");
+                    item.CustomerEmail = item.CustomerEmail != null ? item.CustomerEmail.Replace("|", ",") : "";
+                    item.CustomerCcemail = item.CustomerCcemail != null ? item.CustomerCcemail.Replace("|", ",") : "";
+                    data.Add(item);
+                }
+                string jsonData = JsonConvert.SerializeObject(data);
+                var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                resp = await Task.Run(() => ApiHelper.PostURI("api/ProfileCustomer/Import", httpContent));
+            }
+            catch(Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+            return Json(resp);
+        }
         public async Task<JsonResult> DropDownList()
         {
             Response resp = new Response();

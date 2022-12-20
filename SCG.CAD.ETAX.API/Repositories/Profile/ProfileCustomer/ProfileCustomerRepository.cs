@@ -80,6 +80,25 @@
             return await Task.FromResult(resp);
         }
 
+        public async Task<Response> IMPORT(List<ProfileCustomer> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.IMPORT(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+
         public async Task<Response> DELETE(ProfileCustomer param)
         {
             Response resp = new Response();

@@ -30,6 +30,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+                ViewData["showIMPORT"] = permission.CheckControlAction(configControl, 9, userLevel, menuindex);
                 var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                 ViewData["companycode"] = comcode;
                 return View();
@@ -446,6 +447,42 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.InnerException.ToString());
+            }
+
+
+            return Json(res);
+        }
+        public async Task<JsonResult> EditPostingYear(List<string> listData, string updateby, string year)
+        {
+            Response res = new Response();
+            try
+            {
+                string listbill = "";
+                if (listData.Count > 0)
+                {
+                    foreach (var item in listData)
+                    {
+                        listbill = listbill + "|" + item;
+                    }
+                    var task = await Task.Run(() => ApiHelper.GetURI("api/TransactionDescription/UpdatePostingYear?listbillno=" + listbill + "&updateby=" + updateby + "&postingYear=" + year));
+
+                    if (task.STATUS)
+                    {
+                        res.STATUS = true;
+                    }
+                    else
+                    {
+                        res.ERROR_MESSAGE = "Failed";
+                        if (!string.IsNullOrEmpty(task.MESSAGE))
+                        {
+                            res.ERROR_MESSAGE = task.MESSAGE;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
 
 

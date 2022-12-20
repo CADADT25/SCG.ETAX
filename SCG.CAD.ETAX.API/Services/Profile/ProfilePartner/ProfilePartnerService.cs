@@ -140,7 +140,82 @@
             }
             return resp;
         }
+        public Response IMPORT(List<ProfilePartner> paramList)
+        {
+            Response resp = new Response();
+            try
+            {
+                using (_dbContext)
+                {
+                    foreach (var param in paramList)
+                    {
+                        var update = _dbContext.profilePartner.Where(x => x.PartnerProfileNo == param.PartnerProfileNo).FirstOrDefault();
 
+                        if (update != null)
+                        {
+                            update.CustomerId = param.CustomerId;
+                            update.CompanyCode = param.CompanyCode;
+                            update.SellOrg = param.SellOrg;
+                            update.PartnerOutputType = param.PartnerOutputType;
+                            update.NumberOfCopies = param.NumberOfCopies;
+                            update.SoldToCode = param.SoldToCode;
+                            update.SoldToEmail = param.SoldToEmail;
+                            update.SoldToCcemail = param.SoldToCcemail;
+                            update.ShipToCode = param.ShipToCode;
+                            update.ShipToEmail = param.ShipToEmail;
+                            update.ShipToCcemail = param.ShipToCcemail;
+                            update.PartnerEmailType = param.PartnerEmailType;
+                            update.Isactive = param.Isactive;
+                            update.StatusEmail = param.StatusEmail;
+                            update.StatusSignXml = param.StatusSignXml;
+                            update.StatusPrint = param.StatusPrint;
+                            update.StatusSignPdf = param.StatusSignPdf;
+
+                            update.UpdateBy = param.UpdateBy;
+                            update.UpdateDate = dtNow;
+                            _dbContext.profilePartner.Update(update);
+                        }
+                        else
+                        {
+                            update = new ProfilePartner();
+                            update.CustomerId = param.CustomerId;
+                            update.CompanyCode = param.CompanyCode;
+                            update.SellOrg = param.SellOrg;
+                            update.PartnerOutputType = param.PartnerOutputType;
+                            update.NumberOfCopies = param.NumberOfCopies;
+                            update.SoldToCode = param.SoldToCode;
+                            update.SoldToEmail = param.SoldToEmail;
+                            update.SoldToCcemail = param.SoldToCcemail;
+                            update.ShipToCode = param.ShipToCode;
+                            update.ShipToEmail = param.ShipToEmail;
+                            update.ShipToCcemail = param.ShipToCcemail;
+                            update.PartnerEmailType = param.PartnerEmailType;
+                            update.Isactive = param.Isactive;
+                            update.StatusEmail = param.StatusEmail;
+                            update.StatusSignXml = param.StatusSignXml;
+                            update.StatusPrint = param.StatusPrint;
+                            update.StatusSignPdf = param.StatusSignPdf;
+
+                            update.CreateBy = param.UpdateBy;
+                            update.CreateDate = dtNow;
+                            update.UpdateBy = param.UpdateBy;
+                            update.UpdateDate = dtNow;
+
+                            _dbContext.profilePartner.Add(update);
+                        }
+                    }
+                    _dbContext.SaveChanges();
+                    resp.STATUS = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+            }
+            return resp;
+        }
         public Response DELETE(ProfilePartner param)
         {
             Response resp = new Response();

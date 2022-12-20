@@ -61,7 +61,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                             foreach (var userAdmin in userAdminList)
                             {
                                 toEmail += userAdmin.UserEmail + ";";
-                                toName += request.ManagerName + ",";
+                                toName += userAdmin.FirstName + " " + userAdmin.LastName + ",";
                             }
                             if (toName != "")
                             {
@@ -78,6 +78,15 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                             toName = request.ManagerName;
                         }
 
+                    }
+                    else if(action == "admin_approve")
+                    {
+                        profileEmailTemplate = profileEmailTemplates.FirstOrDefault(x => x.EmailTypeNo == emailType && x.EmailTemplateCode == "submit");
+                        subjectemail = profileEmailTemplate.EmailSubject.Replace("#$Action$#", UtilityHelper.GetActionName(request.RequestAction));
+                        subjectemail = subjectemail.Replace("#$RequestNo$#", request.RequestNo);
+
+                        toEmail = request.ManagerEmail;
+                        toName = request.ManagerName;
                     }
                     else if (action == "reject" && string.IsNullOrEmpty(request.OfficerEmail))
                     {
@@ -237,7 +246,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     message.From = new MailAddress(fromEmailAddress);
                     foreach (var address in toEmail.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        message.To.Add(new MailAddress(toEmail));
+                        message.To.Add(new MailAddress(address));
                     }
                     //message.To.Add(new MailAddress(toEmail));
                     if (!string.IsNullOrEmpty(ccEmail))

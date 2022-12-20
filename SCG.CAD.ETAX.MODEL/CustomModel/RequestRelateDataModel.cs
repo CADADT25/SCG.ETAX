@@ -27,6 +27,7 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string RequesterEmail { get; set; }
         public string OfficerEmail { get; set; }
         public string OfficerName { get; set; }
+        public bool IsManagerAction { get; set; }
         public DateTime RequestDate { get; set; }
         public List<RequestHistory> RequestHistorys { get; set; }
         public List<RequestItem> RequestItems { get; set; }

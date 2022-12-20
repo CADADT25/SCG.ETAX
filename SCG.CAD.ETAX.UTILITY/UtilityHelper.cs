@@ -211,17 +211,13 @@ namespace SCG.CAD.ETAX.UTILITY
                 {
                     return "Undelete";
                 }
-                //if (actionCode.ToLower() == "unzip")
-                //{
-                //    return "Unzip";
-                //}
                 if (actionCode.ToLower() == Variable.RequestActionCode_ReSignNewTrans)
                 {
                     return "Re-Sign PDF XML (Workaround)";
                 }    
                 if (actionCode.ToLower() == Variable.RequestActionCode_ReSignNewCert)
                 {
-                    return "Re-Sign PDF XML (New cert)";
+                    return "Re-Sign XML (New cert)";
                 }
 
             }

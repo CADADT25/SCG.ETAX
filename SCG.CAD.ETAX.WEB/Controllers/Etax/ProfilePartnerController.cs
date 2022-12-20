@@ -161,15 +161,24 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                             "ShipToEmail," +
                             "ShipToCcemail," +
                             "PartnerEmailType," +
+                            "EmailTemplateNo," +
+                            "StatusPrint," +
+                            "StatusEmail," +
+                            "StatusSignPdf," +
+                            "StatusSignXml," +
+                            "Isactive," +
                             "CreateBy," +
                             "CreateDate," +
                             "UpdateBy," +
-                            "UpdateDate," +
-                            "Isactive");
+                            "UpdateDate");
 
 
                         foreach (var item in tran)
                         {
+                            string SoldToEmail = item.SoldToEmail != null ? item.SoldToEmail.Replace(",", "|") : "";
+                            string SoldToCcemail = item.SoldToCcemail != null ? item.SoldToCcemail.Replace(",", "|") : "";
+                            string ShipToEmail = item.ShipToEmail != null ? item.ShipToEmail.Replace(",", "|") : "";
+                            string ShipToCcemail = item.ShipToCcemail != null ? item.ShipToCcemail.Replace(",", "|") : "";
                             strBuilder.AppendLine($"" +
                                 $"{item.PartnerProfileNo}," +
                                 $"{item.CustomerId}," +
@@ -178,17 +187,22 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                                 $"{item.PartnerOutputType}," +
                                 $"{item.NumberOfCopies}," +
                                 $"{item.SoldToCode}," +
-                                $"{item.SoldToEmail}," +
-                                $"{item.SoldToCcemail}," +
+                                $"{SoldToEmail}," +
+                                $"{SoldToCcemail}," +
                                 $"{item.ShipToCode}," +
-                                $"{item.ShipToEmail}," +
-                                $"{item.ShipToCcemail}," +
+                                $"{ShipToEmail}," +
+                                $"{ShipToCcemail}," +
                                 $"{item.PartnerEmailType}," +
+                                $"{item.EmailTemplateNo}," +
+                                $"{item.StatusPrint}," +
+                                $"{item.StatusEmail}," +
+                                $"{item.StatusSignPdf}," +
+                                $"{item.StatusSignXml}," +
+                                $"{item.Isactive}," +
                                 $"{item.CreateBy}," +
                                 $"{item.CreateDate}," +
                                 $"{item.UpdateBy}," +
-                                $"{item.UpdateDate}," +
-                                $"{item.Isactive}");
+                                $"{item.UpdateDate}");
                         }
 
                         resp.STATUS = true;
@@ -205,11 +219,40 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException.ToString());
+                Console.WriteLine(ex.Message.ToString());
             }
 
             return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfilePartner.csv");
 
+        }
+
+        public async Task<JsonResult> Import(string jsonString)
+        {
+            // replace | to ,
+            Response resp = new Response();
+            try
+            {
+                var request = JsonConvert.DeserializeObject<List<ProfilePartner>>(jsonString);
+                var data = new List<ProfilePartner>();
+                foreach (var item in request)
+                {
+                    item.UpdateBy = HttpContext.Session.GetString("userMail");
+                    item.SoldToEmail = item.SoldToEmail != null ? item.SoldToEmail.Replace("|", ",") : "";
+                    item.SoldToCcemail = item.SoldToCcemail != null ? item.SoldToCcemail.Replace("|", ",") : "";
+                    item.ShipToEmail = item.ShipToEmail != null ? item.ShipToEmail.Replace("|", ",") : "";
+                    item.ShipToCcemail = item.ShipToCcemail != null ? item.ShipToCcemail.Replace("|", ",") : "";
+                    data.Add(item);
+                }
+                string jsonData = JsonConvert.SerializeObject(data);
+                var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                resp = await Task.Run(() => ApiHelper.PostURI("api/ProfilePartner/Import", httpContent));
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+            return Json(resp);
         }
 
 

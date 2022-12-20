@@ -1056,6 +1056,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 TextWriter filestream = new StreamWriter(fullpath);
                 //TextWriter filestream = new StreamWriter(@"C:\Code_Dev\output.xml");
                 xml.Save(filestream);
+                filestream.Close();
                 res.STATUS = true;
             }
             catch (Exception ex)

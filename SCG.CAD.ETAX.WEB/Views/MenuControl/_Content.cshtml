@@ -1743,4 +1743,24 @@
     }
 
 
+
+    function fnGetRequestActionName(str) {
+        if (str == "@Variable.RequestActionCode_Delete") {
+            return "Delete";
+        }
+        if (str == "@Variable.RequestActionCode_Undelete") {
+            return "Undelete";
+        }
+        if (str == "@Variable.RequestActionCode_ReSignNewTrans") {
+            return "Re-Sign PDF XML (Workaround)";
+        }
+        if (str == "@Variable.RequestActionCode_ReSignNewCert") {
+            return "Re-Sign XML (New cert)";
+        }
+        if(str == null || str == "" || str == undefined){
+            return "";
+        }
+        return str;
+    }
+
 </script>

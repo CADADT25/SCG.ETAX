@@ -220,6 +220,9 @@
 
 
     function RenderProfileCustomer(){
+        var table = $('#tbProfileCustomerMain').DataTable();
+        table.clear().draw();
+        table.destroy();
 
         var table = $("#tbProfileCustomerMain").DataTable({
 
@@ -416,7 +419,140 @@
         $.unblockUI();
     }
 
+    function ImportProfileCustomer(){
+        $("#inputFileImportCustomer").click();
+    }
 
+    $("#inputFileImportCustomer").on("change", function (e) {
+        var file = e.target.files[0];
+        // input canceled, return
+        if (!file) return;
+        var filedata = $("#inputFileImportCustomer").val().replace(/C:\\fakepath\\/i, '');
+        var chkcsv = filedata.split('.');
+        if(chkcsv[chkcsv.length - 1] != "csv" && chkcsv[chkcsv.length - 1] != "CSV"){
+           var FR = new FileReader();
+            FR.onload = function(e) {
+                var data = new Uint8Array(e.target.result);
+                var workbook = XLSX.read(data, {type: 'array'});
+                var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                var result = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                fnUploadProfileCustomer(result, false);
+                $("#inputFileImportCustomer").val("");
+            };
+            FR.readAsArrayBuffer(file);
+        }else{
+            var FR = new FileReader();
+
+            FR.onload = function (e) {
+                const text = e.target.result;
+                const data = csvToArray(text);
+                //document.write(JSON.stringify(data));
+                fnUploadProfileCustomer(data, true);
+                $("#inputFileImportCustomer").val("");
+            };
+
+            FR.readAsText(file);
+        }
+        
+    });
+
+
+    function fnUploadProfileCustomer(data, iscsv){
+        if(data==null){
+            fnAlertValidate("Data not found in file.");
+        }
+        else if(data.length<=1){
+            fnAlertValidate("Data not found in file.");
+        }else{
+            var datas = [];
+            if(iscsv){
+                for(var i = 0; i < data.length; i++){
+                    if(data[i] != undefined){
+                        var model = new Object();
+                        model.CustomerProfileNo = data[i].CustomerProfileNo;
+                        model.CustomerId = data[i].CustomerId;
+                        model.CompanyCode = data[i].CompanyCode;
+                        model.OutputType = data[i].OutputType;
+                        model.NumberOfCopies = data[i].NumberOfCopies;
+                        model.CustomerEmail = data[i].CustomerEmail;
+                        model.CustomerCcemail = data[i].CustomerCcemail;
+                        model.EmailType = data[i].EmailType;
+                        model.EmailTemplateNo = data[i].EmailTemplateNo;
+                        model.StatusPrint = data[i].StatusPrint;
+                        model.StatusEmail = data[i].StatusEmail;
+                        model.StatusSignPdf = data[i].StatusSignPdf;
+                        model.StatusSignXml = data[i].StatusSignXml;
+                        model.Isactive = data[i].Isactive;
+                        model.CreateBy = null;
+                        model.CreateDate = null;
+                        model.UpdateBy = null;
+                        model.UpdateDate = null;
+                        datas.push(model);
+                    }
+                }
+            }else{
+                for(var i = 1; i < data.length; i++){
+                    var model = new Object();
+                    model.CustomerProfileNo = data[i][0];
+                    model.CustomerId = data[i][1];
+                    model.CompanyCode = data[i][2];
+                    model.OutputType = data[i][3];
+                    model.NumberOfCopies = data[i][4];
+                    model.CustomerEmail = data[i][5];
+                    model.CustomerCcemail = data[i][6];
+                    model.EmailType = data[i][7];
+                    model.EmailTemplateNo = data[i][8];
+                    model.StatusPrint = data[i][9];
+                    model.StatusEmail = data[i][10];
+                    model.StatusSignPdf = data[i][11];
+                    model.StatusSignXml = data[i][12];
+                    model.Isactive = data[i][13];
+                    model.CreateBy = null;
+                    model.CreateDate = null;
+                    model.UpdateBy = null;
+                    model.UpdateDate = null;
+                    datas.push(model);
+                }
+            }
+            
+            
+            Swal.fire({
+                title: 'Are you sure to import?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                confirmButtonClass: 'btn btn-primary',
+                cancelButtonClass: 'btn btn-danger ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $.blockUI();
+                    var getJsonString = JSON.stringify(datas);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Import", "ProfileCustomer")",
+                        data: { jsonString: getJsonString },
+                        dataType: "text",
+                        success: function (res) {
+                            
+                            var ret = $.parseJSON(res);
+                            if (ret.status) {
+                                fnSweetAlert_Success();
+                                RenderProfileCustomer();
+                            }
+                            else {
+                                fnSweetAlert_Error(ret.erroR_MESSAGE);
+                            }
+                            $.unblockUI();
+                        }
+                    });
+                }
+            });
+        }
+        
+    }
 
     // [Begin] Ajax call Controller
 

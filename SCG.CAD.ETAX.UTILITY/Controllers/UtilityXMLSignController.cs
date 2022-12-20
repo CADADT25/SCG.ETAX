@@ -220,7 +220,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             string jsondata = "";
             try
             {
-                Task<Response> resp;
+                Response resp;
                 dataTran.XmlBeforeSignLocation = beforesignfilepath;
                 dataTran.XmlSignLocation = pathfile;
                 if (!string.IsNullOrEmpty(xmlsign.resultCode) && xmlsign.resultCode.Equals("000"))
@@ -232,8 +232,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     dataTran.UpdateDate = DateTime.Now;
 
                     var json = JsonSerializer.Serialize(dataTran);
-                    resp = transactionDescription.Update(json);
-                    if (resp.Result.MESSAGE == "Updated Success.")
+                    resp = transactionDescription.Update(json).Result;
+                    if (resp.MESSAGE == "Updated Success.")
                     {
                         res.STATUS = true;
                     }
@@ -251,8 +251,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     dataTran.UpdateDate = DateTime.Now;
 
                     var json = JsonSerializer.Serialize(dataTran);
-                    resp = transactionDescription.Update(json);
-                    if (resp.Result.MESSAGE == "Updated Success.")
+                    resp = transactionDescription.Update(json).Result;
+                    if (resp.MESSAGE == "Updated Success.")
                     {
                         res.STATUS = true;
                     }

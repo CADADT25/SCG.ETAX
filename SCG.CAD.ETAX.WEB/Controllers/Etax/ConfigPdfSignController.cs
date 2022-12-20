@@ -30,6 +30,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+                ViewData["showIMPORT"] = permission.CheckControlAction(configControl, 9, userLevel, menuindex);
 
                 var comcode = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("premissionComCode"));
                 ViewData["companycode"] = comcode;
@@ -262,6 +263,35 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
         }
 
+        public async Task<JsonResult> ListOnline(string companyCode)
+        {
+            Response resp = new Response();
 
+            List<ConfigPdfSign> tran = new List<ConfigPdfSign>();
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigPdfSign/GetListAll"));
+
+                if (task.STATUS)
+                {
+                    tran = JsonConvert.DeserializeObject<List<ConfigPdfSign>>(task.OUTPUT_DATA.ToString());
+
+                    tran = tran.Where(x => x.ConfigPdfsignCompanyCode == companyCode && x.ConfigPdfsignOnlineRecordNumber != null).ToList();
+
+                }
+                else
+                {
+                    ViewBag.Error = task.MESSAGE;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+            return Json(new { data = tran });
+        }
     }
 }

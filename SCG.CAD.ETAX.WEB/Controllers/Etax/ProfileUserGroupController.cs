@@ -30,6 +30,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 ViewData["showVIEW"] = permission.CheckControlAction(configControl, 6, userLevel, menuindex);
                 ViewData["showSEARCH"] = permission.CheckControlAction(configControl, 7, userLevel, menuindex);
                 ViewData["showADMINTOOL"] = permission.CheckControlAction(configControl, 8, userLevel, menuindex);
+                ViewData["showIMPORT"] = permission.CheckControlAction(configControl, 9, userLevel, menuindex);
 
                 return View();
             }
