@@ -12,10 +12,11 @@ namespace SCG.CAD.ETAX.API.Repositories
         //UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
         //UtilityXMLGenerateController utilityXMLGenerateController = new UtilityXMLGenerateController();
         //UtilityXMLSignController utilityXMLSignController = new UtilityXMLSignController();
-        UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
+        //UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
         
         XMLGenerateRepository xmlGenRepo = new XMLGenerateRepository();
         XMLSignRepository xmlSignRepo = new XMLSignRepository();
+        PDFSignRepository pdfSignRepo = new PDFSignRepository();
 
         SignDocumentService service = new SignDocumentService();
         public async Task<Response> Sign(SignDocumentRequest req)
@@ -187,7 +188,7 @@ namespace SCG.CAD.ETAX.API.Repositories
                 pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
                 pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
                 pdfFileDetail.Billno = billings[0];
-                var resPdfSign = utilityPDFSignController.ProcessPDFSign(configPdfSign, pdfFileDetail);
+                var resPdfSign = pdfSignRepo.ProcessPDFSign(configPdfSign, pdfFileDetail).Result;
                 if (!resPdfSign.STATUS)
                 {
                     resp.CODE = "103";
