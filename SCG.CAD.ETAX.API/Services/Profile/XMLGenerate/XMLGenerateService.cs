@@ -3,6 +3,7 @@ using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY.XMLGenBussiness;
 using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -94,12 +95,12 @@ namespace SCG.CAD.ETAX.API.Services
                 }
                 productUnit = (List<ProductUnit>)res.OUTPUT_DATA;
 
-                res = GetProfileBranch();
-                if (res.STATUS == false)
-                {
-                    return res;
-                }
-                profileBranches = (List<ProfileBranch>)res.OUTPUT_DATA;
+                //res = GetProfileBranch();
+                //if (res.STATUS == false)
+                //{
+                //    return res;
+                //}
+                //profileBranches = (List<ProfileBranch>)res.OUTPUT_DATA;
 
                 res = GetConfigGlobal();
                 if (res.STATUS == false)
@@ -122,7 +123,14 @@ namespace SCG.CAD.ETAX.API.Services
                             {
                                 listbillingno.Add(classtextfile.BILLING_NO);
                                 res = transactionDescriptionService.GET_BILLING(classtextfile.BILLING_NO);
-                                var dataTran = ((List<TransactionDescription>)res.OUTPUT_DATA).FirstOrDefault();
+                                TransactionDescription dataTran = null;
+                                if (res.STATUS)
+                                {
+                                    if (res.OUTPUT_DATA != null)
+                                    {
+                                        dataTran = ((List<TransactionDescription>)res.OUTPUT_DATA).FirstOrDefault();
+                                    }
+                                }
                                 res = logicToolHelper.CheckCancelBillingOrSentRevenueDepartment(dataTran);
                                 if (!res.STATUS)
                                 {
@@ -475,7 +483,7 @@ namespace SCG.CAD.ETAX.API.Services
         public Response InsertDataTransactionDescription(TextFileSchematic dataxml, string source, List<DocumentCode> documentCode, List<ProfileCompany> profileCompany)
         {
             Response res = new Response();
-            TransactionDescription data = new TransactionDescription();
+            TransactionDescription data = null;
             List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
             bool insert = false;
             double ic = 0;
@@ -486,8 +494,10 @@ namespace SCG.CAD.ETAX.API.Services
             try
             {
                 res = transactionDescriptionService.GET_BILLING(dataxml.BILLING_NO);
-                data = ((List<TransactionDescription>)res.OUTPUT_DATA).FirstOrDefault();
-
+                if (res.STATUS)
+                {
+                    data = ((List<TransactionDescription>)res.OUTPUT_DATA).FirstOrDefault();
+                }
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
 
@@ -648,14 +658,18 @@ namespace SCG.CAD.ETAX.API.Services
             Response res = new Response();
             res.STATUS = false;
             string errorText = "";
-            TransactionDescription dataTran = new TransactionDescription();
+            TransactionDescription dataTran = null;
             List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
             try
             {
                 res = transactionDescriptionService.GET_BILLING(billingNo);
-                listdatatransactionDescription = (List<TransactionDescription>)res.OUTPUT_DATA;
+                if (res.STATUS)
+                {
+                    listdatatransactionDescription = (List<TransactionDescription>)res.OUTPUT_DATA;
 
-                dataTran = listdatatransactionDescription.FirstOrDefault();
+                    dataTran = listdatatransactionDescription.FirstOrDefault();
+                }
+                
                 if (dataTran != null)
                 {
                     if (errormessage.Count == 0)

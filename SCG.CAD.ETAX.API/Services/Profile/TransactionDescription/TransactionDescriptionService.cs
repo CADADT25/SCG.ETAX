@@ -6,6 +6,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using SCG.CAD.ETAX.UTILITY.AdminTool;
+using System.Linq;
 using Path = System.IO.Path;
 
 namespace SCG.CAD.ETAX.API.Services
@@ -129,26 +130,28 @@ namespace SCG.CAD.ETAX.API.Services
 
             try
             {
-                var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == Convert.ToString(billingNo)).ToList();
-
-                if (getList.Count > 0)
+                using (_dbContext)
                 {
-                    resp.STATUS = true;
-                    resp.MESSAGE = "Get data from ID '" + billingNo + "' success. ";
-                    resp.OUTPUT_DATA = getList;
-                }
-                else
-                {
-                    resp.STATUS = false;
-                    resp.MESSAGE = "Data not found";
-                }
+                    var getList = _dbContext.transactionDescription.Where(x => x.BillingNumber == Convert.ToString(billingNo)).ToList();
 
+                    if (getList.Count > 0)
+                    {
+                        resp.STATUS = true;
+                        resp.MESSAGE = "Get data from ID '" + billingNo + "' success. ";
+                        resp.OUTPUT_DATA = getList;
+                    }
+                    else
+                    {
+                        resp.STATUS = false;
+                        resp.MESSAGE = "Data not found";
+                    }
+                }
             }
             catch (Exception ex)
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -175,7 +178,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Insert faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -496,7 +499,7 @@ namespace SCG.CAD.ETAX.API.Services
                 if (billno.Count > 0)
                 {
                     var trans = _dbContext.transactionDescription.Where(t => billno.Contains(t.BillingNumber)).ToList();
-                    foreach(var tran in trans)
+                    foreach (var tran in trans)
                     {
                         tran.PostingYear = postingYear;
                         tran.UpdateDate = dtNow;
@@ -632,6 +635,31 @@ namespace SCG.CAD.ETAX.API.Services
                         tran = tran.Where(x => obj.tranSearchDocumentType.Contains(x.DocType)).ToList();
                     }
 
+                    if (obj.tranSearchIcO2c.Count > 0)
+                    {
+                        List<double> ics = new List<double>();
+                        foreach (var str in obj.tranSearchIcO2c)
+                        {
+                            try
+                            {
+                                if (str == "ic")
+                                {
+                                    ics.Add(1);
+                                }
+                                else
+                                {
+                                    ics.Add(0);
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                        tran = tran.Where(x => x.Ic != null).ToList();
+                        tran = tran.Where(x => ics.Contains(x.Ic.Value)).ToList();
+                    }
+
                     if (!string.IsNullOrEmpty(obj.tranSearchDataSource))
                     {
                         tran = tran.Where(x => obj.tranSearchDataSource.Contains(x.SourceName)).ToList();
@@ -640,8 +668,8 @@ namespace SCG.CAD.ETAX.API.Services
                     if (!string.IsNullOrEmpty(obj.tranSearchDateBetween))
                     {
                         var getArrayDate = obj.tranSearchDateBetween.Split("to");
-                        getMinDate = DateTime.ParseExact(getArrayDate[0].Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                        getMaxDate = DateTime.ParseExact(getArrayDate[1].Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                        getMinDate = DateTime.ParseExact(getArrayDate.FirstOrDefault().Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                        getMaxDate = DateTime.ParseExact(getArrayDate.LastOrDefault().Trim(), "dd-MM-yyyy", CultureInfo.InvariantCulture);
                         //getMinDate = Convert.ToDateTime(getArrayDate[0].Trim());
                         //getMaxDate = Convert.ToDateTime(getArrayDate[1].Trim());
 
