@@ -41,6 +41,9 @@
     .hoverwait {
         color: yellow;
     }
+    .dataTables_scrollBody{
+        max-height: 333px;
+    }
 </style>
 @await Html.PartialAsync("~/Views/transactionDescription/_Search.cshtml")
 
@@ -99,11 +102,23 @@
 
 
             "columns": [
-
                 {
                     width: "2%",
                     render: function (data, type, full, meta){
                         return '<input type="checkbox" class="dt-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                
+                {
+                    data: "companyCode",
+                    width: "5%"
+                },
+                {
+                    data: "sellOrg",
+                    width: "5%"
+                },
+                {
+                    data: "customerId",
+                    width: "5%"
                 },
 
                 {
@@ -118,53 +133,6 @@
                     width: "5%",
                     render: function (data, type, row) {
                         return data != null ? ' ' + data + ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>' : ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
-                    }
-                },
-                {
-                    data: "companyCode",
-                    width: "5%"
-                },
-                {
-                    data: "customerId",
-                    width: "5%"
-                },
-                {
-                    data: "ic",
-                    width: "5%",
-                    render: function (data, type, row) {
-                        return data == null ? '' : (data == "1") ? 'IC' : 'O2C';
-                    }
-                },
-                {
-                    data: "docType",
-                    width: "5%"
-                },
-                {
-                    data: "sourceName",
-                    width: "5%"
-                },
-                {
-                    data: "billingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "processingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return data == null ? '' : moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "createDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MM-YYYY');
                     }
                 },
                 {
@@ -216,6 +184,122 @@
                         return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
                     }
                 }
+                //{
+                //    width: "2%",
+                //    render: function (data, type, full, meta){
+                //        return '<input type="checkbox" class="dt-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                //},
+
+                //{
+                //    data: "billingNumber",
+                //    width: "10%",
+                //    render: function (data, type, row) {
+                //        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-eye text-primary"> </i> </a>';
+                //    }
+                //},
+                //{
+                //    data: "postingYear",
+                //    width: "5%",
+                //    render: function (data, type, row) {
+                //        return data != null ? ' ' + data + ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>' : ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                //    }
+                //},
+                //{
+                //    data: "companyCode",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "customerId",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "ic",
+                //    width: "5%",
+                //    render: function (data, type, row) {
+                //        return data == null ? '' : (data == "1") ? 'IC' : 'O2C';
+                //    }
+                //},
+                //{
+                //    data: "docType",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "sourceName",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "billingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "processingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return data == null ? '' : moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "createDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "generateStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "generateStatus");
+                //    }
+                //},
+                //{
+                //    data: "xmlSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "xmlSignStatus");
+                //    }
+                //},
+                //{
+                //    data: "pdfSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "pdfSignStatus");
+                //    }
+                //},
+                //{
+                //    data: "printStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "printStatus");
+                //    }
+                //},
+                //{
+                //    data: "emailSendStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "emailSendStatus");
+                //    }
+                //},
+                //{
+                //    data: "xmlCompressStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "xmlCompressStatus");
+                //    }
+                //},
+                //{
+                //    data: "pdfIndexingStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
+                //    }
+                //}
             ],
             //select: {
             //style:    'os',
@@ -452,11 +536,23 @@
                     //}
                 },
                 "columns": [
-
-                {
+                    {
                     width: "2%",
                     render: function (data, type, full, meta){
                         return '<input type="checkbox" class="dt-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                },
+                
+                {
+                    data: "companyCode",
+                    width: "5%"
+                },
+                {
+                    data: "sellOrg",
+                    width: "5%"
+                },
+                {
+                    data: "customerId",
+                    width: "5%"
                 },
 
                 {
@@ -470,54 +566,7 @@
                     data: "postingYear",
                     width: "5%",
                     render: function (data, type, row) {
-                        return' '+ data +  ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] +');"> <i class="fas fa-pen text-primary"> </i> </a>';
-                    }
-                },
-                {
-                    data: "companyCode",
-                    width: "5%"
-                },
-                {
-                    data: "customerId",
-                    width: "5%"
-                },
-                {
-                    data: "ic",
-                    width: "5%",
-                    render: function (data, type, row) {
-                        return (data == "1") ? 'IC' : 'O2C';
-                    }
-                },
-                {
-                    data: "docType",
-                    width: "5%"
-                },
-                {
-                    data: "sourceName",
-                    width: "5%"
-                },
-                {
-                    data: "billingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "processingDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MM-YYYY');
-                    }
-                },
-                {
-                    data: "createDate",
-                    width: "10%",
-                    className: "text-center",
-                    render: function(data, type, row, meta) {
-                            return moment(data).format('DD-MM-YYYY');
+                        return data != null ? ' ' + data + ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>' : ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] + ');"> <i class="fas fa-pen text-primary"> </i> </a>';
                     }
                 },
                 {
@@ -569,6 +618,122 @@
                         return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
                     }
                 }
+                //{
+                //    width: "2%",
+                //    render: function (data, type, full, meta){
+                //        return '<input type="checkbox" class="dt-checkboxes" name="id[]" value="' + $('<div/>').text(data).html() + '">';}
+                //},
+
+                //{
+                //    data: "billingNumber",
+                //    width: "10%",
+                //    render: function (data, type, row) {
+                //        return' '+ data.substr( 0, 100 ) +  ' <a onclick="fnCallBillingDetail(' + row['transactionNo'] +');"> <i class="fas fa-eye text-primary"> </i> </a>';
+                //    }
+                //},
+                //{
+                //    data: "postingYear",
+                //    width: "5%",
+                //    render: function (data, type, row) {
+                //        return' '+ data +  ' <a onclick="fnModalPostingYearOpen(' + row['billingNumber'] +');"> <i class="fas fa-pen text-primary"> </i> </a>';
+                //    }
+                //},
+                //{
+                //    data: "companyCode",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "customerId",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "ic",
+                //    width: "5%",
+                //    render: function (data, type, row) {
+                //        return (data == "1") ? 'IC' : 'O2C';
+                //    }
+                //},
+                //{
+                //    data: "docType",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "sourceName",
+                //    width: "5%"
+                //},
+                //{
+                //    data: "billingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "processingDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "createDate",
+                //    width: "10%",
+                //    className: "text-center",
+                //    render: function(data, type, row, meta) {
+                //            return moment(data).format('DD-MM-YYYY');
+                //    }
+                //},
+                //{
+                //    data: "generateStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "generateStatus");
+                //    }
+                //},
+                //{
+                //    data: "xmlSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "xmlSignStatus");
+                //    }
+                //},
+                //{
+                //    data: "pdfSignStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "pdfSignStatus");
+                //    }
+                //},
+                //{
+                //    data: "printStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "printStatus");
+                //    }
+                //},
+                //{
+                //    data: "emailSendStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "emailSendStatus");
+                //    }
+                //},
+                //{
+                //    data: "xmlCompressStatus",
+                //    width: "3%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "xmlCompressStatus");
+                //    }
+                //},
+                //{
+                //    data: "pdfIndexingStatus",
+                //    width: "2%",
+                //    render: function (data, type, row) {
+                //        return fnCheckStatus(data, row['transactionNo'], "pdfIndexingStatus");
+                //    }
+                //}
             ],
 
             select: {
