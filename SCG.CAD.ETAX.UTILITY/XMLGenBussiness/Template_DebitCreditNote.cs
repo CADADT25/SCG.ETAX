@@ -12,11 +12,10 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
             try
             {
                 StringBuilder sb = new StringBuilder();
-                //sb.Append("<rsm:DebitCreditNote_CrossIndustryInvoice");
                 sb.Append("<rsm:DebitCreditNote_CrossIndustryInvoice xmlns:rsm='urn:etda:uncefact:data:standard:DebitCreditNote_CrossIndustryInvoice:2' ");
                 sb.Append("xmlns:ram='urn:etda:uncefact:data:standard:DebitCreditNote_ReusableAggregateBusinessInformationEntity:2' ");
                 sb.Append("xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' ");
-                sb.Append("xsi:schemaLocation='urn:etda:uncefact:data:standard:DebitCreditNote_CrossIndustryInvoice:2 file: ../data/standard/DebitCreditNote_CrossIndustryInvoice_2p0.xsd'> ");
+                sb.Append("xsi:schemaLocation='urn:etda:uncefact:data:standard:DebitCreditNote_CrossIndustryInvoice:2 file:../data /standard/DebitCreditNote_CrossIndustryInvoice_2p0.xsd'> ");
                 sb.Append("<rsm:ExchangedDocumentContext>");
                 sb.Append("<ram:GuidelineSpecifiedDocumentContextParameter>");
                 sb.Append("<ram:ID schemeAgencyID='" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeAgencyID + "' schemeVersionID='" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.schemeVersionID + "'>" + data.exchangedDocumentContext.guidelineSpecifiedDocumentContextParameter.id + "</ram:ID>");

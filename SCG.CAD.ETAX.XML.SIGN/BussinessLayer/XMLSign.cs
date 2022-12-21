@@ -84,7 +84,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
             try
             {
                 xMLSignModel = new XMLSignModel();
-                xMLSignModel.configPdfSign = config;
+                xMLSignModel.configXmlSign = config;
                 xMLSignModel.listFileXMLs = new List<FileXML>();
                 pathFolder = config.ConfigXmlsignInputPath;
                 if (Directory.Exists(pathFolder))
