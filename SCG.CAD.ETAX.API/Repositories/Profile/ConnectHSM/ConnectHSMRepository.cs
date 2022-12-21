@@ -19,7 +19,7 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM
             catch (Exception ex)
             {
                 resp.resultCode = "9999";
-                resp.resultDes = ex.InnerException.Message.ToString();
+                resp.resultDes = ex.Message.ToString();
             }
             return await Task.FromResult(resp);
         }
@@ -38,7 +38,7 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM
             catch (Exception ex)
             {
                 resp.resultCode = "9999";
-                resp.resultDes = ex.InnerException.Message.ToString();
+                resp.resultDes = ex.Message.ToString();
             }
             return await Task.FromResult(resp);
         }

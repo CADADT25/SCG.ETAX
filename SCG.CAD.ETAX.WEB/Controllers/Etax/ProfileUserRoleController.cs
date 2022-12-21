@@ -106,7 +106,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
             return Json(new { data = tran });
@@ -168,7 +168,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
 

@@ -32,7 +32,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
 

@@ -53,7 +53,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.ERROR_MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -123,7 +123,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.ERROR_MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }

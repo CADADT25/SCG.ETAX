@@ -32,7 +32,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
 

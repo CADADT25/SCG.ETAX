@@ -35,7 +35,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -65,7 +65,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Get data fail.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -97,7 +97,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Insert faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -152,7 +152,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -185,7 +185,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Delete faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -285,7 +285,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -371,7 +371,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -420,7 +420,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -469,7 +469,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }
@@ -519,7 +519,7 @@ namespace SCG.CAD.ETAX.API.Services
             {
                 resp.STATUS = false;
                 resp.MESSAGE = "Update faild.";
-                resp.INNER_EXCEPTION = ex.InnerException.ToString();
+                resp.INNER_EXCEPTION = ex.Message.ToString();
             }
             return resp;
         }

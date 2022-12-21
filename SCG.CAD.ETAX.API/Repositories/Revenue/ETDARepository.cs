@@ -40,7 +40,7 @@ namespace SCG.CAD.ETAX.API.Repositories
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return resp;
@@ -71,7 +71,7 @@ namespace SCG.CAD.ETAX.API.Repositories
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return resp;
@@ -102,7 +102,7 @@ namespace SCG.CAD.ETAX.API.Repositories
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return resp;

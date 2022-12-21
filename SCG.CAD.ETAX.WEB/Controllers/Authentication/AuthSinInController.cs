@@ -58,10 +58,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
 
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
 
@@ -130,10 +130,10 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Authentication
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
 
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
 

@@ -88,7 +88,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
             return Json(result);
@@ -120,7 +120,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
 
@@ -225,7 +225,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException.ToString());
+                Console.WriteLine(ex.Message.ToString());
             }
 
             return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-ProfileCertificate.csv");
@@ -270,9 +270,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers.Etax
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
 

@@ -18,7 +18,7 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.SendEmail
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
             return await Task.FromResult(resp);
         }
@@ -34,7 +34,7 @@ namespace SCG.CAD.ETAX.API.Repositories.Profile.SendEmail
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
             return await Task.FromResult(resp);
         }

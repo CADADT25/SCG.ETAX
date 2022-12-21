@@ -104,7 +104,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
 
@@ -221,7 +221,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException.ToString());
+                Console.WriteLine(ex.Message.ToString());
             }
 
             return File(Encoding.UTF8.GetBytes(strBuilder.ToString()), "text/csv", "scg-etax-OutputSearchEmailSend.csv");
@@ -265,7 +265,7 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
 
             return Json(new { data = tran });

@@ -19,7 +19,7 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return await Task.FromResult(resp);
@@ -37,7 +37,7 @@
             catch (Exception ex)
             {
                 resp.STATUS = false;
-                resp.ERROR_MESSAGE = ex.InnerException.Message.ToString();
+                resp.ERROR_MESSAGE = ex.Message.ToString();
             }
 
             return await Task.FromResult(resp);

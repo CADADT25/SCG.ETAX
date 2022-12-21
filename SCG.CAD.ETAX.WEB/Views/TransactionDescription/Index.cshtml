@@ -1018,7 +1018,7 @@
                 cancelButtonClass: 'btn btn-danger ml-1',
                 buttonsStyling: false,
                 }).then(function (result) {
-                    if (result) {
+            if (result.isConfirmed) {
                         data = fnGetCheckbox();
                         var updateby = $("#leftSideEmail").text();
 

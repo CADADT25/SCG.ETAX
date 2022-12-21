@@ -50,7 +50,7 @@ namespace SCG.CAD.ETAX.UTILITY
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
             return tran;
         }
@@ -63,7 +63,7 @@ namespace SCG.CAD.ETAX.UTILITY
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
             return task;
         }
@@ -76,7 +76,7 @@ namespace SCG.CAD.ETAX.UTILITY
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
             return task;
         }
@@ -89,7 +89,7 @@ namespace SCG.CAD.ETAX.UTILITY
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
             }
             return task;
         }
