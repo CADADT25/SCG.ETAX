@@ -1,4 +1,5 @@
 ﻿using SCG.CAD.ETAX.DAL.MODEL;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
     {
         public DatabaseExecuteController(string conDbName = "") : base(conDbName)
         {
-            
+
         }
         OutputOnDbModel resultData = new OutputOnDbModel();
 
@@ -84,6 +85,19 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
             finally
             {
                 base.TransClose();
+            }
+
+            return resultData;
+        }
+        protected OutputOnDbModel InsertTraceLogApiBySql(string sql, TraceLogApi param)
+        {
+            try
+            {
+                base.TransInsertTraceLogApiExecuteCommand(sql, param);
+            }
+            finally
+            {
+                 
             }
 
             return resultData;

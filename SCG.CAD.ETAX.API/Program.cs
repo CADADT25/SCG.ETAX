@@ -19,8 +19,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Localization;
+using SCG.CAD.ETAX.API.Middleware;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Http;
+using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpLogging(options => // <--- Setup logging
+{
+    // Specify all that you need here:
+    options.LoggingFields = HttpLoggingFields.All;
+    //options.ResponseHeaders.Add("Non-Sensitive");
+    //options.MediaTypeOptions.AddText("application/javascript");
+    //options.RequestBodyLogLimit = 4096;
+    //options.ResponseBodyLogLimit = 4096;
+});
 
 var connectionString = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["ConnectionStr"];
 
@@ -94,6 +108,8 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -122,6 +138,15 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseLoggingHandler();
+
+app.Use(async (context, next) =>
+{
+    // Do work that can write to the Response.
+    await next.Invoke();
+    // Do logging or other work that doesn't write to the Response.
+});
 
 app.MapControllers();
 

@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SCG.CAD.ETAX.DAL.MODEL;
 using Microsoft.Extensions.Configuration;
-
+using SCG.CAD.ETAX.MODEL.etaxModel;
+using System.Drawing;
 
 namespace SCG.CAD.ETAX.DAL.CONTROLLER
 {
@@ -33,7 +34,7 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
             {
                 strConnection = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")[conDbName];
             }
-            
+
             //strConnection = ConfigurationManager.ConnectionStrings["ConnectionStr"].ConnectionString;
 
         }
@@ -129,6 +130,58 @@ namespace SCG.CAD.ETAX.DAL.CONTROLLER
                     MessageOnDb = "",
                     ResultOnDb = null
                 };
+            }
+            catch (Exception er)
+            {
+                dataOutPut = new OutputOnDbModel
+                {
+                    StatusOnDb = false,
+                    ClassOnDb = "Class Name: TransOracleModels",
+                    MethodOnDb = "Method Name: TransExecuteCommand",
+                    MessageOnDb = "Execute SQL Command Error ==> " + er.Message.ToString(),
+                    ResultOnDb = null
+                };
+            }
+
+            return dataOutPut;
+        }
+        protected OutputOnDbModel TransInsertTraceLogApiExecuteCommand(string sql, TraceLogApi param)
+        {
+            try
+            {
+
+                using (SqlConnection conn = new SqlConnection(strConnection))
+                {
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sql;
+
+                        cmd.Parameters.AddWithValue("@RequestBody", param.RequestBody ?? "");
+                        cmd.Parameters.AddWithValue("@RequestContentType", param.RequestContentType ?? "");
+                        cmd.Parameters.AddWithValue("@RequestMethod", param.RequestMethod ?? "");
+                        cmd.Parameters.AddWithValue("@RequestPath", param.RequestPath ?? "");
+                        cmd.Parameters.AddWithValue("@RequestTimestamp", param.RequestTimestamp);
+                        cmd.Parameters.AddWithValue("@RequestUri", param.RequestUri ?? "");
+                        cmd.Parameters.AddWithValue("@ResponseBody", param.ResponseBody ?? "");
+                        cmd.Parameters.AddWithValue("@ResponseContentType", param.ResponseContentType ?? "");
+                        cmd.Parameters.AddWithValue("@ResponseStatusCode", param.ResponseStatusCode ?? "");
+                        cmd.Parameters.AddWithValue("@ResponseTimestamp", param.ResponseTimestamp);
+
+                        try
+                        {
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (SqlException e)
+                        {
+                            var xxx = e.Message.ToString();
+                            var xxx2 = xxx;
+                        }
+
+                    }
+                }
             }
             catch (Exception er)
             {
