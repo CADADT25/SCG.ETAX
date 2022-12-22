@@ -476,6 +476,7 @@ namespace SCG.CAD.ETAX.API.Services
 
         public Response UPDATE_NEXTTIME(ConfigNextTime param)
         {
+            var setNewOneTime = "";
             Response resp = new Response();
             try
             {
@@ -485,22 +486,24 @@ namespace SCG.CAD.ETAX.API.Services
 
                     if (update != null)
                     {
-
-                        var getOnetime = update.ConfigMftsIndexGenerationSettingOutputOneTime;
-
-                        var splitOneTime = getOnetime.Split("|");
-
-                        var setNewOneTime = "";
-
-                        for (int i = 0; i < splitOneTime.Length; i++)
+                        if (!string.IsNullOrEmpty(update.ConfigMftsIndexGenerationSettingOutputOneTime))
                         {
-                            if (i != param.OneTimePosition)
+                            var getOnetime = update.ConfigMftsIndexGenerationSettingOutputOneTime;
+
+                            var splitOneTime = getOnetime.Split("|");
+
+
+                            for (int i = 0; i < splitOneTime.Length; i++)
                             {
-                                setNewOneTime += "|" + splitOneTime[i];
+                                if (i != param.OneTimePosition)
+                                {
+                                    setNewOneTime += "|" + splitOneTime[i];
+                                }
                             }
+                            setNewOneTime = setNewOneTime.Substring(1);
                         }
 
-                        update.ConfigMftsIndexGenerationSettingOutputOneTime = setNewOneTime.Substring(1);
+                        update.ConfigMftsIndexGenerationSettingOutputOneTime = setNewOneTime;
                         update.ConfigMftsIndexGenerationSettingOutputNextTime = param.NextTime;
 
                         _dbContext.SaveChanges();

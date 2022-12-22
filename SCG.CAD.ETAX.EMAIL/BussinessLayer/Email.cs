@@ -45,8 +45,6 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             {
                 Console.WriteLine("Start SendEmail");
                 log.InsertLog(pathlog, "Start SendEmail");
-                GetDataFromDataBase();
-                GetConfig();
                 LoopbyCompany();
                 Console.WriteLine("End SendEmail");
                 log.InsertLog(pathlog, "End SendEmail");
@@ -105,6 +103,10 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             bool result = false;
             try
             {
+
+                GetDataFromDataBase();
+                GetConfig();
+
                 double sumfilesize;
                 double filesize;
                 string customerid = "";

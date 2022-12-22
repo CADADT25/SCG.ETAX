@@ -570,7 +570,6 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 data.Foc = (dataxml.FI_DOC_TYPE == "FOC") ? 1 : 0;
                 if (!string.IsNullOrEmpty(doctype))
                 {
-                    ic = 1;
                     switch (doctype.ToUpper())
                     {
                         case "380":
@@ -622,6 +621,12 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                         default:
                             break;
                     }
+                }
+
+                ic = 1;
+                if(dataxml.IC_FLAG == null || string.IsNullOrEmpty(dataxml.IC_FLAG))
+                {
+                    ic = 0;
                 }
                 data.Ic = ic;
                 data.ImageDocType = imageDocType;// mapping
@@ -1070,12 +1075,15 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                         break;
                     case "T01":
                     default:
+                        errormessage.Add("Document type invalid");
                         break;
                 }
-                if (res.STATUS)
+                if (!res.STATUS)
                 {
-                    res = UpdateDataTransaction(errormessage, billingno, pathoutbound + filename);
+                    errormessage.Add(res.ERROR_MESSAGE);
                 }
+
+                res = UpdateDataTransaction(errormessage, billingno, pathoutbound + filename);
 
             }
             catch (Exception ex)
