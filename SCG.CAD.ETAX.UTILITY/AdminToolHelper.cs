@@ -49,11 +49,10 @@ namespace SCG.CAD.ETAX.UTILITY
 
         public bool UpdateListTransaction(string jsonString)
         {
-            Task<Response> res;
             try
             {
-                res = transactionDescriptionController.UpdateList(jsonString);
-                if (res.Result.MESSAGE == "Updated Success.")
+                var res = transactionDescriptionController.UpdateList(jsonString).Result;
+                if (res.MESSAGE == "Updated Success.")
                 {
                     return true;
                 }
