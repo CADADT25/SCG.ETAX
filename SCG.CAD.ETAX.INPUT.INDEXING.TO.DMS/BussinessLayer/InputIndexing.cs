@@ -80,6 +80,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 indexingInput.ImageDocTypes = new List<ImageDocType>();
                 indexingInput.ImageDocTypes = transactionDescription
                                                     .Where(x => x.CompanyCode == input.ConfigMftsIndexGenerationSettingInputCompanyCode &&
+                                                    x.PdfSignStatus == "Successful" &&
                                                     x.PdfIndexingStatus == "Waiting" && String.IsNullOrEmpty(x.DmsAttachmentFileName))
                                                     .Select(x => new ImageDocType
                                                     {
