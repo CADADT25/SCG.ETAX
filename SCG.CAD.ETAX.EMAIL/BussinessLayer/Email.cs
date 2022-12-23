@@ -59,7 +59,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
         {
             try
             {
-                configMftsEmailSettings = configMftsEmailSettingController.List().Result;
+                configMftsEmailSettings = configMftsEmailSettingController.List().Result.Where(x=> x.Isactive == 1).ToList();
                 transactionDescriptions = transactionDescriptionController.List().Result;
                 configGlobals = configGlobalController.List().Result;
                 profileCustomers = profileCustomerController.List().Result;
@@ -627,7 +627,7 @@ namespace SCG.CAD.ETAX.EMAIL.BussinessLayer
             try
             {
                 //pathFolder = AppDomain.CurrentDomain.BaseDirectory + "\\TempEmail\\";
-                pathFolder = @"D:\SCG.CAD.ETAX\SCG.CAD.ETAX.EMAIL\bin\Debug\net6.0\TempEmail";
+                pathFolder = @"D:\SCG.CAD.ETAX\SERVICE_TEST\SCG.CAD.ETAX.EMAIL\bin\Debug\net6.0\TempEmail";
                 if (!Directory.Exists(pathFolder))
                 {
                     Directory.CreateDirectory(pathFolder);
