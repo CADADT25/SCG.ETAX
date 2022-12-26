@@ -494,8 +494,7 @@ namespace SCG.CAD.ETAX.API.Services
             Response res = new Response();
             try
             {
-                res.STATUS = true;
-                res.OUTPUT_DATA = profileReasonIssueService.GET_LIST();
+                res = profileReasonIssueService.GET_LIST();
             }
             catch (Exception ex)
             {
