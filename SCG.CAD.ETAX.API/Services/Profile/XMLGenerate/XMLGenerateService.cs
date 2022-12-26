@@ -17,6 +17,7 @@ namespace SCG.CAD.ETAX.API.Services
         ProfileSellerService profileSellerService = new ProfileSellerService();
         TransactionDescriptionService transactionDescriptionService = new TransactionDescriptionService();
         ProfileBranchService profileBranchService = new ProfileBranchService();
+        ProfileReasonIssueService profileReasonIssueService = new ProfileReasonIssueService();
         ProductUnitService productUnitService = new ProductUnitService();
         ConfigGlobalService configGlobalService = new ConfigGlobalService();
         UtilityProfileController profileController = new UtilityProfileController();
@@ -33,6 +34,7 @@ namespace SCG.CAD.ETAX.API.Services
             List<TransactionDescription> listdatatransactionDescription = new List<TransactionDescription>();
             List<TransactionDescription> datatransactionDescription = new List<TransactionDescription>();
             List<ProfileBranch> profileBranches = new List<ProfileBranch>();
+            List<ProfileReasonIssue> profileReasonIssue = new List<ProfileReasonIssue>();
             List<ProductUnit> productUnit = new List<ProductUnit>();
             List<ConfigGlobal> configGlobal = new List<ConfigGlobal>();
 
@@ -102,6 +104,13 @@ namespace SCG.CAD.ETAX.API.Services
                 //}
                 //profileBranches = (List<ProfileBranch>)res.OUTPUT_DATA;
 
+                res = GetProfileReasonIssue();
+                if (res.STATUS == false)
+                {
+                    return res;
+                }
+                profileReasonIssue = (List<ProfileReasonIssue>)res.OUTPUT_DATA;
+
                 res = GetConfigGlobal();
                 if (res.STATUS == false)
                 {
@@ -156,7 +165,8 @@ namespace SCG.CAD.ETAX.API.Services
                                         }
                                         else
                                         {
-                                            res = ConvertClasstoXMLFormat(classtextfile, documentCode, profileCompany, profileSeller, taxCode);
+                                            //res = ConvertClasstoXMLFormat(classtextfile, documentCode, profileCompany, profileSeller, taxCode);
+                                            res = ConvertClasstoXMLFormat(classtextfile, documentCode, profileCompany, profileSeller, taxCode, profileReasonIssue);
                                             if (res.STATUS)
                                             {
                                                 var dataxml = (CrossIndustryInvoice)res.OUTPUT_DATA;
@@ -471,6 +481,21 @@ namespace SCG.CAD.ETAX.API.Services
             try
             {
                 res = configGlobalService.GET_LIST();
+            }
+            catch (Exception ex)
+            {
+                res.STATUS = false;
+                res.ERROR_MESSAGE = ex.ToString();
+            }
+            return res;
+        }
+        public Response GetProfileReasonIssue()
+        {
+            Response res = new Response();
+            try
+            {
+                res.STATUS = true;
+                res.OUTPUT_DATA = profileReasonIssueService.GET_LIST();
             }
             catch (Exception ex)
             {
@@ -829,7 +854,7 @@ namespace SCG.CAD.ETAX.API.Services
             return res;
         }
 
-        public Response ConvertClasstoXMLFormat(TextFileSchematic data, List<DocumentCode> documentCode, List<ProfileCompany> profileCompany, List<ProfileSeller> profileSeller, List<TaxCode> taxCode)
+        public Response ConvertClasstoXMLFormat(TextFileSchematic data, List<DocumentCode> documentCode, List<ProfileCompany> profileCompany, List<ProfileSeller> profileSeller, List<TaxCode> taxCode, List<ProfileReasonIssue> profileReasonIssue)
         {
             Response res = new Response();
             res.STATUS = false;
@@ -842,6 +867,7 @@ namespace SCG.CAD.ETAX.API.Services
                 ProfileSeller profile = new ProfileSeller();
                 ProfileCompany profiledetail = new ProfileCompany();
                 DocumentCode doccode = new DocumentCode();
+                DocumentCode refdoccode = new DocumentCode();
                 string schemeID = "OTHR";
                 xmldata = new CrossIndustryInvoice();
                 supplyChainTradeTransaction = new SupplyChainTradeTransaction();
@@ -866,6 +892,13 @@ namespace SCG.CAD.ETAX.API.Services
                 xmldata.exchangedDocument.typeCode = doccode.DocumentCodeRd ?? "";
                 xmldata.exchangedDocument.issueDateTime = data.BILLING_DATE ?? "";
                 xmldata.exchangedDocument.createionDateTime = data.CREATE_DATE_TIME ?? "";
+                xmldata.exchangedDocument.purpose = data.ORDER_REASON;
+                xmldata.exchangedDocument.purposeCode = "";
+                var reasoncode = profileReasonIssue.FirstOrDefault(x => x.ReasonIssueErpReasonCode == data.ORDER_REASON_CODE);
+                if (reasoncode != null)
+                {
+                    xmldata.exchangedDocument.purposeCode = reasoncode.ReasonIssueRdReasonCode ?? "";
+                }
 
                 profile = profileController.ProfileAddress(profileSeller, profiledetail.CompanyCode, data.SELLER_BRANCH);
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement = new ApplicableHeaderTradeAgreement();
@@ -911,9 +944,14 @@ namespace SCG.CAD.ETAX.API.Services
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.buyerTradeParty.postalTradeAddress.countryID = data.BUYER_LAND1 ?? "";
 
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument = new AdditionalReferencedDocument();
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode = "";
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issueDateTime = "";
-                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issuerAssignedID = "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode = data.REF_FI_DOCTYPE ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issueDateTime = data.REF_DOC_DATE ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issuerAssignedID = data.REF_DOC ?? "";
+                refdoccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == (data.REF_FI_DOCTYPE ?? ""));
+                if (refdoccode != null)
+                {
+                    supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode = refdoccode.DocumentCodeRd ?? "";
+                }
 
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement();
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.invoiceCurrencyCode = new InvoiceCurrencyCode();
@@ -931,6 +969,8 @@ namespace SCG.CAD.ETAX.API.Services
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.taxTotalAmount = data.TAX_TOTAL_AMOUNT ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.grandTotalAmount = data.GRAND_TOTAL_AMOUNT ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.chargeTotalAmount = data.CHARGE_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.originalInformationAmount = data.ORIGINAL_AMOUNT ?? "";
+                supplyChainTradeTransaction.applicableHeaderTradeSettlement.specifiedTradeSettlementHeaderMonetarySummation.differenceSalesInformationAmount = data.DIFFERENCE_AMOUNT ?? "";
 
                 supplyChainTradeTransaction.includedSupplyChainTradeLineItem = new List<IncludedSupplyChainTradeLineItem>();
                 for (int i = 0; i < data.Item.Count; i++)
