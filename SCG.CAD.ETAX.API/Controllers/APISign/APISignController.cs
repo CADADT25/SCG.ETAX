@@ -30,7 +30,7 @@ namespace SCG.CAD.ETAX.API.Controllers.APISign
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("SyncCertificate")]
         public IActionResult SyncCertificate()
         {

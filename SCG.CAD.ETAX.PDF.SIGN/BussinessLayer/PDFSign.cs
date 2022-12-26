@@ -12,6 +12,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         UtilityConfigPDFSignController configPDFSignController = new UtilityConfigPDFSignController();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         UtilityPDFSignController utilityPDFSignController = new UtilityPDFSignController();
+        UtilityAPISignController UtilityAPISignController = new UtilityAPISignController();
         LogHelper log = new LogHelper();
 
         List<ConfigPdfSign> configPDFSign = new List<ConfigPdfSign>();
@@ -137,6 +138,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             try
             {
+                var sss = UtilityAPISignController.GetSyncCertificate().Result;
                 configGlobal = configGlobalController.List().Result;
                 configPDFSign = configPDFSignController.List().Result;
                 pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;

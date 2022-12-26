@@ -1,5 +1,6 @@
 ﻿using SCG.CAD.ETAX.API.Repositories.Profile.ConnectHSM;
 using SCG.CAD.ETAX.UTILITY;
+using SCG.CAD.ETAX.UTILITY.Controllers;
 
 namespace SCG.CAD.ETAX.API.Services
 {
@@ -10,6 +11,7 @@ namespace SCG.CAD.ETAX.API.Services
             var repo = new ConnectHSMRepository();
             Response res = new Response();
             List<CertificateMaster> listcertificateMaster = new List<CertificateMaster>();
+            UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
             CertificateMaster certificateMaster = new CertificateMaster();
             EncodeHelper encodeHelper = new EncodeHelper();
 
@@ -19,15 +21,17 @@ namespace SCG.CAD.ETAX.API.Services
             string slotpassword = encodeHelper.Base64Encode("P@ssw0rd1");
             try
             {
-                var hsmSerial = repo.GetHSMSerial(hsmname).Result;
-                if(hsmSerial != null)
+                //var hsmSerial = repo.GetHSMSerial(hsmname).Result;
+                var hsmSerial = utilityAPISignController.GetHSMSerialwithAPI(hsmname).Result;
+                if(hsmSerial.resultCode != null)
                 {
                     if (hsmSerial.resultCode.Equals("000"))
                     {
                         foreach(var itemhsmSerial in hsmSerial.hsmSerialList)
                         {
-                            var keyAlias = repo.GetKeyAlias(hsmname, itemhsmSerial.hsmSerial).Result;
-                            if (keyAlias != null)
+                            //var keyAlias = repo.GetKeyAlias(hsmname, itemhsmSerial.hsmSerial).Result;
+                            var keyAlias = utilityAPISignController.GetKeyAliaswithAPI(hsmname, itemhsmSerial.hsmSerial).Result;
+                            if (keyAlias.resultCode != null)
                             {
                                 if (keyAlias.resultCode.Equals("000"))
                                 {
