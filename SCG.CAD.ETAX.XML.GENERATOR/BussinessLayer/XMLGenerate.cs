@@ -5,6 +5,7 @@ using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.MODEL.CustomModel;
+using System.Text;
 
 namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 {
@@ -34,7 +35,8 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
 
                 foreach (var textfile in allTextFile)
                 {
-                    res = utilityXMLGenerateController.ProcessXMLGenerate(textfile);
+                    //res = utilityXMLGenerateController.ProcessXMLGenerate(textfile);
+                    res = utilityXMLGenerateController.SendProcessXMLGen(textfile).Result;
                     var filename = Path.GetFileName(textfile);
                     if (res.STATUS)
                     {
@@ -96,5 +98,6 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                 log.InsertLog(pathlog, "Exception : " + ex.ToString());
             }
         }
+
     }
 }

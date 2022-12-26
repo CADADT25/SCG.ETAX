@@ -93,6 +93,7 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                 log.InsertLog(pathlog, "Start PDFSign");
                 GetDataFromDataBase();
 
+                PDFSignModel pDFSignModel = new PDFSignModel();
                 foreach (var config in configPDFSign)
                 {
                     var allfile = ReadPdfFile(config);
@@ -103,7 +104,11 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
                         {
                             foreach (var file in allfile.listFilePDFs)
                             {
-                                res = utilityPDFSignController.ProcessPDFSign(config, file);
+                                // = utilityPDFSignController.ProcessPDFSign(config, file);
+                                pDFSignModel = new PDFSignModel();
+                                pDFSignModel.filePDF = file;
+                                pDFSignModel.configPdfSign = config;
+                                res = utilityPDFSignController.SendProcessPDFSign(pDFSignModel).Result;
                                 if (res.STATUS)
                                 {
                                     Console.WriteLine("Billno : " + file.Billno + " | Result : Success");

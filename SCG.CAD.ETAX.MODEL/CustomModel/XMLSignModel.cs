@@ -5,8 +5,8 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
     public class XMLSignModel
     {
         public ConfigXmlSign configXmlSign { get; set; }
-        public List<FileXML> listFileXMLs { get; set; }
-        public FileXML fileXML { get; set; }
+        public List<FileXML>? listFileXMLs { get; set; }
+        public FileXML? fileXML { get; set; }
     }
     public class FileXML
     {

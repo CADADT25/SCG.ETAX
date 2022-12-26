@@ -6,6 +6,7 @@ using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.UTILITY.XMLGenBussiness;
 using SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer;
+using System.Text;
 
 namespace SCG.CAD.ETAX.UTILITY.Controllers
 {
@@ -1113,6 +1114,17 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 res.ERROR_MESSAGE = ex.Message;
             }
             return res;
+        }
+
+        public async Task<Response> SendProcessXMLGen(string parttextfile)
+        {
+            var jsonString = JsonSerializer.Serialize(parttextfile);
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/XMLGenerate/ProcessXMLGenerate", httpContent));
+
+            //JsonResult Json = new JsonResult(task);
+            return task;
         }
     }
 }
