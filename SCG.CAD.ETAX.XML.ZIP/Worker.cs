@@ -15,13 +15,14 @@ namespace SCG.CAD.ETAX.XML.ZIP
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            int delaytime = 5 * 60 * 1000; // 5 minutes
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEXMLZIP"))
                 {
                     xMLZIP.Xml_ZIP();
                 }
-                await Task.Delay(100000, stoppingToken);
+                await Task.Delay(delaytime, stoppingToken);
             }
         }
     }

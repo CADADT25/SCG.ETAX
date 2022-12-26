@@ -16,13 +16,14 @@ namespace SCG.CAD.ETAX.Print.ZIP
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            int delaytime = 5 * 60 * 1000; // 5 minutes
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMEPRINTZIP"))
                 {
                     printZIP.ProcessPrintzip();
                 }
-                await Task.Delay(100000, stoppingToken);
+                await Task.Delay(delaytime, stoppingToken);
             }
         }
     }

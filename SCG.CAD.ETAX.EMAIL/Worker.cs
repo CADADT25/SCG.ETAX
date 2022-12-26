@@ -16,6 +16,7 @@ namespace SCG.CAD.ETAX.EMAIL
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            int delaytime = 5 * 60 * 1000; // 5 minutes 
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logicToolHelper.CheckBatchRunningTime("RUNNINGTIMESENDEMAIL"))
@@ -26,7 +27,7 @@ namespace SCG.CAD.ETAX.EMAIL
                     //_lifetime.StopApplication();
                 }
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000 * 60, stoppingToken);
+                await Task.Delay(delaytime, stoppingToken);
             }
         }
     }
