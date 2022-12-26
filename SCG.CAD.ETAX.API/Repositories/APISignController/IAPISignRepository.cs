@@ -6,5 +6,6 @@ namespace SCG.CAD.ETAX.API.Repositories
     {
         Task<Response> SendPDFSign(APISendFilePDFSignModel data);
         Task<Response> SendXMLSign(APISendFileXMLSignModel data);
+        Task<Response> SyncCertificate();
     }
 }

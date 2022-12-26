@@ -18,5 +18,8 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
     {
         public string certSerial { get; set; }
         public string keyAlias { get; set; }
+        public string startDate { get; set; }
+        public string endDate { get; set; }
+        public string commonName { get; set; }
     }
 }
