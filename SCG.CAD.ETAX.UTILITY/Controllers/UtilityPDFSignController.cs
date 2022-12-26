@@ -383,5 +383,16 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
             return res;
         }
+
+        public async Task<Response> SendProcessPDFSign(PDFSignModel pDFSignModel)
+        {
+            var jsonString = JsonSerializer.Serialize(pDFSignModel);
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/PDFSign/ProcessPDFSign", httpContent));
+
+            //JsonResult Json = new JsonResult(task);
+            return task;
+        }
     }
 }

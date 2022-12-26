@@ -28,6 +28,7 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
         public void ProcessXMLSign()
         {
             Response res = new Response();
+            XMLSignModel xMLSignModel = new XMLSignModel();
             try
             {
                 Console.WriteLine("Start XMLSign");
@@ -45,7 +46,11 @@ namespace SCG.CAD.ETAX.XML.SIGN.BussinessLayer
                         {
                             foreach (var file in allfile.listFileXMLs)
                             {
-                                res = utilityXMLSignController.ProcessXMLSign(config, file);
+                                xMLSignModel = new XMLSignModel();
+                                xMLSignModel.fileXML = file;
+                                xMLSignModel.configXmlSign = config;
+                                //res = utilityXMLSignController.ProcessXMLSign(config, file);
+                                res = utilityXMLSignController.SendProcessXMLSign(xMLSignModel).Result;
                                 if (res.STATUS)
                                 {
                                     Console.WriteLine("Billno : " + file.Billno + " | Result : Success");
