@@ -12,11 +12,13 @@ namespace SCG.CAD.ETAX.UTILITY
         {
             var textBytes = System.Text.Encoding.UTF8.GetBytes(text);
             return System.Convert.ToBase64String(textBytes);
+            //return UtilityHelper.EncryptString(text);
         }
         public string Base64Decode(string base64)
         {
             var base64Bytes = System.Convert.FromBase64String(base64);
             return System.Text.Encoding.UTF8.GetString(base64Bytes);
+            //return UtilityHelper.DecryptString(base64);
         }
     }
 }
