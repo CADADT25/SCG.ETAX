@@ -6,6 +6,7 @@ namespace SCG.CAD.ETAX.API.Repositories
     public class APISignRepository : IAPISignRepository
     {
         UtilityAPISignController signController = new UtilityAPISignController();
+        APISignService aPISignService = new APISignService();
         public async Task<Response> SendPDFSign(APISendFilePDFSignModel data)
         {
             Response responseSignModel = new Response();
@@ -26,6 +27,19 @@ namespace SCG.CAD.ETAX.API.Repositories
             try
             {
                 responseSignModel = signController.SendFileXMLSign(data).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return responseSignModel;
+        }
+        public async Task<Response> SyncCertificate()
+        {
+            Response responseSignModel = new Response();
+            try
+            {
+                responseSignModel = aPISignService.SyncCertificate().Result;
             }
             catch (Exception ex)
             {

@@ -29,5 +29,14 @@ namespace SCG.CAD.ETAX.API.Controllers.APISign
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("SyncCertificate")]
+        public IActionResult SyncCertificate()
+        {
+            var result = repo.SyncCertificate().Result;
+
+            return Ok(result);
+        }
     }
 }

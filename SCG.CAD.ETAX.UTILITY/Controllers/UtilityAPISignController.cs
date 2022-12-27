@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.CustomModel;
+using SCG.CAD.ETAX.MODEL.etaxModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -225,7 +226,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         {
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = Task.Run(() => GetURIwithAPI("api/ConnectHSM/GetKeyAlias?hsmName=" + hsmName + "&hsmSerial=" + hsmSerial)).GetAwaiter().GetResult(); ;
+            var task = Task.Run(() => GetURIwithAPI("api/ConnectHSM/GetKeyAlias?hsmName=" + hsmName + "&hsmSerial=" + hsmSerial)).GetAwaiter().GetResult();
             if (!string.IsNullOrEmpty(task))
             {
                 response = JsonConvert.DeserializeObject<APIGetKeyAliasModel>(task);
@@ -241,6 +242,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
         public async Task<string> GetURIwithAPI(string url)
         {
             string response = "";
+            string token = GetToken().Result.Token;
             try
             {
                 using (var client = new HttpClient())
@@ -252,6 +254,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     client.DefaultRequestHeaders.Accept.Clear();
 
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     HttpResponseMessage result = await client.GetAsync(apiUrl);
 
@@ -272,6 +276,52 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             }
 
             return response;
+        }
+
+        public async Task<Response> GetSyncCertificate()
+        {
+            Response response = new Response();
+
+            var task = await Task.Run(() => ApiHelper.GetURI("api/APISign/SyncCertificate"));
+            if (task.STATUS)
+            {
+                //response = JsonConvert.DeserializeObject<Response>(task.OUTPUT_DATA.ToString());
+            }
+            else
+            {
+                //var getException = task.Content.ReadAsStringAsync().Result;
+                //response.resultDes = getException.ToString();
+            }
+            return response;
+        }
+
+        private static async Task<AuthModel> GetToken()
+        {
+            AuthModel res = new AuthModel();
+            using (var client = new HttpClient())
+            {
+                var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
+
+                string apiUrl = baseAdress + "api/Auth/GetToken";
+
+                client.DefaultRequestHeaders.Accept.Clear();
+
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("Jwt")["AppKey"]);
+
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                //var getException = await client.GetAsync(apiUrl).Result.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var x = response.Content.ReadAsStringAsync().Result;
+
+                    res = JsonConvert.DeserializeObject<AuthModel>(x.ToString());
+                }
+            }
+            return res;
         }
     }
 }
