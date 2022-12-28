@@ -59,7 +59,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = await Task.Run(() => PutURI("v1/keyAlias", httpContent));
+            var task = await Task.Run(() => PutURI("v1/certInfo", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -145,7 +145,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetHSMSerialModel response = new APIGetHSMSerialModel();
 
-            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/GetHSMSerial", httpContent));
+            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/PostHSMSerial", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -165,7 +165,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/GetKeyAlias", httpContent));
+            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/PostKeyAlias", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -290,10 +290,12 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var task = await Task.Run(() => ApiHelper.GetURI("api/APISign/SyncCertificate"));
             if (task.STATUS)
             {
+                response.STATUS = true;
                 //response = JsonConvert.DeserializeObject<Response>(task.OUTPUT_DATA.ToString());
             }
             else
             {
+                response.STATUS = false;
                 //var getException = task.Content.ReadAsStringAsync().Result;
                 //response.resultDes = getException.ToString();
             }

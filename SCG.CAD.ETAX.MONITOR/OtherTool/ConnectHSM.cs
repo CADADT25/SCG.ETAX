@@ -129,7 +129,7 @@ namespace SCG.CAD.ETAX.MONITOR
                     if (res.resultCode.Equals("000"))
                     {
                         listBox1.Visible = true;
-                        foreach(var item in res.keyAliasList)
+                        foreach(var item in res.certInfoList)
                         {
                             listBox1.Items.Add("certSerial : " + item.certSerial);
                             listBox1.Items.Add("keyAlias : " + item.keyAlias);

@@ -43,23 +43,26 @@ namespace SCG.CAD.ETAX.API.Services
                             {
                                 if (keyAlias.resultCode.Equals("000"))
                                 {
-                                    foreach(var itemkeyAlias in keyAlias.keyAliasList)
+                                    if(keyAlias.certInfoList != null && keyAlias.certInfoList.Count > 0)
                                     {
-                                        certificateMaster = new CertificateMaster();
-                                        certificateMaster.CertificateName = itemkeyAlias.commonName;
-                                        certificateMaster.CertificateHsmname = hsmname;
-                                        certificateMaster.CertificateHsmserial = itemhsmSerial.hsmSerial;
-                                        certificateMaster.CertificateCertSerial = itemkeyAlias.certSerial;
-                                        certificateMaster.CertificateKeyAlias = itemkeyAlias.keyAlias;
-                                        certificateMaster.CertificateSlotPassword = slotpassword;
-                                        certificateMaster.CertificateStartDate = itemkeyAlias.startDate;
-                                        certificateMaster.CertificateEndDate = itemkeyAlias.endDate;
-                                        certificateMaster.CreateBy = "AutoSync";
-                                        certificateMaster.CreateDate = dateTime;
-                                        certificateMaster.UpdateBy = "AutoSync";
-                                        certificateMaster.UpdateDate = dateTime;
-                                        certificateMaster.Isactive = 1;
-                                        listcertificateMaster.Add(certificateMaster);
+                                        foreach (var itemkeyAlias in keyAlias.certInfoList)
+                                        {
+                                            certificateMaster = new CertificateMaster();
+                                            certificateMaster.CertificateName = itemkeyAlias.commonName;
+                                            certificateMaster.CertificateHsmname = hsmname;
+                                            certificateMaster.CertificateHsmserial = itemhsmSerial.hsmSerial;
+                                            certificateMaster.CertificateCertSerial = itemkeyAlias.certSerial;
+                                            certificateMaster.CertificateKeyAlias = itemkeyAlias.keyAlias;
+                                            certificateMaster.CertificateSlotPassword = slotpassword;
+                                            certificateMaster.CertificateStartDate = itemkeyAlias.startDate;
+                                            certificateMaster.CertificateEndDate = itemkeyAlias.endDate;
+                                            certificateMaster.CreateBy = "AutoSync";
+                                            certificateMaster.CreateDate = dateTime;
+                                            certificateMaster.UpdateBy = "AutoSync";
+                                            certificateMaster.UpdateDate = dateTime;
+                                            certificateMaster.Isactive = 1;
+                                            listcertificateMaster.Add(certificateMaster);
+                                        }
                                     }
                                 }
                             }
@@ -90,6 +93,7 @@ namespace SCG.CAD.ETAX.API.Services
                 {
                     _dbContext.Database.ExecuteSqlRaw("Truncate table CertificateMaster");
                     _dbContext.AddRange(listcertificateMaster);
+                    _dbContext.SaveChanges();
                     res.STATUS = true;
                 }
             }
