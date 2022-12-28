@@ -31,5 +31,21 @@ namespace SCG.CAD.ETAX.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        [Route("PostKeyAlias")]
+        public IActionResult PostKeyAlias(APIPostKeyAliasModel data)
+        {
+            var result = repo.GetKeyAlias(data.hsmName, data.hsmSerial).Result;
+
+            return Ok(result);
+        }
+        [HttpPost]
+        [Route("PostHSMSerial")]
+        public IActionResult PostHSMSerial(APIPostHSMSerialModel data)
+        {
+            var result = repo.GetHSMSerial(data.hsmName).Result;
+
+            return Ok(result);
+        }
     }
 }

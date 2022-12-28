@@ -14,6 +14,8 @@ namespace SCG.CAD.ETAX.API.Services
             UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
             CertificateMaster certificateMaster = new CertificateMaster();
             EncodeHelper encodeHelper = new EncodeHelper();
+            APIPostHSMSerialModel aPIPostHSMSerialModel = new APIPostHSMSerialModel();
+            APIPostKeyAliasModel aPIPostKeyAliasModel = new APIPostKeyAliasModel();
 
             res.STATUS = false;
             DateTime dateTime = DateTime.Now;
@@ -21,8 +23,10 @@ namespace SCG.CAD.ETAX.API.Services
             string slotpassword = encodeHelper.Base64Encode("P@ssw0rd1");
             try
             {
+                aPIPostHSMSerialModel.hsmName = hsmname;
                 //var hsmSerial = repo.GetHSMSerial(hsmname).Result;
-                var hsmSerial = utilityAPISignController.GetHSMSerialwithAPI(hsmname).Result;
+                //var hsmSerial = utilityAPISignController.GetHSMSerialwithAPI(hsmname).Result;
+                var hsmSerial = utilityAPISignController.PostHSMSerialwithAPI(aPIPostHSMSerialModel).Result;
                 if(hsmSerial.resultCode != null)
                 {
                     if (hsmSerial.resultCode.Equals("000"))
@@ -30,7 +34,11 @@ namespace SCG.CAD.ETAX.API.Services
                         foreach(var itemhsmSerial in hsmSerial.hsmSerialList)
                         {
                             //var keyAlias = repo.GetKeyAlias(hsmname, itemhsmSerial.hsmSerial).Result;
-                            var keyAlias = utilityAPISignController.GetKeyAliaswithAPI(hsmname, itemhsmSerial.hsmSerial).Result;
+                            //var keyAlias = utilityAPISignController.GetKeyAliaswithAPI(hsmname, itemhsmSerial.hsmSerial).Result;
+                            aPIPostKeyAliasModel = new APIPostKeyAliasModel();
+                            aPIPostKeyAliasModel.hsmName = hsmname;
+                            aPIPostKeyAliasModel.hsmSerial = itemhsmSerial.hsmSerial;
+                            var keyAlias = utilityAPISignController.PostKeyAliaswithAPI(aPIPostKeyAliasModel).Result;
                             if (keyAlias.resultCode != null)
                             {
                                 if (keyAlias.resultCode.Equals("000"))
