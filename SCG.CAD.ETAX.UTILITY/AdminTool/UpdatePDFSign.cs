@@ -145,6 +145,10 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
                     json = JsonSerializer.Serialize(listdataTran);
                     result = adminToolHelper.UpdateListTransaction(json);
                 }
+                else
+                {
+                    result = true;
+                }
 
             }
             catch (Exception ex)
@@ -162,7 +166,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
             List<string> files = new List<string>();
             ConfigPdfSign config = new ConfigPdfSign();
             List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
-            TransactionDescription dataTran = new TransactionDescription();
+            TransactionDescription dataTran = null;
             try
             {
                 transactionDescription = adminToolHelper.GetBillingTransaction(billno);

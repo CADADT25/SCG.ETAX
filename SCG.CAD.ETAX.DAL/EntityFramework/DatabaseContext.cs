@@ -79,6 +79,7 @@ namespace SCG.CAD.ETAX.DAL.EntityFramework
         public DbSet<RequestPath> requestPath { get; set; }
         public DbSet<RequestHistory> requestHistory { get; set; }
         public DbSet<ConfigApplication> configApplication { get; set; }
+        public DbSet<TraceLogApi> traceLogApi { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

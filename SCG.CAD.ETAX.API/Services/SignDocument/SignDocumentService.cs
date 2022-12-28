@@ -10,7 +10,7 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
 {
     public class SignDocumentService
     {
-        readonly DatabaseContext _dbContext = new();
+        //readonly DatabaseContext _dbContext = new();
         LogicToolHelper toolHelper = new LogicToolHelper();
 
         //#region Get data
@@ -32,7 +32,11 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //}
         public string GetConfigGlobal(string configGlobalName)
         {
-            var data = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == configGlobalName).FirstOrDefault();
+            ConfigGlobal data = null;
+            using (var _dbContext = new DatabaseContext())
+            {
+                data = _dbContext.configGlobal.Where(t => t.ConfigGlobalName == configGlobalName).FirstOrDefault();
+            }
             if (data != null)
             {
                 return data.ConfigGlobalValue;
@@ -66,20 +70,32 @@ namespace SCG.CAD.ETAX.API.Services.SignDocument
         //}
         public ConfigPdfSign GetConfigPdfSign(string companyCode)
         {
-            var data = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == companyCode && t.ConfigPdfsignOnlineRecordNumber != null && t.ConfigPdfsignOnlineRecordNumber != "").FirstOrDefault();
-            return data;
+            using (var _dbContext = new DatabaseContext())
+            {
+                var data = _dbContext.configPdfSign.Where(t => t.ConfigPdfsignCompanyCode == companyCode && t.ConfigPdfsignOnlineRecordNumber != null && t.ConfigPdfsignOnlineRecordNumber != "").FirstOrDefault();
+                return data;
+            }
+            return null;
         }
         public ConfigXmlSign GetConfigXmlSign(string companyCode)
         {
-            var data = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == companyCode && t.ConfigXmlsignOnlineRecordNumber != null && t.ConfigXmlsignOnlineRecordNumber != "").FirstOrDefault();
-            return data;
+            using (var _dbContext = new DatabaseContext())
+            {
+                var data = _dbContext.configXmlSign.Where(t => t.ConfigXmlsignCompanycode == companyCode && t.ConfigXmlsignOnlineRecordNumber != null && t.ConfigXmlsignOnlineRecordNumber != "").FirstOrDefault();
+                return data;
+            }
+            return null;
         }
         //#endregion
 
         public TransactionDescription GetTransactionDescription(string billingNo)
         {
-            var data = _dbContext.transactionDescription.Where(t => t.BillingNumber == billingNo).FirstOrDefault();
-            return data;
+            using (var _dbContext = new DatabaseContext())
+            {
+                var data = _dbContext.transactionDescription.Where(t => t.BillingNumber == billingNo).FirstOrDefault();
+                return data;
+            }
+            return null;
         }
 
         //#region Xml generator

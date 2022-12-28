@@ -45,7 +45,7 @@ namespace SCG.CAD.ETAX.API.Controllers
                         new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("Jwt")["Issuer"],
                         new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("Jwt")["Issuer"],
                         null,
-                        expires: DateTime.Now.AddMinutes(2),
+                        expires: DateTime.Now.AddMinutes(5),
                         signingCredentials: signinCredentials
                     );
                     var ret = new AuthModel() { Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken) };

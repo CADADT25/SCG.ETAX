@@ -138,7 +138,7 @@ namespace SCG.CAD.ETAX.UTILITY.AdminTool
         {
             List<string> files = new List<string>();
             List<TransactionDescription> transactionDescription = new List<TransactionDescription>();
-            TransactionDescription dataTran = new TransactionDescription();
+            TransactionDescription dataTran = null;
             ConfigXmlSign config = new ConfigXmlSign();
 
             string filetype = "*.xml";

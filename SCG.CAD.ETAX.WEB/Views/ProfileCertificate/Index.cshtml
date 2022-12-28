@@ -332,7 +332,8 @@
         }
 
         var model = new Object();
-        model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        //model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        model.CertificateCompanyCode = $('#txtInsertProfileCompanyCode').val();
         model.CertificateCertSerial = $('#txtInsertProfileCertificatSerial').val();
 
         model.CreateBy = $("#leftSideEmail").text();
