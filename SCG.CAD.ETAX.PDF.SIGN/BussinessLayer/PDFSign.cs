@@ -138,7 +138,6 @@ namespace SCG.CAD.ETAX.PDF.SIGN.BussinessLayer
         {
             try
             {
-                var sss = UtilityAPISignController.GetSyncCertificate().Result;
                 configGlobal = configGlobalController.List().Result;
                 configPDFSign = configPDFSignController.List().Result;
                 pathlog = configGlobal.FirstOrDefault(x => x.ConfigGlobalName == namepathlog).ConfigGlobalValue;

@@ -8,13 +8,13 @@ namespace SCG.CAD.ETAX.MODEL.CustomModel
 {
     public class APIGetKeyAliasModel
     {
-        public string totalKeyAlias { get; set; }
+        public string totalCertInfo { get; set; }
         public string resultCode { get; set; }
         public string resultDes { get; set; }
-        public List<KeyAliasList> keyAliasList { get; set; }
+        public List<CertInfoList> certInfoList { get; set; }
     }
 
-    public class KeyAliasList
+    public class CertInfoList
     {
         public string certSerial { get; set; }
         public string keyAlias { get; set; }

@@ -59,7 +59,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = await Task.Run(() => PutURI("v1/keyAlias", httpContent));
+            var task = await Task.Run(() => PutURI("v1/certInfo", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -139,12 +139,13 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return response;
         }
 
-        public async Task<APIGetHSMSerialModel> PutHSMSerialwithAPI(string jsonString)
+        public async Task<APIGetHSMSerialModel> PostHSMSerialwithAPI(APIPostHSMSerialModel data)
         {
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(data);
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetHSMSerialModel response = new APIGetHSMSerialModel();
 
-            var task = await Task.Run(() => PutURIwithAPI("api/ConnectHSM/GetHSMSerial", httpContent));
+            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/PostHSMSerial", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -158,12 +159,13 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return response;
         }
 
-        public async Task<APIGetKeyAliasModel> PutKeyAliaswithAPI(string jsonString)
+        public async Task<APIGetKeyAliasModel> PostKeyAliaswithAPI(APIPostKeyAliasModel data)
         {
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(data);
             var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             APIGetKeyAliasModel response = new APIGetKeyAliasModel();
 
-            var task = await Task.Run(() => PutURIwithAPI("api/ConnectHSM/GetKeyAlias", httpContent));
+            var task = await Task.Run(() => PostURIwithAPI("api/ConnectHSM/PostKeyAlias", httpContent));
             if (task.IsSuccessStatusCode)
             {
                 var x = task.Content.ReadAsStringAsync().Result;
@@ -177,11 +179,12 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             return response;
         }
 
-        public static async Task<HttpResponseMessage> PutURIwithAPI(string url, HttpContent c)
+        public static async Task<HttpResponseMessage> PostURIwithAPI(string url, HttpContent c)
         {
             HttpResponseMessage response = new HttpResponseMessage();
             try
             {
+                string token = GetToken().Result.Token;
                 using (var client = new HttpClient())
                 {
                     var baseAdress = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("ApiConfig")["ApiBaseAddress"];
@@ -191,6 +194,8 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                     client.DefaultRequestHeaders.Accept.Clear();
 
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     HttpResponseMessage result = await client.PostAsync(new Uri(apiUrl), c);
 
@@ -285,10 +290,12 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             var task = await Task.Run(() => ApiHelper.GetURI("api/APISign/SyncCertificate"));
             if (task.STATUS)
             {
+                response.STATUS = true;
                 //response = JsonConvert.DeserializeObject<Response>(task.OUTPUT_DATA.ToString());
             }
             else
             {
+                response.STATUS = false;
                 //var getException = task.Content.ReadAsStringAsync().Result;
                 //response.resultDes = getException.ToString();
             }

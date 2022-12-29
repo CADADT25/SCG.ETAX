@@ -14,6 +14,8 @@ namespace SCG.CAD.ETAX.API.Services
             UtilityAPISignController utilityAPISignController = new UtilityAPISignController();
             CertificateMaster certificateMaster = new CertificateMaster();
             EncodeHelper encodeHelper = new EncodeHelper();
+            APIPostHSMSerialModel aPIPostHSMSerialModel = new APIPostHSMSerialModel();
+            APIPostKeyAliasModel aPIPostKeyAliasModel = new APIPostKeyAliasModel();
 
             res.STATUS = false;
             DateTime dateTime = DateTime.Now;
@@ -21,8 +23,10 @@ namespace SCG.CAD.ETAX.API.Services
             string slotpassword = encodeHelper.Base64Encode("P@ssw0rd1");
             try
             {
+                aPIPostHSMSerialModel.hsmName = hsmname;
                 //var hsmSerial = repo.GetHSMSerial(hsmname).Result;
-                var hsmSerial = utilityAPISignController.GetHSMSerialwithAPI(hsmname).Result;
+                //var hsmSerial = utilityAPISignController.GetHSMSerialwithAPI(hsmname).Result;
+                var hsmSerial = utilityAPISignController.PostHSMSerialwithAPI(aPIPostHSMSerialModel).Result;
                 if(hsmSerial.resultCode != null)
                 {
                     if (hsmSerial.resultCode.Equals("000"))
@@ -30,28 +34,35 @@ namespace SCG.CAD.ETAX.API.Services
                         foreach(var itemhsmSerial in hsmSerial.hsmSerialList)
                         {
                             //var keyAlias = repo.GetKeyAlias(hsmname, itemhsmSerial.hsmSerial).Result;
-                            var keyAlias = utilityAPISignController.GetKeyAliaswithAPI(hsmname, itemhsmSerial.hsmSerial).Result;
+                            //var keyAlias = utilityAPISignController.GetKeyAliaswithAPI(hsmname, itemhsmSerial.hsmSerial).Result;
+                            aPIPostKeyAliasModel = new APIPostKeyAliasModel();
+                            aPIPostKeyAliasModel.hsmName = hsmname;
+                            aPIPostKeyAliasModel.hsmSerial = itemhsmSerial.hsmSerial;
+                            var keyAlias = utilityAPISignController.PostKeyAliaswithAPI(aPIPostKeyAliasModel).Result;
                             if (keyAlias.resultCode != null)
                             {
                                 if (keyAlias.resultCode.Equals("000"))
                                 {
-                                    foreach(var itemkeyAlias in keyAlias.keyAliasList)
+                                    if(keyAlias.certInfoList != null && keyAlias.certInfoList.Count > 0)
                                     {
-                                        certificateMaster = new CertificateMaster();
-                                        certificateMaster.CertificateName = itemkeyAlias.commonName;
-                                        certificateMaster.CertificateHsmname = hsmname;
-                                        certificateMaster.CertificateHsmserial = itemhsmSerial.hsmSerial;
-                                        certificateMaster.CertificateCertSerial = itemkeyAlias.certSerial;
-                                        certificateMaster.CertificateKeyAlias = itemkeyAlias.keyAlias;
-                                        certificateMaster.CertificateSlotPassword = slotpassword;
-                                        certificateMaster.CertificateStartDate = itemkeyAlias.startDate;
-                                        certificateMaster.CertificateEndDate = itemkeyAlias.endDate;
-                                        certificateMaster.CreateBy = "AutoSync";
-                                        certificateMaster.CreateDate = dateTime;
-                                        certificateMaster.UpdateBy = "AutoSync";
-                                        certificateMaster.UpdateDate = dateTime;
-                                        certificateMaster.Isactive = 1;
-                                        listcertificateMaster.Add(certificateMaster);
+                                        foreach (var itemkeyAlias in keyAlias.certInfoList)
+                                        {
+                                            certificateMaster = new CertificateMaster();
+                                            certificateMaster.CertificateName = itemkeyAlias.commonName;
+                                            certificateMaster.CertificateHsmname = hsmname;
+                                            certificateMaster.CertificateHsmserial = itemhsmSerial.hsmSerial;
+                                            certificateMaster.CertificateCertSerial = itemkeyAlias.certSerial;
+                                            certificateMaster.CertificateKeyAlias = itemkeyAlias.keyAlias;
+                                            certificateMaster.CertificateSlotPassword = slotpassword;
+                                            certificateMaster.CertificateStartDate = itemkeyAlias.startDate;
+                                            certificateMaster.CertificateEndDate = itemkeyAlias.endDate;
+                                            certificateMaster.CreateBy = "AutoSync";
+                                            certificateMaster.CreateDate = dateTime;
+                                            certificateMaster.UpdateBy = "AutoSync";
+                                            certificateMaster.UpdateDate = dateTime;
+                                            certificateMaster.Isactive = 1;
+                                            listcertificateMaster.Add(certificateMaster);
+                                        }
                                     }
                                 }
                             }
@@ -82,6 +93,7 @@ namespace SCG.CAD.ETAX.API.Services
                 {
                     _dbContext.Database.ExecuteSqlRaw("Truncate table CertificateMaster");
                     _dbContext.AddRange(listcertificateMaster);
+                    _dbContext.SaveChanges();
                     res.STATUS = true;
                 }
             }
