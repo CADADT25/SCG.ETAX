@@ -15,7 +15,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
             try
             {
-                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigXmlGenerator/GetListAll"));
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ConfigXmlGenerator/GetListForService"));
 
                 if (task.STATUS)
                 {

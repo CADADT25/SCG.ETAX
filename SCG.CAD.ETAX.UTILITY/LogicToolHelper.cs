@@ -358,6 +358,7 @@ namespace SCG.CAD.ETAX.UTILITY
 
         public Response MoveFile(string pathinput, string filename, DateTime billingdate, string output)
         {
+            //output = @"C:\\\\Work space\\\\Document\\\\Etax\\Test\\move\\";
             Response res = new Response();
             res.STATUS = false;
             try

@@ -41,7 +41,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             int row = 56;
             string pathoutput;
             string pathlog = @"D:\log\";
-            string namepathlog = "PATHLOGFILE_XMLGENERATOR"; 
+            string namepathlog = "PATHLOGFILE_XMLGENERATOR";
             string nametextfilefail = "";
             string companycode = "";
             List<string> errormessage = new List<string>();
@@ -119,7 +119,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 configGlobal = (List<ConfigGlobal>)res.OUTPUT_DATA;
 
                 res = ConvertToDataTable(textfile, row);
-                if(res.STATUS)
+                if (res.STATUS)
                 {
                     var dt = (DataTable)res.OUTPUT_DATA;
                     if (dt != null && dt.Rows.Count > 0)
@@ -625,7 +625,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 }
 
                 ic = 1;
-                if(dataxml.IC_FLAG == null || string.IsNullOrEmpty(dataxml.IC_FLAG))
+                if (dataxml.IC_FLAG == null || string.IsNullOrEmpty(dataxml.IC_FLAG))
                 {
                     ic = 0;
                 }
@@ -912,7 +912,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 xmldata.exchangedDocument.purpose = data.ORDER_REASON;
                 xmldata.exchangedDocument.purposeCode = "";
                 var reasoncode = profileReasonIssue.FirstOrDefault(x => x.ReasonIssueErpReasonCode == data.ORDER_REASON_CODE);
-                if(reasoncode != null)
+                if (reasoncode != null)
                 {
                     xmldata.exchangedDocument.purposeCode = reasoncode.ReasonIssueRdReasonCode ?? "";
                 }
@@ -966,7 +966,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issueDateTime = data.REF_DOC_DATE ?? "";
                 supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.issuerAssignedID = data.REF_DOC ?? "";
                 refdoccode = documentCode.FirstOrDefault(x => x.DocumentCodeErp == (data.REF_FI_DOCTYPE ?? ""));
-                if(refdoccode != null)
+                if (refdoccode != null)
                 {
                     supplyChainTradeTransaction.applicableHeaderTradeAgreement.additionalReferencedDocument.referenceTypeCode = refdoccode.DocumentCodeRd ?? "";
                 }
@@ -1118,10 +1118,11 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
 
         public async Task<Response> SendProcessXMLGen(string parttextfile)
         {
-            var jsonString = JsonSerializer.Serialize(parttextfile);
-            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            //var jsonString = JsonSerializer.Serialize(parttextfile);
+            //var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            var task = await Task.Run(() => ApiHelper.PostURI("api/XMLGenerate/ProcessXMLGenerate", httpContent));
+            //var task = await Task.Run(() => ApiHelper.PostURI("api/XMLGenerate/ProcessXMLGenerate", httpContent));
+            var task = await Task.Run(() => ApiHelper.GetURI("api/XMLGenerate/ProcessXMLGenerate?parttextfile=" + parttextfile));
 
             //JsonResult Json = new JsonResult(task);
             return task;

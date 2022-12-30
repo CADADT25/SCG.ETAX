@@ -8,7 +8,8 @@
             repo = new XMLGenerateRepository();
         }
 
-        [HttpPost]
+        //[HttpPost]
+        [HttpGet]
         [Route("ProcessXMLGenerate")]
         public IActionResult ProcessXMLGenerate(string parttextfile)
         {

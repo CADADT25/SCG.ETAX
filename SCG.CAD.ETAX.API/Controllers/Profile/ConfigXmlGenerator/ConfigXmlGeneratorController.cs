@@ -25,6 +25,15 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetListForService")]
+        public IActionResult GetListForService()
+        {
+            var result = repo.GET_LIST_FOR_SERVICE().Result;
+
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("GetDetail")]
         public IActionResult GetDetail(int id)
         {

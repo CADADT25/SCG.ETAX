@@ -5,6 +5,34 @@
         readonly DatabaseContext _dbContext = new();
 
         public DateTime dtNow = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd'" + "T" + "'HH:mm:ss.fff"));
+        public Response GET_LIST_FOR_SERVICE()
+        {
+            Response resp = new Response();
+            try
+            {
+                var getList = _dbContext.configXmlGenerator.Where(t => t.ConfigXmlGeneratorInputPath != null && t.ConfigXmlGeneratorOutputPath != null).ToList();
+
+                if (getList.Count > 0)
+                {
+                    resp.STATUS = true;
+                    resp.MESSAGE = "Get list count '" + getList.Count + "' records. ";
+                    resp.OUTPUT_DATA = getList;
+                }
+                else
+                {
+                    resp.STATUS = false;
+                    resp.MESSAGE = "Data not found";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Get data fail.";
+                resp.INNER_EXCEPTION = ex.Message.ToString();
+            }
+            return resp;
+        }
         public Response GET_LIST()
         {
             Response resp = new Response();
@@ -110,7 +138,7 @@
                         update.ConfigXmlGeneratorOutputType = param.ConfigXmlGeneratorOutputType;
                         update.ConfigXmlGeneratorOutputPath = param.ConfigXmlGeneratorOutputPath;
                         update.ConfigXmlGeneratorOnlineRecordNumber = param.ConfigXmlGeneratorOnlineRecordNumber;
-                       
+
                         update.UpdateBy = param.UpdateBy;
                         update.UpdateDate = dtNow;
                         update.Isactive = param.Isactive;

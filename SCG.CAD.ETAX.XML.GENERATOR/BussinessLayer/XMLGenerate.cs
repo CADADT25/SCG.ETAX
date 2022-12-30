@@ -76,7 +76,7 @@ namespace SCG.CAD.ETAX.XML.GENERATOR.BussinessLayer
                         result.AddRange(listpath);
                     }
                 }
-
+                //result.AddRange(new List<string>() { @"C:\Work space\Document\Etax\Test\010020220912012137.txt" });
             }
             catch (Exception ex)
             {
