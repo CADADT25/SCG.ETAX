@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.MODEL.etaxModel;
@@ -15,6 +16,7 @@ namespace SCG.CAD.ETAX.UTILITY
 {
     public class LogicToolHelper
     {
+        LogHelper log = new LogHelper();
         UtilityConfigGlobalController configGlobalController = new UtilityConfigGlobalController();
         UtilityConfigMftsEmailSettingController configMftsEmailSettingController = new UtilityConfigMftsEmailSettingController();
         UtilityConfigPDFSignController configPDFSignController = new UtilityConfigPDFSignController();
@@ -304,7 +306,7 @@ namespace SCG.CAD.ETAX.UTILITY
             // else = false
             bool result = false;
 
-            if(value != null && value == 1)
+            if (value != null && value == 1)
             {
                 result = true;
             }
@@ -380,13 +382,22 @@ namespace SCG.CAD.ETAX.UTILITY
                     File.Delete(output + filename);
                 }
                 // Move the file.  
-                File.Move(pathinput, output + filename);
+                File.Move(pathinput, output + filename, true);
 
                 res.STATUS = true;
             }
             catch (Exception ex)
             {
                 res.ERROR_MESSAGE = ex.Message.ToString();
+                try
+                {
+                    var logPath = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConfigPath")["LogPath"];
+                    log.InsertLog(logPath, "Source:" + pathinput + " Destination:" + output + filename + " Exception : " + ex.ToString());
+                }
+                catch
+                {
+
+                }
             }
             return res;
         }
