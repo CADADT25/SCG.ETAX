@@ -39,7 +39,7 @@
             });
 
             $("#ddlInsertProfileSellerDistrict").change(function () {
-
+                
                $("#ddlInsertProfileSellerSubDistrict").empty();
 
                var districtCode = $("#ddlInsertProfileSellerDistrict").val();
@@ -62,7 +62,7 @@
             });
 
             $("#ddlUpdateProfileSellerDistrict").change(function () {
-
+                
                $("#ddlUpdateProfileSellerSubDistrict").empty();
 
                var districtCode = $("#ddlUpdateProfileSellerDistrict").val();
@@ -219,12 +219,14 @@
 
         function fnDropdownProfileSellerDistrict(provinceCode) {
 
-            $('<option>',
-            {
-                value: 0,
-            }).html("--- Select District ---").appendTo("#ddlInsertProfileSellerDistrict");
+            
 
             $.getJSON("@Url.Action("GetDistrict", "ProfileSeller")?proviceCode="+provinceCode+"", function (data) {
+                $("#ddlInsertProfileSellerDistrict").empty()
+                $('<option>',
+                {
+                    value: 0,
+                }).html("--- Select District ---").appendTo("#ddlInsertProfileSellerDistrict");
                 $.each(data, function (i, data) {
                     $('<option>',
                         {
@@ -244,13 +246,15 @@
         }
 
         function fnDropdownProfileSellerSubDistrict(DistrictCode) {
-
-            $('<option>',
-            {
-                value: 0,
-            }).html("--- Select Sub District ---").appendTo("#ddlInsertProfileSellerSubDistrict");
+            
+           
 
             $.getJSON("@Url.Action("GetSubDistrict", "ProfileSeller")?districtCode="+DistrictCode+"", function (data) {
+                $("#ddlInsertProfileSellerSubDistrict").empty();
+                $('<option>',
+                {
+                    value: 0,
+                }).html("--- Select Sub District ---").appendTo("#ddlInsertProfileSellerSubDistrict");
                 $.each(data, function (i, data) {
                     $('<option>',
                         {

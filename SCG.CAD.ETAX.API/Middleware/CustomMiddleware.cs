@@ -69,7 +69,7 @@ namespace SCG.CAD.ETAX.API.Middleware
 
                             // add the log object to the logger stream 
                             // via the Repo instance injected
-                            repo.INSERT(log);
+                            //repo.INSERT(log);
 
                             // since we have read till the end of the stream, 
                             // reset it onto the first position

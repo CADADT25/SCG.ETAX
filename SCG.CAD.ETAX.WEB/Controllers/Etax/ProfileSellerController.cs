@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SCG.CAD.ETAX.UTILITY.Authentication;
+using System.Globalization;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.City.TISICityNameModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.Provice.ThaiISOCountrySubdivisionCodeModel;
 using static SCG.CAD.ETAX.MODEL.Revenue.ETDA.CodeList.SubDivision.TISICitySubDivisionNameModel;
@@ -104,27 +105,27 @@ namespace SCG.CAD.ETAX.WEB.Controllers
 
             List<ProfileSeller> tran = new List<ProfileSeller>();
 
-            
 
-                try
+
+            try
+            {
+                var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAllDetail"));
+
+                if (task.STATUS)
                 {
-                    var task = await Task.Run(() => ApiHelper.GetURI("api/ProfileSeller/GetListAllDetail"));
+                    tran = JsonConvert.DeserializeObject<List<ProfileSeller>>(task.OUTPUT_DATA.ToString());
 
-                    if (task.STATUS)
-                    {
-                        tran = JsonConvert.DeserializeObject<List<ProfileSeller>>(task.OUTPUT_DATA.ToString());
-
-                        tran = tran.Where(x => x.CompanyCode == companyCode).ToList();
-                    }
-                    else
-                    {
-                        ViewBag.Error = task.MESSAGE;
-                    }
+                    tran = tran.Where(x => x.CompanyCode == companyCode).ToList();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine(ex.Message);
+                    ViewBag.Error = task.MESSAGE;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
 
             return Json(new { data = tran });
@@ -254,8 +255,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ETDAProvice>>(task.OUTPUT_DATA.ToString());
-
-                    tran = tran.ToList();
+                    CultureInfo ci = CultureInfo.GetCultureInfo("th-TH");
+                    StringComparer comp = StringComparer.Create(ci, true);
+                    tran = tran.OrderBy(t => t.ProviceName, comp).ToList();
                 }
                 else
                 {
@@ -284,8 +286,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ETDADistrict>>(task.OUTPUT_DATA.ToString());
-
-                    tran = tran.ToList();
+                    CultureInfo ci = CultureInfo.GetCultureInfo("th-TH");
+                    StringComparer comp = StringComparer.Create(ci, true);
+                    tran = tran.OrderBy(t => t.districtName, comp).ToList();
                 }
                 else
                 {
@@ -313,8 +316,9 @@ namespace SCG.CAD.ETAX.WEB.Controllers
                 if (task.STATUS)
                 {
                     tran = JsonConvert.DeserializeObject<List<ETDASubDistrict>>(task.OUTPUT_DATA.ToString());
-
-                    tran = tran.ToList();
+                    CultureInfo ci = CultureInfo.GetCultureInfo("th-TH");
+                    StringComparer comp = StringComparer.Create(ci, true);
+                    tran = tran.OrderBy(t => t.subDistrictName, comp).ToList();
                 }
                 else
                 {

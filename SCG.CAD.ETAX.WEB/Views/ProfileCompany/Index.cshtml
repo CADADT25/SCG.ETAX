@@ -134,7 +134,12 @@
 
     function fnDropdownProfileCompanyCertificate() {
 
-        var setCompanyCode = $("#companyCodeState").text();
+        var setCompanyCode = "";
+        if ($("#companyCodeState").text() != null && $("#companyCodeState").text() != ""){
+            setCompanyCode = $("#companyCodeState").text();
+        }else{
+            setCompanyCode = $("#companyCodeStateUpdate").text();
+        }
 
         $('<option>',
         {

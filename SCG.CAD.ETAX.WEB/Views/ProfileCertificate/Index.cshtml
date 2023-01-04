@@ -64,7 +64,7 @@
                 setCompanyCode = $("#companyCodeState").text();
             }
         }
-
+        $('#tbProfileCertificateMain').DataTable().destroy();
         var table = $("#tbProfileCertificateMain").DataTable({
             destroy: true,
             "scrollY": true,
@@ -133,7 +133,7 @@
                 cell.innerHTML = i+1;
             } );
         } ).draw();
-
+        //debugger
 
         EditProfileCertificate(table);
         DeleteProfileCertificate(table);
@@ -233,8 +233,9 @@
     function EditProfileCertificate(table){
 
         $('#tbProfileCertificateMain').on('click', 'td.editor-edit', function () {
-
-            var data = table.row($(this).closest('tr')).data();
+            //debugger
+            //var data = table.row($(this).closest('tr')).data();
+            var data = $("#tbProfileCertificateMain").DataTable().row($(this).closest('tr')).data();
 
             var getPK = data[Object.keys(data)[0]];
 
@@ -330,10 +331,15 @@
         else{
             IsActive = 0;
         }
-
+       // debugger
         var model = new Object();
         //model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
-        model.CertificateCompanyCode = $('#txtInsertProfileCompanyCode').val();
+        if($('#txtUpdateProfileCompanyCode').val() != null && $('#txtUpdateProfileCompanyCode').val() != ""){
+            model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
+        }else{
+            model.CertificateCompanyCode = $('#txtInsertProfileCompanyCode').val();
+        }
+        
         model.CertificateCertSerial = $('#txtInsertProfileCertificatSerial').val();
 
         model.CreateBy = $("#leftSideEmail").text();
@@ -399,7 +405,7 @@
 
         var model = new Object();
 
-
+        //debugger
         model.CertificateNo = $('#txtUpdateProfileCertificateNo').val();
         model.CertificateCompanyCode = $('#txtUpdateProfileCompanyCode').val();
         model.CertificateHSMName = $('#txtUpdateProfileCertificateHSMName').val();
