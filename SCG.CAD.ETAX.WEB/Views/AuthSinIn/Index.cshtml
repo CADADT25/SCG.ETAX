@@ -130,7 +130,8 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="d-flex justify-content-between">
-                                            <label for="login-password">Password</label><a href="javascript:void(0);"><small>Forgot Password?</small></a>
+                                            <label for="login-password">Password</label>
+                                            @*<a href="javascript:void(0);"><small>Forgot Password?</small></a>*@
                                         </div>
                                         <div class="input-group input-group-merge form-password-toggle">
                                             <input class="form-control form-control-merge" id="LoginPassword" type="password" name="LoginPassword" placeholder="············" aria-describedby="LoginPassword" tabindex="2" />
@@ -216,58 +217,63 @@
 
         function checklogin(){
 
-            $.blockUI();
+            if ($('#LoginEmail').val() == ""){
+                fnAlertValidate("Please enter Email.");
+            } else if ($('#LoginPassword').val() == ""){
+                fnAlertValidate("Please enter Password.");
+            }else{
+                $.blockUI();
 
-            var model = new Object();
+                var model = new Object();
 
-            model.username = $('#LoginEmail').val();
-            model.password = $('#LoginPassword').val();
+                model.username = $('#LoginEmail').val();
+                model.password = $('#LoginPassword').val();
 
-            var getJsonString = JSON.stringify(model);
+                var getJsonString = JSON.stringify(model);
 
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("GetLogin", "AuthSinIn")",
-                dataType: "json",
-                data: { jsonString : getJsonString },
-                success: function (result) {
-
-
-
-                    data = $.parseJSON(result);
-
-                    if(data.UrlRedirect != ""){
-                        $('#leftSideEmail').val("Test.com");
-                        window.location.href= data.UrlRedirect;
-
-                    }else{
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetLogin", "AuthSinIn")",
+                    dataType: "json",
+                    data: { jsonString: getJsonString },
+                    success: function (result) {
 
 
-                        fnSweetAlert_Error(data.MessageRedirect);
 
-                        $.unblockUI();
+                        data = $.parseJSON(result);
+
+                        if (data.UrlRedirect != "") {
+                            $('#leftSideEmail').val("Test.com");
+                            window.location.href = data.UrlRedirect;
+
+                        } else {
+
+
+                            fnSweetAlert_Error(data.MessageRedirect);
+
+                            $.unblockUI();
+                        }
+
+
+                        //alert(data.UrlRedirect);
+
+
+                        //var errorMessage = data.erroR_MESSAGE;
+
+                        //if(data.status == true){
+
+                        //    fnSweetAlert_SaveSuccess();
+
+                        //}
+                        //else{
+                        //    fnSweetAlert_Error(errorMessage);
+                        //}
+
                     }
 
 
-                    //alert(data.UrlRedirect);
-
-
-                    //var errorMessage = data.erroR_MESSAGE;
-
-                    //if(data.status == true){
-
-                    //    fnSweetAlert_SaveSuccess();
-
-                    //}
-                    //else{
-                    //    fnSweetAlert_Error(errorMessage);
-                    //}
-
-                }
-
-
-            });
-
+                });
+            }
 
         }
 
