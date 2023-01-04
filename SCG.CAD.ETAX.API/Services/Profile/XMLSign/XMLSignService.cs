@@ -134,7 +134,7 @@ namespace SCG.CAD.ETAX.API.Services
             EncodeHelper encodeHelper = new EncodeHelper();
             try
             {
-                result.environment = "0";
+                result.environment = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("JavaApi")["Env"];
                 result.hsmName = config.ConfigXmlsignHsmModule;
                 result.hsmSerial = config.ConfigXmlsignHsmSerial;
                 result.slotPassword = encodeHelper.Base64Decode(config.ConfigXmlsignHsmPassword);

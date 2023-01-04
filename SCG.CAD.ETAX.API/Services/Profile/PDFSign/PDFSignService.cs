@@ -130,7 +130,7 @@ namespace SCG.CAD.ETAX.API.Services
             int fontSize;
             try
             {
-                result.environment = "0";
+                result.environment = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("JavaApi")["Env"];
                 result.hsmName = config.ConfigPdfsignHsmModule;
                 result.hsmSerial = config.ConfigPdfsignHsmSerial;
                 result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);

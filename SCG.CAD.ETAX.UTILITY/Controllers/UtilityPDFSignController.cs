@@ -1,4 +1,5 @@
-﻿using SCG.CAD.ETAX.MODEL;
+﻿using Microsoft.Extensions.Configuration;
+using SCG.CAD.ETAX.MODEL;
 using SCG.CAD.ETAX.MODEL.CustomModel;
 using SCG.CAD.ETAX.MODEL.etaxModel;
 using System.Text;
@@ -154,7 +155,7 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             int fontSize;
             try
             {
-                result.environment = "0";
+                result.environment = new ConfigurationBuilder().AddNewtonsoftJsonFile("appsettings.json").Build().GetSection("JavaApi")["Env"];
                 result.hsmName = config.ConfigPdfsignHsmModule;
                 result.hsmSerial = config.ConfigPdfsignHsmSerial;
                 result.slotPassword = encodeHelper.Base64Decode(config.ConfigPdfsignHsmPassword);

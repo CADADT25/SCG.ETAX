@@ -178,7 +178,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                             imageNo++;
 
                             Console.WriteLine("BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
-                            log.InsertLog(pathlog, "Company :" + input.CompanyCode);
+                            log.InsertLog(pathlog, "BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
                             result.Add(imageDocType);
                         }
                     }
