@@ -27,36 +27,50 @@ namespace SCG.CAD.ETAX.API.Repositories
             try
             {
                 //check string empty
+                if (string.IsNullOrEmpty(req.Company))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "Company is required.";
+                    return await Task.FromResult(resp);
+                }
+                if (string.IsNullOrEmpty(req.BillingNumber))
+                {
+                    resp.CODE = "103";
+                    resp.MESSAGE = "BillingNumber is required.";
+                    return await Task.FromResult(resp);
+                }
                 if (string.IsNullOrEmpty(req.TextEncodeBase64))
                 {
                     resp.CODE = "103";
                     resp.MESSAGE = "TextEncodeBase64 is required.";
                     return await Task.FromResult(resp);
                 }
-                if (string.IsNullOrEmpty(req.TextFileName))
-                {
-                    resp.CODE = "103";
-                    resp.MESSAGE = "TextFileName is required.";
-                    return await Task.FromResult(resp);
-                }
-                if (req.TextFileName.Split(".").Last().ToLower() != "txt")
-                {
-                    resp.CODE = "103";
-                    resp.MESSAGE = "TextFileName is is invalid.";
-                    return await Task.FromResult(resp);
-                }
-                if (string.IsNullOrEmpty(req.PdfFileName))
-                {
-                    resp.CODE = "103";
-                    resp.MESSAGE = "PdfFileName is required.";
-                    return await Task.FromResult(resp);
-                }
-                if (req.PdfFileName.Split(".").Last().ToLower() != "pdf")
-                {
-                    resp.CODE = "103";
-                    resp.MESSAGE = "PdfFileName is is invalid.";
-                    return await Task.FromResult(resp);
-                }
+                
+
+                //if (string.IsNullOrEmpty(req.TextFileName))
+                //{
+                //    resp.CODE = "103";
+                //    resp.MESSAGE = "TextFileName is required.";
+                //    return await Task.FromResult(resp);
+                //}
+                //if (req.TextFileName.Split(".").Last().ToLower() != "txt")
+                //{
+                //    resp.CODE = "103";
+                //    resp.MESSAGE = "TextFileName is is invalid.";
+                //    return await Task.FromResult(resp);
+                //}
+                //if (string.IsNullOrEmpty(req.PdfFileName))
+                //{
+                //    resp.CODE = "103";
+                //    resp.MESSAGE = "PdfFileName is required.";
+                //    return await Task.FromResult(resp);
+                //}
+                //if (req.PdfFileName.Split(".").Last().ToLower() != "pdf")
+                //{
+                //    resp.CODE = "103";
+                //    resp.MESSAGE = "PdfFileName is is invalid.";
+                //    return await Task.FromResult(resp);
+                //}
                 if (string.IsNullOrEmpty(req.PdfEncodeBase64))
                 {
                     resp.CODE = "103";
@@ -68,10 +82,10 @@ namespace SCG.CAD.ETAX.API.Repositories
                 // check text & pdf file
                 string tempPath = service.GetConfigGlobal("RESIGN_NEWTRANS_TEMP_PATH");
 
-                string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.TextFileName);
+                string textPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.Company + req.BillingNumber + ".txt");
                 string textPath = service.CreateFileFromBase64(req.TextEncodeBase64, textPathTemp);
 
-                string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.PdfFileName);
+                string pdfPathTemp = Path.Combine(tempPath, "api", DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("HHmmss"), req.Company + req.BillingNumber + ".pdf");
                 string pdfPath = service.CreateFileFromBase64(req.PdfEncodeBase64, pdfPathTemp);
 
                 if (string.IsNullOrEmpty(textPath))
@@ -186,10 +200,12 @@ namespace SCG.CAD.ETAX.API.Repositories
                 }
                 var pdfFileDetail = new FilePDF();
                 pdfFileDetail.FullPath = pdfPath;
-                pdfFileDetail.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
+                pdfFileDetail.FileName = req.Company + req.BillingNumber;
+                //pdfFileDetail.FileName = req.PdfFileName.Replace("." + req.PdfFileName.Split(".").Last(), "");
                 pdfFileDetail.Outbound = configPdfSign.ConfigPdfsignOutputPath;
                 pdfFileDetail.Inbound = configPdfSign.ConfigPdfsignInputPath;
                 pdfFileDetail.Billno = billings[0];
+                pdfFileDetail.Comcode = tran.CompanyCode;
                 var pdfSignModel = new PDFSignModel() { configPdfSign = configPdfSign, filePDF = pdfFileDetail };
                 var resPdfSign = pdfSignRepo.ProcessPDFSign(pdfSignModel).Result;
                 //var resPdfSign = pdfSignRepo.ProcessPDFSign(configPdfSign, pdfFileDetail).Result;
