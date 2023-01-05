@@ -169,10 +169,14 @@
         }, 1000);
         setTimeout(function(){
             $('#ddlInsertConfigMftsIndexGenerationSettingOutputLogReceiveType').val('').trigger('change');
+        }, 1000);        
+        setTimeout(function(){
+            $('#ddlInsertConfigMftsIndexGenerationSettingOutputLogArchivedType').val('').trigger('change');
         }, 1000);
         
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputFolder').value = '';
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputLogReceiveFolder').value = '';
+        document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputLogArchivedFolder').value = '';
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputHost').value = '';
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputPort').value = '';
         document.getElementById('txtInsertConfigMftsIndexGenerationSettingOutputUsername').value = '';
@@ -301,6 +305,9 @@
                 $("#ddlUpdateConfigMftsIndexGenerationSettingOutputLogReceiveType").select2().val(data.ConfigMftsIndexGenerationSettingOutputLogReceiveType).trigger("change");
                 document.getElementById('txtUpdateConfigMftsIndexGenerationSettingOutputLogReceiveFolder').value = data.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder;
 
+                $("#ddlUpdateConfigMftsIndexGenerationSettingOutputLogArchivedType").select2().val(data.ConfigMftsIndexGenerationSettingOutputLogArchivedType).trigger("change");
+                document.getElementById('txtUpdateConfigMftsIndexGenerationSettingOutputLogArchivedFolder').value = data.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder;
+
 
                 document.getElementById('txtUpdateConfigMftsIndexGenerationSettingOutputHost').value = data.ConfigMftsIndexGenerationSettingOutputHost;
                 document.getElementById('txtUpdateConfigMftsIndexGenerationSettingOutputPort').value = data.ConfigMftsIndexGenerationSettingOutputPort;
@@ -341,6 +348,8 @@
         model.ConfigMftsIndexGenerationSettingOutputFolder = $('#txtInsertConfigMftsIndexGenerationSettingOutputFolder').val();
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveType = $('#ddlInsertConfigMftsIndexGenerationSettingOutputLogReceiveType').val();
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder = $('#txtInsertConfigMftsIndexGenerationSettingOutputLogReceiveFolder').val();
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedType = $('#ddlInsertConfigMftsIndexGenerationSettingOutputLogArchivedType').val();
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder = $('#txtInsertConfigMftsIndexGenerationSettingOutputLogArchivedFolder').val();
         model.ConfigMftsIndexGenerationSettingOutputHost = $('#txtInsertConfigMftsIndexGenerationSettingOutputHost').val();
         model.ConfigMftsIndexGenerationSettingOutputPort = $('#txtInsertConfigMftsIndexGenerationSettingOutputPort').val();
         model.ConfigMftsIndexGenerationSettingOutputUsername = $('#txtInsertConfigMftsIndexGenerationSettingOutputUsername').val();
@@ -405,6 +414,8 @@
         model.ConfigMftsIndexGenerationSettingOutputFolder = $('#txtUpdateConfigMftsIndexGenerationSettingOutputFolder').val();
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveType = $('#ddlUpdateConfigMftsIndexGenerationSettingOutputLogReceiveType').val();
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder = $('#txtUpdateConfigMftsIndexGenerationSettingOutputLogReceiveFolder').val();
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedType = $('#ddlUpdateConfigMftsIndexGenerationSettingOutputLogArchivedType').val();
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder = $('#txtUpdateConfigMftsIndexGenerationSettingOutputLogArchivedFolder').val();
         model.ConfigMftsIndexGenerationSettingOutputHost = $('#txtUpdateConfigMftsIndexGenerationSettingOutputHost').val();
         model.ConfigMftsIndexGenerationSettingOutputPort = $('#txtUpdateConfigMftsIndexGenerationSettingOutputPort').val();
         model.ConfigMftsIndexGenerationSettingOutputUsername = $('#txtUpdateConfigMftsIndexGenerationSettingOutputUsername').val();
@@ -457,6 +468,8 @@
         model.ConfigMftsIndexGenerationSettingOutputFolder = '';
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveType = '';
         model.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder = '';
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedType = '';
+        model.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder = '';
         model.ConfigMftsIndexGenerationSettingOutputHost = '';
         model.ConfigMftsIndexGenerationSettingOutputPort = '';
         model.ConfigMftsIndexGenerationSettingOutputUsername = '';

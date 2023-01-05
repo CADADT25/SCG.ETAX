@@ -389,6 +389,125 @@ namespace SCG.CAD.ETAX.API.Services
             }
             return resp;
         }
+        public Response UPDATE_INDEXING_INPUT_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            List<transactionSearchErrorModel> transactionSearchError = new List<transactionSearchErrorModel>();
+
+            try
+            {
+                using (var _dbContext = new DatabaseContext())
+                {
+                    if (param.Count > 0)
+                    {
+                        foreach (var item in param)
+                        {
+                            var update = _dbContext.transactionDescription.Where(x => x.TransactionNo == item.TransactionNo).FirstOrDefault();
+
+                            if (update != null)
+                            {
+                                update.DmsAttachmentFileName = item.DmsAttachmentFileName;
+                                update.DmsAttachmentFilePath = item.DmsAttachmentFilePath;
+
+                                update.UpdateBy = item.UpdateBy;
+                                update.UpdateDate = dtNow;
+                                _dbContext.transactionDescription.Update(update);
+                                //_dbContext.SaveChanges();
+
+                                resp.STATUS = true;
+
+                                resp.MESSAGE = "Updated Success.";
+                            }
+                            else
+                            {
+                                transactionSearchError.Add(new transactionSearchErrorModel
+                                {
+                                    tranSearchErrorBillingNo = "123",
+                                    tranSearchErrorDetail = "Can't update because data not found."
+                                });
+                            }
+                        }
+                        _dbContext.SaveChanges();
+                    }
+                }
+
+                if (transactionSearchError.Count > 0)
+                {
+                    resp.ERROR_STACK = Convert.ToString(transactionSearchError.Count());
+                    resp.OUTPUT_DATA = transactionSearchError;
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.Message.ToString();
+            }
+            return resp;
+        }
+        
+        public Response UPDATE_INDEXING_OUTPUT_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            List<transactionSearchErrorModel> transactionSearchError = new List<transactionSearchErrorModel>();
+
+            try
+            {
+                using (var _dbContext = new DatabaseContext())
+                {
+                    if (param.Count > 0)
+                    {
+                        foreach (var item in param)
+                        {
+                            var update = _dbContext.transactionDescription.Where(x => x.TransactionNo == item.TransactionNo).FirstOrDefault();
+
+                            if (update != null)
+                            {
+                                update.PdfIndexingDetail = item.PdfIndexingDetail;
+                                update.PdfIndexingStatus = item.PdfIndexingStatus;
+                                update.PdfIndexingDateTime = item.PdfIndexingDateTime;
+                                update.DmsAttachmentFileName = item.DmsAttachmentFileName;
+                                update.DmsAttachmentFilePath = item.DmsAttachmentFilePath;
+
+
+                                update.UpdateBy = item.UpdateBy;
+                                update.UpdateDate = dtNow;
+                                _dbContext.transactionDescription.Update(update);
+                                //_dbContext.SaveChanges();
+
+                                resp.STATUS = true;
+
+                                resp.MESSAGE = "Updated Success.";
+                            }
+                            else
+                            {
+                                transactionSearchError.Add(new transactionSearchErrorModel
+                                {
+                                    tranSearchErrorBillingNo = "123",
+                                    tranSearchErrorDetail = "Can't update because data not found."
+                                });
+                            }
+                        }
+                        _dbContext.SaveChanges();
+                    }
+                }
+
+                if (transactionSearchError.Count > 0)
+                {
+                    resp.ERROR_STACK = Convert.ToString(transactionSearchError.Count());
+                    resp.OUTPUT_DATA = transactionSearchError;
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.MESSAGE = "Update faild.";
+                resp.INNER_EXCEPTION = ex.Message.ToString();
+            }
+            return resp;
+        }
 
         public Response DELETE(TransactionDescription param)
         {

@@ -119,6 +119,8 @@ namespace SCG.CAD.ETAX.API.Services
                         update.ConfigMftsIndexGenerationSettingOutputFolder = param.ConfigMftsIndexGenerationSettingOutputFolder;
                         update.ConfigMftsIndexGenerationSettingOutputLogReceiveType = param.ConfigMftsIndexGenerationSettingOutputLogReceiveType;
                         update.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder = param.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder;
+                        update.ConfigMftsIndexGenerationSettingOutputLogArchivedType = param.ConfigMftsIndexGenerationSettingOutputLogArchivedType;
+                        update.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder = param.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder;
                         update.ConfigMftsIndexGenerationSettingOutputHost = param.ConfigMftsIndexGenerationSettingOutputHost;
                         update.ConfigMftsIndexGenerationSettingOutputPort = param.ConfigMftsIndexGenerationSettingOutputPort;
                         update.ConfigMftsIndexGenerationSettingOutputUsername = param.ConfigMftsIndexGenerationSettingOutputUsername;

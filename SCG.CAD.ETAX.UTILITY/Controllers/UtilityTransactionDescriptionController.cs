@@ -125,5 +125,24 @@ namespace SCG.CAD.ETAX.UTILITY.Controllers
             //JsonResult Json = new JsonResult(task);
             return task;
         }
+        public async Task<Response> UpdateIndexingInputList(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/TransactionDescription/UpdateIndexingInputList", httpContent));
+
+            //JsonResult Json = new JsonResult(task);
+            return task;
+        }
+
+        public async Task<Response> UpdateIndexingOutputList(string jsonString)
+        {
+            var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var task = await Task.Run(() => ApiHelper.PostURI("api/TransactionDescription/UpdateIndexingOutputList", httpContent));
+
+            //JsonResult Json = new JsonResult(task);
+            return task;
+        }
     }
 }

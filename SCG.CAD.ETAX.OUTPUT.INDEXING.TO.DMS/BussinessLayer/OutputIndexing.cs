@@ -6,6 +6,7 @@ using SCG.CAD.ETAX.MODEL.etaxModel;
 using SCG.CAD.ETAX.UTILITY;
 using SCG.CAD.ETAX.UTILITY.Controllers;
 using System.Text.Json;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
 {
@@ -90,19 +91,20 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                 Console.WriteLine("Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
                 log.InsertLog(pathlog, "Read File From SourceName : " + output.ConfigMftsIndexGenerationSettingOutputSourceName.ToUpper());
                 FileLoginIndex.SourceName = output.ConfigMftsIndexGenerationSettingOutputSourceName;
-                FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputFolder;
+                //FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder;
+                FileLoginIndex.Path = output.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder;
                 FileLoginIndex.FileDetails = new List<FileDetail>();
 
-                Console.WriteLine("Read File From Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
-                log.InsertLog(pathlog, "Read File Type : " + output.ConfigMftsIndexGenerationSettingOutputType.ToUpper());
-                if (output.ConfigMftsIndexGenerationSettingOutputType.ToUpper() == "FOLDER")
+                Console.WriteLine("Read File From Type : " + output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper());
+                log.InsertLog(pathlog, "Read File Type : " + output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper());
+                if (output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper() == "FOLDER")
                 {
-                    FileLoginIndex.FileDetails.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputFolder));
+                    FileLoginIndex.FileDetails.AddRange(ReadFileFromFolder(output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder, output.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder));
                 }
-                //else
-                //{
-                //    FileLoginIndex.FIleDetails.AddRange(ReadFileFromSFTP(output));
-                //}
+                else
+                {
+                    FileLoginIndex.FileDetails.AddRange(ReadFileFromSFTP(output));
+                }
                 listFileLoginIndex.Add(FileLoginIndex);
             }
             catch (Exception ex)
@@ -131,10 +133,10 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                     client.Connect();
                     if (client.IsConnected)
                     {
-                        Console.WriteLine("Read File From SFTP host : " + host + " | Path : " + configoutput.ConfigMftsIndexGenerationSettingOutputFolder);
-                        log.InsertLog(pathlog, "Read File From SFTP host : " + host + " | Path : " + configoutput.ConfigMftsIndexGenerationSettingOutputFolder);
+                        Console.WriteLine("Read File From SFTP host : " + host + " | Path : " + configoutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder);
+                        log.InsertLog(pathlog, "Read File From SFTP host : " + host + " | Path : " + configoutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder);
 
-                        allFileInPath = client.ListDirectory(configoutput.ConfigMftsIndexGenerationSettingOutputFolder);
+                        allFileInPath = client.ListDirectory(configoutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder);
                         foreach (var item in allFileInPath)
                         {
                             if (item.Name.StartsWith(filename))
@@ -146,6 +148,16 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                                 filedetail.FileValues = new List<string>();
                                 filedetail.FileValues = client.ReadAllLines(item.FullName).ToList();
                                 result.Add(filedetail);
+                                try
+                                {
+                                    log.InsertLog(pathlog, "Move File From: " + item.FullName + " To :" + Path.Combine(configoutput.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder, item.Name));
+                                    client.RenameFile(item.FullName, Path.Combine(configoutput.ConfigMftsIndexGenerationSettingOutputLogArchivedFolder, item.Name));
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.InsertLog(pathlog, "Move File Exception : " + ex.ToString());
+                                }
+
                             }
                         }
                     }
@@ -163,7 +175,7 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
             return result;
         }
 
-        public List<FileDetail> ReadFileFromFolder(string path)
+        public List<FileDetail> ReadFileFromFolder(string path, string pathArchived)
         {
             List<FileDetail> result = new List<FileDetail>();
             FileDetail filedetail = new FileDetail();
@@ -186,6 +198,15 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                             filedetail.FileValues = new List<string>();
                             filedetail.FileValues = File.ReadAllLines(item).ToList();
                             result.Add(filedetail);
+                            try
+                            {
+                                log.InsertLog(pathlog, "Move File From: " + item + " To :" + Path.Combine(pathArchived, name));
+                                File.Move(item, Path.Combine(pathArchived, name));
+                            }
+                            catch (Exception ex)
+                            {
+                                log.InsertLog(pathlog, "Move File Exception : " + ex.ToString());
+                            }
                         }
                     }
                 }
@@ -315,7 +336,7 @@ namespace SCG.CAD.ETAX.OUTPUT.INDEXING.TO.DMS.BussinessLayer
                 if (listUpdate.Count > 0)
                 {
                     var json = JsonSerializer.Serialize(listUpdate);
-                    res = transactionDescriptionController.UpdateList(json);
+                    res = transactionDescriptionController.UpdateIndexingOutputList(json);
                     if (res.Result.MESSAGE == "Updated Success.")
                     {
                         result = true;

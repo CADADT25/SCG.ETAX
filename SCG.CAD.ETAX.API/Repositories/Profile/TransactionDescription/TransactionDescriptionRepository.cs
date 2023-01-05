@@ -134,6 +134,42 @@
 
             return await Task.FromResult(resp);
         }
+        public async Task<Response> UPDATE_INDEXING_OUTPUT_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_INDEXING_OUTPUT_LIST(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
+        public async Task<Response> UPDATE_INDEXING_INPUT_LIST(List<TransactionDescription> param)
+        {
+            Response resp = new Response();
+
+            try
+            {
+                var result = service.UPDATE_INDEXING_INPUT_LIST(param);
+
+                resp = result;
+            }
+            catch (Exception ex)
+            {
+                resp.STATUS = false;
+                resp.ERROR_MESSAGE = ex.Message.ToString();
+            }
+
+            return await Task.FromResult(resp);
+        }
 
         public async Task<Response> DELETE(TransactionDescription param)
         {

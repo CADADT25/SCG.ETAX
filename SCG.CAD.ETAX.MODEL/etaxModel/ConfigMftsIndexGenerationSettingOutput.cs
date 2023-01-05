@@ -13,6 +13,8 @@ namespace SCG.CAD.ETAX.MODEL.etaxModel
         public string? ConfigMftsIndexGenerationSettingOutputFolder { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputLogReceiveType { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputLogReceiveFolder { get; set; }
+        public string? ConfigMftsIndexGenerationSettingOutputLogArchivedType { get; set; }
+        public string? ConfigMftsIndexGenerationSettingOutputLogArchivedFolder { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputHost { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputPort { get; set; }
         public string? ConfigMftsIndexGenerationSettingOutputUsername { get; set; }

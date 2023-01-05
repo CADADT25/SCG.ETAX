@@ -9,6 +9,8 @@
         Task<Response> INSERT(TransactionDescription param);
         Task<Response> UPDATE(TransactionDescription param);
         Task<Response> UPDATE_LIST(List<TransactionDescription> param);
+        Task<Response> UPDATE_INDEXING_INPUT_LIST(List<TransactionDescription> param);
+        Task<Response> UPDATE_INDEXING_OUTPUT_LIST(List<TransactionDescription> param);
         Task<Response> DELETE(TransactionDescription param);
         Task<Response> SEARCH(transactionSearchModel JsonString);
         Task<Response> SYNCSTATUSPDFSIGN(string listbillno, string updateby);

@@ -79,6 +79,23 @@ namespace SCG.CAD.ETAX.API.Controllers
         }
 
         [HttpPost]
+        [Route("UpdateIndexingInputList")]
+        public IActionResult UpdateIndexingInputList(List<TransactionDescription> param)
+        {
+            var result = repo.UPDATE_INDEXING_INPUT_LIST(param).Result;
+
+            return Ok(result);
+        }
+        [HttpPost]
+        [Route("UpdateIndexingOutputList")]
+        public IActionResult UpdateIndexingOutputList(List<TransactionDescription> param)
+        {
+            var result = repo.UPDATE_INDEXING_OUTPUT_LIST(param).Result;
+
+            return Ok(result);
+        }
+
+        [HttpPost]
         [Route("Delete")]
         public IActionResult Delete(TransactionDescription param)
         {

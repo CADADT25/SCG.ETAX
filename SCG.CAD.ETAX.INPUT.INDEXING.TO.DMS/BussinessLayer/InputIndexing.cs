@@ -124,21 +124,21 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                         {
                             controllFile = GenControlFile(imageDocType);
                             controllFileName = "index" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
-                            if (output.ConfigMftsIndexGenerationSettingOutputLogReceiveType.ToUpper() == "FOLDER")
+                            if (output.ConfigMftsIndexGenerationSettingOutputType.ToUpper() == "FOLDER")
                             {
                                 resultSendFile = SendToFolder(output, imageDocType);
-                                CreateControlFile(controllFile, output.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder, controllFileName);
+                                CreateControlFile(controllFile, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
                             }
-                            //else
-                            //{
-                            //    resultSendFile = UploadToSFTP(output, imageDocType, controllFile, controllFileName);
-                            //}
+                            else
+                            {
+                                resultSendFile = UploadToSFTP(output, imageDocType, controllFile, controllFileName);
+                            }
 
-                            //if (resultSendFile)
-                            //{
-                            //    dataUpdate = PrepareTransactionDescription(imageDocType, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
-                            //    UpdateTransactionDescription(dataUpdate);
-                            //}
+                            if (resultSendFile)
+                            {
+                                dataUpdate = PrepareTransactionDescription(imageDocType, output.ConfigMftsIndexGenerationSettingOutputFolder, controllFileName);
+                                UpdateTransactionDescription(dataUpdate);
+                            }
                         }
                     }
                 }
@@ -248,7 +248,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
         public bool SendToFolder(ConfigMftsIndexGenerationSettingOutput configOutput, List<ImageDocType> imageDocType)
         {
             bool result = false;
-            string outpath = configOutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder;
+            string outpath = configOutput.ConfigMftsIndexGenerationSettingOutputFolder;
             try
             {
                 Console.WriteLine("Send To Folder : " + outpath);
@@ -264,7 +264,8 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                     {
                         File.Delete(outpath + "\\" + file.ReName);
                     }
-                    File.Move(file.PathFilePDF, outpath + "\\" + file.ReName);
+                    //File.Move(file.PathFilePDF, outpath + "\\" + file.ReName);
+                    File.Copy(file.PathFilePDF, outpath + "\\" + file.ReName);
                     Console.WriteLine("File : " + file.ReName);
                     log.InsertLog(pathlog, "File : " + file.ReName);
                 }
@@ -293,15 +294,15 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                     client.Connect();
                     if (client.IsConnected)
                     {
-                        Console.WriteLine("Upload To SFTP host : " + host + " | Path : " + configOutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder);
-                        log.InsertLog(pathlog, "Upload To SFTP host : " + host + " | Path : " + configOutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder);
+                        Console.WriteLine("Upload To SFTP host : " + host + " | Path : " + configOutput.ConfigMftsIndexGenerationSettingOutputFolder);
+                        log.InsertLog(pathlog, "Upload To SFTP host : " + host + " | Path : " + configOutput.ConfigMftsIndexGenerationSettingOutputFolder);
                         foreach (var item in imageDocType)
                         {
                             byte[] imageDoc = File.ReadAllBytes(item.PathFilePDF);
                             using (var ms = new MemoryStream(imageDoc))
                             {
                                 client.BufferSize = (uint)ms.Length; // bypass Payload error large files
-                                client.UploadFile(ms, configOutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder + "/" + item.ReName);
+                                client.UploadFile(ms, configOutput.ConfigMftsIndexGenerationSettingOutputFolder + "/" + item.ReName);
                             }
                         }
 
@@ -309,7 +310,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                         using (var ms = new MemoryStream(controllFile))
                         {
                             client.BufferSize = (uint)ms.Length; // bypass Payload error large files
-                            client.UploadFile(ms, configOutput.ConfigMftsIndexGenerationSettingOutputLogReceiveFolder + "/" + controllFileName);
+                            client.UploadFile(ms, configOutput.ConfigMftsIndexGenerationSettingOutputFolder + "/" + controllFileName);
                         }
                         Console.WriteLine("Create Control File Name : " + controllFileName);
                         log.InsertLog(pathlog, "Create Control File Name : " + controllFileName);
@@ -448,7 +449,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 if (dataUpdate.Count > 0)
                 {
                     var json = JsonSerializer.Serialize(dataUpdate);
-                    res = transactionDescriptionController.UpdateList(json);
+                    res = transactionDescriptionController.UpdateIndexingInputList(json);
                     if (res.Result.MESSAGE == "Updated Success.")
                     {
                         result = true;
