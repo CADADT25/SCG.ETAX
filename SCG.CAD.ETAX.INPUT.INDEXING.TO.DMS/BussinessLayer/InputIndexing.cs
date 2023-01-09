@@ -45,6 +45,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
 
                 foreach (var input in configIndexInput)
                 {
+                    //nexttime = logicToolHelper.SetNextRunTime(input.ConfigMftsIndexGenerationSettingInputAnyTime, input.ConfigMftsIndexGenerationSettingInputOneTime, batchname, input.ConfigMftsIndexGenerationSettingInputNo);
                     if (logicToolHelper.CheckRunTime(input.ConfigMftsIndexGenerationSettingInputNextTime))
                     {
                         indexingInputModel = GetIndexingInput(input);
@@ -166,21 +167,25 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                     log.InsertLog(pathlog, "Company : " + input.CompanyCode);
                     foreach (var item in input.ImageDocTypes)
                     {
-                        splitImageDocumentType = item.ImageDocumentType.Split(',');
-                        imageNo = 1;
-                        foreach (var imagedoc in splitImageDocumentType)
+                        if (File.Exists(item.PathFilePDF))
                         {
-                            imageDocType = new ImageDocType();
-                            imageDocType.BillNo = item.BillNo;
-                            imageDocType.PathFilePDF = item.PathFilePDF;
-                            imageDocType.ImageDocumentType = imagedoc;
-                            imageDocType.ReName = "BKPF-" + item.FiDocNumber + "_" + item.Year + "-" + input.CompanyCode + "-" + imageNo + "-" + imagedoc + "-" + "ETAX00000000000.pdf";
-                            imageNo++;
+                            splitImageDocumentType = item.ImageDocumentType.Split(',');
+                            imageNo = 1;
+                            foreach (var imagedoc in splitImageDocumentType)
+                            {
+                                imageDocType = new ImageDocType();
+                                imageDocType.BillNo = item.BillNo;
+                                imageDocType.PathFilePDF = item.PathFilePDF;
+                                imageDocType.ImageDocumentType = imagedoc;
+                                imageDocType.ReName = "BKPF-" + item.FiDocNumber + "_" + item.Year + "-" + input.CompanyCode + "-" + imageNo + "-" + imagedoc + "-" + "ETAX00000000000.pdf";
+                                imageNo++;
 
-                            Console.WriteLine("BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
-                            log.InsertLog(pathlog, "BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
-                            result.Add(imageDocType);
+                                Console.WriteLine("BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
+                                log.InsertLog(pathlog, "BillNo : " + item.BillNo + "New File Name : " + imageDocType.ReName);
+                                result.Add(imageDocType);
+                            }
                         }
+
                     }
                 }
             }
@@ -237,6 +242,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                 oFileStream.Close();
                 Console.WriteLine("Create Control File Name : " + filename);
                 log.InsertLog(pathlog, "Create Control File Name : " + filename);
+                result = true;
             }
             catch (Exception ex)
             {
@@ -321,6 +327,7 @@ namespace SCG.CAD.ETAX.INPUT.INDEXING.TO.DMS.BussinessLayer
                         log.InsertLog(pathlog, "couldn't connect sftp host : " + host);
                     }
                 }
+                result = true;
             }
             catch (Exception ex)
             {

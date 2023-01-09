@@ -413,7 +413,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 update.UpdateBy = item.UpdateBy;
                                 update.UpdateDate = dtNow;
                                 _dbContext.transactionDescription.Update(update);
-                                //_dbContext.SaveChanges();
+                                _dbContext.SaveChanges();
 
                                 resp.STATUS = true;
 
@@ -428,7 +428,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 });
                             }
                         }
-                        _dbContext.SaveChanges();
+                        //_dbContext.SaveChanges();
                     }
                 }
 
@@ -475,7 +475,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 update.UpdateBy = item.UpdateBy;
                                 update.UpdateDate = dtNow;
                                 _dbContext.transactionDescription.Update(update);
-                                //_dbContext.SaveChanges();
+                                _dbContext.SaveChanges();
 
                                 resp.STATUS = true;
 
@@ -490,7 +490,7 @@ namespace SCG.CAD.ETAX.API.Services
                                 });
                             }
                         }
-                        _dbContext.SaveChanges();
+                        //_dbContext.SaveChanges();
                     }
                 }
 

@@ -136,7 +136,6 @@ namespace SCG.CAD.ETAX.UTILITY
         {
             DateTime result = new DateTime();
             DateTime datenow = DateTime.Now;
-            DateTime nexttime = DateTime.Now;
             List<DateTime> listdate = new List<DateTime>();
             string[] timearray;
             try
@@ -144,6 +143,7 @@ namespace SCG.CAD.ETAX.UTILITY
                 var anytimearray = anytime.Split('|');
                 foreach (var time in anytimearray)
                 {
+                    DateTime nexttime = DateTime.Now;
                     timearray = time.Split(':');
                     if (datenow.Hour > Convert.ToInt32(timearray[0]))
                     {
