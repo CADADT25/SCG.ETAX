@@ -420,10 +420,46 @@
         currentInsertModeConfigPdfSign = true;
         $("#modalInsertConfigPdfSign").modal('show');
     }
+    function validateInsertConfigPdfSign(){
 
-     function fnInsertConfigPdfSign(){
+    }
+    function validateUpdateConfigPdfSign(){
+
+    }
+    function fnInsertConfigPdfSign(){
         if ($('#txtInsertConfigPdfSignCustomerCode').val() != '' && $('#ddlInsertConfigPdfSignInputSource').val() != '') {
-            callConfigPdfSignInsertController();
+            var model = new Object();
+            var isOkey = true;
+            if ($('#toggleInsertConfigPdfSignIsBatch').prop('checked')) {
+                if($('#ddlInsertConfigPdfSignInputSource').val() == '' || $('#ddlInsertConfigPdfSignInputSource').val() == null || $('#ddlInsertConfigPdfSignInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtInsertConfigPdfSignInputPath').val() == '' || $('#txtInsertConfigPdfSignInputPath').val() == null || $('#txtInsertConfigPdfSignInputPath').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlInsertConfigPdfSignInputType').val() == '' || $('#ddlInsertConfigPdfSignInputType').val() == null || $('#ddlInsertConfigPdfSignInputType').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else {
+                if($('#txtInsertConfigPdfSignOnlineRecordNumber').val() == '' || $('#txtInsertConfigPdfSignOnlineRecordNumber').val() == null || $('#txtInsertConfigPdfSignOnlineRecordNumber').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            if($('#ddlInsertConfigPdfSignOutputSource').val() == '' || $('#ddlInsertConfigPdfSignOutputSource').val() == null || $('#ddlInsertConfigPdfSignOutputSource').val() == undefined){
+                isOkey = false;
+            }
+            if($('#txtInsertConfigPdfSignOutputPath').val() == '' || $('#txtInsertConfigPdfSignOutputPath').val() == null || $('#txtInsertConfigPdfSignOutputPath').val() == undefined){
+                isOkey = false;
+            }
+            if($('#ddlInsertConfigPdfSignOutputType').val() == '' || $('#ddlInsertConfigPdfSignOutputType').val() == null || $('#ddlInsertConfigPdfSignOutputType').val() == undefined){
+                isOkey = false;
+            }
+            if(isOkey){
+                callConfigPdfSignInsertController();
+            }else{
+                fnToastrInputDataFail();
+            }
         }
         else {
             //validateInsertConfigPdfSign();
@@ -434,7 +470,38 @@
 
     function fnUpdateConfigPdfSign(){
         if ($('#txtUpdateConfigPdfSignCustomerCode').val() != '') {
-            callConfigPdfSignUpdateController();
+            var model = new Object();
+            var isOkey = true;
+            if($('#toggleUpdateConfigPdfSignIsBatch').prop('checked')){
+                if($('#ddlUpdateConfigPdfSignInputSource').val() == '' || $('#ddlUpdateConfigPdfSignInputSource').val() == null || $('#ddlUpdateConfigPdfSignInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtUpdateConfigPdfSignInputPath').val() == '' || $('#txtUpdateConfigPdfSignInputPath').val() == null || $('#txtUpdateConfigPdfSignInputPath').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlUpdateConfigPdfSignInputType').val() == '' || $('#ddlUpdateConfigPdfSignInputType').val() == null || $('#ddlUpdateConfigPdfSignInputType').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else{
+                if($('#txtUpdateConfigPdfSignOnlineRecordNumber').val() == '' || $('#txtUpdateConfigPdfSignOnlineRecordNumber').val() == null || $('#txtUpdateConfigPdfSignOnlineRecordNumber').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            if($('#ddlUpdateConfigPdfSignOutputSource').val() == '' || $('#ddlUpdateConfigPdfSignOutputSource').val() == null || $('#ddlUpdateConfigPdfSignOutputSource').val() == undefined){
+                isOkey = false;
+            }
+            if($('#txtUpdateConfigPdfSignOutputPath').val() == '' || $('#txtUpdateConfigPdfSignOutputPath').val() == null || $('#txtUpdateConfigPdfSignOutputPath').val() == undefined){
+                isOkey = false;
+            }
+            if($('#ddlUpdateConfigPdfSignOutputType').val() == '' || $('#ddlUpdateConfigPdfSignOutputType').val() == null || $('#ddlUpdateConfigPdfSignOutputType').val() == undefined){
+                isOkey = false;
+            }
+            if(isOkey){
+                callConfigPdfSignUpdateController();
+            }else{
+                fnToastrInputDataFail();
+            }
         }
         else {
             //validateUpdateConfigPdfSign();
@@ -690,8 +757,8 @@
                     document.getElementById('ddlInsertConfigPdfSignOutputSource').value = '';
                     document.getElementById('txtInsertConfigPdfSignOutputPath').value = '';
                     document.getElementById('txtInsertConfigPdfSignOnlineRecordNumber').value = '';
-                    document.getElementById('ddlInsertConfigPdfSignInputType').value = '';
-                    document.getElementById('ddlInsertConfigPdfSignOutputType').value = '';
+                    //document.getElementById('ddlInsertConfigPdfSignInputType').value = '';
+                    //document.getElementById('ddlInsertConfigPdfSignOutputType').value = '';
                     document.getElementById('ddlInsertConfigPdfSignFontName').value = '';
                     document.getElementById('txtInsertConfigPdfSignFontSize').value = '';
                     document.getElementById('txtInsertConfigPdfSignImage').value = '';
@@ -706,6 +773,12 @@
                     //document.getElementById('txtInsertConfigPdfSignFtpPort').value = '';
                     //document.getElementById('txtInsertConfigPdfSignFtpUsername').value = '';
                     //document.getElementById('txtInsertConfigPdfSignFtpPassword').value = '';
+
+                    $('#ddlInsertConfigPdfSignInputSource').prop('disabled', true)
+                    $('#ddlInsertConfigPdfSignOutputSource').prop('disabled', true)
+                    $('#txtInsertConfigPdfSignInputPath').prop('disabled', true)
+                    $('#txtInsertConfigPdfSignOutputPath').prop('disabled', true)
+                    $('#txtInsertConfigPdfSignOnlineRecordNumber').prop('disabled', true)
 
                     $("#modalInsertConfigPdfSign").modal('hide');
 
@@ -812,8 +885,8 @@
                     document.getElementById('toggleUpdateConfigPdfSignIsImageFirst').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImageLast').value = '';
                     document.getElementById('toggleUpdateConfigPdfSignIsImageSpecific').value = '';
-                    document.getElementById('ddlUpdateConfigPdfSignInputType').value = '';
-                    document.getElementById('ddlUpdateConfigPdfSignOutputType').value = '';
+                    //document.getElementById('ddlUpdateConfigPdfSignInputType').value = '';
+                    //document.getElementById('ddlUpdateConfigPdfSignOutputType').value = '';
                     document.getElementById('ddlUpdateConfigPdfSignFontName').value = '';
                     document.getElementById('txtUpdateConfigPdfSignFontSize').value = '';
                     document.getElementById('txtUpdateConfigPdfSignImage').value = '';

@@ -330,18 +330,20 @@
             var GetDistrict = $('#ddlInsertProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlInsertProfileSellerSubDistrict').val();
             var GetBranchCode = $('#txtInsertProfileSellerBranch').val();
+            var GetSellMail = $('#txtInsertProfileSellerEmail').val();
 
-            if ( GetCompanyCode != '0' &&
+            if ( GetCompanyCode != '0' && GetCompanyCode != '' &&
             GetBranchCode != '' &&
-            GetProvince != '0' &&
-            GetDistrict != '0' &&
-            GetSubDistrict != '0')
+            GetProvince != '0' && GetProvince != '' && GetProvince != null &&
+            GetDistrict != '0' && GetDistrict != '' && GetDistrict != null &&
+            GetSubDistrict != '0' && GetSubDistrict != '' && GetSubDistrict != null &&
+            GetSellMail != '')
             {
                 callProfileSellerInsertController();
             }
             else {
                 fnToastrInputDataFail();
-                validateInsertProfileSeller();
+                //validateInsertProfileSeller();
             }
 
         }
@@ -353,18 +355,19 @@
             var GetDistrict = $('#ddlUpdateProfileSellerDistrict').val();
             var GetSubDistrict = $('#ddlUpdateProfileSellerSubDistrict').val();
             var GetBranchCode = $('#ddlUpdateProfileSellerBranch').val();
+            var GetSellMail = $('#txtUpdateProfileSellerEmail').val();
 
-            if ( GetCompanyCode != '0' &&
+            if ( GetCompanyCode != '0' && GetCompanyCode != '' &&
             GetBranchCode != '' &&
-            GetProvince != '0' &&
-            GetDistrict != '0' &&
-            GetSubDistrict != '0')
-            {
+            GetProvince != '0' && GetProvince != '' && GetProvince != null &&
+            GetDistrict != '0' && GetDistrict != '' && GetDistrict != null &&
+            GetSubDistrict != '0' && GetSubDistrict != '' && GetSubDistrict != null &&
+            GetSellMail != '') {
                 callProfileSellerUpdateController();
             }
             else {
                 fnToastrInputDataFail();
-                validateUpdateProfileSeller();
+                //validateUpdateProfileSeller();
             }
 
         }

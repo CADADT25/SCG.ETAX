@@ -12,7 +12,7 @@
            }
         };
         $(document).ajaxError(function( event, request, settings ) {
-            debugger
+            //debugger
             if(request.status == 401 || request.status == "401"){
                 fnSweetAlert_SessionExpire();
             }

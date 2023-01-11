@@ -321,9 +321,48 @@
         $("#modalInsertConfigXmlSign").modal('show');
     }
 
-     function fnInsertConfigXmlSign(){
+    function validateInsertConfigXmlSign(){
+
+    }
+    function validateUpdateConfigXmlSign() {
+
+    }
+    function fnInsertConfigXmlSign(){
         if ($('#txtInsertConfigXmlSignCompanyCode').val() != '' && $('#ddlInsertConfigXmlSignInputSource').val() != '') {
-            callConfigXmlSignInsertController();
+            var isOkey = true;
+            if ($('#toggleInsertConfigXmlSignIsBatch').prop('checked')) {
+                if($('#ddlInsertConfigXmlSignInputSource').val() == '' || $('#ddlInsertConfigXmlSignInputSource').val() == null || $('#ddlInsertConfigXmlSignInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtInsertConfigXmlSignInputPath').val() == '' || $('#txtInsertConfigXmlSignInputPath').val() == null || $('#txtInsertConfigXmlSignInputPath').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlInsertConfigXmlSignOutputConvertSource').val() == '' || $('#ddlInsertConfigXmlSignOutputConvertSource').val() == null || $('#ddlInsertConfigXmlSignOutputConvertSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtInsertConfigXmlSignOutputConvertPath').val() == '' || $('#txtInsertConfigXmlSignOutputConvertPath').val() == null || $('#txtInsertConfigXmlSignOutputConvertPath').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else {
+                if($('#txtInsertConfigXmlSignOnlineRecordNumber').val() == '' || $('#txtInsertConfigXmlSignOnlineRecordNumber').val() == null || $('#txtInsertConfigXmlSignOnlineRecordNumber').val() == undefined){
+                    isOkey = false;
+                }
+            }
+
+            if ($('#ddlInsertConfigXmlSignOutputSource').val() == '' || $('#ddlInsertConfigXmlSignOutputSource').val() == null || $('#ddlInsertConfigXmlSignOutputSource').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#txtInsertConfigXmlSignOutputPath').val() == '' || $('#txtInsertConfigXmlSignOutputPath').val() == null || $('#txtInsertConfigXmlSignOutputPath').val() == undefined) {
+                isOkey = false;
+            }
+
+            if(isOkey){
+                callConfigXmlSignInsertController();
+            }else{
+                fnToastrInputDataFail();
+            }
+            
         }
         else {
             validateInsertConfigXmlSign();
@@ -334,7 +373,38 @@
 
     function fnUpdateConfigXmlSign(){
         if ($('#txtUpdateConfigXmlSignCompanyCode').val() != '' && $('#txtUpdateConfigXmlSignInputSource').val() != '') {
-            callConfigXmlSignUpdateController();
+            var isOkey = true;
+            if ($('#toggleUpdateConfigXmlSignIsBatch').prop('checked')) {
+                if($('#ddlUpdateConfigXmlSignInputSource').val() == '' || $('#ddlUpdateConfigXmlSignInputSource').val() == null || $('#ddlUpdateConfigXmlSignInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtUpdateConfigXmlSignInputPath').val() == '' || $('#txtUpdateConfigXmlSignInputPath').val() == null || $('#txtUpdateConfigXmlSignInputPath').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlUpdateConfigXmlSignOutputConvertSource').val() == '' || $('#ddlUpdateConfigXmlSignOutputConvertSource').val() == null || $('#ddlUpdateConfigXmlSignOutputConvertSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtUpdateConfigXmlSignOutputConvertPath').val() == '' || $('#txtUpdateConfigXmlSignOutputConvertPath').val() == null || $('#txtUpdateConfigXmlSignOutputConvertPath').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else {
+                if($('#txtUpdateConfigXmlSignOnlineRecordNumber').val() == '' || $('#txtUpdateConfigXmlSignOnlineRecordNumber').val() == null || $('#txtUpdateConfigXmlSignOnlineRecordNumber').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            if ($('#ddlUpdateConfigXmlSignOutputSource').val() == '' || $('#ddlUpdateConfigXmlSignOutputSource').val() == null || $('#ddlUpdateConfigXmlSignOutputSource').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#txtUpdateConfigXmlSignOutputPath').val() == '' || $('#txtUpdateConfigXmlSignOutputPath').val() == null || $('#txtUpdateConfigXmlSignOutputPath').val() == undefined) {
+                isOkey = false;
+            }
+
+            if(isOkey){
+                callConfigXmlSignUpdateController();
+            }else{
+                fnToastrInputDataFail();
+            }
         }
         else {
             validateUpdateConfigXmlSign();

@@ -283,8 +283,40 @@
     }
 
      function fnInsertConfigXmlGenerator(){
-        if ($('#txtInsertConfigXmlGeneratorCompanyCode').val() != '' && $('#txtInsertConfigXmlGeneratorInputSource').val() != '') {
-            callConfigXmlGeneratorInsertController();
+        if ($('#txtInsertConfigXmlGeneratorCompanyCode').val() != '' && $('#txtInsertConfigXmlGeneratorCompanyCode').val() != null) {
+            var isOkey = true;
+            if ($('#toggleInsertConfigXmlGeneratorIsBatch').prop('checked')) {
+                if($('#ddlInsertConfigXmlGeneratorInputSource').val() == '' || $('#ddlInsertConfigXmlGeneratorInputSource').val() == null || $('#ddlInsertConfigXmlGeneratorInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlInsertConfigXmlGeneratorInputType').val() == '' || $('#ddlInsertConfigXmlGeneratorInputType').val() == null || $('#ddlInsertConfigXmlGeneratorInputType').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtInsertConfigXmlGeneratorInputPath').val() == '' || $('#txtInsertConfigXmlGeneratorInputPath').val() == null || $('#txtInsertConfigXmlGeneratorInputPath').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else {
+                if ($('#txtInsertConfigXmlGeneratorOnlineRecordNumber').val() == '' || $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').val() == null || $('#txtInsertConfigXmlGeneratorOnlineRecordNumber').val() == undefined) {
+                    isOkey = false;
+                }
+            }
+            if ($('#ddlInsertConfigXmlGeneratorOutputSource').val() == '' || $('#ddlInsertConfigXmlGeneratorOutputSource').val() == null || $('#ddlInsertConfigXmlGeneratorOutputSource').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#ddlInsertConfigXmlGeneratorOutputType').val() == '' || $('#ddlInsertConfigXmlGeneratorOutputType').val() == null || $('#ddlInsertConfigXmlGeneratorOutputType').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#txtInsertConfigXmlGeneratorOutputPath').val() == '' || $('#txtInsertConfigXmlGeneratorOutputPath').val() == null || $('#txtInsertConfigXmlGeneratorOutputPath').val() == undefined) {
+                isOkey = false;
+            }
+            
+            if(isOkey){
+                callConfigXmlGeneratorInsertController();
+            }else{
+                fnToastrInputDataFail();
+            }
+            
         }
         else {
             validateInsertConfigXmlGenerator();
@@ -294,8 +326,39 @@
     }
 
     function fnUpdateConfigXmlGenerator(){
-        if ($('#txtUpdateConfigXmlGeneratorCompanyCode').val() != '' && $('#txtUpdateConfigXmlGeneratorInputSource').val() != '') {
-            callConfigXmlGeneratorUpdateController();
+        if ($('#txtUpdateConfigXmlGeneratorCompanyCode').val() != '' && $('#txtUpdateConfigXmlGeneratorCompanyCode').val() != null) {
+            var isOkey = true;
+            if ($('#toggleUpdateConfigXmlGeneratorIsBatch').prop('checked')) {
+                if($('#ddlUpdateConfigXmlGeneratorInputSource').val() == '' || $('#ddlUpdateConfigXmlGeneratorInputSource').val() == null || $('#ddlUpdateConfigXmlGeneratorInputSource').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#ddlUpdateConfigXmlGeneratorInputType').val() == '' || $('#ddlUpdateConfigXmlGeneratorInputType').val() == null || $('#ddlUpdateConfigXmlGeneratorInputType').val() == undefined){
+                    isOkey = false;
+                }
+                if($('#txtUpdateConfigXmlGeneratorInputPath').val() == '' || $('#txtUpdateConfigXmlGeneratorInputPath').val() == null || $('#txtUpdateConfigXmlGeneratorInputPath').val() == undefined){
+                    isOkey = false;
+                }
+            }
+            else {
+                if ($('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').val() == '' || $('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').val() == null || $('#txtUpdateConfigXmlGeneratorOnlineRecordNumber').val() == undefined) {
+                    isOkey = false;
+                }
+            }
+            if ($('#ddlUpdateConfigXmlGeneratorOutputSource').val() == '' || $('#ddlUpdateConfigXmlGeneratorOutputSource').val() == null || $('#ddlUpdateConfigXmlGeneratorOutputSource').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#ddlUpdateConfigXmlGeneratorOutputType').val() == '' || $('#ddlUpdateConfigXmlGeneratorOutputType').val() == null || $('#ddlUpdateConfigXmlGeneratorOutputType').val() == undefined) {
+                isOkey = false;
+            }
+            if ($('#txtUpdateConfigXmlGeneratorOutputPath').val() == '' || $('#txtUpdateConfigXmlGeneratorOutputPath').val() == null || $('#txtUpdateConfigXmlGeneratorOutputPath').val() == undefined) {
+                isOkey = false;
+            }
+
+            if(isOkey){
+                callConfigXmlGeneratorUpdateController();
+            }else{
+                fnToastrInputDataFail();
+            }
         }
         else {
             validateUpdateConfigXmlGenerator();
